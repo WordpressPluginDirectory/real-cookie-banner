@@ -37,9 +37,11 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selecto
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\Style;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\TransformAttribute;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\VisualParent;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\tcf\TcfForwardGdprStringInUrl;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
+use DevOwl\RealCookieBanner\lite\view\TcfBanner;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
 // @codeCoverageIgnoreStart
@@ -74,6 +76,8 @@ class Plugin extends AbstractPlugin
             'a[href][class*="nectar_video_lightbox"]',
             // [Plugin Comp] Elementor media carousel
             'a[href][data-elementor-lightbox-video]',
+            // [Plugin Comp] https://promo-theme.com/
+            'a[data-popup-json]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a
@@ -239,6 +243,8 @@ class Plugin extends AbstractPlugin
         $attributeJsonBlocker->addAttributes([
             // [Plugin Comp] Multiview in Divi (e.g. Desktop / mobile / tablet)
             'data-et-multi-view',
+            // [Plugin Comp] https://promo-theme.com/
+            'data-popup-json',
         ]);
         /**
          * Plugin.
@@ -301,6 +307,20 @@ class Plugin extends AbstractPlugin
             // [Plugin Comp] https://wordpress.org/plugins/foobox-image-lightbox/
             'foobox',
         ]);
+        if ($this->isPro()) {
+            /**
+             * Plugin.
+             *
+             * @var TcfForwardGdprStringInUrl
+             */
+            $tcfForwardGdprStringInUrl = $cb->addPlugin(TcfForwardGdprStringInUrl::class);
+            $vendors = TcfBanner::getInstance()->localize(\true)['vendors'] ?? [];
+            foreach ($vendors as $vendorId => $vendor) {
+                if (isset($vendor['deviceStorageDisclosure']) && isset($vendor['deviceStorageDisclosure']['domains'])) {
+                    $tcfForwardGdprStringInUrl->addVendorDisclosureDomains($vendorId, $vendor['deviceStorageDisclosure']['domains']);
+                }
+            }
+        }
     }
     /**
      * See `AbstractPlugin`.

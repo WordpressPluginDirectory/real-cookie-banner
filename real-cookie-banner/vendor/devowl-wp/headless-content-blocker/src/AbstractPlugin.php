@@ -29,6 +29,13 @@ abstract class AbstractPlugin
         $this->headlessContentBlocker = $headlessContentBlocker;
     }
     /**
+     * Before the content blocker gets setup.
+     */
+    public function setup()
+    {
+        // Silence is golden.
+    }
+    /**
      * The content blocker got setup completely.
      */
     public function afterSetup()

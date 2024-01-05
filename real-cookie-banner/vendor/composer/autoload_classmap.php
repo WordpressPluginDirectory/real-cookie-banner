@@ -146,6 +146,8 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\Style' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/Style.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\TransformAttribute' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/TransformAttribute.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\VisualParent' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/VisualParent.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfForwardGdprStringInUrl' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfForwardGdprStringInUrl.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfVendorDomainsBlockable' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfVendorDomainsBlockable.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractLanguagePlugin' => $vendorDir . '/devowl-wp/multilingual/src/AbstractLanguagePlugin.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractOutputBufferPlugin' => $vendorDir . '/devowl-wp/multilingual/src/AbstractOutputBufferPlugin.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractSyncPlugin' => $vendorDir . '/devowl-wp/multilingual/src/AbstractSyncPlugin.php',

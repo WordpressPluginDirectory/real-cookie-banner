@@ -33,6 +33,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     const TAG_ATTRIBUTE_MAP_LINKABLE = 'linkable';
     private $isSetup = \false;
+    private $setupCallbacks = [];
     private $afterSetupCallbacks = [];
     private $beforeMatchCallbacks = [];
     private $checkResultCallbacks = [];
@@ -105,6 +106,7 @@ class HeadlessContentBlocker extends FastHtmlTag
         $this->plugins[$className] = $this->plugins[$className] ?? [];
         $this->plugins[$className][] = $plugin;
         // Register callbacks
+        $this->addSetupCallback([$plugin, 'setup']);
         $this->addAfterSetupCallback([$plugin, 'afterSetup']);
         $this->addCallback([$plugin, 'modifyHtmlAfterProcessing']);
         $this->addBeforeMatchCallback([$plugin, 'beforeMatch']);
@@ -166,6 +168,15 @@ class HeadlessContentBlocker extends FastHtmlTag
     {
         $this->blockables = $blockables;
         $this->blockablesToHostsCache = null;
+    }
+    /**
+     * Add a callable before the content blocker gets setup.
+     *
+     * @param callable $callback
+     */
+    public function addSetupCallback($callback)
+    {
+        $this->setupCallbacks[] = $callback;
     }
     /**
      * Add a callable after the content blocker got setup.
@@ -362,6 +373,7 @@ class HeadlessContentBlocker extends FastHtmlTag
             return;
         }
         $this->isSetup = \true;
+        $this->runSetupCallback();
         // Block by inline style within HTML attribute `style=""`
         $styleInlineAttributeMatcher = new StyleInlineAttributeMatcher($this);
         $styleInlineAttributeFinder = new StyleInlineAttributeFinder();
@@ -446,6 +458,15 @@ class HeadlessContentBlocker extends FastHtmlTag
                     }
                 }
             }
+        }
+    }
+    /**
+     * Run registered setup callbacks.
+     */
+    protected function runSetupCallback()
+    {
+        foreach ($this->setupCallbacks as $callback) {
+            $callback();
         }
     }
     /**

@@ -255,6 +255,8 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\Style' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/Style.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\TransformAttribute' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/TransformAttribute.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\VisualParent' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/VisualParent.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfForwardGdprStringInUrl' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfForwardGdprStringInUrl.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfVendorDomainsBlockable' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfVendorDomainsBlockable.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractLanguagePlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractLanguagePlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractOutputBufferPlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractOutputBufferPlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractSyncPlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractSyncPlugin.php',

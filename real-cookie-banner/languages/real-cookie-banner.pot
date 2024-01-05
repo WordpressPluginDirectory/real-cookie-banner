@@ -1,4 +1,4 @@
-# Copyright (C) 2023 devowl.io
+# Copyright (C) 2024 devowl.io
 # This file is distributed under the same license as the Real Cookie Banner plugin.
 msgid ""
 msgstr ""
@@ -55,8 +55,8 @@ msgid "key-features/content-blocker.gif"
 msgstr ""
 
 #: inc/AdInitiator.php:85
-#: inc/import/ImportBlocker.php:128
-#: inc/import/ImportBlocker.php:192
+#: inc/import/ImportBlocker.php:141
+#: inc/import/ImportBlocker.php:205
 #: inc/settings/Blocker.php:141
 #: inc/view/ConfigPage.php:209
 #: inc/view/customize/banner/Texts.php:313
@@ -999,7 +999,7 @@ msgstr ""
 msgid "Pixel Manager for WooCommerce allows to check consents only in its PRO version (paid version). Therefore, you won't see the \"Enable Explicit Consent Mode\" option."
 msgstr ""
 
-#: inc/Core.php:472
+#: inc/Core.php:473
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1450,145 +1450,145 @@ msgstr ""
 msgid "Services that do not share consents via the TCF standard, but via other technologies. These are divided into several groups according to their purpose. Some of them are used based on a legitimate interest (e.g. threat prevention), others are used only with your consent. Details about the individual groups and purposes of the services can be found in the individual privacy settings."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:156
+#: inc/overrides/pro/view/TcfBanner.php:166
 msgctxt "legal-text"
 msgid "You also allow data transfer under the TCF standard to {{consentCount}} based on consent, and {{legIntCount}} based on legitimate interest, for the following purposes:"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:161
+#: inc/overrides/pro/view/TcfBanner.php:171
 msgctxt "legal-text"
 msgid "Vendor list"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:162
+#: inc/overrides/pro/view/TcfBanner.php:172
 msgctxt "legal-text"
 msgid "Vendors"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:163
+#: inc/overrides/pro/view/TcfBanner.php:173
 msgctxt "legal-text"
 msgid "partner"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:163
+#: inc/overrides/pro/view/TcfBanner.php:173
 msgctxt "legal-text"
 msgid "partners"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:164
+#: inc/overrides/pro/view/TcfBanner.php:174
 msgctxt "legal-text"
 msgid "data retention period"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:165
+#: inc/overrides/pro/view/TcfBanner.php:175
 msgid "Show more"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:166
+#: inc/overrides/pro/view/TcfBanner.php:176
 #: inc/view/customize/banner/Decision.php:132
 #: inc/view/customize/banner/Decision.php:154
 #: inc/view/customize/banner/Decision.php:190
 msgid "Hide"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:167
+#: inc/overrides/pro/view/TcfBanner.php:177
 msgid "Example"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:168
+#: inc/overrides/pro/view/TcfBanner.php:178
 msgid "Explanation of the legitimate interest"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:169
+#: inc/overrides/pro/view/TcfBanner.php:179
 msgctxt "legal-text"
 msgid "Data processing on the legal basis of:"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:170
+#: inc/overrides/pro/view/TcfBanner.php:180
 msgctxt "legal-text"
 msgid "No vendor requests purposes under this legal basis."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:175
+#: inc/overrides/pro/view/TcfBanner.php:185
 msgctxt "legal-text"
 msgid "Non-standardized data processing"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:176
+#: inc/overrides/pro/view/TcfBanner.php:186
 msgctxt "legal-text"
 msgid "Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called \"essential services\" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:181
+#: inc/overrides/pro/view/TcfBanner.php:191
 msgctxt "legal-text"
 msgid "Data processing standardized according to TCF"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:182
+#: inc/overrides/pro/view/TcfBanner.php:192
 msgctxt "legal-text"
 msgid "The Transparency and Consent Framework (TCF) is a standard for obtaining consistent consent for processing of personal data and cookie setting. This should enable all parties in the digital (advertising) chain to ensure that they set, process and store data and cookies in accordance with the GDPR and the ePrivacy Directive."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:189
+#: inc/overrides/pro/view/TcfBanner.php:199
 msgctxt "legal-text"
 msgid "Purposes"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:190
+#: inc/overrides/pro/view/TcfBanner.php:200
 msgctxt "legal-text"
 msgid "Purposes describe for which purpose which providers may set cookies and process personal data. Purposes are pre-selected if there is a legitimate interest for its data processing. For all other purposes, data will only be processed with explicit consent."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:197
+#: inc/overrides/pro/view/TcfBanner.php:207
 msgctxt "legal-text"
 msgid "Special purposes"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:198
+#: inc/overrides/pro/view/TcfBanner.php:208
 msgctxt "legal-text"
 msgid "Special purposes for setting cookies and processing personal data by our vendors describe purposes for which we have a legitimate interest that cannot be rejected. For example, we need to process data to prevent fraud."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:205
+#: inc/overrides/pro/view/TcfBanner.php:215
 msgctxt "legal-text"
 msgid "Features"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:206
+#: inc/overrides/pro/view/TcfBanner.php:216
 msgctxt "legal-text"
 msgid "Features for processing personal data describe how data is used to fulfill one or more purposes. Features cannot be opted out, but in the \"Purposes\" section, purposes that lead to the use of features can be selected or deselected. Any purpose can lead to features being used."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:213
+#: inc/overrides/pro/view/TcfBanner.php:223
 msgctxt "legal-text"
 msgid "Special features"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:214
+#: inc/overrides/pro/view/TcfBanner.php:224
 msgctxt "legal-text"
 msgid "Special features for processing personal data describe how data is used to fulfill one or more purposes in a profound way. Personal data will only be processed in this way with explicit consent."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:221
+#: inc/overrides/pro/view/TcfBanner.php:231
 msgctxt "legal-text"
 msgid "Data categories"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:222
+#: inc/overrides/pro/view/TcfBanner.php:232
 msgctxt "legal-text"
 msgid "Data categories describe which data is used and obtained while processing personal data."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:300
+#: inc/overrides/pro/view/TcfBanner.php:310
 msgid "The TCF requires that the consent dialogue must \"[cover] all or substantially all of the content of the website\". We therefore recommend displaying the consent dialogue as a banner in the middle of the website. Also make sure that the overlay remains active so that your website cannot be used until the consent decision has been made."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:332
+#: inc/overrides/pro/view/TcfBanner.php:342
 msgid "You currently have TCF mode enabled. Therefore, you are not allowed to change the font size and font thickness for this button."
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/view/TcfBanner.php:356
+#: inc/overrides/pro/view/TcfBanner.php:366
 msgid "Your current contrast ratio between background and font color (%1$s) does not reach the minimum of %2$s. Please adjust your colors!"
 msgstr ""
 

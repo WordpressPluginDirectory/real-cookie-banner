@@ -270,6 +270,8 @@ class Core extends BaseCore implements IOverrideCore
         // Ezoic CDN compatibility
         \add_filter('rocket_buffer', [$this->getBlocker(), 'replace'], 1);
         // WP Rocket Lazy loading compatibility
+        \add_filter('wp-meteor-frontend-rewrite', [$this->getBlocker(), 'replace']);
+        // WP Meteor
         \add_filter('ionos_performancemodify_output', [$this->getBlocker(), 'replace']);
         // IONOS Performance plugin
         \add_filter('ionos_performance_modify_output', [$this->getBlocker(), 'replace']);

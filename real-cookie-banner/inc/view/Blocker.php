@@ -307,6 +307,8 @@ class Blocker
             'jet_smart_filters',
             // [Plugin Comp] https://www.buddyboss.com/
             'activity_filter',
+            // [Plugin Comp] Elementor
+            'loadmore_elementor_portfolio',
         ]);
         return \wp_doing_ajax() && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
     }

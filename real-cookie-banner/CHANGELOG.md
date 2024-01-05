@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.3.4 (2024-01-05)
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.1</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* never touch internal links when forwarding TCF consent string via link (CU-8693cyetg)</details>
+
+
+
+
+
+## 4.3.3 (2024-01-04)
+
+
+### Bug Fixes
+
+* compatibility with PT Novo Shortcodes (CU-8693dg00y)
+* correctly add GDPR TCF URL parameters to e.g. Awin Affiliate links (CU-8693cyetg)
+* scanner does not work when WP Meteor is active (CU-8693e1ap0)
+* uncaught TypeError: explode(): Argument [#2](https://git.devowl.io/devowlio/devowl-wp/issues/2) () must be of type string, array given after importing TCF content blcker (CU-8693dmfxd)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.12.7</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Fix
+
+* Admin-UI - Add import/export functionality (CU-86934facb)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.8.4</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* transform also anchor links with GDPR TCF URL parameters (CU-8693cyetg)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* correctly deduplicate Elementor Forms with Google reCaptcha (CU-8693e1f9x)
+
+
+##### Features
+
+* introduce new plugin hook setup() (CU-8693cyetg)
+* introduce TcfForwardGdprStringInUrl plugin (CU-8693cyetg)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.5.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Performance
+
+* scanner does extra WP REST API request  when WP Meteor is active (CU-8693e1ap0)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.17.7</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Build Process
+
+* correctly autoload composer package files autoload.files per plugin (CU-8693dhuhv)</details>
+
+
+
+
+
 ## 4.3.2 (2023-12-22)
 
 

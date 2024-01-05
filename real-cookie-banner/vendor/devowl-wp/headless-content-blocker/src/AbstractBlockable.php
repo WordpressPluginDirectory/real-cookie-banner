@@ -52,6 +52,7 @@ abstract class AbstractBlockable
                 $selectorSyntaxFinder->setFastHtmlTag($this->headlessContentBlocker);
                 unset($blockers[$idx]);
                 $this->selectorSyntaxFinder[] = $selectorSyntaxFinder;
+                $this->originalExpressions[] = $line;
             }
         }
         foreach ($blockers as $expression) {
