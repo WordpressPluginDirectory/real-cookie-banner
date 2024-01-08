@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.3.5 (2024-01-08)
+
+
+### Bug Fixes
+
+* whitespace above visual content blocker when using OceanWP responsive video embeds (CU-8693fg0uu)
+* whitespace below visual content blocker when using Astra Theme video embeds (CU-8693fg0uu)
+
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.4</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* awin ad within a link is not correctly unblocked, only on reload (CU-8693ff6kr)</details>
+
+
+
+
+
 ## 4.3.4 (2024-01-05)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
