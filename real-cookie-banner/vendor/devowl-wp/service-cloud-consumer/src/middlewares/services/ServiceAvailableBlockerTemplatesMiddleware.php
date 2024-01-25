@@ -34,13 +34,13 @@ class ServiceAvailableBlockerTemplatesMiddleware extends AbstractPoolMiddleware
              *
              * @var ServiceTemplate[]
              */
-            $existingServices = $variableResolver->resolveRequired('services.created');
+            $existingServices = $variableResolver->resolveRequired('created.' . ServiceTemplate::class);
             /**
              * Existing blocker templates.
              *
              * @var ServiceTemplate[]
              */
-            $existingBlocker = $variableResolver->resolveRequired('blocker.created');
+            $existingBlocker = $variableResolver->resolveRequired('created.' . BlockerTemplate::class);
             $existingBlockerIdentifiers = \array_map(function ($item) {
                 return $item->identifier;
             }, $existingBlocker);

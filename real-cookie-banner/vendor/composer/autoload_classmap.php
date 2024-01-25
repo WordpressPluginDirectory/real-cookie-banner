@@ -232,6 +232,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\ExistsMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/ExistsMiddleware.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\OneOfMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/OneOfMiddleware.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\ScanResultsMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/ScanResultsMiddleware.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\SuccessorMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/SuccessorMiddleware.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\TcfMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/TcfMiddleware.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\VarMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/VarMiddleware.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\VersionsMiddleware' => $vendorDir . '/devowl-wp/service-cloud-consumer/src/middlewares/VersionsMiddleware.php',

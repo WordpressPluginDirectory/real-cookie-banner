@@ -39,11 +39,14 @@ class Notices
     const NOTICE_TCF_TOO_MUCH_VENDORS = 'tcf-too-much-vendors';
     const NOTICE_SERVICES_WITH_EMPTY_PRIVACY_POLICY = 'services-with-empty-privacy-policy';
     const NOTICE_SERVICES_WITH_UPDATED_TEMPLATES = 'services-with-updated-templates';
+    const NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES = 'services-with-successor-templates';
     const TCF_TOO_MUCH_VENDORS = 30;
     const CHECKLIST_PREFIX = 'checklist-';
     const MODAL_HINT_PREFIX = 'modal-hint-';
     const SCANNER_IGNORE_ADMIN_BAR_PREFIX = 'scanner-ignore-admin-bar-';
     const DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-upgrade-notice';
+    const DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-successor-notice';
+    const DISMISSED_SUCCESSORS = 'dismissed-successors';
     private $states;
     /**
      * C'tor.
@@ -229,6 +232,25 @@ class Notices
         }
     }
     /**
+     * Show a notice of services and content blockers with a successor template.
+     */
+    public function admin_notice_services_with_successor_templates()
+    {
+        $successors = $this->servicesWithSuccessorTemplates();
+        if (isset($_GET[self::DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG])) {
+            $dismissed = $this->getStates()->get(self::DISMISSED_SUCCESSORS, []);
+            foreach ($successors as $successor) {
+                $dismissed = \array_values(\array_merge($dismissed, \array_keys($successor)));
+            }
+            $this->getStates()->set(self::DISMISSED_SUCCESSORS, \array_unique($dismissed));
+            $this->getStates()->set(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, null);
+            return;
+        }
+        if (\current_user_can(Core::MANAGE_MIN_CAPABILITY) && \count($successors) > 0 && !Core::getInstance()->getConfigPage()->isVisible()) {
+            echo \sprintf('<div class="notice notice-warning">%s</div>', $this->servicesWithSuccessorTemplatesHtml($successors));
+        }
+    }
+    /**
      * Get the notice HTML of services and content blockers with a template update.
      *
      * @param array $needsUpdate
@@ -237,9 +259,9 @@ class Notices
     public function servicesWithUpdatedTemplatesHtml($needsUpdate, $context = 'notice')
     {
         $configPage = Core::getInstance()->getConfigPage();
+        $configPageUrl = $configPage->getUrl();
         $output = $context === 'notice' ? '<p>' . \__('Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:', RCB_TD) . '</p><ul>' : '<ul>';
         foreach ($needsUpdate as $update) {
-            $configPageUrl = $configPage->getUrl();
             switch ($update->post_type) {
                 case Blocker::CPT_NAME:
                     $typeLabel = \__('Content Blocker', RCB_TD);
@@ -253,10 +275,56 @@ class Notices
                 default:
                     break;
             }
-            $output .= \sprintf('<li><strong>%s</strong> (%s) - <a href="%s">%s</a></li>', \esc_html($update->post_title), $typeLabel, $editLink, \__('Review changes', RCB_TD));
+            $output .= \sprintf('<li><strong>%s</strong> (%s) &bull; <a href="%s">%s</a></li>', \esc_html($update->post_title), $typeLabel, $editLink, \__('Review changes', RCB_TD));
         }
-        $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG, '1');
+        $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
         $output .= $context === 'notice' ? '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>' : '</ul>';
+        return $output;
+    }
+    /**
+     * Get the notice HTML of services and content blockers with a successor template.
+     *
+     * @param array $successors
+     */
+    public function servicesWithSuccessorTemplatesHtml($successors)
+    {
+        $configPage = Core::getInstance()->getConfigPage();
+        $configPageUrl = $configPage->getUrl();
+        $output = '<p>' . \__('Templates in Real Cookie Banner have been replaced by new templates. You should check whether you want to replace the new service and/or content blocker with the new one in order to remain legally compliant. The following services are affected:', RCB_TD) . '</p><ul>';
+        foreach ($successors as $postType => $successor) {
+            foreach ($successor as $successorIdentifier => $row) {
+                switch ($postType) {
+                    case Blocker::CPT_NAME:
+                        $typeLabel = \__('Content Blocker', RCB_TD);
+                        $replaceLink = $configPageUrl . '#/blocker/new?force=' . $successorIdentifier;
+                        break;
+                    case Cookie::CPT_NAME:
+                        $typeLabel = \__('Service (Cookie)', RCB_TD);
+                        $replaceLink = $configPageUrl . '#/cookies/' . CookieGroup::getInstance()->getEssentialGroupId() . '/new?force=' . $successorIdentifier;
+                        break;
+                    default:
+                        break;
+                }
+                $output .= \sprintf('<li>%s: <strong>%s</strong> replaces %s &bull; <a href="%s">%s</a></li>', $typeLabel, $row['name'], Utils::joinWithAndSeparator(\array_map(function ($replaces) use($postType, $configPageUrl) {
+                    $postId = $replaces[0];
+                    $postTitle = $replaces[1];
+                    switch ($postType) {
+                        case Blocker::CPT_NAME:
+                            $editLink = $configPageUrl . '#/blocker/edit/' . $postId;
+                            break;
+                        case Cookie::CPT_NAME:
+                            $groupIds = \wp_get_post_terms($postId, CookieGroup::TAXONOMY_NAME, ['fields' => 'ids']);
+                            $editLink = $configPageUrl . '#/cookies/' . $groupIds[0] . '/edit/' . $postId;
+                            break;
+                        default:
+                            break;
+                    }
+                    return \sprintf('<a href="%s" target="_blank">%s</a>', $editLink, $postTitle);
+                }, $row['replaces']), \__(' and ', RCB_TD)), $replaceLink, \__('Replace', RCB_TD));
+            }
+        }
+        $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
+        $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
         return $output;
     }
     /**
@@ -279,7 +347,7 @@ class Notices
         }
         $needsUpdate = $wpdb->get_results(
             // phpcs:disable WordPress.DB.PreparedSQL
-            $wpdb->prepare("SELECT\n                    pm.meta_id AS post_version_meta_id,\n                    pm.post_id,\n                    pm.meta_value AS post_template_version,\n                    prid.meta_value AS post_template_identifier,\n                    p.post_title, p.post_type,\n                    templates.version as should\n                FROM {$wpdb->postmeta} pm\n                INNER JOIN {$wpdb->postmeta} prid\n                    ON prid.post_id = pm.post_id\n                INNER JOIN {$wpdb->posts} p\n                    ON p.ID = pm.post_id\n                INNER JOIN {$table_name} templates\n                    ON BINARY templates.identifier = BINARY prid.meta_value\n                    AND templates.context = %s\n                    AND templates.is_outdated = 0\n                    AND templates.type = (\n                        CASE\n                            WHEN p.post_type = %s THEN %s\n                            ELSE %s\n                        END\n                    )\n                WHERE pm.meta_key = %s\n                    AND pm.meta_value > 0\n                    AND prid.meta_key = %s\n                    AND p.post_type IN (%s, %s)\n                    AND templates.version <> pm.meta_value", TemplateConsumers::getContext(), Cookie::CPT_NAME, StorageHelper::TYPE_SERVICE, StorageHelper::TYPE_BLOCKER, Blocker::META_NAME_PRESET_VERSION, Blocker::META_NAME_PRESET_ID, Blocker::CPT_NAME, Cookie::CPT_NAME)
+            $wpdb->prepare("SELECT\n                    pm.meta_id AS post_version_meta_id,\n                    pm.post_id,\n                    pm.meta_value AS post_template_version,\n                    prid.meta_value AS post_template_identifier,\n                    p.post_title, p.post_type,\n                    templates.version as should\n                FROM {$wpdb->postmeta} pm\n                INNER JOIN {$wpdb->postmeta} prid\n                    ON prid.post_id = pm.post_id\n                INNER JOIN {$wpdb->posts} p\n                    ON p.ID = pm.post_id\n                INNER JOIN {$table_name} templates\n                    ON BINARY templates.identifier = BINARY prid.meta_value\n                    AND templates.context = %s\n                    AND templates.is_outdated = 0\n                    AND templates.type = (\n                        CASE\n                            WHEN p.post_type = %s THEN %s\n                            ELSE %s\n                        END\n                    )\n                WHERE pm.meta_key = %s\n                    AND pm.meta_value > 0\n                    AND prid.meta_key = %s\n                    AND p.post_type IN (%s, %s)\n                    AND p.post_status NOT IN ('trash')\n                    AND templates.version <> pm.meta_value", TemplateConsumers::getContext(), Cookie::CPT_NAME, StorageHelper::TYPE_SERVICE, StorageHelper::TYPE_BLOCKER, Blocker::META_NAME_PRESET_VERSION, Blocker::META_NAME_PRESET_ID, Blocker::CPT_NAME, Cookie::CPT_NAME)
         );
         // Remove rows of languages other than current and cast to correct types
         foreach ($needsUpdate as $key => &$row) {
@@ -293,6 +361,41 @@ class Notices
         }
         $result = \array_values($needsUpdate);
         $this->getStates()->set(self::NOTICE_SERVICES_WITH_UPDATED_TEMPLATES, $result);
+        return $result;
+    }
+    /**
+     * Read all services and content blockers which have an successor.
+     *
+     * @return array
+     */
+    public function servicesWithSuccessorTemplates()
+    {
+        global $wpdb;
+        $dismissed = $this->getStates()->get(self::DISMISSED_SUCCESSORS, []);
+        $noticeState = $this->getStates()->get(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, null);
+        if (\is_array($noticeState)) {
+            return $noticeState;
+        }
+        $table_name = $this->getTableName(StorageHelper::TABLE_NAME);
+        // Probably refresh template cache
+        $serviceConsumer = TemplateConsumers::getCurrentServiceConsumer();
+        if ($serviceConsumer->getStorage()->shouldInvalidate()) {
+            $serviceConsumer->retrieve();
+        }
+        $successors = $wpdb->get_results(
+            // phpcs:disable WordPress.DB
+            $wpdb->prepare("SELECT\n                    p.post_type,\n                    successors.identifier AS successor,\n                    CONCAT(successors.headline, CASE WHEN successors.sub_headline <> '' THEN CONCAT(' (', successors.sub_headline, ')') ELSE '' END) AS successor_name,\n                    pm.post_id AS replaces_id,\n                    p.post_title AS replaces_title,\n                    successors.successor_of_identifiers as successor_json\n                FROM {$wpdb->postmeta} pm\n                INNER JOIN {$wpdb->postmeta} prid\n                    ON prid.post_id = pm.post_id\n                INNER JOIN {$wpdb->posts} p\n                    ON p.ID = pm.post_id\n                INNER JOIN {$table_name} successors\n                    ON successors.context = %s\n                    AND successors.type = (\n                        CASE\n                            WHEN p.post_type = %s THEN %s\n                            ELSE %s\n                        END\n                    )\n                    AND successors.is_outdated = 0\n                    AND successors.successor_of_identifiers IS NOT NULL\n                WHERE pm.meta_key = %s\n                    AND pm.meta_value > 0\n                    AND prid.meta_key = %s\n                    AND p.post_type IN (%s, %s)\n                    AND p.post_status NOT IN ('trash')\n                    AND successors.successor_of_identifiers LIKE CONCAT('%\"', prid.meta_value, '\"%')", TemplateConsumers::getContext(), Cookie::CPT_NAME, StorageHelper::TYPE_SERVICE, StorageHelper::TYPE_BLOCKER, Blocker::META_NAME_PRESET_VERSION, Blocker::META_NAME_PRESET_ID, Blocker::CPT_NAME, Cookie::CPT_NAME)
+        );
+        // Map to a result grouped by post type (service, content blocker) and successor identifier
+        $result = [];
+        foreach ($successors as $key => $row) {
+            if (\intval(Core::getInstance()->getCompLanguage()->getCurrentPostId($row->replaces_id, $row->post_type)) === \intval($row->replaces_id) && !\in_array($row->successor, $dismissed, \true)) {
+                $result[$row->post_type] = $result[$row->post_type] ?? [];
+                $result[$row->post_type][$row->successor] = $result[$row->post_type][$row->successor] ?? ['name' => $row->successor_name, 'replaces' => []];
+                $result[$row->post_type][$row->successor]['replaces'][] = [$row->replaces_id, $row->replaces_title];
+            }
+        }
+        $this->getStates()->set(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, $result);
         return $result;
     }
     /**
@@ -332,6 +435,10 @@ class Notices
             $noticeState = [];
             foreach ($servicesWithoutPrivacyPolicy as $serviceId) {
                 $service = \get_post($serviceId);
+                // Does the service still exist?
+                if (\is_wp_error($service)) {
+                    continue;
+                }
                 $cookieGroup = \get_the_terms($service, CookieGroup::TAXONOMY_NAME)[0] ?? null;
                 $isProviderCurrentWebsite = \get_post_meta($serviceId, Cookie::META_NAME_IS_PROVIDER_CURRENT_WEBSITE, \true);
                 if ($cookieGroup === null || $service === null || $isProviderCurrentWebsite) {
@@ -511,6 +618,7 @@ class Notices
         $states = $this->getStates();
         $states->set(self::NOTICE_SERVICES_WITH_EMPTY_PRIVACY_POLICY, null);
         $states->set(self::NOTICE_SERVICES_WITH_UPDATED_TEMPLATES, null);
+        $states->set(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, null);
     }
     /**
      * Getter.

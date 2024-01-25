@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\block
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\ExistsMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\OneOfMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\ScanResultsMiddleware;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\SuccessorMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\TcfMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\VarMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\VersionsMiddleware;
@@ -35,5 +36,6 @@ class BlockerConsumer extends ServiceCloudConsumer
         $this->addMiddleware(new ScanResultsMiddleware($this));
         $this->addMiddleware(new VersionsMiddleware($this));
         $this->addMiddleware(new TcfMiddleware($this));
+        $this->addMiddleware(new SuccessorMiddleware($this));
     }
 }

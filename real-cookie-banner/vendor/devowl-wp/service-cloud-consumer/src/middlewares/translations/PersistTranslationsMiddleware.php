@@ -21,7 +21,7 @@ abstract class PersistTranslationsMiddleware extends AbstractPoolMiddleware
     /**
      * Never create translations for this string-values.
      */
-    const EXPAND_SKIP_KEYS = ['language', 'identifier', 'enabledWhenOneOf', 'recommendedWhenOneOf', 'extendsIdentifier', 'status', 'createdAt', 'tier', 'logoUrl', 'consumerData', 'serviceTemplateIdentifiers', 'ruleGroups', 'rules', 'visualType', 'visualContentType', 'shouldUncheckContentBlockerCheckboxWhenOneOf', 'shouldRemoveTechnicalHandlingWhenOneOf', 'codeOptIn', 'codeOptOut', 'codeOnPageLoad', 'tagManagerOptInEventName', 'tagManagerOptOutEventName', 'dynamicFields', 'dataProcessingInCountries', 'dataProcessingInCountriesSpecialTreatments', 'legalBasis', 'legalBasisNotice', 'group', 'technicalHandlingNotice', 'createContentBlockerNotice', 'groupNotice', 'providerNotice'];
+    const EXPAND_SKIP_KEYS = ['language', 'identifier', 'successorOfIdentifierInfo', 'enabledWhenOneOf', 'recommendedWhenOneOf', 'extendsIdentifier', 'status', 'createdAt', 'tier', 'logoUrl', 'consumerData', 'serviceTemplateIdentifiers', 'ruleGroups', 'rules', 'ruleNotice', 'visualType', 'visualContentType', 'shouldUncheckContentBlockerCheckboxWhenOneOf', 'shouldRemoveTechnicalHandlingWhenOneOf', 'codeOptIn', 'codeOptOut', 'codeOnPageLoad', 'tagManagerOptInEventName', 'tagManagerOptOutEventName', 'dynamicFields', 'dataProcessingInCountries', 'dataProcessingInCountriesSpecialTreatments', 'legalBasis', 'legalBasisNotice', 'group', 'technicalHandlingNotice', 'createContentBlockerNotice', 'groupNotice', 'providerNotice'];
     /**
      * Fetch english templates as they should not be persisted to database.
      *

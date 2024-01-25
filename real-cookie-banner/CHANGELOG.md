@@ -3,6 +3,265 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.3.7 (2024-01-25)
+
+
+### Bug Fixes
+
+* check if service exists when reading services without privacy policy (CU-apv5uu)
+* cookie banner did not load in customizer when using SG Optimizer JavaScript minification (CU-8693h1xfq)
+* improved compatibility with PixelYourSite (CU-8692wdhdy)
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+
+
+### Maintenance
+
+* add security hashes (CU-861mmp30r)
+* merge conflict (CU-869372jf7)
+* update to antd@5 (CU-863gku332)
+* wordpress part review 4 (CU-869372jf7)
+* wordpress part review 5 (CU-869372jf7)
+
+
+### Performance
+
+* optimize the SQL query which deletes scanner results for a scanned URL (CU-8693h2quv)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.13.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* added successorOfIdentifier field to services and content blocker templates (CU-869372jf7)
+* extended client response for services and blocker successorOf (CU-869372jf7)
+* introduce ruleNotice to content blockers (CU-86938uzfp)
+* removed shouldRemoveTechnicalHandlingWhenOneOf (CU-8693g1maw)
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+
+
+##### Features
+
+* introduce Google Consent Mode (CU-8693g1maw)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.11.11</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.3</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* add autoplay to wistia.net (CU-8693jdhgk)
+* extract external URL from inline script of TradeTracker (CU-8693jrh8f)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.6</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Flatsome UX builder and visual content blockers for video embeds (CU-8693jdhgk)
+
+
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.9.10</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.12.5</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+* show rule notice above the rules textare in content blockers if one given (CU-86938uzfp)
+
+
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)
+* wordpress part review 4 (CU-869372jf7)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.11</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* allow to copy client UUID by hovering the installation type icon (CU-8693hv7vb)
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+
+
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.5.11</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.4.4</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+* show rule notice above the rules textare in content blockers if one given (CU-86938uzfp)
+
+
+##### Maintenance
+
+* merge conflict (CU-869372jf7)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.17.9</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* php error automatic conversion of false to array is deprecated (CU-apv5uu)
+* show a notice for successor templates which replace other templates (CU-869372jf7)
+* sometimes the WordPress REST API is contacted infinite when WP heartbeat is deactivated and login no longer valid (CU-8693jq17r)
+
+
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)
+
+
+##### Performance
+
+* reduce bundle size by replacing sha-1 by a simple hash function (CU-apv5uu)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 0.2.20</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Bug Fixes
+
+* sometimes the recorder registered two clicks with a delay of zero (CU-apv5uu)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.6</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 0.5.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Bug Fixes
+
+* remove unused duplicated translations of country name (CU-866av8d30)
+
+
+##### Features
+
+* data processing countries group for Automattic (CU-866av8d30)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.7.11</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Continuous Integration
+
+* use project ID to read associated merge request for pipeline (CU-apv5uu)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.3.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 0.2.13</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Bug Fixes
+
+* allow updating variables before stylesheet is created (CU-apv5uu)
+
+
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.27</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Maintenance
+
+* update to antd@5 (CU-863gku332)</details>
+
+
+
+
+
+## 4.3.6 (2024-01-18) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.0</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Bug Fixes
+
+* output ci summary for review application URLs for traefik v2 (CU-2rjtd0)
+
+
+##### Continuous Integration
+
+* automatically retry to fetch the git repository three times when there is a temporary error (CU-8693j5ngt)
+* deploy backends in production to docker-host-6.owlsrv.de (CU-2rjtd0)
+
+
+##### Features
+
+* introduce public-changelogs command (CU-2mjxz4x)</details>
+
+<details><summary>Development dependency update @devowl-wp/monorepo-utils 0.2.0</summary>
+
+
+**_Purpose of dependency:_** _Predefined monorepo utilities and tasks._
+##### Features
+
+* introduce public-changelogs command (CU-2mjxz4x)</details>
+
+
+
+
+
 ## 4.3.5 (2024-01-08)
 
 

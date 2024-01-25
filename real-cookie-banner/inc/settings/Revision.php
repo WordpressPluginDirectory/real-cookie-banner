@@ -200,6 +200,7 @@ class Revision
         }
         $notices = Core::getInstance()->getNotices();
         $needsUpdate = $notices->servicesWithUpdatedTemplates();
+        $successors = $notices->servicesWithSuccessorTemplates();
         /**
          * Modify the result for the `/wp-json/real-cookie-banner/v1/revision/current` route. Usually,
          * this filter should not be used publicly as it is only intent for internal usage.
@@ -209,7 +210,7 @@ class Revision
          * @return {array}
          * @since 2.0.0
          */
-        return \apply_filters('RCB/Revision/Current', \array_merge($create, $tagManagerResults, ['public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
+        return \apply_filters('RCB/Revision/Current', \array_merge($create, $tagManagerResults, ['public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'template_successors_notice_html' => \count($successors) > 0 ? $notices->servicesWithSuccessorTemplatesHtml($successors) : null, 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
     }
     /**
      * Read all available options. This does not impact the performance in any way,

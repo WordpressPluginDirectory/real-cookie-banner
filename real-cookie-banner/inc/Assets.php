@@ -202,7 +202,7 @@ class Assets
             $handleAnimateCss = $this->enqueueLibraryStyle('animate-css', [[$useNonMinifiedSources, 'animate.css/animate.css'], 'animate.css/animate.min.css']);
             $excludeAssets->byHandle('css', $handleAnimateCss);
         }
-        if ($handle !== \false && !\is_customize_preview()) {
+        if ($handle !== \false) {
             $preloadJs = ['iabtcf-stub', $handle];
             $preloadCss = ['animate-css'];
             $advancedFeatures = [Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_PRIORITY_QUEUE];

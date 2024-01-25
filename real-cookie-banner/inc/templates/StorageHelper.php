@@ -157,7 +157,7 @@ class StorageHelper
                 $values[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('(%s, %s, %s, %d, %s,
                             %s, %s, %s,
                             %d, %d, %d, %d, %d, %d, %d,
-                            %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode($template->getBeforeMiddleware()), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) [])));
+                            %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode($template->getBeforeMiddleware()), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
                 $persistedIdentifierInSql[] = $wpdb->prepare('%s', $template->identifier);
             }
             // phpcs:disable WordPress.DB.PreparedSQL
@@ -165,7 +165,7 @@ class StorageHelper
                         `identifier`, `context`, `type`, `version`, `created_at`,
                         `headline`, `sub_headline`, `logo_url`,
                         `is_outdated`, `is_disabled`, `is_invalidate_needed`, `is_untranslated`, `is_hidden`, `is_recommended`, `is_cloud`,
-                        `tier`, `tags`, `before_middleware`, `after_middleware`, `other_meta`
+                        `tier`, `tags`, `before_middleware`, `after_middleware`, `other_meta`, `successor_of_identifiers`
                     )
                     VALUES %s ON DUPLICATE KEY UPDATE
                         `version` = VALUES(`version`),
@@ -183,7 +183,8 @@ class StorageHelper
                         `tags` = VALUES(`tags`),
                         `before_middleware` = VALUES(`before_middleware`),
                         `after_middleware` = VALUES(`after_middleware`),
-                        `other_meta` = VALUES(`other_meta`)', $table_name, \join(',', $values)));
+                        `other_meta` = VALUES(`other_meta`),
+                        `successor_of_identifiers` = VALUES(`successor_of_identifiers`)', $table_name, \join(',', $values)));
             // phpcs:enable WordPress.DB.PreparedSQL
             // When $result is zero, the query did not fail but no new row where added, we need to respect `ON DUPLICATE KEY UPDATE`
             $inserted += $result === \false ? 0 : \count($values);

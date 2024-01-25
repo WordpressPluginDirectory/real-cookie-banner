@@ -60,7 +60,8 @@ msgstr ""
 #: inc/settings/Blocker.php:141
 #: inc/view/ConfigPage.php:209
 #: inc/view/customize/banner/Texts.php:313
-#: inc/view/Notices.php:377
+#: inc/view/Notices.php:413
+#: inc/view/Notices.php:465
 msgid "Content Blocker"
 msgstr ""
 
@@ -405,6 +406,7 @@ msgstr ""
 #. translators:
 #: inc/Assets.php:617
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:198
+#: inc/view/Notices.php:505
 msgid " and "
 msgstr ""
 
@@ -991,15 +993,20 @@ msgid "We need to inform you that on Feb. 02, 2022, the Belgian Data Protection 
 msgstr ""
 
 #. translators:
-#: inc/comp/ThirdPartyNotices.php:64
+#: inc/comp/ThirdPartyNotices.php:73
 msgid "<strong>Pixel Manager for WooCommerce</strong> embed trackers by default without waiting for consent. Please activate \"Enable Explicit Consent Mode\" under <a href=\"%1$s\"><i>WooCommerce > Pixel Manager > Advanced > Cookie Consent Management</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"Pixel Manager for WooCommerce\"."
 msgstr ""
 
-#: inc/comp/ThirdPartyNotices.php:76
+#: inc/comp/ThirdPartyNotices.php:85
 msgid "Pixel Manager for WooCommerce allows to check consents only in its PRO version (paid version). Therefore, you won't see the \"Enable Explicit Consent Mode\" option."
 msgstr ""
 
-#: inc/Core.php:473
+#. translators:
+#: inc/comp/ThirdPartyNotices.php:116
+msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
+msgstr ""
+
+#: inc/Core.php:474
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1691,19 +1698,19 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:247
 #: inc/settings/CookieGroup.php:268
-#: inc/templates/TemplateConsumers.php:269
+#: inc/templates/TemplateConsumers.php:279
 msgid "Essential"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:248
 #: inc/settings/CookieGroup.php:269
-#: inc/templates/TemplateConsumers.php:272
+#: inc/templates/TemplateConsumers.php:282
 msgid "Functional"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:249
 #: inc/settings/CookieGroup.php:270
-#: inc/templates/TemplateConsumers.php:275
+#: inc/templates/TemplateConsumers.php:285
 msgid "Statistics"
 msgstr ""
 
@@ -1715,7 +1722,7 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:253
 #: inc/settings/CookieGroup.php:271
-#: inc/templates/TemplateConsumers.php:278
+#: inc/templates/TemplateConsumers.php:288
 msgid "Marketing"
 msgstr ""
 
@@ -1739,7 +1746,7 @@ msgctxt "legal-text"
 msgid "Marketing services are used by us and third parties to track the behaviour of individual visitors (across multiple pages), analyse the data collected and, for example, display personalized advertisements. These services enable us to track visitors across multiple websites."
 msgstr ""
 
-#: inc/settings/Revision.php:496
+#: inc/settings/Revision.php:499
 msgid "Without context"
 msgstr ""
 
@@ -1901,69 +1908,69 @@ msgstr ""
 msgid "Real Cookie Banner asks website visitors for consent to set cookies and process personal data. For this purpose, a UUID (pseudonymous identification of the user) is assigned to each website visitor, which is valid until the cookie expires to store the consent. Cookies are used to test whether cookies can be set, to store reference to documented consent, to store which services from which service groups the visitor has consented to, and, if consent is obtained under the Transparency & Consent Framework (TCF), to store consent in TCF partners, purposes, special purposes, features and special features. As part of the obligation to disclose according to GDPR, the collected consent is fully documented. This includes, in addition to the services and service groups to which the visitor has consented, and if consent is obtained according to the TCF standard, to which TCF partners, purposes and features the visitor has consented, all cookie banner settings at the time of consent as well as the technical circumstances (e.g. size of the displayed area at the time of consent) and the user interactions (e.g. clicking on buttons) that led to consent. Consent is collected once per language."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:233
+#: inc/templates/TemplateConsumers.php:243
 msgid "Load content"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:236
+#: inc/templates/TemplateConsumers.php:246
 msgid "Load map"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:239
+#: inc/templates/TemplateConsumers.php:249
 msgid "Load form"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:242
+#: inc/templates/TemplateConsumers.php:252
 #: inc/view/ConfigPage.php:191
 #: inc/view/customize/banner/FooterDesign.php:243
 msgid "Disabled"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:243
+#: inc/templates/TemplateConsumers.php:253
 msgid "Already created"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:244
+#: inc/templates/TemplateConsumers.php:254
 msgid "You have already created a Content Blocker with this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:248
+#: inc/templates/TemplateConsumers.php:258
 msgid "You have already created a Service (Cookie) with this template."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:253
+#: inc/templates/TemplateConsumers.php:263
 msgid "This service template is optimized to work with %s."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:255
+#: inc/templates/TemplateConsumers.php:265
 msgid "Please activate %s in settings to use this template."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:260
+#: inc/templates/TemplateConsumers.php:270
 msgid "You don't have to define a technical handling here, because this is done by the plugin <strong>%s</strong>."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:264
+#: inc/templates/TemplateConsumers.php:274
 msgid "A suitable content blocker for this service can be created automatically."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:283
+#: inc/templates/TemplateConsumers.php:293
 msgid "This template is currently disabled because the respective WordPress plugin is not installed or the desired function is not active. <a href=\"%s\" target=\"_blank\">Learn more</a>"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:287
+#: inc/templates/TemplateConsumers.php:297
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-disabled-cookie-templates/"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:290
+#: inc/templates/TemplateConsumers.php:300
 msgid "TCF required"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:291
+#: inc/templates/TemplateConsumers.php:301
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
@@ -3210,68 +3217,78 @@ msgstr ""
 msgid "Add to Menu"
 msgstr ""
 
-#: inc/view/Notices.php:367
+#: inc/view/Notices.php:404
 msgid "Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:382
+#: inc/view/Notices.php:418
+#: inc/view/Notices.php:469
 msgid "Service (Cookie)"
 msgstr ""
 
-#: inc/view/Notices.php:394
+#: inc/view/Notices.php:430
 msgid "Review changes"
 msgstr ""
 
-#: inc/view/Notices.php:401
+#: inc/view/Notices.php:441
+#: inc/view/Notices.php:518
 msgid "Dismiss this notice"
 msgstr ""
 
-#: inc/view/Notices.php:589
+#: inc/view/Notices.php:456
+msgid "Templates in Real Cookie Banner have been replaced by new templates. You should check whether you want to replace the new service and/or content blocker with the new one in order to remain legally compliant. The following services are affected:"
+msgstr ""
+
+#: inc/view/Notices.php:508
+msgid "Replace"
+msgstr ""
+
+#: inc/view/Notices.php:802
 msgid "There are no privacy policies with further information linked for the following services in your cookie banner. We now consider these to be mandatory in order to comply with the information obligations under the GDPR. Please provide a privacy policy for each service!"
 msgstr ""
 
-#: inc/view/Notices.php:601
+#: inc/view/Notices.php:814
 msgid "Set privacy policy URL"
 msgstr ""
 
 #. translators:s
-#: inc/view/Notices.php:694
+#: inc/view/Notices.php:907
 msgid "<strong>%1$s</strong> is processing data to %2$s"
 msgstr ""
 
-#: inc/view/Notices.php:709
+#: inc/view/Notices.php:922
 msgid "Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission."
 msgstr ""
 
-#: inc/view/Notices.php:752
+#: inc/view/Notices.php:965
 msgid "<strong>[ACTION REQUIRED]</strong> As of January 16, 2024, Google AdSense will only display advertising on your website if you obtain consent in accordance with the TCF standard. You must act now to continue earning advertising revenue!"
 msgstr ""
 
-#: inc/view/Notices.php:756
+#: inc/view/Notices.php:969
 msgid "You are currently obtaining non-standard compliant consent for Google Adsense via Real Cookie Banner. Please delete the Google AdSense service and Google AdSense content blocker in the Real Cookie Banner settings and then configure the TCF integration."
 msgstr ""
 
-#: inc/view/Notices.php:760
+#: inc/view/Notices.php:973
 msgid "https://devowl.io/knowledge-base/google-adsense-tcf-consent-wordpress/"
 msgstr ""
 
-#: inc/view/Notices.php:761
+#: inc/view/Notices.php:974
 msgid "Read instructions for Google AdSense configuration with TCF consents"
 msgstr ""
 
-#: inc/view/Notices.php:800
+#: inc/view/Notices.php:1013
 msgid "You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!"
 msgstr ""
 
-#: inc/view/Notices.php:813
+#: inc/view/Notices.php:1026
 msgid "Scan website again"
 msgstr ""
 
-#: inc/view/Notices.php:839
+#: inc/view/Notices.php:1052
 msgid "Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don't use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!"
 msgstr ""
 
-#: inc/view/Notices.php:846
+#: inc/view/Notices.php:1059
 msgid "Configure TCF vendors"
 msgstr ""
 

@@ -443,7 +443,7 @@ class License
         $this->switch();
         $host = Utils::getCurrentHostName();
         $this->restore();
-        return ['blog' => $this->getBlogId(), 'host' => $host, 'programmatically' => $this->getProgrammaticActivation(), 'blogName' => $this->getBlogName(), 'installationType' => $this->getActivation()->getInstallationType(), 'telemetryDataSharingOptIn' => $this->getActivation()->isTelemetryDataSharingOptIn(), 'code' => $this->getActivation()->getCode(), 'hint' => $this->getActivation()->getHint(), 'remote' => \is_wp_error($remote) ? null : $remote, 'noUsage' => $this->isNoUsage()];
+        return ['uuid' => $this->getUuid(), 'blog' => $this->getBlogId(), 'host' => $host, 'programmatically' => $this->getProgrammaticActivation(), 'blogName' => $this->getBlogName(), 'installationType' => $this->getActivation()->getInstallationType(), 'telemetryDataSharingOptIn' => $this->getActivation()->isTelemetryDataSharingOptIn(), 'code' => $this->getActivation()->getCode(), 'hint' => $this->getActivation()->getHint(), 'remote' => \is_wp_error($remote) ? null : $remote, 'noUsage' => $this->isNoUsage()];
     }
     /**
      * See filter `DevOwl/RealProductManager/License/Programmatic/$slug`.

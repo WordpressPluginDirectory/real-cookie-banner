@@ -341,6 +341,7 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\ExistsMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/ExistsMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\OneOfMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/OneOfMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\ScanResultsMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/ScanResultsMiddleware.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\SuccessorMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/SuccessorMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\TcfMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/TcfMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\VarMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/VarMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\VersionsMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/VersionsMiddleware.php',

@@ -108,6 +108,13 @@ class TemplatesPluginIntegrations
             \add_filter('prli_track_link', function ($track_me) {
                 return $track_me ? \wp_rcb_consent_given('http', 'prli_click_*', '*')['cookieOptIn'] : $track_me;
             });
+            // Pixel Your Site
+            \add_filter('pys_disable_all_cookie', function ($isDeactivated) {
+                if ($isDeactivated) {
+                    return $isDeactivated;
+                }
+                return !\wp_rcb_consent_given('http', 'pys_session_limit', '*')['cookieOptIn'];
+            });
         }
     }
     /**

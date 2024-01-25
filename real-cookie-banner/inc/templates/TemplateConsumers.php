@@ -189,8 +189,18 @@ class TemplateConsumers
             'isTcfActive' => function () {
                 return $this->isPro() && TCF::getInstance()->isActive();
             },
-            'blocker.created' => [$this, 'blockerCreated'],
-            'services.created' => [$this, 'servicesCreated'],
+            'created.' . BlockerTemplate::class => function ($resolver) {
+                return $this->blockerCreated($resolver);
+            },
+            'created.' . ServiceTemplate::class => function ($resolver) {
+                return $this->servicesCreated($resolver);
+            },
+            'created.global.' . BlockerTemplate::class => function ($resolver) {
+                return $this->blockerCreated($resolver, \true);
+            },
+            'created.global.' . ServiceTemplate::class => function ($resolver) {
+                return $this->servicesCreated($resolver, \true);
+            },
             'tcfVendors.created' => [$this, 'tcfVendorsCreated'],
             'serviceScan' => function () {
                 return Core::getInstance()->getScanner()->getQuery()->getScannedTemplateStats();
@@ -243,15 +253,16 @@ class TemplateConsumers
         }
     }
     /**
-     * Implementation of `blocker.created`.
+     * Implementation of created content blocker.
      *
      * @param VariableResolver $resolver
+     * @param boolean $global
      */
-    public function blockerCreated($resolver)
+    public function blockerCreated($resolver, $global = \false)
     {
         $consumer = $resolver->getConsumer();
         $result = [];
-        $existing = Blocker::getInstance()->getOrdered(\false, \get_posts(Core::getInstance()->queryArguments(['post_type' => Blocker::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'meta_query' => [['key' => Blocker::META_NAME_PRESET_ID, 'compare' => 'EXISTS']], 'post_status' => ['publish', 'private', 'draft']], 'blockerWithTemplate')));
+        $existing = Blocker::getInstance()->getOrdered(\false, \get_posts(Core::getInstance()->queryArguments(['post_type' => Blocker::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'meta_query' => [['key' => Blocker::META_NAME_PRESET_ID, 'compare' => 'EXISTS']], 'post_status' => ['publish', 'private', 'draft'], 'suppress_filters' => !$global], 'blockerWithTemplate')));
         foreach ($existing as $post) {
             $tmp = new BlockerTemplate($consumer);
             $tmp->identifier = $post->metas[Blocker::META_NAME_PRESET_ID];
@@ -262,15 +273,16 @@ class TemplateConsumers
         return $result;
     }
     /**
-     * Implementation of `services.created`.
+     * Implementation of created services.
      *
      * @param VariableResolver $resolver
+     * @param boolean $global
      */
-    public function servicesCreated($resolver)
+    public function servicesCreated($resolver, $global = \false)
     {
         $consumer = $resolver->getConsumer();
         $result = [];
-        $existing = Cookie::getInstance()->getOrdered(null, \false, \get_posts(Core::getInstance()->queryArguments(['post_type' => Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'meta_query' => [['key' => Blocker::META_NAME_PRESET_ID, 'compare' => 'EXISTS']], 'post_status' => ['publish', 'private', 'draft']], 'servicesWithTemplate')));
+        $existing = Cookie::getInstance()->getOrdered(null, \false, \get_posts(Core::getInstance()->queryArguments(['post_type' => Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'meta_query' => [['key' => Blocker::META_NAME_PRESET_ID, 'compare' => 'EXISTS']], 'post_status' => ['publish', 'private', 'draft'], 'suppress_filters' => !$global], 'servicesWithTemplate')));
         foreach ($existing as $post) {
             $tmp = new ServiceTemplate($consumer);
             $tmp->identifier = $post->metas[Blocker::META_NAME_PRESET_ID];

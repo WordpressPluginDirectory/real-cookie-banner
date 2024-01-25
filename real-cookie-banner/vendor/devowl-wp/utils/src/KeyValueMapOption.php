@@ -214,7 +214,7 @@ class KeyValueMapOption
      */
     public function getMap()
     {
-        $map = $this->isSiteWide() ? \get_site_option($this->getName()) : \get_option($this->getName());
+        $map = $this->isSiteWide() ? \get_site_option($this->getName(), []) : \get_option($this->getName(), []);
         if (isset($map['__created']) && $map['__created']) {
             foreach ($this->migrations as $migration) {
                 $map = $migration($map);

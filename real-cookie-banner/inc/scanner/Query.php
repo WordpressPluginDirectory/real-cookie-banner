@@ -113,13 +113,13 @@ class Query
         if (\count($urls) > 0) {
             $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
             $urls = \array_map(function ($url) use($wpdb) {
-                return $wpdb->prepare('%s', $url);
+                return $wpdb->prepare('%s', \md5($url));
             }, $urls);
             $sqlIn = \join(',', $urls);
             \delete_transient(Scanner::TRANSIENT_SERVICES_FOR_NOTICE);
             \delete_transient(\DevOwl\RealCookieBanner\scanner\Query::TRANSIENT_SCANNED_EXTERNAL_URLS);
             // phpcs:disable WordPress.DB.PreparedSQL
-            return $wpdb->query("DELETE FROM {$table_name} WHERE source_url IN ({$sqlIn})");
+            return $wpdb->query("DELETE FROM {$table_name} WHERE source_url_hash IN ({$sqlIn})");
             // phpcs:enable WordPress.DB.PreparedSQL
         }
         return 0;

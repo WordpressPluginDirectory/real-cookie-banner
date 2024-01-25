@@ -297,11 +297,6 @@ class ServiceCloudConsumer
         if ($abortDataSourceDownloadException !== null) {
             throw $abortDataSourceDownloadException;
         }
-        $dataSourceResult = $this->filterTemplates(\array_values($dataSourceResult));
-        // Sort by headline
-        \usort($dataSourceResult, function ($a, $b) {
-            return \strcmp($a->headline, $b->headline);
-        });
         foreach ($dataSourceResult as $dsTemplate) {
             $dsTemplate->memoizeBeforeMiddleware();
         }
@@ -310,6 +305,11 @@ class ServiceCloudConsumer
             foreach ($dataSourceResult as $dsTemplate) {
                 $middleware->beforePersistTemplate($dsTemplate, $dataSourceResult);
             }
+        });
+        $dataSourceResult = $this->filterTemplates(\array_values($dataSourceResult));
+        // Sort by headline
+        \usort($dataSourceResult, function ($a, $b) {
+            return \strcmp($a->headline, $b->headline);
         });
         $this->templates = $dataSourceResult;
         return $dataSourceResult;

@@ -217,6 +217,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_tcf_too_much_vendors']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notices_services_with_empty_privacy_policy']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_updated_templates']);
+        \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_successor_templates']);
         \add_action('admin_init', [$automaticScanStarter, 'probablyAddClientJob']);
         \add_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . RCB_SLUG, [$automaticScanStarter, 'probablyAddClientJob']);
         \add_action('admin_init', [$this, 'registerSettings'], 1);

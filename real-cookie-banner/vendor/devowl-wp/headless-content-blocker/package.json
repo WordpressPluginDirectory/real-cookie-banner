@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/headless-content-blocker",
-    "version": "0.16.1",
+    "version": "0.16.3",
     "private": true,
     "description": "Block HTML content by URLs and selector syntax",
     "homepage": "https://devowl.io",
@@ -39,9 +39,9 @@
     ],
     "devDependencies": {
         "@devowl-wp/composer-licenses": "^0.1.15",
-        "@devowl-wp/continuous-integration": "^0.5.1",
-        "@devowl-wp/eslint-config": "^0.2.5",
-        "@devowl-wp/node-gitlab-ci": "^0.7.10",
+        "@devowl-wp/continuous-integration": "^0.6.1",
+        "@devowl-wp/eslint-config": "^0.2.6",
+        "@devowl-wp/node-gitlab-ci": "^0.7.11",
         "@devowl-wp/npm-licenses": "^0.1.13",
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.12",

@@ -62,6 +62,12 @@ abstract class AbstractTemplate
      */
     public $version;
     /**
+     * A list of identifiers that replaces this template, as the old template has been deleted.
+     *
+     * @var array[]
+     */
+    public $successorOfIdentifierInfo = [];
+    /**
      * Meta data: rules overwriting the `isDisabled` property.
      *
      * @var string[]
@@ -134,6 +140,9 @@ abstract class AbstractTemplate
      *
      * scan                     = { foundCount: number; foundOnSitesCount: number; ignored: boolean; lastScanned?: string; }
      * -- Scan results for a given template by identifier.
+     *
+     * successorOf              = Array<{ identifier: string; id: int; }>
+     * -- If a template is a successor to another template, this array holds infos about the ID of the record within the consumer environment using this template
      * ```
      *
      * @var mixed[]
@@ -207,6 +216,7 @@ abstract class AbstractTemplate
             $this->id = \is_numeric($arr['id'] ?? null) ? \intval($arr['id']) : 0;
             $this->identifier = \is_string($arr['identifier'] ?? null) ? $arr['identifier'] : '';
             $this->version = \is_numeric($arr['version'] ?? null) ? \intval($arr['version']) : 1;
+            $this->successorOfIdentifierInfo = \is_array($arr['successorOfIdentifierInfo'] ?? null) ? $arr['successorOfIdentifierInfo'] : [];
             $this->enabledWhenOneOf = \is_array($arr['enabledWhenOneOf'] ?? null) ? $arr['enabledWhenOneOf'] : [];
             $this->isHidden = \boolval($arr['isHidden'] ?? null);
             $this->recommendedWhenOneOf = \is_array($arr['recommendedWhenOneOf'] ?? null) ? $arr['recommendedWhenOneOf'] : [];

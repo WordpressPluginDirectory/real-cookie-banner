@@ -34,6 +34,9 @@ class CloudDataSource extends AbstractDataSource
         $shouldFetchFromApi = $this->shouldFetchFromApi();
         $result = [];
         $result = $shouldFetchFromApi ? $this->loadFromApi($result) : $this->loadFromDatabase();
+        if ($shouldFetchFromApi) {
+            Core::getInstance()->getNotices()->recalculatePostDependingNotices();
+        }
         // The service cloud definitely provides at least one template, provide proper error handling when we already
         // have templates persisted, skip the download entirely
         if ($shouldFetchFromApi && \count($result) === 0) {

@@ -61,7 +61,7 @@ class Autoplay extends AbstractPlugin
     {
         $autoplayUrl = null;
         $host = \parse_url($link, \PHP_URL_HOST);
-        if (Utils::endsWith($host, 'youtube.com') || Utils::endsWith($host, 'dailymotion.com') || Utils::endsWith($host, 'loom.com')) {
+        if (Utils::endsWith($host, 'youtube.com') || Utils::endsWith($host, 'dailymotion.com') || Utils::endsWith($host, 'loom.com') || Utils::endsWith($host, 'wistia.net')) {
             $autoplayUrl = FastHtmlTagUtils::addParametersToUrl($link, ['autoplay' => '1']);
         }
         // Vimeo (https://vimeo.zendesk.com/hc/en-us/articles/115004485728-Autoplaying-and-looping-embedded-videos)

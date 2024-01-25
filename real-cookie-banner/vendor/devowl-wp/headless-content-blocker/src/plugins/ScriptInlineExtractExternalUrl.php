@@ -57,11 +57,22 @@ class ScriptInlineExtractExternalUrl extends AbstractPlugin
         if (empty($markup) || \strpos($markup, Constants::HTML_ATTRIBUTE_INLINE) !== \false) {
             return \false;
         }
-        if (\stripos($markup, '.createElement(') !== \false && \preg_match('/["\']script["\']/m', $markup) && \preg_match('/\\.src\\s*=*\\s*/m', $markup) && \preg_match('/\\.(?:insertBefore|appendChild)\\s*\\(/m', $markup) && \preg_match_all('/["\']((?:http[s]?|\\/\\/)[^"\']+)["\']/m', $markup, $urlMatches, \PREG_SET_ORDER, 0)) {
+        /*error_log('--- ' . $markup);
+          error_log('-----' . json_encode([
+              stripos($markup, '.createElement(') !== false,
+              preg_match('/["\']script["\']/m', $markup),
+              preg_match('/\.src\s*=*\s*|setAttribute\(\s*[\'"]src/m', $markup),
+              preg_match('/\.(?:insertBefore|appendChild)\s*\(/m', $markup),
+              preg_match_all('/["\']((?:http[s]?|[:]?\/\/)[^"\']+)["\']/m', $markup, $urlMatches, PREG_SET_ORDER, 0),
+          ]));*/
+        if (\stripos($markup, '.createElement(') !== \false && \preg_match('/["\']script["\']/m', $markup) && \preg_match('/\\.src\\s*=*\\s*|setAttribute\\(\\s*[\'"]src/m', $markup) && \preg_match('/\\.(?:insertBefore|appendChild)\\s*\\(/m', $markup) && \preg_match_all('/["\']((?:http[s]?|[:]?\\/\\/)[^"\']+)["\']/m', $markup, $urlMatches, \PREG_SET_ORDER, 0)) {
             // Find first valid external URL (e.g. URLs without Scheme)
             foreach ($urlMatches as $match) {
-                if (\filter_var(Utils::setUrlSchema($match[1], 'http'), \FILTER_VALIDATE_URL)) {
-                    return $match[1];
+                // Fix e.g. `:(document.location.protocol == "https:" ? "https" : "http") + "://tm.tradetracker.net/tag?t="`
+                // Will result in `$match[1] = "://tm.tradetracker.net/tag?t="`
+                $url = \trim($match[1], ':');
+                if (\filter_var(Utils::setUrlSchema($url, 'http'), \FILTER_VALIDATE_URL)) {
+                    return $url;
                 }
             }
         }

@@ -170,7 +170,7 @@ class DashboardTileMigrationMajor3 extends \DevOwl\RealCookieBanner\comp\migrati
              *
              * @var BlockerTemplate[]
              */
-            $templates = $consumer->getVariableResolver()->resolveDefault('blocker.created', []);
+            $templates = $consumer->getVariableResolver()->resolveDefault('created.' . BlockerTemplate::class, []);
             foreach ($templates as $template) {
                 $post = $template->consumerData['post'] ?? null;
                 if ($post instanceof WP_Post) {

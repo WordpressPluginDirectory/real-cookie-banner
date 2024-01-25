@@ -33,10 +33,14 @@ use Exception;
  * but `consumerData['id']` and `identifier` should be filled to make sure that the internal middlewares are working as expected.
  *
  * ```txt
- * blocker.created    = * ServiceTemplate[]
- * services.created   = * BlockerTemplate[]
+ * created.{TemplateClass::class}       = * TemplateClass[]
+ * created.global.{TemplateClass::class}    = * TemplateClass[]
  * tcfVendors.created = Array<{ vendorId: number; vendorConfigurationId: number; }>
  * ```
+ *
+ * What is the difference between `created.` and `created.global.`? In a consumer environment like e.g. WordPress and WPML as plugin installed,
+ * `created.` should only return the elements for the current language (current context). The `created.global.` should return all entries across
+ * all languages.
  *
  * ### Misc
  *

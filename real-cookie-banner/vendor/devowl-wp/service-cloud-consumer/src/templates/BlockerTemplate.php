@@ -37,6 +37,12 @@ class BlockerTemplate extends AbstractTemplate
      */
     public $rules = [];
     /**
+     * Rule notice.
+     *
+     * @var string
+     */
+    public $ruleNotice;
+    /**
      * Is visual?
      *
      * @var boolean
@@ -101,6 +107,7 @@ class BlockerTemplate extends AbstractTemplate
             $this->tcfVendorIds = \is_array($arr['tcfVendorIds'] ?? null) ? $arr['tcfVendorIds'] : [];
             $this->ruleGroups = \is_array($arr['ruleGroups'] ?? null) ? $arr['ruleGroups'] : [];
             $this->rules = \is_array($arr['rules'] ?? null) ? $arr['rules'] : [];
+            $this->ruleNotice = \is_string($arr['ruleNotice'] ?? null) ? $arr['ruleNotice'] : '';
             $this->isVisual = \boolval($arr['isVisual'] ?? null);
             $this->isVisualDarkMode = \boolval($arr['isVisualDarkMode'] ?? null);
             $this->visualBlur = \is_numeric($arr['visualBlur'] ?? null) ? \intval($arr['visualBlur']) : 0;
