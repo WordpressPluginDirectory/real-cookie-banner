@@ -105,7 +105,7 @@ class Clear
             if (!empty($matches)) {
                 unset($_COOKIE[$key]);
                 // unset for this page request
-                $result[$key] = \setcookie($key, null, -1, '/', $host);
+                $result[$key] = \setcookie($key, '', -1, '/', $host);
                 // only 1st party is supported here
             }
         }

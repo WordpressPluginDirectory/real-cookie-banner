@@ -3,6 +3,8 @@
 namespace DevOwl\RealCookieBanner;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\ExcludeAssets;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\CookieConsentManagement;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\Settings;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\AbstractCustomizePanel;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\Core as CustomizeCore;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset\AnonymousAssetBuilder;
@@ -40,6 +42,7 @@ use DevOwl\RealCookieBanner\scanner\Persist;
 use DevOwl\RealCookieBanner\scanner\Scanner;
 use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\Reset;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\TCF;
@@ -173,6 +176,12 @@ class Core extends BaseCore implements IOverrideCore
      */
     private $realQueue;
     /**
+     * See CookieConsentManagement.
+     *
+     * @var CookieConsentManagement
+     */
+    private $cookieConsentManagement;
+    /**
      * Application core constructor.
      */
     protected function __construct()
@@ -218,6 +227,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('admin_notices', [$this->getNotices(), 'admin_notices_services_with_empty_privacy_policy']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_updated_templates']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_successor_templates']);
+        \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_google_consent_mode_adjustments']);
         \add_action('admin_init', [$automaticScanStarter, 'probablyAddClientJob']);
         \add_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . RCB_SLUG, [$automaticScanStarter, 'probablyAddClientJob']);
         \add_action('admin_init', [$this, 'registerSettings'], 1);
@@ -251,12 +261,19 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [BannerLink::getInstance(), 'new_version_installation_after_3_12_0']);
         \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [Texts::class, 'new_version_installation_after_3_12_0']);
         \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [$this->getNotices(), 'new_version_installation_after_4_0_0']);
+        \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [BodyDesign::class, 'new_version_installation_after_4_3_7']);
         \add_filter('RCB/Blocker/Enabled', [$this->getScanner(), 'force_blocker_enabled']);
         \add_filter('customize_save_response', [$this, 'customize_save_response'], 10, 1);
         \add_filter('option_' . Consent::SETTING_COOKIE_DURATION, [Consent::getInstance(), 'option_cookie_duration']);
         \add_filter('option_' . Consent::SETTING_CONSENT_DURATION, [Consent::getInstance(), 'option_consent_duration']);
         \add_action('update_option_' . Consent::SETTING_CONSENT_DURATION, [Consent::getInstance(), 'update_option_consent_transient_deletion'], 10, 2);
-        \add_action('update_option_' . General::SETTING_SET_COOKIES_VIA_MANAGER, [TemplateConsumers::getInstance(), 'forceRecalculation']);
+        \add_filter('pre_update_option', function ($value, $optionName, $oldValue) {
+            // See https://wordpress.stackexchange.com/a/330290/83335
+            if ($value !== $oldValue && \in_array($optionName, [General::SETTING_SET_COOKIES_VIA_MANAGER, GoogleConsentMode::SETTING_GCM_ENABLED], \true)) {
+                TemplateConsumers::getInstance()->forceRecalculation();
+            }
+            return $value;
+        }, 10, 3);
         // Cache relevant hooks
         \add_filter('RCB/Customize/Updated', [\DevOwl\RealCookieBanner\Cache::getInstance(), 'customize_updated']);
         \add_filter('RCB/Settings/Updated', [\DevOwl\RealCookieBanner\Cache::getInstance(), 'settings_updated']);
@@ -313,7 +330,7 @@ class Core extends BaseCore implements IOverrideCore
         $this->rpmInitiator = new \DevOwl\RealCookieBanner\RpmInitiator();
         $this->rpmInitiator->start();
         $this->anonymousAssetBuilder = new AnonymousAssetBuilder($this->getTableName(AnonymousAssetBuilder::TABLE_NAME), RCB_OPT_PREFIX, \true);
-        $this->tcfVendorListNormalizer = new TcfVendorListNormalizer(RCB_DB_PREFIX, \defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV') ? 'http://real_cookie_banner_backend:8000/1.0.0/tcf/gvl/' : 'https://rcb.devowl.io/1.0.0/tcf/gvl/', $this->getCompLanguage());
+        $this->tcfVendorListNormalizer = new TcfVendorListNormalizer(RCB_DB_PREFIX, Service::getExternalContainerUrl('rcb') . '1.0.0/tcf/gvl/', $this->getCompLanguage());
         $this->getScanner()->probablyForceSitemaps();
         $this->overrideConstructFreemium();
         $this->overrideConstruct();
@@ -345,6 +362,7 @@ class Core extends BaseCore implements IOverrideCore
         Multisite::getInstance()->register();
         CountryBypass::getInstance()->register();
         TCF::getInstance()->register();
+        GoogleConsentMode::getInstance()->register();
         $this->overrideRegisterSettings();
     }
     /**
@@ -461,6 +479,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_filter('RCB/Revision/BackwardsCompatibility', [Texts::class, 'applyLegalBasisBackwardsCompatibility'], 10, 2);
         \add_filter('RCB/Revision/BackwardsCompatibility', [BannerLink::getInstance(), 'applyBackwardsCompatibility'], 10, 2);
         \add_filter('RCB/Revision/BackwardsCompatibility', [Consent::class, 'applyAgeNoticeAgeLimitBackwardsCompatibility'], 10, 2);
+        \add_filter('RCB/Revision/BackwardsCompatibility', [BodyDesign::class, 'applyBackwardsCompatibility'], 10, 2);
         // Multilingual
         \add_filter('rest_' . Cookie::CPT_NAME . '_query', [Hooks::getInstance(), 'rest_query']);
         \add_filter('rest_' . Blocker::CPT_NAME . '_query', [Hooks::getInstance(), 'rest_query']);
@@ -480,6 +499,7 @@ class Core extends BaseCore implements IOverrideCore
         Consent::getInstance()->enableOptionsAutoload();
         Multisite::getInstance()->enableOptionsAutoload();
         TCF::getInstance()->enableOptionsAutoload();
+        GoogleConsentMode::getInstance()->enableOptionsAutoload();
         CountryBypass::getInstance()->enableOptionsAutoload();
         if ($scanner->isActive()) {
             $scanner->reduceCurrentUserPermissions();
@@ -678,6 +698,19 @@ class Core extends BaseCore implements IOverrideCore
     public function getRealQueue()
     {
         return $this->realQueue;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getCookieConsentManagement()
+    {
+        if ($this->cookieConsentManagement === null) {
+            $settings = new Settings(General::getInstance(), Consent::getInstance(), CountryBypass::getInstance(), TCF::getInstance(), Multisite::getInstance(), GoogleConsentMode::getInstance());
+            $this->cookieConsentManagement = new CookieConsentManagement($settings);
+        }
+        return $this->cookieConsentManagement;
     }
     /**
      * Check if a license is active.

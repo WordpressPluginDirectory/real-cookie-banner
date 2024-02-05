@@ -42,7 +42,7 @@ trait TCF
     {
         // Silence is golden.
     }
-    // Documented in IOverrideTCF
+    // Documented in AbstractTcf
     public function isActive()
     {
         return \false;
@@ -62,9 +62,14 @@ trait TCF
     {
         return '';
     }
-    // Documented in IOverrideTCF
+    // Documented in AbstractTcf
     public function getScopeOfConsent()
     {
         return null;
+    }
+    // Documented in AbstractTcf
+    public function getVendorConfigurations()
+    {
+        return [];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker as ServicesBlocker;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Cache;
 use DevOwl\RealCookieBanner\Core;
@@ -42,13 +43,6 @@ class Blocker implements IOverrideBlocker
     const META_NAME_VISUAL_DOWNLOAD_THUMBNAIL = 'visualDownloadThumbnail';
     const META_NAME_VISUAL_HERO_BUTTON_TEXT = 'visualHeroButtonText';
     const META_NAME_SHOULD_FORCE_TO_SHOW_VISUAL = 'shouldForceToShowVisual';
-    const DEFAULT_CRITERIA = self::CRITERIA_SERVICES;
-    const CRITERIA_SERVICES = 'services';
-    const CRITERIA_TCF_VENDORS = 'tcfVendors';
-    const DEFAULT_VISUAL_TYPE = self::VISUAL_TYPE_DEFAULT;
-    const VISUAL_TYPE_DEFAULT = 'default';
-    const VISUAL_TYPE_WRAPPED = 'wrapped';
-    const VISUAL_TYPE_HERO = 'hero';
     const SYNC_OPTIONS_COPY = [\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_RULES, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_CRITERIA, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_TCF_VENDORS, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_TCF_PURPOSES, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_SERVICES, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_IS_VISUAL, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_TYPE, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_MEDIA_THUMBNAIL, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_CONTENT_TYPE, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_IS_VISUAL_DARK_MODE, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_BLUR, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_DOWNLOAD_THUMBNAIL, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_SHOULD_FORCE_TO_SHOW_VISUAL, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_VERSION];
     const SYNC_OPTIONS_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_HERO_BUTTON_TEXT];
     const SYNC_OPTIONS = ['meta' => ['copy' => \DevOwl\RealCookieBanner\settings\Blocker::SYNC_OPTIONS_COPY, 'copy-once' => \DevOwl\RealCookieBanner\settings\Blocker::SYNC_OPTIONS_COPY_ONCE]];
@@ -79,7 +73,7 @@ class Blocker implements IOverrideBlocker
         \register_meta('post', self::META_NAME_PRESET_VERSION, ['object_subtype' => self::CPT_NAME, 'type' => 'number', 'single' => \true, 'show_in_rest' => \true]);
         // This meta is stored as line-separated list (this shouldn't be done usually - 3rd normal form - but it's ok here)
         \register_meta('post', self::META_NAME_RULES, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
-        \register_meta('post', self::META_NAME_CRITERIA, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => self::DEFAULT_CRITERIA]);
+        \register_meta('post', self::META_NAME_CRITERIA, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => ServicesBlocker::DEFAULT_CRITERIA]);
         // This meta is stored as JSON (this shouldn't be done usually - 3rd normal form - but it's ok here)
         \register_meta('post', self::META_NAME_TCF_VENDORS, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         // This meta is stored as JSON (this shouldn't be done usually - 3rd normal form - but it's ok here)
@@ -95,7 +89,7 @@ class Blocker implements IOverrideBlocker
         // This meta is stored as JSON (this shouldn't be done usually - 3rd normal form - but it's ok here)
         \register_meta('post', self::META_NAME_SERVICES, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_IS_VISUAL, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
-        \register_meta('post', self::META_NAME_VISUAL_TYPE, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => self::DEFAULT_VISUAL_TYPE]);
+        \register_meta('post', self::META_NAME_VISUAL_TYPE, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => ServicesBlocker::DEFAULT_VISUAL_TYPE]);
         \register_meta('post', self::META_NAME_VISUAL_MEDIA_THUMBNAIL, ['object_subtype' => self::CPT_NAME, 'type' => 'number', 'single' => \true, 'show_in_rest' => \true, 'default' => 0]);
         \register_meta('post', self::META_NAME_VISUAL_CONTENT_TYPE, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => '']);
         \register_meta('post', self::META_NAME_IS_VISUAL_DARK_MODE, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true, 'default' => \false]);
@@ -120,14 +114,14 @@ class Blocker implements IOverrideBlocker
             }
             $criteria = $blocker->metas[self::META_NAME_CRITERIA];
             $nonVisualRow = ['id' => $blocker->ID, self::META_NAME_RULES => $blocker->metas[self::META_NAME_RULES]];
-            if ($criteria !== self::DEFAULT_CRITERIA) {
+            if ($criteria !== ServicesBlocker::DEFAULT_CRITERIA) {
                 $nonVisualRow[self::META_NAME_CRITERIA] = $criteria;
             }
             switch ($blocker->metas[self::META_NAME_CRITERIA]) {
-                case self::CRITERIA_SERVICES:
+                case ServicesBlocker::CRITERIA_SERVICES:
                     $nonVisualRow[self::META_NAME_SERVICES] = $blocker->metas[self::META_NAME_SERVICES];
                     break;
-                case self::CRITERIA_TCF_VENDORS:
+                case ServicesBlocker::CRITERIA_TCF_VENDORS:
                     $nonVisualRow[self::META_NAME_TCF_VENDORS] = $blocker->metas[self::META_NAME_TCF_VENDORS];
                     $nonVisualRow[self::META_NAME_TCF_PURPOSES] = $blocker->metas[self::META_NAME_TCF_PURPOSES];
                     break;

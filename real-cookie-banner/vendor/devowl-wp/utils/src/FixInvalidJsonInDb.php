@@ -74,11 +74,13 @@ class FixInvalidJsonInDb
     public function get_metadata($value, $object_id, $meta_key, $single, $meta_type)
     {
         $modifyMetaKeys = $this->metadataSingleMetaKey[$meta_type] ?? [];
-        if (\count($modifyMetaKeys) > 0) {
+        $loadAllMetaKeys = empty($meta_key);
+        $loadFixableMetaKey = \in_array($meta_key, $modifyMetaKeys, \true);
+        if (\count($modifyMetaKeys) > 0 && ($loadAllMetaKeys || $loadFixableMetaKey)) {
             // Check if another plugin already modified this behavior and use that value instead of recalling
             $changed = \false;
             $check = $value !== null ? $value : $this->get_metadata_raw($meta_type, $object_id, $meta_key, $single);
-            if (empty($meta_key)) {
+            if ($loadAllMetaKeys) {
                 // Meta key is empty so all meta keys are loaded from cache
                 if (\is_array($check)) {
                     foreach ($check as $nestedKey => &$nestedValue) {
@@ -93,7 +95,7 @@ class FixInvalidJsonInDb
                         }
                     }
                 }
-            } elseif (\in_array($meta_key, $modifyMetaKeys, \true)) {
+            } elseif ($loadFixableMetaKey) {
                 if ($single) {
                     $newValue = $this->ensureValidJsonString($check);
                     if ($newValue !== \false) {

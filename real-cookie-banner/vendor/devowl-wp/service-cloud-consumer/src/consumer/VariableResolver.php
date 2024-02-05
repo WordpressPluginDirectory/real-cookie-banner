@@ -48,7 +48,7 @@ use Exception;
  * blocker.consumer   = * Service cloud consumer for blocker templates
  * service.consumer   = * Service cloud consumer for service templates
  * tier               = * "free" | "pro"
- * manager            = * "none" | "googleTagManager" | "matomoTagManager"
+ * manager            = * "none" | "googleTagManager" | "googleTagManagerWithGcm" | "matomoTagManager"
  * serviceScan        = Record<string (identifier), { foundCount: number; foundOnSitesCount: number; ignored: boolean; lastScanned: string; }>;
  * isTcfActive        = boolean
  * ```
@@ -74,7 +74,6 @@ use Exception;
  * i18n.ExistsMiddleware.serviceAlreadyCreatedTooltip                         = "You have already created a Service (Cookie) with this template."
  * i18n.ManagerMiddleware.tooltip                                             = "This service template is optimized to work with %s."
  * i18n.ManagerMiddleware.disabledTooltip                                     = "Please activate %s in settings to use this template."
- * i18n.DisableTechnicalHandlingWhenOneOfMiddleware.technicalHandlingNotice   = 'You don\'t have to define a technical handling here, because this is done by the plugin <strong>%s</strong>.'
  * i18n.ServiceAvailableBlockerTemplatesMiddleware.tooltip                    = "A suitable content blocker for this service can be created automatically."
  * i18n.GroupMiddleware.group.essential                                       = "Essential"
  * i18n.GroupMiddleware.group.functional                                      = "Functional"

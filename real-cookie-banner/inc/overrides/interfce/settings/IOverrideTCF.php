@@ -34,12 +34,6 @@ interface IOverrideTCF
      */
     public function clearGvl();
     /**
-     * Check if compatibility is enabled.
-     *
-     * @return boolean
-     */
-    public function isActive();
-    /**
      * Check when the compatibility got enabled the first time.
      *
      * @return string|null
@@ -57,10 +51,4 @@ interface IOverrideTCF
      * @return string|null
      */
     public function getGvlDownloadTime();
-    /**
-     * Get scope of consent.
-     *
-     * @return string Can be `service`
-     */
-    public function getScopeOfConsent();
 }

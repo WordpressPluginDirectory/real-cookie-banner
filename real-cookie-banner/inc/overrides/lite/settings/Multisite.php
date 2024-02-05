@@ -19,17 +19,17 @@ trait Multisite
     {
         // Silence is golden.
     }
-    // Documented in IOverrideMultisite
+    // Documented in AbstractMultisite
     public function isConsentForwarding()
     {
         return \false;
     }
-    // Documented in IOverrideMultisite
+    // Documented in AbstractMultisite
     public function getForwardTo()
     {
         return $this->isConsentForwarding();
     }
-    // Documented in IOverrideMultisite
+    // Documented in AbstractMultisite
     public function getCrossDomains()
     {
         return $this->isConsentForwarding();

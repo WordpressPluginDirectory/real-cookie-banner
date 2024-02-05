@@ -17,19 +17,19 @@ trait Core
     /**
      * The plugins activator class.
      *
-     * @see Activator
+     * @var Activator
      */
     private $activator;
     /**
      * The plugins asset class.
      *
-     * @see Assets
+     * @var Assets
      */
     private $assets;
     /**
      * The utils service class.
      *
-     * @see Service
+     * @var Service
      */
     private $service;
     /**
@@ -60,6 +60,7 @@ trait Core
         \register_activation_hook($pluginFile, [$this->getActivator(), 'install']);
         \register_activation_hook($pluginFile, [$this->getActivator(), 'activate']);
         \register_deactivation_hook($pluginFile, [$this->getActivator(), 'deactivate']);
+        RateLimitNotice::instance($this)->hooks();
     }
     /**
      * The plugin is loaded. Start to register the localization (i18n) files.

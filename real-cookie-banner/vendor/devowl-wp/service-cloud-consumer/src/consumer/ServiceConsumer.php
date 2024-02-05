@@ -5,7 +5,6 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\ExistsMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\OneOfMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\ScanResultsMiddleware;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\DisableTechnicalHandlingWhenOneOfMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\GroupMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ServiceAvailableBlockerTemplatesMiddleware;
@@ -28,7 +27,6 @@ class ServiceConsumer extends ServiceCloudConsumer
         parent::__construct(ServiceTemplate::class);
         $this->addMiddleware(new ExistsMiddleware($this));
         $this->addMiddleware(new OneOfMiddleware($this));
-        $this->addMiddleware(new DisableTechnicalHandlingWhenOneOfMiddleware($this));
         $this->addMiddleware(new ManagerMiddleware($this));
         $this->addMiddleware(new ServiceAvailableBlockerTemplatesMiddleware($this));
         $this->addMiddleware(new VarMiddleware($this));

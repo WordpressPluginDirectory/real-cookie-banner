@@ -5,6 +5,9 @@ namespace DevOwl\RealCookieBanner\settings;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\Core;
+use DevOwl\RealCookieBanner\Localization;
+use DevOwl\RealCookieBanner\templates\ServiceTemplateTechnicalHandlingIntegration;
+use DevOwl\RealCookieBanner\Utils;
 use WP_Error;
 use WP_REST_Terms_Controller;
 use WP_Term;
@@ -25,12 +28,15 @@ class CookieGroup
     const SYNC_META_COPY_AND_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL, \DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_ORDER];
     const SYNC_OPTIONS = ['meta' => ['copy' => \DevOwl\RealCookieBanner\settings\CookieGroup::SYNC_META_COPY_AND_COPY_ONCE, 'copy-once' => \DevOwl\RealCookieBanner\settings\CookieGroup::SYNC_META_COPY_AND_COPY_ONCE]];
     const META_KEYS = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL];
+    const HTML_ATTRIBUTE_SKIP_IF_ACTIVE = 'skip-if-active';
+    const HTML_ATTRIBUTE_SKIP_WRITE = 'skip-write';
     /**
      * Singleton instance.
      *
      * @var CookieGroup
      */
     private static $me = null;
+    private $toJsonCache = null;
     private $cacheGetOrdered = [];
     /**
      * C'tor.
@@ -90,6 +96,42 @@ class CookieGroup
         }
     }
     /**
+     * Make `skip-if-active` work with comma-separated list of active plugins. That means, if
+     * a given plugin is active it automatically skips the HTML tag.
+     *
+     * @param string $html
+     * @param string $identifier The template identifier (can be `null`)
+     * @see https://regex101.com/r/gIPJRq/2
+     */
+    public function modifySkipIfActive($html, $identifier = null)
+    {
+        return \preg_replace_callback(
+            \sprintf('/\\s+(%s=")([^"]+)(")/m', self::HTML_ATTRIBUTE_SKIP_IF_ACTIVE),
+            /**
+             * Available matches:
+             *      $match[0] => Full string
+             *      $match[1] => Tagname
+             *      $match[2] => Comma separated string
+             *      $match[3] => Quote
+             */
+            function ($m) use($identifier) {
+                $plugins = \explode(',', $m[2]);
+                $result = \array_map(function ($plugin) use($identifier) {
+                    $isActive = Utils::isPluginActive($plugin);
+                    if ($isActive && !empty($identifier)) {
+                        // Documented in `TemplateConsumers`
+                        // We need to also make sure here to deactivate the script if e.g. RankMath SEO has
+                        // deactivated the Google Analytics functionality.
+                        $isActive = \apply_filters('RCB/Templates/FalsePositivePlugin', $isActive, $plugin, $identifier, 'service');
+                    }
+                    return $isActive;
+                }, $plugins);
+                return \in_array(\true, $result, \true) ? ' ' . self::HTML_ATTRIBUTE_SKIP_WRITE : '';
+            },
+            $html
+        );
+    }
+    /**
      * Get all available cookie groups ordered.
      *
      * @param boolean $force
@@ -126,6 +168,48 @@ class CookieGroup
         }
         $this->cacheGetOrdered[$context] = $terms;
         return $terms;
+    }
+    /**
+     * Localize available cookie groups for frontend.
+     *
+     * @param boolean $useCache
+     */
+    public function toJson($useCache = \false)
+    {
+        if ($useCache && $this->toJsonCache !== null) {
+            return $this->toJsonCache;
+        }
+        $output = [];
+        $groups = \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->getOrdered();
+        foreach ($groups as $group) {
+            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'items' => []];
+            // Populate cookies
+            $cookies = \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getOrdered($group->term_id);
+            foreach ($cookies as $cookie) {
+                $metas = $cookie->metas;
+                // Apply plugin integrations
+                $presetId = $metas[\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID] ?? null;
+                if ($presetId !== null) {
+                    $integration = ServiceTemplateTechnicalHandlingIntegration::applyFilters($presetId);
+                    if ($integration->isIntegrated()) {
+                        $integrationCode = $integration->getCodeOptIn();
+                        if ($integrationCode !== null) {
+                            $metas[\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN] = $integrationCode;
+                        }
+                        $integrationCode = $integration->getCodeOptOut();
+                        if ($integrationCode !== null) {
+                            $metas[\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT] = $integrationCode;
+                        }
+                    }
+                }
+                foreach ([\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD] as $codeKey) {
+                    $metas[$codeKey] = $this->modifySkipIfActive($metas[$codeKey], $cookie->metas[\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID] ?? null);
+                }
+                $value['items'][] = \array_merge(['id' => $cookie->ID, 'name' => $cookie->post_title, 'purpose' => $cookie->post_content], $metas);
+            }
+            $output[] = $value;
+        }
+        return Core::getInstance()->getCompLanguage()->translateArray($output, \array_merge(\DevOwl\RealCookieBanner\settings\Cookie::SYNC_META_COPY, Localization::COMMON_SKIP_KEYS, ['poweredBy']), null, ['legal-text']);
     }
     /**
      * Get the WP_Term of the essential group.

@@ -3,8 +3,8 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\client\TelemetryData as ClientTelemetryData;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\UtilsProvider;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request

@@ -19,12 +19,12 @@ trait General
     {
         // Silence is golden.
     }
-    // Documented in IOverrideGeneral
+    // Documented in AbstractGeneral
     public function getAdditionalPageHideIds()
     {
         return [];
     }
-    // Documented in IOverrideGeneral
+    // Documented in AbstractGeneral
     public function getSetCookiesViaManager()
     {
         return 'none';

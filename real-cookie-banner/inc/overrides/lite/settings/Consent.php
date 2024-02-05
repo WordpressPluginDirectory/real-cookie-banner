@@ -20,13 +20,13 @@ trait Consent
     {
         // Silence is golden.
     }
-    // Documented in IOverrideConsent
+    // Documented in AbstractConsent
     public function isDataProcessingInUnsafeCountries()
     {
         return \false;
     }
-    // Documented in IOverrideConsent
-    public function getDataProcessingInUnsafeCountriesSafeCountries()
+    // Documented in AbstractConsent
+    public function getDataProcessingInUnsafeCountriesSafeCountriesRaw()
     {
         return \explode(',', SettingsConsent::DEFAULT_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES);
     }

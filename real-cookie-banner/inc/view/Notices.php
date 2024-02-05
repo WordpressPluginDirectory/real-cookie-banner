@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\view;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
@@ -10,11 +11,14 @@ use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
+use DevOwl\RealCookieBanner\settings\General;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\checklist\Scanner;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\KeyValueMapOption;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 // @codeCoverageIgnoreStart
@@ -40,13 +44,20 @@ class Notices
     const NOTICE_SERVICES_WITH_EMPTY_PRIVACY_POLICY = 'services-with-empty-privacy-policy';
     const NOTICE_SERVICES_WITH_UPDATED_TEMPLATES = 'services-with-updated-templates';
     const NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES = 'services-with-successor-templates';
+    const NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS = 'services-with-gcm-adjustments';
     const TCF_TOO_MUCH_VENDORS = 30;
     const CHECKLIST_PREFIX = 'checklist-';
     const MODAL_HINT_PREFIX = 'modal-hint-';
     const SCANNER_IGNORE_ADMIN_BAR_PREFIX = 'scanner-ignore-admin-bar-';
     const DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-upgrade-notice';
     const DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-successor-notice';
+    const DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES = 'rcb-dismiss-gcm-no-consent-types';
+    const DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST = 'rcb-dismiss-gcm-no-legitimate-interest';
+    const DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE = 'rcb-dismiss-gcm-required';
     const DISMISSED_SUCCESSORS = 'dismissed-successors';
+    const DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES = 'dismissed-services-using-gcm-and-no-consent-types';
+    const DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST = 'dismissed-services-using-gcm-and-no-legitimate-interest';
+    const DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE = 'dismissed-services-requiring-gcm';
     private $states;
     /**
      * C'tor.
@@ -155,7 +166,7 @@ class Notices
                 $oldCountries = UtilsUtils::isJson($prev_value, []);
                 $specialTreatments = UtilsUtils::isJson(\get_post_meta($object_id, Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \true));
                 $addedCountries = \array_values(\array_diff($currentCountries, $oldCountries));
-                $addedUnsafeCountries = $this->calculateUnsafeCountries($addedCountries, $specialTreatments === \false ? [] : $specialTreatments);
+                $addedUnsafeCountries = Service::calculateUnsafeCountries($addedCountries, $specialTreatments === \false ? [] : $specialTreatments);
                 if (\count($addedUnsafeCountries) > 0) {
                     $this->getStates()->set(self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, \true);
                 }
@@ -179,40 +190,12 @@ class Notices
             \add_action('shutdown', function () use($meta_value, $object_id) {
                 $currentCountries = UtilsUtils::isJson($meta_value, []);
                 $specialTreatments = UtilsUtils::isJson(\get_post_meta($object_id, Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \true));
-                $unsafeCountries = $this->calculateUnsafeCountries($currentCountries, $specialTreatments === \false ? [] : $specialTreatments);
+                $unsafeCountries = Service::calculateUnsafeCountries($currentCountries, $specialTreatments === \false ? [] : $specialTreatments);
                 if (\count($unsafeCountries)) {
                     $this->getStates()->set(self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, \true);
                 }
             });
         }
-    }
-    /**
-     * Calculate unsafe countries from a given array of countries.
-     *
-     * See also `frontend-packages/react-cookie-banner/src/components/common/groups/cookiePropertyList.tsx` method
-     * `calculateUnsafeCountries` method.
-     *
-     * @param string[] $countries
-     * @param string[] $specialTreatments See `api-packages/api-real-cookie-banner/src/entity/template/service/service.ts` the enum `EServiceTemplateDataProcessingInCountriesSpecialTreatment`
-     * @return string[]
-     */
-    protected function calculateUnsafeCountries($countries, $specialTreatments = [])
-    {
-        if (\in_array('standard-contractual-clauses', $specialTreatments, \true)) {
-            return [];
-        }
-        $safeCountries = [];
-        foreach (Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS as $listCountries) {
-            $safeCountries = \array_merge($safeCountries, $listCountries);
-        }
-        $unsafeCountries = [];
-        // Check if one service country is not safe
-        foreach ($countries as $country) {
-            if (!\in_array($country, $safeCountries, \true) || $country === 'US' && !\in_array('provider-is-self-certified-trans-atlantic-data-privacy-framework', $specialTreatments, \true)) {
-                $unsafeCountries[] = $country;
-            }
-        }
-        return $unsafeCountries;
     }
     /**
      * Show a notice of services and content blockers with a template update.
@@ -248,6 +231,44 @@ class Notices
         }
         if (\current_user_can(Core::MANAGE_MIN_CAPABILITY) && \count($successors) > 0 && !Core::getInstance()->getConfigPage()->isVisible()) {
             echo \sprintf('<div class="notice notice-warning">%s</div>', $this->servicesWithSuccessorTemplatesHtml($successors));
+        }
+    }
+    /**
+     * Show a notice of services with Google Consent Mode adjustments.
+     */
+    public function admin_notice_services_with_google_consent_mode_adjustments()
+    {
+        $adjustments = $this->servicesWithGoogleConsentModeAdjustments();
+        $output = $this->servicesWithGoogleConsentModeAdjustmentsHtml($adjustments);
+        $show = \current_user_can(Core::MANAGE_MIN_CAPABILITY) && !Core::getInstance()->getConfigPage()->isVisible();
+        $resetCache = \false;
+        if (isset($_GET[self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES])) {
+            $this->getStates()->set(self::DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES, \true);
+            unset($output['noConsentTypes']);
+            $resetCache = \true;
+        }
+        if (isset($_GET[self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST])) {
+            $dismissed = $this->getStates()->get(self::DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST, []);
+            $dismissed = \array_values(\array_merge($dismissed, \array_column($adjustments['noLegitimateInterest'], 'id')));
+            $this->getStates()->set(self::DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST, \array_unique($dismissed));
+            unset($output['noLegitimateInterest']);
+            $resetCache = \true;
+        }
+        if (isset($_GET[self::DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE]) && \in_array($_GET[self::DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE], ['requiresGoogleConsentModeGa', 'requiresGoogleConsentModeAdsConversionTracking'], \true)) {
+            $dismissed = $this->getStates()->get(self::DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE, []);
+            $service = $_GET[self::DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE];
+            $dismissed = \array_values(\array_merge($dismissed, [$service]));
+            $this->getStates()->set(self::DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE, \array_unique($dismissed));
+            unset($output[$service]);
+            $resetCache = \true;
+        }
+        if ($resetCache) {
+            $this->getStates()->set(self::NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS, null);
+        }
+        foreach ($output as $key => $value) {
+            if ($show && !\in_array($key, ['noConsentTypes', 'noLegitimateInterest', 'gtmAndGcmWithGtmActive'], \true)) {
+                echo \sprintf('<div class="notice notice-warning">%s</div>', $value);
+            }
         }
     }
     /**
@@ -305,7 +326,7 @@ class Notices
                     default:
                         break;
                 }
-                $output .= \sprintf('<li>%s: <strong>%s</strong> replaces %s &bull; <a href="%s">%s</a></li>', $typeLabel, $row['name'], Utils::joinWithAndSeparator(\array_map(function ($replaces) use($postType, $configPageUrl) {
+                $output .= \sprintf('<li>%s: <strong>%s</strong> replaces %s &bull; <a href="%s">%s</a></li>', $typeLabel, $row['name'], UtilsUtils::joinWithAndSeparator(\array_map(function ($replaces) use($postType, $configPageUrl) {
                     $postId = $replaces[0];
                     $postTitle = $replaces[1];
                     switch ($postType) {
@@ -326,6 +347,50 @@ class Notices
         $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
         $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
         return $output;
+    }
+    /**
+     * Get multiple notice HTMLs of services with Google Consent Mode adjustments.
+     *
+     * @param array $adjustments
+     * @return string[]
+     */
+    public function servicesWithGoogleConsentModeAdjustmentsHtml($adjustments)
+    {
+        $configPage = Core::getInstance()->getConfigPage();
+        $configPageUrl = UtilsUtils::isRest() ? $configPage->getUrl() : $_SERVER['REQUEST_URI'];
+        $settingsPage = $configPageUrl . '#/settings/gcm';
+        $activateGcmUrl = \sprintf('<a href="%s">%s</a>', $settingsPage, \__('Activate Google Consent Mode', RCB_TD));
+        $learnMoreUrl = \sprintf('<a href="%s" target="_blank">%s</a>', \__('https://devowl.io/knowledge-base/real-cookie-banner-google-consent-mode-setup/', RCB_TD), \__('Learn more', RCB_TD));
+        $result = [];
+        if (\count($adjustments['missingConsentTypes']) > 0) {
+            $output = '<p>' . \__('You are obtaining consent for Google services and have activated Google Consent Mode at the same time. However, you have not yet specified in the named services which consent types should be requested in accordance with Google Consent Mode. Please add these in the following services:', RCB_TD) . '</p><ul>';
+            foreach ($adjustments['missingConsentTypes'] as $row) {
+                $editLink = $configPageUrl . '#/cookies/' . $row['groupId'] . '/edit/' . $row['id'] . '?initiallyScrollToField=googleConsentModeConsentTypes';
+                $output .= \sprintf('<li><strong>%s</strong> &bull; <a href="%s">%s</a></li>', \esc_html($row['title']), $editLink, \__('Edit service', RCB_TD));
+            }
+            $dismissLink = \add_query_arg(self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES, '1', $configPageUrl);
+            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
+            $result['noConsentTypes'] = $output;
+        }
+        if (\count($adjustments['noLegitimateInterest']) > 0) {
+            $output = '<p>' . \__('You have activated Google Consent Mode and agreed to recommendations for the use of Google services without consent. At the same time, you only allow the following services to be loaded after obtaining consent. Please check whether you want to use the following services on your website based on a legitimate interest (even before Google receiving consent into consent types accordance with Google Consent Mode and therefore e.g. not setting advertising cookies):', RCB_TD) . '</p><ul>';
+            foreach ($adjustments['noLegitimateInterest'] as $row) {
+                $editLink = $configPageUrl . '#/cookies/' . $row['groupId'] . '/edit/' . $row['id'] . '?initiallyScrollToField=legalBasis';
+                $output .= \sprintf('<li><strong>%s</strong> &bull; <a href="%s">%s</a></li>', \esc_html($row['title']), $editLink, \__('Edit service', RCB_TD));
+            }
+            $dismissLink = \add_query_arg(self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST, '1', $configPageUrl);
+            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
+            $result['noLegitimateInterest'] = $output;
+        }
+        if (isset($adjustments['requiresGoogleConsentModeGa'])) {
+            $output = \sprintf('<p>' . \__('You obtain consent for <strong>Google Analytics 4</strong> using Real Cookie Banner. In order to continue to create audiences in Google Analytics 4, you must have configured Google Consent Mode in your cookie banner as of March 2024.', RCB_TD) . '</p><p>%s</p>', \join(' &bull; ', [$activateGcmUrl, \sprintf('<a href="%s">%s</a>', \add_query_arg(self::DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE, 'requiresGoogleConsentModeGa', $configPageUrl), \__('I do not use "Audiences" in Google Analytics 4', RCB_TD)), $learnMoreUrl]));
+            $result['requiresGoogleConsentModeGa'] = $output;
+        }
+        if (isset($adjustments['requiresGoogleConsentModeAdsConversionTracking'])) {
+            $output = \sprintf('<p>' . \__('You obtain consent for <strong>Google Ads Conversion Tracking and Remarketing</strong> using Real Cookie Banner. From March 2024, conversions will only be processed by Google Ads if consent is obtained using Google Consent Mode. This data is also required in order to be able to continue to run remarketing campaigns in Google Ads.', RCB_TD) . '</p><p>%s</p>', \join(' &bull; ', [$activateGcmUrl, \sprintf('<a href="%s">%s</a>', \add_query_arg(self::DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE, 'requiresGoogleConsentModeAdsConversionTracking', $configPageUrl), \__('Ignore', RCB_TD)), $learnMoreUrl]));
+            $result['requiresGoogleConsentModeAdsConversionTracking'] = $output;
+        }
+        return $result;
     }
     /**
      * Read all services and content blockers which have an updated template version.
@@ -384,7 +449,7 @@ class Notices
         }
         $successors = $wpdb->get_results(
             // phpcs:disable WordPress.DB
-            $wpdb->prepare("SELECT\n                    p.post_type,\n                    successors.identifier AS successor,\n                    CONCAT(successors.headline, CASE WHEN successors.sub_headline <> '' THEN CONCAT(' (', successors.sub_headline, ')') ELSE '' END) AS successor_name,\n                    pm.post_id AS replaces_id,\n                    p.post_title AS replaces_title,\n                    successors.successor_of_identifiers as successor_json\n                FROM {$wpdb->postmeta} pm\n                INNER JOIN {$wpdb->postmeta} prid\n                    ON prid.post_id = pm.post_id\n                INNER JOIN {$wpdb->posts} p\n                    ON p.ID = pm.post_id\n                INNER JOIN {$table_name} successors\n                    ON successors.context = %s\n                    AND successors.type = (\n                        CASE\n                            WHEN p.post_type = %s THEN %s\n                            ELSE %s\n                        END\n                    )\n                    AND successors.is_outdated = 0\n                    AND successors.successor_of_identifiers IS NOT NULL\n                WHERE pm.meta_key = %s\n                    AND pm.meta_value > 0\n                    AND prid.meta_key = %s\n                    AND p.post_type IN (%s, %s)\n                    AND p.post_status NOT IN ('trash')\n                    AND successors.successor_of_identifiers LIKE CONCAT('%\"', prid.meta_value, '\"%')", TemplateConsumers::getContext(), Cookie::CPT_NAME, StorageHelper::TYPE_SERVICE, StorageHelper::TYPE_BLOCKER, Blocker::META_NAME_PRESET_VERSION, Blocker::META_NAME_PRESET_ID, Blocker::CPT_NAME, Cookie::CPT_NAME)
+            $wpdb->prepare("SELECT\n                    p.post_type,\n                    successors.identifier AS successor,\n                    CONCAT(successors.headline, CASE WHEN successors.sub_headline <> '' THEN CONCAT(' (', successors.sub_headline, ')') ELSE '' END) AS successor_name,\n                    pm.post_id AS replaces_id,\n                    p.post_title AS replaces_title,\n                    successors.successor_of_identifiers as successor_json\n                FROM {$wpdb->postmeta} pm\n                INNER JOIN {$wpdb->postmeta} prid\n                    ON prid.post_id = pm.post_id\n                INNER JOIN {$wpdb->posts} p\n                    ON p.ID = pm.post_id\n                INNER JOIN {$table_name} successors\n                    ON successors.context = %s\n                    AND successors.type = (\n                        CASE\n                            WHEN p.post_type = %s THEN %s\n                            ELSE %s\n                        END\n                    )\n                    AND successors.is_outdated = 0\n                    AND successors.successor_of_identifiers IS NOT NULL\n                WHERE pm.meta_key = %s\n                    AND pm.meta_value > 0\n                    AND prid.meta_key = %s\n                    AND p.post_type IN (%s, %s)\n                    AND p.post_status NOT IN ('trash')\n                    AND successors.successor_of_identifiers LIKE BINARY CONCAT('%\"', prid.meta_value, '\"%')", TemplateConsumers::getContext(), Cookie::CPT_NAME, StorageHelper::TYPE_SERVICE, StorageHelper::TYPE_BLOCKER, Blocker::META_NAME_PRESET_VERSION, Blocker::META_NAME_PRESET_ID, Blocker::CPT_NAME, Cookie::CPT_NAME)
         );
         // Map to a result grouped by post type (service, content blocker) and successor identifier
         $result = [];
@@ -396,6 +461,25 @@ class Notices
             }
         }
         $this->getStates()->set(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, $result);
+        return $result;
+    }
+    /**
+     * Read all services and calculate adjustments which needs to be done when Google Consent Mode is active
+     * or needs to be activated.
+     *
+     * @return array
+     */
+    public function servicesWithGoogleConsentModeAdjustments()
+    {
+        $dismissedNoConsentTypes = $this->getStates()->get(self::DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES, \false);
+        $dismissedNoLegitimateInterest = $this->getStates()->get(self::DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST, []);
+        $dismissedRequiringGcmActive = $this->getStates()->get(self::DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE, []);
+        $noticeState = $this->getStates()->get(self::NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS, null);
+        if (\is_array($noticeState)) {
+            return $noticeState;
+        }
+        $result = Core::getInstance()->getCookieConsentManagement()->getSettings()->getGoogleConsentMode()->calculateRecommandations($dismissedNoConsentTypes, $dismissedNoLegitimateInterest, $dismissedRequiringGcmActive);
+        $this->getStates()->set(self::NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS, $result);
         return $result;
     }
     /**
@@ -464,49 +548,17 @@ class Notices
         $noticeState = $this->getStates()->get(self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, null);
         // Should it be recalculated by metadata change or should it be initially checked?
         if (($noticeState === \true || $noticeState === null) && !Consent::getInstance()->isDataProcessingInUnsafeCountries()) {
-            $safeCountries = [];
-            foreach (Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS as $listCountries) {
-                $safeCountries = \array_merge($safeCountries, $listCountries);
-            }
-            $servicesHtml = [];
             $iso3166OneAlpha2 = Iso3166OneAlpha2::getSortedCodes();
-            $candidates = [];
-            foreach (CookieGroup::getInstance()->getOrdered() as $group) {
-                foreach (Cookie::getInstance()->getOrdered($group->term_id) as $cookie) {
-                    $candidates[] = ['dataProcessingInCountries' => $cookie->metas[Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES], 'dataProcessingInCountriesSpecialTreatments' => $cookie->metas[Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS], 'name' => $cookie->post_title];
-                }
-            }
-            // List also TCF vendors
-            if (TCF::getInstance()->isActive()) {
-                $tcfQuery = Core::getInstance()->getTcfVendorListNormalizer()->getQuery();
-                $vendorIds = [];
-                foreach (TcfVendorConfiguration::getInstance()->getOrdered() as $vendor) {
-                    $vendorId = $vendor->metas[TcfVendorConfiguration::META_NAME_VENDOR_ID];
-                    $candidates[] = ['dataProcessingInCountries' => $vendor->metas[TcfVendorConfiguration::META_NAME_DATA_PROCESSING_IN_COUNTRIES], 'dataProcessingInCountriesSpecialTreatments' => $vendor->metas[TcfVendorConfiguration::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS], 'name' => $vendorId, 'tcf' => \true];
-                    $vendorIds[] = $vendorId;
-                }
-                // Read TCF vendor names
-                if (\count($vendorIds) > 0) {
-                    $vendors = $tcfQuery->vendors(['in' => $vendorIds])['vendors'];
-                    foreach ($candidates as $key => $candidate) {
-                        if (isset($candidate['tcf'])) {
-                            $candidates[$key]['name'] = $vendors[$candidate['name']]['name'];
-                        }
-                    }
-                }
-            }
-            foreach ($candidates as $candidate) {
-                $unsafeCountries = $this->calculateUnsafeCountries($candidate['dataProcessingInCountries'], $candidate['dataProcessingInCountriesSpecialTreatments']);
-                if (\count($unsafeCountries) > 0) {
-                    $servicesHtml[] = \sprintf(
-                        // translators:s
-                        \__('<strong>%1$s</strong> is processing data to %2$s', RCB_TD),
-                        \esc_html($candidate['name']),
-                        \join(', ', \array_map(function ($country) use($iso3166OneAlpha2) {
-                            return $iso3166OneAlpha2[$country] ?? $country;
-                        }, $unsafeCountries))
-                    );
-                }
+            $servicesHtml = [];
+            foreach (Core::getInstance()->getCookieConsentManagement()->getSettings()->getConsent()->calculateServicesWithDataProcessingInUnsafeCountries() as $candidate) {
+                $servicesHtml[] = \sprintf(
+                    // translators:s
+                    \__('<strong>%1$s</strong> is processing data to %2$s', RCB_TD),
+                    \esc_html($candidate['name']),
+                    \join(', ', \array_map(function ($country) use($iso3166OneAlpha2) {
+                        return $iso3166OneAlpha2[$country] ?? $country;
+                    }, $candidate['unsafeCountries']))
+                );
             }
             if (\count($servicesHtml) > 0) {
                 return \sprintf('<p>%s</p><ul><li>%s</li></ul>', \__('Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission.', RCB_TD), \join('</li><li>', $servicesHtml));
@@ -619,6 +671,7 @@ class Notices
         $states->set(self::NOTICE_SERVICES_WITH_EMPTY_PRIVACY_POLICY, null);
         $states->set(self::NOTICE_SERVICES_WITH_UPDATED_TEMPLATES, null);
         $states->set(self::NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES, null);
+        $states->set(self::NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS, null);
     }
     /**
      * Getter.

@@ -263,7 +263,7 @@ class UserConsent
             // This is especially useful for `COUNT` statements
             $where[] = '(context = "" OR context <> "")';
         }
-        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'c.ipv4', 'c.ipv6', 'c.ipv4_hash', 'c.ipv6_hash', 'c.uuid', 'c.previous_decision', 'c.decision', 'c.created', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'c.referer as viewed_page', 'c.url_imprint', 'c.url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'c.tcf_string', 'c.recorder', 'c.ui_view'];
+        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'c.ipv4', 'c.ipv6', 'c.ipv4_hash', 'c.ipv6_hash', 'c.uuid', 'c.previous_decision', 'c.decision', 'c.created', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'c.referer as viewed_page', 'c.url_imprint', 'c.url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'c.previous_tcf_string', 'c.tcf_string', 'c.previous_gcm_consent', 'c.gcm_consent', 'c.recorder', 'c.ui_view'];
         if ($returnType === self::BY_CRITERIA_RESULT_TYPE_COUNT) {
             $sql = \sprintf('SELECT COUNT(1) AS cnt FROM %s AS cs WHERE %s', $table_name, \join(' AND ', $where));
         } else {
@@ -312,6 +312,12 @@ class UserConsent
                 $row->previous_decision = \json_decode($row->previous_decision, ARRAY_A);
                 $row->previous_decision = \count($row->previous_decision) > 0 ? $row->previous_decision : null;
                 $row->decision = \json_decode($row->decision, ARRAY_A);
+                if ($row->previous_gcm_consent !== null) {
+                    $row->previous_gcm_consent = \json_decode($row->previous_gcm_consent, ARRAY_A);
+                }
+                if ($row->gcm_consent !== null) {
+                    $row->gcm_consent = \json_decode($row->gcm_consent, ARRAY_A);
+                }
                 // Only populate decision_labels if we also decode the decision
                 $revisionHashes[] = $row->revision_hash;
                 if (\property_exists($row, 'revision')) {

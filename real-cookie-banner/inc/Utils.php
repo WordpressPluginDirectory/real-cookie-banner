@@ -41,19 +41,6 @@ class Utils
     const HOST_TYPE_CURRENT_WITH_ALL_SUBDOMAINS = 'current+subdomains';
     const PREINSTALLED_ENV_IONOS = 'ionos';
     /**
-     * Join an array of strings together with comma and the last one with `and`.
-     *
-     * @param string[] $array
-     * @param string $andSeparator
-     */
-    public static function joinWithAndSeparator($array, $andSeparator)
-    {
-        if (\count($array) > 1) {
-            \array_splice($array, \count($array) - 1, 0, ['{{andSeparator}}']);
-        }
-        return \str_replace(', {{andSeparator}}, ', $andSeparator, \join(', ', $array));
-    }
-    /**
      * Always create a clone of the post cause we need to force the `post_status` to get the valid permalink.
      * This also returns a valid permalink even for trashed or draft posts.
      *

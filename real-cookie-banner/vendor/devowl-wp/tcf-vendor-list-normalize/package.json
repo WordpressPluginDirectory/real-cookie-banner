@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/tcf-vendor-list-normalize",
-    "version": "0.3.10",
+    "version": "0.3.11",
     "private": true,
     "description": "Download and persist vendor-list.json to database",
     "homepage": "https://devowl.io",
@@ -96,7 +96,7 @@
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.12",
         "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/utils": "^1.17.9",
+        "@devowl-wp/utils": "^1.18.0",
         "@devowl-wp/webpack-config": "^0.2.27",
         "@types/jest": "~29.5.5",
         "jest": "~29.7.0",

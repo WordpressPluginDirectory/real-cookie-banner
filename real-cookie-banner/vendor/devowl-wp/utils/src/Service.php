@@ -9,7 +9,7 @@ use WP_REST_Response;
 // Avoid direct file request
 // @codeCoverageIgnoreEnd
 /**
- * Create a base REST Service needed for boilerplate development. Please do not remove it.
+ * Create a base REST Service needed for boilerplate development.
  * @internal
  */
 class Service
@@ -156,7 +156,7 @@ class Service
             $host = \substr($host, \strlen('WordPress.'));
         }
         // Internal hook
-        return \apply_filters('DevOwl/Utils/Service/ExternalContainerUrl', \sprintf('https://%s.%s', $serviceName, $host), $serviceName, $host);
+        return \apply_filters('DevOwl/Utils/Service/ExternalContainerUrl', \trailingslashit(\sprintf('https://%s.%s', $serviceName, $host)), $serviceName, $host);
     }
     /**
      * Get the offset for the obfuscate mechanism. This can be a string or a number. This allows

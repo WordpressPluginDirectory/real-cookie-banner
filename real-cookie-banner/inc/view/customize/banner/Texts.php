@@ -131,7 +131,7 @@ class Texts
     {
         return \sprintf('<div class="notice notice-info inline below-h2 notice-alt" style="margin: 10px 0px 0px;"><p>%s</p></div>', \sprintf(
             // translators:
-            \__('Consent Forwarding is currently disabled or no external hosts have been defined (a different domain than the current website domain). Please navigate to %1$sSettings > Multisite / Consent Forwarding%2$s to configure it.', RCB_TD),
+            \__('Consent Forwarding is currently disabled or no external hosts have been defined (a different domain than the current website domain). Please navigate to %1$sSettings > Consent Forwarding%2$s to configure it.', RCB_TD),
             '<a href="' . \esc_attr(Core::getInstance()->getConfigPage()->getUrl()) . '#/settings/multisite" target="_blank">',
             '</a>'
         ));

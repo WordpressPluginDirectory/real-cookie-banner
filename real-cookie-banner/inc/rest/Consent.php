@@ -223,7 +223,7 @@ class Consent
      * @param WP_REST_Request $request
      *
      * @api {post} /real-cookie-banner/v1/consent Create or update an existing consent
-     * @apiParam {array} groups
+     * @apiParam {array} consent
      * @apiParam {string} buttonClicked
      * @apiParam {boolean} [markAsDoNotTrack]
      * @apiParam {number} [viewPortWidth=0]
@@ -231,6 +231,7 @@ class Consent
      * @apiParam {number} [blocker=0]
      * @apiParam {string} [blockerThumbnail]
      * @apiParam {string} [tcfString]
+     * @apiParam {array} [gcmConsent]
      * @apiParam {string} [recorderJsonString]
      * @apiParam {string} [uiView]
      * @apiName Create
@@ -252,7 +253,7 @@ class Consent
         if (IpHandler::getInstance()->isFlooding()) {
             return new WP_Error('rest_rcb_forbidden');
         }
-        $persist = MyConsent::getInstance()->persist($request->get_param('groups'), $markAsDoNotTrack, $buttonClicked, $viewPortWidth, $viewPortHeight, $referer, $blocker, $blockerThumbnail, 0, null, \false, $tcfString, null, $recorderJsonString, $uiView);
+        $persist = MyConsent::getInstance()->persist($request->get_param('consent'), $markAsDoNotTrack, $buttonClicked, $viewPortWidth, $viewPortHeight, $referer, $blocker, $blockerThumbnail, 0, null, \false, $tcfString, $request->get_param('gcmConsent'), null, $recorderJsonString, $uiView);
         if (\is_wp_error($persist)) {
             return $persist;
         }

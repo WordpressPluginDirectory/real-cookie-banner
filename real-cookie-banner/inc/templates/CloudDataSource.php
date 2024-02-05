@@ -8,6 +8,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\datasources\Abort
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\datasources\AbstractDataSource;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\Utils;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -85,8 +86,7 @@ class CloudDataSource extends AbstractDataSource
         $apiLanguage = $this->getApiLanguage();
         $allowAsync = $this->allowAsyncCacheCalculation();
         $args = ['language' => $apiLanguage, 'cursor' => $cursor, 'clientUuid' => $license->getUuid(), 'licenseKey' => $license->getActivation()->getCode(), 'limit' => self::PER_PAGE, 'minRequiredRcbVersion' => Utils::semverToInt(RCB_VERSION), 'allowAsyncCacheCalculation' => $allowAsync ? 'true' : 'false'];
-        $isDevEnv = \defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV');
-        $apiUrl = $isDevEnv ? 'http://real_cookie_banner_backend:8000/' : 'https://rcb.devowl.io/';
+        $apiUrl = Service::getExternalContainerUrl('rcb');
         $apiUrl .= \sprintf('1.0.0/template/%s', $this->getStorageHelper()->getType() === \DevOwl\RealCookieBanner\templates\StorageHelper::TYPE_BLOCKER ? 'content-blockers' : 'services');
         $apiUrl = \add_query_arg($args, $apiUrl);
         $response = \wp_remote_get($apiUrl);

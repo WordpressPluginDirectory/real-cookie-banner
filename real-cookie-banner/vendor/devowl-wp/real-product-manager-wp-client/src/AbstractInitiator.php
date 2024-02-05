@@ -5,6 +5,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license\TelemetryData;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Base;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Assets;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -189,7 +190,7 @@ abstract class AbstractInitiator
     // Self-explaining
     public function getHost()
     {
-        return \defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV') ? 'http://real_product_manager_backend:8000/' : 'https://license.devowl.io/';
+        return Service::getExternalContainerUrl('license');
     }
     // Self-explaining
     public function getAccountSiteUrl()

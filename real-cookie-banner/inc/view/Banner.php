@@ -6,20 +6,13 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\CacheInvalidator;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelper;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Utils as HeadlessContentBlockerUtils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\AbstractOutputBufferPlugin;
-use DevOwl\RealCookieBanner\Assets;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\Localization;
 use DevOwl\RealCookieBanner\MyConsent;
 use DevOwl\RealCookieBanner\settings\BannerLink;
-use DevOwl\RealCookieBanner\settings\Blocker as SettingsBlocker;
 use DevOwl\RealCookieBanner\settings\General as SettingsGeneral;
-use DevOwl\RealCookieBanner\settings\Cookie;
-use DevOwl\RealCookieBanner\settings\CookieGroup;
 use DevOwl\RealCookieBanner\settings\General;
-use DevOwl\RealCookieBanner\templates\ServiceTemplateTechnicalHandlingIntegration;
 use DevOwl\RealCookieBanner\Utils as RealCookieBannerUtils;
 use DevOwl\RealCookieBanner\view\customize\banner\BasicLayout;
 use DevOwl\RealCookieBanner\view\customize\banner\CustomCss;
@@ -47,10 +40,8 @@ class Banner
      *
      * For the chronically changes have a look at the `@devowl-wp/react-cookie-banner` package.
      */
-    const DESIGN_VERSION = 7;
+    const DESIGN_VERSION = 8;
     const ACTION_CLEAR_CURRENT_COOKIE = 'rcb-clear-current-cookie';
-    const HTML_ATTRIBUTE_SKIP_IF_ACTIVE = 'skip-if-active';
-    const HTML_ATTRIBUTE_SKIP_WRITE = 'skip-write';
     /**
      * Example:
      *
@@ -155,94 +146,16 @@ class Banner
      */
     public function wp_head()
     {
-        $groups = CookieGroup::getInstance()->getOrdered();
-        foreach ($groups as $group) {
-            // Populate cookies
-            $cookies = Cookie::getInstance()->getOrdered($group->term_id);
-            foreach ($cookies as $cookie) {
-                $script = $cookie->metas[Cookie::META_NAME_CODE_ON_PAGE_LOAD];
-                if (!empty($script)) {
-                    // Output and never do block them through Content Blocker
-                    echo HeadlessContentBlockerUtils::applyDynamicsToHtml(AttributesHelper::skipHtmlTagsInContentBlocker($script, \sprintf('%s %s', self::HTML_ATTRIBUTE_SKIP_LAZY_LOADING_PLUGINS, CacheInvalidator::getInstance()->getExcludeHtmlAttributesString())), $cookie->metas[Cookie::META_NAME_CODE_DYNAMICS] ?? []);
-                }
-            }
-        }
+        $cacheExcludeAttributes = CacheInvalidator::getInstance()->getExcludeHtmlAttributesString();
+        $additionalTags = \sprintf('%s %s', self::HTML_ATTRIBUTE_SKIP_LAZY_LOADING_PLUGINS, $cacheExcludeAttributes);
+        $frontend = Core::getInstance()->getCookieConsentManagement()->getFrontend();
+        $output = $frontend->generateCodeOnPageLoad(function ($html, $service) use($additionalTags) {
+            return AttributesHelper::skipHtmlTagsInContentBlocker($html, $additionalTags);
+        });
+        echo \join('', $output);
         // Web vitals: Avoid large rerenderings when the content blocker gets overlapped the original item
         // E.g. SVGs are loaded within the blocked element.
         echo \sprintf('<style>[%s]:not(.rcb-content-blocker):not([%s]):not([%s^="children:"]):not([%s]){opacity:0!important;}</style>', Constants::HTML_ATTRIBUTE_BLOCKER_ID, Constants::HTML_ATTRIBUTE_UNBLOCKED_TRANSACTION_COMPLETE, Constants::HTML_ATTRIBUTE_VISUAL_PARENT, Constants::HTML_ATTRIBUTE_CONFIRM);
-    }
-    /**
-     * Localize available cookie groups for frontend.
-     */
-    public function localizeGroups()
-    {
-        $output = [];
-        $groups = CookieGroup::getInstance()->getOrdered();
-        foreach ($groups as $group) {
-            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'items' => []];
-            // Populate cookies
-            $cookies = Cookie::getInstance()->getOrdered($group->term_id);
-            foreach ($cookies as $cookie) {
-                $metas = $cookie->metas;
-                // Apply plugin integrations
-                $presetId = $metas[SettingsBlocker::META_NAME_PRESET_ID] ?? null;
-                if ($presetId !== null) {
-                    $integration = ServiceTemplateTechnicalHandlingIntegration::applyFilters($presetId);
-                    if ($integration->isIntegrated()) {
-                        $integrationCode = $integration->getCodeOptIn();
-                        if ($integrationCode !== null) {
-                            $metas[Cookie::META_NAME_CODE_OPT_IN] = $integrationCode;
-                        }
-                        $integrationCode = $integration->getCodeOptOut();
-                        if ($integrationCode !== null) {
-                            $metas[Cookie::META_NAME_CODE_OPT_OUT] = $integrationCode;
-                        }
-                    }
-                }
-                foreach ([Cookie::META_NAME_CODE_OPT_IN, Cookie::META_NAME_CODE_OPT_OUT, Cookie::META_NAME_CODE_ON_PAGE_LOAD] as $codeKey) {
-                    $metas[$codeKey] = $this->modifySkipIfActive($metas[$codeKey], $cookie->metas[SettingsBlocker::META_NAME_PRESET_ID] ?? null);
-                }
-                $value['items'][] = \array_merge(['id' => $cookie->ID, 'name' => $cookie->post_title, 'purpose' => $cookie->post_content], $metas);
-            }
-            $output[] = $value;
-        }
-        return Core::getInstance()->getCompLanguage()->translateArray($output, \array_merge(Cookie::SYNC_META_COPY, Localization::COMMON_SKIP_KEYS, ['poweredBy']), null, ['legal-text']);
-    }
-    /**
-     * Make `skip-if-active` work with comma-separated list of active plugins. That means, if
-     * a given plugin is active it automatically skips the HTML tag.
-     *
-     * @param string $html
-     * @param string $identifier The template identifier (can be `null`)
-     * @see https://regex101.com/r/gIPJRq/2
-     */
-    public function modifySkipIfActive($html, $identifier = null)
-    {
-        return \preg_replace_callback(
-            \sprintf('/\\s+(%s=")([^"]+)(")/m', self::HTML_ATTRIBUTE_SKIP_IF_ACTIVE),
-            /**
-             * Available matches:
-             *      $match[0] => Full string
-             *      $match[1] => Tagname
-             *      $match[2] => Comma separated string
-             *      $match[3] => Quote
-             */
-            function ($m) use($identifier) {
-                $plugins = \explode(',', $m[2]);
-                $result = \array_map(function ($plugin) use($identifier) {
-                    $isActive = RealCookieBannerUtils::isPluginActive($plugin);
-                    if ($isActive && !empty($identifier)) {
-                        // Documented in `TemplateConsumers`
-                        // We need to also make sure here to deactivate the script if e.g. RankMath SEO has
-                        // deactivated the Google Analytics functionality.
-                        $isActive = \apply_filters('RCB/Templates/FalsePositivePlugin', $isActive, $plugin, $identifier, 'service');
-                    }
-                    return $isActive;
-                }, $plugins);
-                return \in_array(\true, $result, \true) ? ' ' . self::HTML_ATTRIBUTE_SKIP_WRITE : '';
-            },
-            $html
-        );
     }
     /**
      * Print out the overlay at `wp_body_open`. See also `wp_footer` for backwards-compatibilty.

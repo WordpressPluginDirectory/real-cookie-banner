@@ -17,22 +17,4 @@ interface IOverrideMultisite
      * Register PRO-only options.
      */
     public function overrideRegister();
-    /**
-     * Check if consent is aggregated.
-     *
-     * @return boolean
-     */
-    public function isConsentForwarding();
-    /**
-     * Get forward to URLs.
-     *
-     * @return string[]|false
-     */
-    public function getForwardTo();
-    /**
-     * Get consent aggregation cross domains.
-     *
-     * @return string[]|false
-     */
-    public function getCrossDomains();
 }

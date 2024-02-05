@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service as ServicesService;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
@@ -36,6 +37,7 @@ class Cookie
     const META_NAME_CODE_DYNAMICS = 'codeDynamics';
     const META_NAME_PROVIDER_PRIVACY_POLICY_URL = 'providerPrivacyPolicyUrl';
     const META_NAME_PROVIDER_LEGAL_NOTICE_URL = 'providerLegalNoticeUrl';
+    const META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES = 'googleConsentModeConsentTypes';
     const META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME = 'tagManagerOptInEventName';
     const META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME = 'tagManagerOptOutEventName';
     const META_NAME_CODE_OPT_IN = 'codeOptIn';
@@ -44,7 +46,7 @@ class Cookie
     const META_NAME_EXECUTE_CODE_OPT_OUT_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN = 'executeCodeOptOutWhenNoTagManagerConsentIsGiven';
     const META_NAME_DELETE_TECHNICAL_DEFINITIONS_AFTER_OPT_OUT = 'deleteTechnicalDefinitionsAfterOptOut';
     const META_NAME_CODE_ON_PAGE_LOAD = 'codeOnPageLoad';
-    const SYNC_META_COPY = [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_UNIQUE_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_PROVIDER_CURRENT_WEBSITE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_EMBEDDING_ONLY_EXTERNAL_RESOURCES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_LEGAL_BASIS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TECHNICAL_DEFINITIONS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_DYNAMICS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_IN_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_OUT_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DELETE_TECHNICAL_DEFINITIONS_AFTER_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_VERSION];
+    const SYNC_META_COPY = [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_UNIQUE_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_PROVIDER_CURRENT_WEBSITE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_EMBEDDING_ONLY_EXTERNAL_RESOURCES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_LEGAL_BASIS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TECHNICAL_DEFINITIONS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_DYNAMICS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_IN_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_OUT_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DELETE_TECHNICAL_DEFINITIONS_AFTER_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_VERSION];
     const SYNC_META_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_PHONE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_EMAIL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_LINK, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL];
     const TECHNICAL_HANDLING_META_COLLECTION = [
         \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME,
@@ -57,10 +59,7 @@ class Cookie
         \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD,
     ];
     const SYNC_OPTIONS = ['data' => ['menu_order'], 'taxonomies' => [\DevOwl\RealCookieBanner\settings\CookieGroup::TAXONOMY_NAME], 'meta' => ['copy' => \DevOwl\RealCookieBanner\settings\Cookie::SYNC_META_COPY, 'copy-once' => \DevOwl\RealCookieBanner\settings\Cookie::SYNC_META_COPY_ONCE]];
-    const META_KEYS = [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_PROVIDER_CURRENT_WEBSITE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_PHONE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_EMAIL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_LINK, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_UNIQUE_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_EMBEDDING_ONLY_EXTERNAL_RESOURCES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_LEGAL_BASIS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TECHNICAL_DEFINITIONS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_DYNAMICS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_IN_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_OUT_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DELETE_TECHNICAL_DEFINITIONS_AFTER_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID];
-    const LEGAL_BASIS_CONSENT = 'consent';
-    const LEGAL_BASIS_LEGITIMATE_INTEREST = 'legitimate-interest';
-    const LEGAL_BASIS_LEGAL_REQUIREMENT = 'legal-requirement';
+    const META_KEYS = [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_PROVIDER_CURRENT_WEBSITE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_PHONE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_EMAIL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_LINK, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_UNIQUE_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_IS_EMBEDDING_ONLY_EXTERNAL_RESOURCES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_LEGAL_BASIS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TECHNICAL_DEFINITIONS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_DYNAMICS, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_IN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_IN_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_EXECUTE_CODE_OPT_OUT_WHEN_NO_TAG_MANAGER_CONSENT_IS_GIVEN, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_DELETE_TECHNICAL_DEFINITIONS_AFTER_OPT_OUT, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_CODE_ON_PAGE_LOAD, \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID];
     /**
      * This capabilities are added to the custom post type. This allows to use one main capability
      * `manage_real_cookie_banner` instead of granular capabilities like `edit_rcb-cookie`, ...
@@ -98,7 +97,7 @@ class Cookie
         \register_meta('post', self::META_NAME_PROVIDER_CONTACT_EMAIL, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_PROVIDER_CONTACT_LINK, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_UNIQUE_NAME, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
-        \register_meta('post', self::META_NAME_LEGAL_BASIS, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'default' => self::LEGAL_BASIS_CONSENT, 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => [self::LEGAL_BASIS_CONSENT, self::LEGAL_BASIS_LEGITIMATE_INTEREST, self::LEGAL_BASIS_LEGAL_REQUIREMENT]]]]);
+        \register_meta('post', self::META_NAME_LEGAL_BASIS, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'default' => ServicesService::LEGAL_BASIS_CONSENT, 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => ServicesService::LEGAL_BASIS]]]);
         \register_meta('post', self::META_NAME_IS_EMBEDDING_ONLY_EXTERNAL_RESOURCES, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
         // This meta is stored as JSON (this shouldn't be done usually - 3rd normal form - but it's ok here)
         \register_meta('post', self::META_NAME_DATA_PROCESSING_IN_COUNTRIES, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
@@ -118,6 +117,8 @@ class Cookie
         \register_meta('post', self::META_NAME_CODE_ON_PAGE_LOAD, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_TAG_MANAGER_OPT_IN_EVENT_NAME, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_TAG_MANAGER_OPT_OUT_EVENT_NAME, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
+        // This meta is stored as JSON (this shouldn't be done usually - 3rd normal form - but it's ok here)
+        \register_meta('post', self::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
     }
     /**
      * Get all available cookies ordered by group. You also get a `metas` property
@@ -170,6 +171,7 @@ class Cookie
                     case self::META_NAME_CODE_DYNAMICS:
                     case self::META_NAME_DATA_PROCESSING_IN_COUNTRIES:
                     case self::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS:
+                    case self::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES:
                         $metaValue = Utils::isJson($metaValue, []);
                         break;
                     case self::META_NAME_IS_PROVIDER_CURRENT_WEBSITE:

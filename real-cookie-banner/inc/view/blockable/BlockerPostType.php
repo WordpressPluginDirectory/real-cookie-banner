@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\view\blockable;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker as ServicesBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview\ImagePreviewBlockable;
@@ -47,7 +48,7 @@ class BlockerPostType extends AbstractBlockable implements ImagePreviewBlockable
         $metas = $this->getPost()->metas;
         $criteria = $metas[Blocker::META_NAME_CRITERIA];
         switch ($criteria) {
-            case Blocker::CRITERIA_TCF_VENDORS:
+            case ServicesBlocker::CRITERIA_TCF_VENDORS:
                 // Map Custom Post Type Post ID to vendor ID
                 $tcfVendorConfigurations = TcfVendorConfiguration::getInstance()->getOrdered();
                 $vendorIds = \array_map(function ($postId) use($tcfVendorConfigurations) {

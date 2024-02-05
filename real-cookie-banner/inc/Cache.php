@@ -50,6 +50,7 @@ class Cache
     public function settings_updated($response)
     {
         $response->data['invalidate_cache'] = $this->invalidate();
+        \DevOwl\RealCookieBanner\Core::getInstance()->getNotices()->recalculatePostDependingNotices();
         return $response;
     }
     /**

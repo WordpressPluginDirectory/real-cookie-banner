@@ -2,6 +2,8 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\ServiceGroup;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractGeneral;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
@@ -17,7 +19,7 @@ use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
  * General settings.
  * @internal
  */
-class General implements IOverrideGeneral
+class General extends AbstractGeneral implements IOverrideGeneral
 {
     use LiteGeneral;
     use UtilsProvider;
@@ -40,9 +42,6 @@ class General implements IOverrideGeneral
     const DEFAULT_OPERATOR_CONTACT_FORM_ID = 0;
     const DEFAULT_HIDE_PAGE_IDS = '';
     const DEFAULT_SET_COOKIES_VIA_MANAGER = 'none';
-    const TERRITORIAL_LEGAL_BASIS_GDPR = 'gdpr-eprivacy';
-    const TERRITORIAL_LEGAL_BASIS_DSG_SWITZERLAND = 'dsg-switzerland';
-    const LEGAL_BASIS_ALLOWED = [self::TERRITORIAL_LEGAL_BASIS_GDPR, self::TERRITORIAL_LEGAL_BASIS_DSG_SWITZERLAND];
     /**
      * Singleton instance.
      *
@@ -97,29 +96,17 @@ class General implements IOverrideGeneral
         $contactFormUrl = Utils::getPermalink($contactFormId);
         return ['address' => empty($address) ? \html_entity_decode(\get_bloginfo('name')) : $address, 'country' => $this->getOperatorCountry(), 'contactEmail' => $this->getOperatorContactEmail(), 'contactPhone' => $this->getOperatorContactPhone(), 'contactFormUrl' => $contactFormUrl];
     }
-    /**
-     * Is the banner active?
-     *
-     * @return boolean
-     */
+    // Documented in AbstractGeneral
     public function isBannerActive()
     {
         return \get_option(self::SETTING_BANNER_ACTIVE);
     }
-    /**
-     * Is the content blocker active?
-     *
-     * @return boolean
-     */
+    // Documented in AbstractGeneral
     public function isBlockerActive()
     {
         return \get_option(self::SETTING_BLOCKER_ACTIVE);
     }
-    /**
-     * Get configured legal basis.
-     *
-     * @return string[]
-     */
+    // Documented in AbstractGeneral
     public function getTerritorialLegalBasis()
     {
         $option = \explode(',', \get_option(self::SETTING_TERRITORIAL_LEGAL_BASIS, ''));
@@ -127,42 +114,34 @@ class General implements IOverrideGeneral
         $option = \array_values($option);
         return \count($option) > 0 ? $option : [self::TERRITORIAL_LEGAL_BASIS_GDPR];
     }
-    /**
-     * Get configured operator country.
-     *
-     * @return string
-     */
+    // Documented in AbstractGeneral
     public function getOperatorCountry()
     {
         return \get_option(self::SETTING_OPERATOR_COUNTRY, '');
     }
-    /**
-     * Get configured operator contact address.
-     */
+    // Documented in AbstractGeneral
     public function getOperatorContactAddress()
     {
         return \get_option(self::SETTING_OPERATOR_CONTACT_ADDRESS, self::DEFAULT_OPERATOR_CONTACT_ADDRESS);
     }
-    /**
-     * Get configured operator contact phone.
-     */
+    // Documented in AbstractGeneral
     public function getOperatorContactPhone()
     {
         return \get_option(self::SETTING_OPERATOR_CONTACT_PHONE, self::DEFAULT_OPERATOR_CONTACT_PHONE);
     }
-    /**
-     * Get configured operator contact email.
-     */
+    // Documented in AbstractGeneral
     public function getOperatorContactEmail()
     {
         return \get_option(self::SETTING_OPERATOR_CONTACT_EMAIL, self::DEFAULT_OPERATOR_CONTACT_EMAIL);
     }
-    /**
-     * Get the operator contact form page URL.
-     *
-     * @param mixed $default
-     * @return string
-     */
+    // Documented in AbstractGeneral
+    public function getServiceGroups()
+    {
+        return \array_map(function ($data) {
+            return ServiceGroup::fromJson($data);
+        }, \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->toJson(\true));
+    }
+    // Documented in AbstractGeneral
     public function getOperatorContactFormUrl($default = \false)
     {
         $compLanguage = Core::getInstance()->getCompLanguage();

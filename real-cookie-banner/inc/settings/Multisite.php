@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractMultisite;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\lite\settings\Multisite as LiteMultisite;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideMultisite;
@@ -10,10 +11,10 @@ use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideMultisite;
 // Avoid direct file request
 // @codeCoverageIgnoreEnd
 /**
- * Multisite / Consent Forwarding settings.
+ * Consent Forwarding settings.
  * @internal
  */
-class Multisite implements IOverrideMultisite
+class Multisite extends AbstractMultisite implements IOverrideMultisite
 {
     use LiteMultisite;
     use UtilsProvider;

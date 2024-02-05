@@ -3,6 +3,177 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.4.1 (2024-02-05)
+
+
+### Bug Fixes
+
+* accordions and list colors were not migrated successfully when TCF is active (CU-8693qpd7a)
+
+
+
+
+
+
+
+# 4.4.0 (2024-02-05)
+
+
+### Bug Fixes
+
+* compatibility with UnitedThemes (CU-8693qm7f8)
+* illegal mix of collations (CU-8693nwm9m)
+
+
+### Features
+
+* introduce Google Consent Mode (CU-apv5uu)
+
+
+### Maintenance
+
+* use non-docker URL with HTTPS in development environment to not bypass Traefik (CU-86939q6ce)
+
+
+### Performance
+
+* save one SQL SELECT query in WordPress admin dashboard (CU-86939q6ce)
+
+
+### Refactoring
+
+* introduce @devowl-wp/cookie-consent-management package (CU-apv5uu)
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)
+* move Google Consent Mode calculations to @devowl-wp/cookie-consent-management (CU-apv5uu)
+* move some util methods to @devowl-wp/utils (CU-86939q6ce)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.0</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Features
+
+* introduce Google Consent Mode (CU-apv5uu)
+
+
+##### Refactoring
+
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.4</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibility with embed HTML tags (CU-8693p91em)
+
+
+##### Refactoring
+
+* move Google Consent Mode calculations to @devowl-wp/cookie-consent-management (CU-apv5uu)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.10.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Features
+
+* introduce Google Consent Mode (CU-apv5uu)
+
+
+##### Refactoring
+
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.0</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Features
+
+* introduce Google Consent Mode (CU-apv5uu)
+
+
+##### Refactoring
+
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.12</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Maintenance
+
+* use non-docker URL with HTTPS in development environment to not bypass Traefik (CU-86939q6ce)
+
+
+##### Performance
+
+* save one SQL SELECT query in WordPress admin dashboard (CU-86939q6ce)
+
+
+##### Refactoring
+
+* move some util methods to @devowl-wp/utils (CU-86939q6ce)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.5.0</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Features
+
+* introduce Google Consent Mode (CU-apv5uu)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.18.0</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Features
+
+* introduce a new notice when a rate limited request was done to devowl.io backend services (CU-86939q6ce)
+
+
+##### Maintenance
+
+* use non-docker URL with HTTPS in development environment to not bypass Traefik (CU-86939q6ce)
+
+
+##### Performance
+
+* save one SQL SELECT query in WordPress admin dashboard (CU-86939q6ce)
+
+
+##### Refactoring
+
+* move some util methods to @devowl-wp/utils (CU-86939q6ce)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 0.2.21</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Refactoring
+
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.4.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Features
+
+* introduce Google Consent Mode (CU-apv5uu)
+
+
+##### Refactoring
+
+* introduce @devowl-wp/react-utils package (CU-8693nj8v6)</details>
+
+
+
+
+
 ## 4.3.7 (2024-01-25)
 
 

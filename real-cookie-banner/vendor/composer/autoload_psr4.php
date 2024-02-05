@@ -21,6 +21,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\' => array($vendorDir . '/devowl-wp/fast-html-tag/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\DeliverAnonymousAsset\\' => array($vendorDir . '/devowl-wp/deliver-anonymous-asset/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Customize\\' => array($vendorDir . '/devowl-wp/customize/src'),
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\' => array($vendorDir . '/devowl-wp/cookie-consent-management/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\' => array($vendorDir . '/devowl-wp/cache-invalidate/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\ColinODell\\Json5\\' => array($vendorDir . '/colinodell/json5/src'),
     'DevOwl\\RealCookieBanner\\' => array($baseDir . '/inc', $baseDir . '/src/inc'),

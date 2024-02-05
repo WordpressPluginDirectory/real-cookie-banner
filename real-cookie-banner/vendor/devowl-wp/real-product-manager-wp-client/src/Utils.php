@@ -215,27 +215,4 @@ class Utils
         }
         return $hostnames;
     }
-    /**
-     * Get the list of active plugins in a map: File => Name. This is needed for the config and the
-     * notice for `skip-if-active` attribute in cookie opt-in codes.
-     *
-     * @param boolean $includeSlugs
-     */
-    public static function getActivePluginsMap($includeSlugs = \true)
-    {
-        $result = [];
-        $plugins = \array_merge(\get_option('active_plugins'), \is_multisite() ? \array_keys(\get_site_option('active_sitewide_plugins')) : []);
-        foreach ($plugins as $pluginFile) {
-            $pluginFilePath = \constant('WP_PLUGIN_DIR') . '/' . $pluginFile;
-            if (\file_exists($pluginFilePath)) {
-                $name = \wp_specialchars_decode(\get_plugin_data($pluginFilePath)['Name']);
-                $result[$pluginFile] = $name;
-                if ($includeSlugs) {
-                    $slug = \explode('/', $pluginFile)[0];
-                    $result[$slug] = $name;
-                }
-            }
-        }
-        return $result;
-    }
 }

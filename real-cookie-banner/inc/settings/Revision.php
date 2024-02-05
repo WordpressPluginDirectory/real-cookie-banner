@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\UserConsent;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\Notices;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license\License;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 use ReflectionClass;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -27,7 +28,7 @@ class Revision
     const TABLE_NAME_INDEPENDENT = 'revision_independent';
     const OPTION_PREFIX = 'SETTING_';
     const OPTION_NAME_CURRENT_HASH_PREFIX = RCB_OPT_PREFIX . '-revision-current-hash';
-    const EXCLUDE_OPTIONS_FROM_REVISION = [\DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_FIRST_ACCEPTED_TIME, \DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_ACCEPTED_TIME, \DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_GVL_DOWNLOAD_TIME, \DevOwl\RealCookieBanner\settings\CountryBypass::SETTING_COUNTRY_BYPASS_DB_DOWNLOAD_TIME];
+    const EXCLUDE_OPTIONS_FROM_REVISION = [\DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_FIRST_ACCEPTED_TIME, \DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_ACCEPTED_TIME, \DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_GVL_DOWNLOAD_TIME, \DevOwl\RealCookieBanner\settings\CountryBypass::SETTING_COUNTRY_BYPASS_DB_DOWNLOAD_TIME, \DevOwl\RealCookieBanner\settings\GoogleConsentMode::SETTING_GCM_SHOW_RECOMMONDATIONS_WITHOUT_CONSENT];
     const INDEPENDENT_OPTIONS = [\DevOwl\RealCookieBanner\settings\General::SETTING_BANNER_ACTIVE, \DevOwl\RealCookieBanner\settings\General::SETTING_BLOCKER_ACTIVE, \DevOwl\RealCookieBanner\settings\General::SETTING_HIDE_PAGE_IDS, \DevOwl\RealCookieBanner\settings\Consent::SETTING_RESPECT_DO_NOT_TRACK, \DevOwl\RealCookieBanner\settings\Consent::SETTING_SAVE_IP, \DevOwl\RealCookieBanner\settings\Consent::SETTING_CONSENT_DURATION];
     /**
      * Singleton instance.
@@ -73,7 +74,7 @@ class Revision
             \update_option(\DevOwl\RealCookieBanner\settings\Consent::SETTING_COOKIE_VERSION, \DevOwl\RealCookieBanner\settings\Consent::DEFAULT_COOKIE_VERSION);
         }
         // Create hashable revision
-        $revision = \array_merge(['options' => $this->fromOptions(self::INDEPENDENT_OPTIONS, \false), 'groups' => Core::getInstance()->getBanner()->localizeGroups(), 'websiteOperator' => \DevOwl\RealCookieBanner\settings\General::getInstance()->localizeWebsiteOperator()], $this->getContextVariables());
+        $revision = \array_merge(['options' => $this->fromOptions(self::INDEPENDENT_OPTIONS, \false), 'groups' => \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->toJson(), 'websiteOperator' => \DevOwl\RealCookieBanner\settings\General::getInstance()->localizeWebsiteOperator()], $this->getContextVariables());
         /**
          * Modify the revision array so specific data changes can cause a "Request new consent".
          *
@@ -179,7 +180,7 @@ class Revision
      *
      * - `public_to_users`: The revision hash currently published to users
      * - `calculated`: The current revision hash from the latest settings
-     * - `has_manager`: Has a cookie with a valid Google/Matomo Tag Manager script (so you can show a notice in your config UI)
+     * - `created_tag_managers`: Has a cookie with a valid Google/Matomo Tag Manager script (so you can show a notice in your config UI)
      * - `public_count`: A total count of public cookies
      *
      * @param boolean $recreate If true, a new revision gets created so new consents need to be made. Always recreates when no consents are given yet.
@@ -191,16 +192,15 @@ class Revision
         $publicToUsers = $this->getCurrentHash();
         $consentsDeletedAt = \mysql2date('c', \get_transient(\DevOwl\RealCookieBanner\settings\Consent::TRANSIENT_SCHEDULE_CONSENTS_DELETION), \false);
         // Search for all available tag managers
-        $setCookiesViaManager = \DevOwl\RealCookieBanner\settings\General::getInstance()->getSetCookiesViaManager();
-        if ($setCookiesViaManager === 'none') {
-            $tagManagerResults['has_manager'] = \false;
-        } else {
-            $ids = \get_posts(Core::getInstance()->queryArguments(['post_type' => \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'fields' => 'ids', 'meta_query' => [['key' => \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, 'value' => $setCookiesViaManager === 'googleTagManager' ? 'gtm' : 'mtm', 'compare' => '=']]], 'revisionGetManagerIds'));
-            $tagManagerResults['has_manager'] = \count($ids) > 0 ? $ids[0] : \false;
+        $createdTagManagers = [];
+        foreach (ManagerMiddleware::TAG_MANAGER_IDENTIFIERS as $tagManagerIdentifier) {
+            $ids = \get_posts(Core::getInstance()->queryArguments(['post_type' => \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'fields' => 'ids', 'meta_query' => [['key' => \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, 'value' => $tagManagerIdentifier, 'compare' => '=']]], 'revisionGetManagerIds'));
+            $createdTagManagers[$tagManagerIdentifier] = $ids;
         }
         $notices = Core::getInstance()->getNotices();
         $needsUpdate = $notices->servicesWithUpdatedTemplates();
         $successors = $notices->servicesWithSuccessorTemplates();
+        $gcmAdjustments = $notices->servicesWithGoogleConsentModeAdjustments();
         /**
          * Modify the result for the `/wp-json/real-cookie-banner/v1/revision/current` route. Usually,
          * this filter should not be used publicly as it is only intent for internal usage.
@@ -210,7 +210,7 @@ class Revision
          * @return {array}
          * @since 2.0.0
          */
-        return \apply_filters('RCB/Revision/Current', \array_merge($create, $tagManagerResults, ['public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'template_successors_notice_html' => \count($successors) > 0 ? $notices->servicesWithSuccessorTemplatesHtml($successors) : null, 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
+        return \apply_filters('RCB/Revision/Current', \array_merge($create, ['created_tag_managers' => $createdTagManagers, 'public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'template_successors_notice_html' => \count($successors) > 0 ? $notices->servicesWithSuccessorTemplatesHtml($successors) : null, 'google_consent_mode_notices_html' => \array_values($notices->servicesWithGoogleConsentModeAdjustmentsHtml($gcmAdjustments)), 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
     }
     /**
      * Read all available options. This does not impact the performance in any way,
@@ -222,7 +222,7 @@ class Revision
      */
     public function fromOptions($whiteBlackList = null, $isInArray = \false, $asOptionName = \false)
     {
-        $clazzes = [\DevOwl\RealCookieBanner\settings\General::class, \DevOwl\RealCookieBanner\settings\Consent::class, \DevOwl\RealCookieBanner\settings\Multisite::class, \DevOwl\RealCookieBanner\settings\TCF::class, \DevOwl\RealCookieBanner\settings\CountryBypass::class];
+        $clazzes = [\DevOwl\RealCookieBanner\settings\General::class, \DevOwl\RealCookieBanner\settings\Consent::class, \DevOwl\RealCookieBanner\settings\Multisite::class, \DevOwl\RealCookieBanner\settings\TCF::class, \DevOwl\RealCookieBanner\settings\CountryBypass::class, \DevOwl\RealCookieBanner\settings\GoogleConsentMode::class];
         $options = [];
         foreach ($clazzes as $clazzName) {
             $clazz = new ReflectionClass($clazzName);

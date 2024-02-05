@@ -238,6 +238,12 @@ abstract class AbstractMatcher
     protected function applyNewLinkElement($match, $linkAttribute, $link)
     {
         $newLinkAttribute = AttributesHelper::transformAttribute($linkAttribute);
+        // Special case: `<embed` needs to have a `src`
+        if ($match->getTag() === 'embed' && $linkAttribute === 'src') {
+            $match->setAttribute('src', 'about:blank');
+            $match->setAttribute($newLinkAttribute, $link);
+            return $newLinkAttribute;
+        }
         if (\in_array($linkAttribute, $this->calculateAllKeepAttributes($match), \true)) {
             $match->setAttribute($linkAttribute, $link);
         } else {

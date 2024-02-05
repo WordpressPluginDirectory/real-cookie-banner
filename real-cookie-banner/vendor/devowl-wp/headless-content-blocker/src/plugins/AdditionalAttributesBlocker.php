@@ -60,6 +60,7 @@ class AdditionalAttributesBlocker extends AbstractPlugin
         $additionalAttributesBlocker = $headlessContentBlocker->addPlugin(AdditionalAttributesBlocker::class);
         $additionalAttributesBlocker->setTagAttributeMap([
             'iframe',
+            'embed',
             'frame',
             /**
              * Imagine this (idk who is doing this, but it exists in the wild):

@@ -17,6 +17,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Utils;
 class Autoplay extends AbstractPlugin
 {
     const HTML_TAG_IFRAME = 'iframe';
+    const HTML_TAG_EMBED = 'embed';
     const HTML_TAG_DIV = 'div';
     const HTML_ATTRIBUTE_SRC = 'src';
     /**
@@ -41,8 +42,9 @@ class Autoplay extends AbstractPlugin
             $match = $match;
             $tag = $match->getTag();
             $linkAttribute = $match->getLinkAttribute();
-            $link = $match->getLink();
-            if ($tag === self::HTML_TAG_IFRAME && \in_array($linkAttribute, [self::HTML_ATTRIBUTE_SRC, self::HTML_ATTRIBUTE_ALTERNATIVE_SRC], \true)) {
+            $transformedAttributeValue = AttributesHelper::transformAttribute($linkAttribute);
+            $link = $match->getAttribute($transformedAttributeValue, $match->getLink(), \true);
+            if (\in_array($tag, [self::HTML_TAG_IFRAME, self::HTML_TAG_EMBED], \true) && \in_array($linkAttribute, [self::HTML_ATTRIBUTE_SRC, self::HTML_ATTRIBUTE_ALTERNATIVE_SRC], \true)) {
                 $autoplayUrl = $this->transformUrl($link);
                 // Add the attribute
                 if ($autoplayUrl !== null) {

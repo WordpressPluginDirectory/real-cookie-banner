@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractCountryBypass;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\CountryBypass as LiteCountryBypass;
@@ -14,7 +15,7 @@ use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideCountryBypass;
  * Bypass the cookie banner for a specific set of countries.
  * @internal
  */
-class CountryBypass implements IOverrideCountryBypass
+class CountryBypass extends AbstractCountryBypass implements IOverrideCountryBypass
 {
     use LiteCountryBypass;
     use UtilsProvider;
@@ -29,22 +30,11 @@ class CountryBypass implements IOverrideCountryBypass
     const SETTING_COUNTRY_BYPASS_DB_DOWNLOAD_TIME = RCB_OPT_PREFIX . '-country-bypass-db-download-time';
     // This option should not be visible in any REST service, it is only used via `get_option` and `update_option`
     const OPTION_COUNTRY_DB_NEXT_DOWNLOAD_TIME = RCB_OPT_PREFIX . '-country-db-next-download-time';
-    const TYPE_ALL = 'all';
-    const TYPE_ESSENTIALS = 'essentials';
     const DEFAULT_COUNTRY_BYPASS_ACTIVE = \false;
     const DEFAULT_COUNTRY_BYPASS_COUNTRIES = 'GDPR,CCPA,GB,CH';
     // use the predefined lists of below
     const DEFAULT_COUNTRY_BYPASS_TYPE = self::TYPE_ALL;
     const DEFAULT_COUNTRY_BYPASS_DB_DOWNLOAD_TIME = '';
-    /**
-     * A list of predefined lists for e.g. `GDPR` or `CCPA`.
-     */
-    const PREDEFINED_COUNTRY_LISTS = [
-        // EU: https://reciprocitylabs.com/resources/what-countries-are-covered-by-gdpr/
-        // EEA: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:European_Economic_Area_(EEA)
-        'GDPR' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LV', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'],
-        'CCPA' => ['US'],
-    ];
     /**
      * Singleton instance.
      *

@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\templates;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\MyConsent;
 use DevOwl\RealCookieBanner\settings\Consent;
@@ -52,9 +53,9 @@ class ServiceLocalDataSource extends LocalDataSource
         } else {
             $s->consumerData['isUntranslated'] = \false;
         }
-        $s->legalBasis = Cookie::LEGAL_BASIS_LEGAL_REQUIREMENT;
+        $s->legalBasis = Service::LEGAL_BASIS_LEGAL_REQUIREMENT;
         $s->isProviderCurrentWebsite = \true;
-        $s->technicalDefinitions = [['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*-tcf', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '-test', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false]];
+        $s->technicalDefinitions = [['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*-tcf', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*-gcm', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '-test', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false]];
         $s->deleteTechnicalDefinitionsAfterOptOut = \false;
         $s->tier = 'free';
         $this->add($s);

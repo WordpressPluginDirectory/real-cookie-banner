@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\import;
 
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\General;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\Multisite;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\TCF;
@@ -81,6 +82,11 @@ trait ImportSettings
                     break;
                 }
                 return \true;
+            case GoogleConsentMode::SETTING_GCM_ENABLED:
+            case GoogleConsentMode::SETTING_GCM_SHOW_RECOMMONDATIONS_WITHOUT_CONSENT:
+            case GoogleConsentMode::SETTING_GCM_ADDITIONAL_URL_PARAMETERS:
+            case GoogleConsentMode::SETTING_GCM_REDACT_DATA_WITHOUT_CONSENT:
+            case GoogleConsentMode::SETTING_GCM_LIST_PURPOSES:
             case Multisite::SETTING_CONSENT_FORWARDING:
                 if (!$this->isPro() && $value === \true) {
                     $onlyPro = \true;

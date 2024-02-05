@@ -10,18 +10,6 @@ class Utils
 {
     const TEMP_REGEX_AVOID_UNMASK = 'PLEACE_REPLACE_ME_AGAIN';
     /**
-     * Takes any string and replaces `{{myVariable}}` with the value of the passed `dynamics` map.
-     *
-     * @param string $src
-     * @param array $dynamics
-     */
-    public static function applyDynamicsToHtml($src, $dynamics)
-    {
-        return \preg_replace_callback('/{{([A-Za-z0-9_]+)}}/m', function ($m) use($dynamics) {
-            return $dynamics[$m[1]] ?? $m[0];
-        }, $src);
-    }
-    /**
      * Flatten an array.
      *
      * @param array $array

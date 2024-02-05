@@ -12,9 +12,9 @@ use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\General;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Utils;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Utils as RealProductManagerWpClientUtils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer\BlockerConsumer;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer\ConsumerPool;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer\ServiceConsumer;
@@ -22,6 +22,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer\Variable
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\BlockerTemplate;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 use WP_Error;
 use WP_Post;
 // @codeCoverageIgnoreStart
@@ -184,6 +185,7 @@ class TemplateConsumers
             'blocker.consumer' => $blockerConsumer,
             'service.consumer' => $serviceConsumer,
             'tier' => $this->isPro() ? 'pro' : 'free',
+            'isGcm' => GoogleConsentMode::getInstance()->isEnabled(),
             'manager' => General::getInstance()->getSetCookiesViaManager(),
             'oneOf' => [$this, 'oneOf'],
             'isTcfActive' => function () {
@@ -223,8 +225,6 @@ class TemplateConsumers
             'i18n.ManagerMiddleware.tooltip' => \__('This service template is optimized to work with %s.', RCB_TD),
             // translators:
             'i18n.ManagerMiddleware.disabledTooltip' => \__('Please activate %s in settings to use this template.', RCB_TD),
-            // translators:
-            'i18n.DisableTechnicalHandlingWhenOneOfMiddleware.technicalHandlingNotice' => \__('You don\'t have to define a technical handling here, because this is done by the plugin <strong>%s</strong>.', RCB_TD),
             'i18n.ServiceAvailableBlockerTemplatesMiddleware.tooltip' => \__('A suitable content blocker for this service can be created automatically.', RCB_TD),
             'i18n.GroupMiddleware.group.essential' => function () {
                 return \__('Essential', Hooks::TD_FORCED);
@@ -564,7 +564,7 @@ class TemplateConsumers
                  * @since 3.16.0
                  */
                 if (\apply_filters('RCB/Templates/FalsePositivePlugin', \true, $slug, $template->identifier, $template instanceof ServiceTemplate ? 'service' : 'blocker')) {
-                    $pluginName = RealProductManagerWpClientUtils::getActivePluginsMap()[$slug] ?? null;
+                    $pluginName = UtilsUtils::getActivePluginsMap()[$slug] ?? null;
                     return $pluginName !== null ? $pluginName : \true;
                 }
             } elseif (Utils::isThemeActive($slug)) {

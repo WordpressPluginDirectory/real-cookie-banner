@@ -34,24 +34,6 @@ interface IOverrideCountryBypass
      */
     public function clearDatabase();
     /**
-     * Check if compatibility is enabled.
-     *
-     * @return boolean
-     */
-    public function isActive();
-    /**
-     * Get the list of countries where the banner should be shown (ISO 3166-1 alpha2).
-     *
-     * @return string[]
-     */
-    public function getCountries();
-    /**
-     * Get the type for the Country Bypass. Can be `all` or `essentials` (see class constants).
-     *
-     * @return string
-     */
-    public function getType();
-    /**
      * Check when the database got downloaded at latest.
      *
      * @return string|null

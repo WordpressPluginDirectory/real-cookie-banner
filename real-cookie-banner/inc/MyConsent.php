@@ -3,6 +3,8 @@
 namespace DevOwl\RealCookieBanner;
 
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\lite\GcmConsent;
+use DevOwl\RealCookieBanner\lite\TcfConsent;
 use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\General;
@@ -60,12 +62,13 @@ class MyConsent
      * @param string $forwardedUuid The UUID reference of the source website
      * @param boolean $forwardedBlocker Determine if forwarded consent came through a content blocker
      * @param string $tcfString TCF compatibility; encoded TCF string (not the vendor string; `isForVendors = false`)
+     * @param string $gcmConsent Google Consent Mode compatibility; JSON encoded array of consent types
      * @param string $customBypass Allows to set a custom bypass which causes the banner to be hidden (e.g. Geolocation)
      * @param string $recorderJsonString Recorder interactions with the help of `@devowl-wp/web-html-element-interaction-recorder` as JSON string as it is never consumed via PHP
      * @param string $uiView Can be `initial` (the cookie banner pops up for first time with first and second layer or content blocker) or `change` (Change privacy settings). `null` indicates a UI was never visible
      * @return array The current used user
      */
-    public function persist($consent, $markAsDoNotTrack, $buttonClicked, $viewPortWidth, $viewPortHeight, $referer, $blocker = 0, $blockerThumbnail = null, $forwarded = 0, $forwardedUuid = null, $forwardedBlocker = \false, $tcfString = null, $customBypass = null, $recorderJsonString = null, $uiView = null)
+    public function persist($consent, $markAsDoNotTrack, $buttonClicked, $viewPortWidth, $viewPortHeight, $referer, $blocker = 0, $blockerThumbnail = null, $forwarded = 0, $forwardedUuid = null, $forwardedBlocker = \false, $tcfString = null, $gcmConsent = null, $customBypass = null, $recorderJsonString = null, $uiView = null)
     {
         $args = \get_defined_vars();
         global $wpdb;
@@ -85,6 +88,8 @@ class MyConsent
         $consent_hash = \md5(\json_encode($consent));
         $created = \mysql2date('c', \current_time('mysql'), \false);
         $previousDecision = $user === \false ? \false : $user['decision_in_cookie'];
+        $previousTcfString = $this->isPro() ? $_COOKIE[TcfConsent::getInstance()->getCookieName()] ?? 'NULL' : 'NULL';
+        $previousGcmConsent = $this->isPro() ? $_COOKIE[GcmConsent::getInstance()->getCookieName()] ?? \false : \false;
         $previousCreated = $user === \false ? \false : $user['created'];
         $ips = \DevOwl\RealCookieBanner\IpHandler::getInstance()->persistIp();
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
@@ -107,7 +112,7 @@ class MyConsent
         $wpdb->query(
             // phpcs:disable WordPress.DB.PreparedSQL
             \str_ireplace("'NULL'", 'NULL', $wpdb->prepare(
-                "INSERT IGNORE INTO {$table_name}\n                        (plugin_version, design_version,\n                        ipv4, ipv6, ipv4_hash, ipv6_hash,\n                        uuid, revision, revision_independent,\n                        previous_decision, decision, decision_hash,\n                        blocker, blocker_thumbnail,\n                        dnt, custom_bypass,\n                        button_clicked, context, viewport_width, viewport_height,\n                        referer, pure_referer,\n                        url_imprint, url_privacy_policy,\n                        forwarded, forwarded_blocker,\n                        tcf_string, recorder, ui_view, created)\n                        VALUES\n                        (%s, %d,\n                        %d, %s, %s, %s,\n                        %s, %s, %s,\n                        %s, %s, %s,\n                        %s, %s,\n                        %d, %s,\n                        %s, %s, %d, %d,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s, %s, %s)",
+                "INSERT IGNORE INTO {$table_name}\n                        (plugin_version, design_version,\n                        ipv4, ipv6, ipv4_hash, ipv6_hash,\n                        uuid, revision, revision_independent,\n                        previous_decision, decision, decision_hash,\n                        blocker, blocker_thumbnail,\n                        dnt, custom_bypass,\n                        button_clicked, context, viewport_width, viewport_height,\n                        referer, pure_referer,\n                        url_imprint, url_privacy_policy,\n                        forwarded, forwarded_blocker,\n                        previous_tcf_string, tcf_string,\n                        previous_gcm_consent, gcm_consent,\n                        recorder, ui_view, created)\n                        VALUES\n                        (%s, %d,\n                        %d, %s, %s, %s,\n                        %s, %s, %s,\n                        %s, %s, %s,\n                        %s, %s,\n                        %d, %s,\n                        %s, %s, %d, %d,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s,\n                        %s, %s, %s)",
                 RCB_VERSION,
                 Banner::DESIGN_VERSION,
                 $ips['ipv4'] === null ? 'NULL' : $ips['ipv4'],
@@ -136,7 +141,10 @@ class MyConsent
                 // %s used for 'NULL' transformation
                 $forwardedBlocker,
                 // %s used for 'NULL' transformation
+                $previousTcfString,
                 $tcfString === null ? 'NULL' : $tcfString,
+                $previousGcmConsent === \false ? 'NULL' : $previousGcmConsent,
+                $gcmConsent === null ? 'NULL' : \json_encode($gcmConsent),
                 $recorderJsonString === null ? 'NULL' : $recorderJsonString,
                 $uiView === null ? 'NULL' : $uiView,
                 $created
@@ -283,18 +291,13 @@ class MyConsent
             foreach ($rows as $row) {
                 $jsonRevision = $row->revision;
                 $jsonRevisionIndependent = $row->revision_independent;
-                $obj = [
-                    'id' => $row->id,
-                    'uuid' => $row->uuid,
-                    'isDoNotTrack' => $row->dnt,
-                    'isUnblock' => $row->blocker > 0,
-                    'isForwarded' => $row->forwarded > 0,
-                    'created' => $row->created,
+                $obj = ['id' => $row->id, 'uuid' => $row->uuid, 'isDoNotTrack' => $row->dnt, 'isUnblock' => $row->blocker > 0, 'isForwarded' => $row->forwarded > 0, 'created' => $row->created, 'context' => [
                     'groups' => $jsonRevision['groups'],
-                    'decision' => $row->decision,
+                    'consent' => $row->decision,
+                    'gcmConsent' => $row->gcm_consent,
                     // TCF compatibility
                     'tcf' => isset($jsonRevision['tcf']) ? ['tcf' => $jsonRevision['tcf'], 'tcfMeta' => $jsonRevisionIndependent['tcfMeta'], 'tcfString' => $row->tcf_string] : null,
-                ];
+                ]];
                 $result[] = $obj;
             }
         }

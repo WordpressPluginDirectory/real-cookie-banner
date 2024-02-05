@@ -20,6 +20,23 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
+#: RateLimitNotice.php:61
+msgid " and "
+msgstr ""
+
+#. translators:
+#: RateLimitNotice.php:68
+msgid "Your WordPress unexpectedly requests the license server and cloud services of <strong>%1$s</strong> exceptionally often (URL: <code>%3$s</code>). This indicates a misconfiguration of your WordPress system, which can also affect the loading speed of your website or cause malfunctions. Please check with your technical contact what is configured incorrectly! Alternatively, you can <a href=\"%2$s\" target=\"_blank\">open a support ticket</a> at the plugin manufacturer support."
+msgstr ""
+
+#: RateLimitNotice.php:73
+msgid "https://devowl.io/support/"
+msgstr ""
+
+#: RateLimitNotice.php:82
+msgid "I have solved the problem (hide the message until the next occurrence of the error)"
+msgstr ""
+
 #. translators:
 #: Service.php:117
 msgid "<strong>An unexpected network error has occurred!</strong> One or more WordPress plugins tried to call the WordPress REST API, which failed. Most likely a <strong>security plugin%s</strong>, a web <strong>server configuration</strong> or active <strong>ad-blocker extension</strong> installed on your browser disabled the REST API. Please make sure that the following REST API namespaces are reachable to use your plugin without problems:"

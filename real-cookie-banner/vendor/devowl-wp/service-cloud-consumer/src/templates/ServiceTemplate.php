@@ -66,12 +66,6 @@ class ServiceTemplate extends AbstractTemplate
      */
     public $shouldUncheckContentBlockerCheckboxWhenOneOf = [];
     /**
-     * Automatically reset technical-handling fields with `WhenOneOf` statements.
-     *
-     * @var string[]
-     */
-    public $shouldRemoveTechnicalHandlingWhenOneOf = [];
-    /**
      * Code on opt in.
      *
      * @var string
@@ -138,6 +132,12 @@ class ServiceTemplate extends AbstractTemplate
      * @var string[]
      */
     public $dataProcessingInCountriesSpecialTreatments = [];
+    /**
+     * Google Consent Mode consent types.
+     *
+     * @var string[]
+     */
+    public $googleConsentModeConsentTypes = [];
     /**
      * If `true` the service does not set any cookies but transfers e.g. ip address through a network request.
      *
@@ -213,9 +213,9 @@ class ServiceTemplate extends AbstractTemplate
             $this->dynamicFields = \is_array($arr['dynamicFields'] ?? null) ? $arr['dynamicFields'] : [];
             $this->dataProcessingInCountries = \is_array($arr['dataProcessingInCountries'] ?? null) ? $arr['dataProcessingInCountries'] : [];
             $this->dataProcessingInCountriesSpecialTreatments = \is_array($arr['dataProcessingInCountriesSpecialTreatments'] ?? null) ? $arr['dataProcessingInCountriesSpecialTreatments'] : [];
+            $this->googleConsentModeConsentTypes = \is_array($arr['googleConsentModeConsentTypes'] ?? null) ? $arr['googleConsentModeConsentTypes'] : [];
             $this->shouldUncheckContentBlockerCheckbox = \boolval($arr['shouldUncheckContentBlockerCheckbox'] ?? null);
             $this->shouldUncheckContentBlockerCheckboxWhenOneOf = \is_array($arr['shouldUncheckContentBlockerCheckboxWhenOneOf'] ?? null) ? $arr['shouldUncheckContentBlockerCheckboxWhenOneOf'] : [];
-            $this->shouldRemoveTechnicalHandlingWhenOneOf = \is_array($arr['shouldRemoveTechnicalHandlingWhenOneOf'] ?? null) ? $arr['shouldRemoveTechnicalHandlingWhenOneOf'] : [];
             $this->codeOptIn = \is_string($arr['codeOptIn'] ?? null) ? $arr['codeOptIn'] : '';
             $this->codeOptOut = \is_string($arr['codeOptOut'] ?? null) ? $arr['codeOptOut'] : '';
             $this->codeOnPageLoad = \is_string($arr['codeOnPageLoad'] ?? null) ? $arr['codeOnPageLoad'] : '';

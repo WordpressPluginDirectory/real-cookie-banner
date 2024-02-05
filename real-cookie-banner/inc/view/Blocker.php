@@ -309,6 +309,8 @@ class Blocker
             'activity_filter',
             // [Plugin Comp] Elementor
             'loadmore_elementor_portfolio',
+            // [Plugin Comp] https://knowledgebase.unitedthemes.com/docs/how-to-set-up-your-portfolio/
+            'ut_get_portfolio_post_content',
         ]);
         return \wp_doing_ajax() && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
     }

@@ -15,6 +15,7 @@ use DevOwl\RealCookieBanner\settings\CookieGroup;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\General;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\view\Blocker;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\view\Banner;
@@ -23,7 +24,7 @@ use DevOwl\RealCookieBanner\view\customize\banner\CustomCss;
 use DevOwl\RealCookieBanner\view\customize\banner\Texts;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Core as RpmWpClientCore;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license\License;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Utils as RealProductManagerUtils;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Assets as UtilsAssets;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Constants;
 // @codeCoverageIgnoreStart
@@ -193,7 +194,7 @@ class Assets
                 $anonymousAssetsBuilder->ready('vendorBanner', !$useNonMinifiedSources);
             }
             // Populate `codeOnPageLoad`
-            \add_action('wp_head', [\DevOwl\RealCookieBanner\Core::getInstance()->getBanner(), 'wp_head']);
+            \add_action('wp_head', [\DevOwl\RealCookieBanner\Core::getInstance()->getBanner(), 'wp_head'], 2);
         }
         // animate.css (only when animations are enabled)
         $customize = \DevOwl\RealCookieBanner\Core::getInstance()->getBanner()->getCustomize();
@@ -265,6 +266,7 @@ class Assets
         $bannerCustomize = $banner->getCustomize();
         $consentSettings = Consent::getInstance();
         $generalSettings = General::getInstance();
+        $googleConsentMode = GoogleConsentMode::getInstance();
         $notices = $core->getNotices();
         $licenseActivation = $core->getRpmInitiator()->getPluginUpdater()->getCurrentBlogLicense()->getActivation();
         $showLicenseFormImmediate = !$licenseActivation->hasInteractedWithFormOnce();
@@ -277,7 +279,7 @@ class Assets
                 // our graphs and charts we need at least 4
                 $colorScheme[] = $colorScheme[0];
             }
-            $result = ['showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => DeliverAnonymousAsset::getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => RealProductManagerUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'predefinedDataProcessingInSafeCountriesLists' => Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
+            $result = ['installationDateIso' => \mysql2date('c', \get_option(\DevOwl\RealCookieBanner\Activator::OPTION_NAME_INSTALLATION_DATE, \time())), 'showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => DeliverAnonymousAsset::getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => UtilsUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'predefinedDataProcessingInSafeCountriesLists' => Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
         } elseif (\is_customize_preview()) {
             $result = \array_merge($bannerCustomize->localizeIds(), $bannerCustomize->localizeValues(), $bannerCustomize->localizeDefaultValues(), ['poweredByTexts' => $core->getCompLanguage()->translateArray(Texts::getPoweredByLinkTexts()), 'isPoweredByLinkDisabledByException' => $bannerCustomize->isPoweredByLinkDisabledByException()]);
         } elseif ($banner->shouldLoadAssets($context)) {
@@ -297,7 +299,7 @@ class Assets
              */
             $result['hints'] = \apply_filters('RCB/Hints', ['deleteCookieGroup' => [], 'deleteCookie' => [], 'export' => [], 'dashboardTile' => [], 'proDialog' => null]);
         }
-        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['languageSwitcher' => $core->getCompLanguage()->getLanguageSwitcher(), 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'userConsentCookieName' => \DevOwl\RealCookieBanner\MyConsent::getInstance()->getCookieName(), 'revisionHash' => Revision::getInstance()->getCurrentHash(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'isTcf' => TCF::getInstance()->isActive(), 'isPreventPreDecision' => $banner->isPreventPreDecision(), 'isAcceptAllForBots' => $consentSettings->isAcceptAllForBots(), 'isRespectDoNotTrack' => $consentSettings->isRespectDoNotTrack(), 'isDataProcessingInUnsafeCountries' => $consentSettings->isDataProcessingInUnsafeCountries(), 'dataProcessingInUnsafeCountriesSafeCountries' => $consentSettings->getDataProcessingInUnsafeCountriesSafeCountries(), 'isAgeNotice' => $consentSettings->isAgeNoticeEnabled(), 'ageNoticeAgeLimit' => $consentSettings->getAgeNoticeAgeLimit(), 'isListServicesNotice' => $consentSettings->isListServicesNoticeEnabled(), 'setCookiesViaManager' => $generalSettings->getSetCookiesViaManager(), 'territorialLegalBasis' => $generalSettings->getTerritorialLegalBasis(), 'essentialGroup' => CookieGroup::getInstance()->getEssentialGroup()->slug, 'groups' => $banner->localizeGroups(), 'bannerLinks' => BannerLink::getInstance()->localize(), 'websiteOperator' => $generalSettings->localizeWebsiteOperator(), 'blocker' => $core->getBlocker()->localize(), 'setVisualParentIfClassOfParent' => Blocker::SET_VISUAL_PARENT_IF_CLASS_OF_PARENT, 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
+        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['languageSwitcher' => $core->getCompLanguage()->getLanguageSwitcher(), 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'userConsentCookieName' => \DevOwl\RealCookieBanner\MyConsent::getInstance()->getCookieName(), 'revisionHash' => Revision::getInstance()->getCurrentHash(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'isTcf' => TCF::getInstance()->isActive(), 'isGcm' => $googleConsentMode->isEnabled(), 'isGcmListPurposes' => $googleConsentMode->isListPurposes(), 'isPreventPreDecision' => $banner->isPreventPreDecision(), 'isAcceptAllForBots' => $consentSettings->isAcceptAllForBots(), 'isRespectDoNotTrack' => $consentSettings->isRespectDoNotTrack(), 'isDataProcessingInUnsafeCountries' => $consentSettings->isDataProcessingInUnsafeCountries(), 'dataProcessingInUnsafeCountriesSafeCountries' => $consentSettings->getDataProcessingInUnsafeCountriesSafeCountries(), 'isAgeNotice' => $consentSettings->isAgeNoticeEnabled(), 'ageNoticeAgeLimit' => $consentSettings->getAgeNoticeAgeLimit(), 'isListServicesNotice' => $consentSettings->isListServicesNoticeEnabled(), 'setCookiesViaManager' => $generalSettings->getSetCookiesViaManager(), 'territorialLegalBasis' => $generalSettings->getTerritorialLegalBasis(), 'essentialGroup' => CookieGroup::getInstance()->getEssentialGroup()->slug, 'groups' => CookieGroup::getInstance()->toJson(), 'bannerLinks' => BannerLink::getInstance()->localize(), 'websiteOperator' => $generalSettings->localizeWebsiteOperator(), 'blocker' => $core->getBlocker()->localize(), 'setVisualParentIfClassOfParent' => Blocker::SET_VISUAL_PARENT_IF_CLASS_OF_PARENT, 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
             'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
             'standardContractualClauses' => \_x('Standard contractual clauses', 'legal-text', RCB_TD),
             'adequacyDecision' => \_x('Adequacy decision', 'legal-text', RCB_TD),
@@ -318,6 +320,7 @@ class Assets
             'noExpiration' => \_x('No expiration', 'legal-text', RCB_TD),
             'type' => \_x('Type', 'legal-text', RCB_TD),
             'purpose' => \_x('Purpose', 'legal-text', RCB_TD),
+            'purposes' => \_x('Purposes', 'legal-text', RCB_TD),
             'headerTitlePrivacyPolicyHistory' => \_x('History of your privacy settings', 'legal-text', RCB_TD),
             'skipToConsentChoices' => \_x('Skip to consent choices', 'legal-text', RCB_TD),
             'historyLabel' => \_x('Show consent from', 'legal-text', RCB_TD),
@@ -328,6 +331,8 @@ class Assets
             Cookie::META_NAME_PROVIDER_CONTACT_LINK => \_x('Contact form', 'legal-text', RCB_TD),
             Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL => \_x('Privacy Policy', 'legal-text', RCB_TD),
             Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL => \_x('Legal notice', 'legal-text', RCB_TD),
+            'nonStandard' => \_x('Non-standardized data processing', 'legal-text', RCB_TD),
+            'nonStandardDesc' => \_x('Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called "essential services" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given.', 'legal-text', RCB_TD),
             // translators:
             'dataProcessingInUnsafeCountries' => \_x('Data processing in unsecure third countries', 'legal-text', RCB_TD),
             // @deprecated backwards-compatibility for "List of consents"

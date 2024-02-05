@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
+class ComposerStaticInit584d7b00d2e9cef7b7490015271bedb0
 {
     public static $files = array (
         '7aed44d824e149ce152c0fb82af9379a' => __DIR__ . '/..' . '/colinodell/json5/src/global.php',
@@ -32,6 +32,7 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
             'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\' => 50,
             'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\DeliverAnonymousAsset\\' => 60,
             'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Customize\\' => 48,
+            'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\' => 62,
             'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\' => 54,
             'DevOwl\\RealCookieBanner\\Vendor\\ColinODell\\Json5\\' => 48,
             'DevOwl\\RealCookieBanner\\' => 24,
@@ -99,6 +100,10 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         array (
             0 => __DIR__ . '/..' . '/devowl-wp/customize/src',
         ),
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src',
+        ),
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\' => 
         array (
             0 => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src',
@@ -165,6 +170,23 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\WpOptimizeImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/WpOptimizeImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\WpRocketImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/WpRocketImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\WpSuperCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/WpSuperCacheImpl.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\CookieConsentManagement' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/CookieConsentManagement.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\Utils' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/Utils.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\Frontend' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/frontend/Frontend.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\services\\Blocker' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/services/Blocker.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\services\\ProviderContact' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/services/ProviderContact.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\services\\Service' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/services/Service.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\services\\ServiceGroup' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/services/ServiceGroup.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\services\\TechnicalDefinitions' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/services/TechnicalDefinitions.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractConsent' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractConsent.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractCountryBypass' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractCountryBypass.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractGeneral' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractGeneral.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractGoogleConsentMode' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractGoogleConsentMode.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractMultisite' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractMultisite.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\AbstractTcf' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/AbstractTcf.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\BaseSettings' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/BaseSettings.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\settings\\Settings' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/settings/Settings.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\tcf\\VendorConfiguration' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/tcf/VendorConfiguration.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Customize\\AbstractCustomizePanel' => __DIR__ . '/..' . '/devowl-wp/customize/src/AbstractCustomizePanel.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Customize\\Assets' => __DIR__ . '/..' . '/devowl-wp/customize/src/Assets.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Customize\\ContrastRatioValidator' => __DIR__ . '/..' . '/devowl-wp/customize/src/ContrastRatioValidator.php',
@@ -349,7 +371,6 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\blocker\\DisableProFeaturesInFreeMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/blocker/DisableProFeaturesInFreeMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\blocker\\FlatRulesMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/blocker/FlatRulesMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\blocker\\ResolveServiceTemplatesMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/blocker/ResolveServiceTemplatesMiddleware.php',
-        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\services\\DisableTechnicalHandlingWhenOneOfMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/services/DisableTechnicalHandlingWhenOneOfMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\services\\GroupMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/services/GroupMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\services\\ManagerMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/services/ManagerMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\middlewares\\services\\ServiceAvailableBlockerTemplatesMiddleware' => __DIR__ . '/..' . '/devowl-wp/service-cloud-consumer/src/middlewares/services/ServiceAvailableBlockerTemplatesMiddleware.php',
@@ -627,6 +648,7 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\Localization' => __DIR__ . '/..' . '/devowl-wp/utils/src/Localization.php',
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\PackageLocalization' => __DIR__ . '/..' . '/devowl-wp/utils/src/PackageLocalization.php',
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\PluginReceiver' => __DIR__ . '/..' . '/devowl-wp/utils/src/PluginReceiver.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\RateLimitNotice' => __DIR__ . '/..' . '/devowl-wp/utils/src/RateLimitNotice.php',
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\Service' => __DIR__ . '/..' . '/devowl-wp/utils/src/Service.php',
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\ServiceNoStore' => __DIR__ . '/..' . '/devowl-wp/utils/src/ServiceNoStore.php',
         'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\Utils' => __DIR__ . '/..' . '/devowl-wp/utils/src/Utils.php',
@@ -704,6 +726,7 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideConsent' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideConsent.php',
         'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideCountryBypass' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideCountryBypass.php',
         'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideGeneral' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideGeneral.php',
+        'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideGoogleConsentMode' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideGoogleConsentMode.php',
         'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideMultisite' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideMultisite.php',
         'DevOwl\\RealCookieBanner\\overrides\\interfce\\settings\\IOverrideTCF' => __DIR__ . '/../..' . '/inc/overrides/interfce/settings/IOverrideTCF.php',
         'DevOwl\\RealCookieBanner\\rest\\Config' => __DIR__ . '/../..' . '/inc/rest/Config.php',
@@ -724,6 +747,7 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
         'DevOwl\\RealCookieBanner\\settings\\CookieGroup' => __DIR__ . '/../..' . '/inc/settings/CookieGroup.php',
         'DevOwl\\RealCookieBanner\\settings\\CountryBypass' => __DIR__ . '/../..' . '/inc/settings/CountryBypass.php',
         'DevOwl\\RealCookieBanner\\settings\\General' => __DIR__ . '/../..' . '/inc/settings/General.php',
+        'DevOwl\\RealCookieBanner\\settings\\GoogleConsentMode' => __DIR__ . '/../..' . '/inc/settings/GoogleConsentMode.php',
         'DevOwl\\RealCookieBanner\\settings\\Multisite' => __DIR__ . '/../..' . '/inc/settings/Multisite.php',
         'DevOwl\\RealCookieBanner\\settings\\Reset' => __DIR__ . '/../..' . '/inc/settings/Reset.php',
         'DevOwl\\RealCookieBanner\\settings\\Revision' => __DIR__ . '/../..' . '/inc/settings/Revision.php',
@@ -788,9 +812,9 @@ class ComposerStaticInit0acd338d3a522c18659ca8e721f2a981
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0acd338d3a522c18659ca8e721f2a981::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0acd338d3a522c18659ca8e721f2a981::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit0acd338d3a522c18659ca8e721f2a981::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit584d7b00d2e9cef7b7490015271bedb0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit584d7b00d2e9cef7b7490015271bedb0::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit584d7b00d2e9cef7b7490015271bedb0::$classMap;
 
         }, null, ClassLoader::class);
     }

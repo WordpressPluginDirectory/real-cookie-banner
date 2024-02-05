@@ -6,7 +6,6 @@ use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
-use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\customize\banner\BasicLayout;
 use DevOwl\RealCookieBanner\view\customize\banner\BodyDesign;
 use DevOwl\RealCookieBanner\view\customize\banner\Decision;
@@ -15,6 +14,7 @@ use DevOwl\RealCookieBanner\view\customize\banner\individual\Texts as Individual
 use DevOwl\RealCookieBanner\view\customize\banner\Mobile;
 use DevOwl\RealCookieBanner\view\customize\banner\Texts;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\BlockerTemplate;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 use WP_Post;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -87,7 +87,7 @@ class DashboardTileMigrationMajor3 extends \DevOwl\RealCookieBanner\comp\migrati
         ])), ['needsPro' => \true, 'linkText' => \__('Reconfigure Content Blocker', RCB_TD), 'callback' => $this->getConfigUrl('/blocker'), 'info' => \count($blockersWithBetterPotentialVisualType) > 0 ? \sprintf(
             // translators:
             \__('We recommend for <strong>%s</strong> to change the design to a more and better visual Content Blocker.', RCB_TD),
-            Utils::joinWithAndSeparator(\array_values($blockersWithBetterPotentialVisualType), \__(' and ', RCB_TD))
+            UtilsUtils::joinWithAndSeparator(\array_values($blockersWithBetterPotentialVisualType), \__(' and ', RCB_TD))
         ) : null, 'previewImage' => $core->getBaseAssetsUrl(\__('pro-modal/visual-content-blocker.webp', RCB_TD))])->addAction('scanner', \__('Scan your website for services that require consent', RCB_TD), \join('<br /><br/ >', [\__('The service scanner crawls every subpage of your website, all plugins and other technical indicators of your website to find services on your website that require consent. This allows you to collect all the consent you need from your website visitors.', RCB_TD), \__('If you last fully scanned your website before Februrary 2022, we recommend that you scan your website again. The scanner will now detect even more services!', RCB_TD)]), ['linkText' => \__('Scan website (again)', RCB_TD), 'callback' => [$this, 'scanWebsiteAgain']])->addAction('mobile-experience', \__('Cookie banner optimizations for mobile devices', RCB_TD), \__('We provide additional options for optimized display of the cookie banner on mobile devices. These make the cookie banner easier to use on smartphones by optimizing it to the normal hand position of users. Also, the cookie banner is no longer Largest Contentfull Paint (LCP) as defined by Google\'s Web Vitals and thus the optimizations will increase your PageSpeed score for mobile devices.', RCB_TD), ['needsPro' => \true, 'linkText' => \__('Activate optimizations', RCB_TD), 'performed' => $isMobileExperienceEnabled, 'linkDisabled' => $isMobileExperienceEnabled, 'callback' => [$this, 'applyMobileOptimizations'], 'previewImage' => $core->getBaseAssetsUrl(\__('pro-modal/mobile-optimization.png', RCB_TD))]);
     }
     /**

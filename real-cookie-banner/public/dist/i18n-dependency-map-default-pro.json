@@ -10,7 +10,7 @@
     ],
     "chunk-config-tab-cookies.pro.js": [
         "chunk-config-tab-cookies.pro.js",
-        "586.pro.js"
+        "228.pro.js"
     ],
     "chunk-config-tab-tcf.pro.js": [
         "chunk-config-tab-tcf.pro.js",
@@ -21,7 +21,7 @@
     ],
     "chunk-config-tab-blocker.pro.js": [
         "chunk-config-tab-blocker.pro.js",
-        "586.pro.js",
+        "228.pro.js",
         "766.pro.js"
     ],
     "chunk-config-tab-import.pro.js": [

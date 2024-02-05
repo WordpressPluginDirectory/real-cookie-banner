@@ -17,16 +17,4 @@ interface IOverrideGeneral
      * Register PRO-only options.
      */
     public function overrideRegister();
-    /**
-     * Get an array of hidden page ids (not imprint and privacy policy, there are own options!).
-     *
-     * @return int[]
-     */
-    public function getAdditionalPageHideIds();
-    /**
-     * Get the option "Load services after consent via".
-     *
-     * @return string
-     */
-    public function getSetCookiesViaManager();
 }

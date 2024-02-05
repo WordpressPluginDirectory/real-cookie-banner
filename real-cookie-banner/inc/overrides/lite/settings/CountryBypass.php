@@ -35,17 +35,17 @@ trait CountryBypass
     {
         // Silence is golden.
     }
-    // Documented in IOverrideCountryBypass
+    // Documented in AbstractCountryBypass
     public function isActive()
     {
         return \false;
     }
-    // Documented in IOverrideCountryBypass
-    public function getCountries()
+    // Documented in AbstractCountryBypass
+    public function getCountriesRaw()
     {
         return [];
     }
-    // Documented in IOverrideCountryBypass
+    // Documented in AbstractCountryBypass
     public function getType()
     {
         return null;

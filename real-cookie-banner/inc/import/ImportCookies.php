@@ -68,6 +68,11 @@ trait ImportCookies
                 // See https://developer.wordpress.org/reference/functions/update_post_meta/#workaround
                 $metas[Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS] = \wp_slash(\json_encode($metas[Cookie::META_NAME_DATA_PROCESSING_IN_COUNTRIES_SPECIAL_TREATMENTS]));
             }
+            // Save Google Consent Mode Consent Types as plain string in meta
+            if (isset($metas[Cookie::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES])) {
+                // See https://developer.wordpress.org/reference/functions/update_post_meta/#workaround
+                $metas[Cookie::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES] = \wp_slash(\json_encode($metas[Cookie::META_NAME_GOOGLE_CONSENT_MODE_CONSENT_TYPES]));
+            }
             // Save code dynamics as plain string in meta
             if (isset($metas[Cookie::META_NAME_CODE_DYNAMICS])) {
                 $metas[Cookie::META_NAME_CODE_DYNAMICS] = \wp_slash(\json_encode($metas[Cookie::META_NAME_CODE_DYNAMICS]));

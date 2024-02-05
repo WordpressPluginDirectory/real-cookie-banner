@@ -2,7 +2,9 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractTcf;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TCF as LiteTCF;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideTCF;
 // @codeCoverageIgnoreStart
@@ -13,7 +15,7 @@ use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideTCF;
  * TCF settings.
  * @internal
  */
-class TCF implements IOverrideTCF
+class TCF extends AbstractTcf implements IOverrideTCF
 {
     use LiteTCF;
     use UtilsProvider;
@@ -41,8 +43,6 @@ class TCF implements IOverrideTCF
     const DEFAULT_TCF_ACCEPTED_TIME = '';
     const DEFAULT_TCF_SCOPE_OF_CONSENT = self::SCOPE_OF_CONSENT_SERVICE;
     const DEFAULT_TCF_GVL_DOWNLOAD_TIME = '';
-    const SCOPE_OF_CONSENT_SERVICE = 'service-specific';
-    const ALLOWED_SCOPE_OF_CONSENT = [self::SCOPE_OF_CONSENT_SERVICE];
     /**
      * Singleton instance.
      *
@@ -69,6 +69,11 @@ class TCF implements IOverrideTCF
     public function register()
     {
         $this->overrideRegister();
+    }
+    // Documented in AbstractTcf
+    public function queryVendors($args = [])
+    {
+        return Core::getInstance()->getTcfVendorListNormalizer()->getQuery()->vendors($args);
     }
     /**
      * When a new version of Real Cookie Banner got installed, automatically download the new GVL.

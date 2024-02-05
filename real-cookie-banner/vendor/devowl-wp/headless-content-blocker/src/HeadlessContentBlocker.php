@@ -67,7 +67,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     private $blockables = [];
     private $finderToMatcher;
-    private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'img'], 'attr' => ['href', 'data-src', 'src']]];
+    private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'embed', 'img'], 'attr' => ['href', 'data-src', 'src']]];
     /**
      * Selector syntax map.
      *

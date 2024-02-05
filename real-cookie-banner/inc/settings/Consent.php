@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractConsent;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\lite\settings\Consent as LiteConsent;
@@ -15,7 +16,7 @@ use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
  * Settings > Consent.
  * @internal
  */
-class Consent implements IOverrideConsent
+class Consent extends AbstractConsent implements IOverrideConsent
 {
     use LiteConsent;
     use UtilsProvider;
@@ -42,23 +43,6 @@ class Consent implements IOverrideConsent
     const DEFAULT_LIST_SERVICES_NOTICE = \true;
     const DEFAULT_CONSENT_DURATION = 120;
     const TRANSIENT_SCHEDULE_CONSENTS_DELETION = RCB_OPT_PREFIX . '-schedule-consents-deletion';
-    /**
-     * Search the coding for difference.
-     */
-    const COOKIE_VERSION_1 = 1;
-    const COOKIE_VERSION_2 = 2;
-    const COOKIE_VERSION_3 = 3;
-    const DEFAULT_COOKIE_VERSION = self::COOKIE_VERSION_3;
-    /**
-     * A list of predefined lists for e.g. `GDPR` considered as secury country for data processing in unsafe countries.
-     */
-    const PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS = [
-        // EU: https://reciprocitylabs.com/resources/what-countries-are-covered-by-gdpr/
-        // EEA: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:European_Economic_Area_(EEA)
-        'GDPR' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LV', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'],
-        'ADEQUACY' => ['AD', 'AR', 'CA', 'FO', 'GG', 'IL', 'IM', 'JP', 'JE', 'NZ', 'KR', 'CH', 'GB', 'UY', 'US'],
-    ];
-    const AGE_NOTICE_COUNTRY_AGE_MAP = ['INHERIT' => 0, 'GDPR' => 16, 'BE' => 13, 'DK' => 13, 'EE' => 13, 'FI' => 13, 'IS' => 13, 'LV' => 13, 'NO' => 13, 'PT' => 13, 'SE' => 13, 'MT' => 13, 'AT' => 14, 'BG' => 14, 'CY' => 14, 'IT' => 14, 'LT' => 14, 'ES' => 14, 'CZ' => 15, 'FR' => 15, 'GR' => 15, 'SI' => 15, 'DE' => 16, 'HR' => 16, 'HU' => 16, 'LI' => 16, 'LU' => 16, 'NL' => 16, 'PL' => 16, 'RO' => 16, 'SK' => 16, 'IE' => 16, 'CH' => 13];
     /**
      * Singleton instance.
      *
@@ -104,38 +88,22 @@ class Consent implements IOverrideConsent
         \register_setting(self::OPTION_GROUP, self::SETTING_CONSENT_DURATION, ['type' => 'number', 'show_in_rest' => \true]);
         $this->overrideRegister();
     }
-    /**
-     * Check if bots should acceppt all cookies automatically.
-     *
-     * @return boolean
-     */
+    // Documented in AbstractConsent
     public function isAcceptAllForBots()
     {
         return \get_option(self::SETTING_ACCEPT_ALL_FOR_BOTS);
     }
-    /**
-     * Check if "Do not Track" header is respected.
-     *
-     * @return boolean
-     */
+    // Documented in AbstractConsent
     public function isRespectDoNotTrack()
     {
         return \get_option(self::SETTING_RESPECT_DO_NOT_TRACK);
     }
-    /**
-     * Check if IPs should be saved in plain in database.
-     *
-     * @return boolean
-     */
+    // Documented in AbstractConsent
     public function isSaveIpEnabled()
     {
         return \get_option(self::SETTING_SAVE_IP);
     }
-    /**
-     * Check if age notice hint is enabled
-     *
-     * @return boolean
-     */
+    // Documented in AbstractConsent
     public function isAgeNoticeEnabled()
     {
         return \get_option(self::SETTING_AGE_NOTICE);
@@ -155,38 +123,22 @@ class Consent implements IOverrideConsent
         }
         return self::AGE_NOTICE_COUNTRY_AGE_MAP[$option] ?? $defaultAge;
     }
-    /**
-     * Check if list-services notice hint is enabled
-     *
-     * @return boolean
-     */
+    // Documented in AbstractConsent
     public function isListServicesNoticeEnabled()
     {
         return \get_option(self::SETTING_LIST_SERVICES_NOTICE);
     }
-    /**
-     * Get the cookie duration for the consent cookies.
-     *
-     * @return int
-     */
+    // Documented in AbstractConsent
     public function getCookieDuration()
     {
         return \get_option(self::SETTING_COOKIE_DURATION);
     }
-    /**
-     * Get the cookie version for the consent cookies.
-     *
-     * @return int
-     */
+    // Documented in AbstractConsent
     public function getCookieVersion()
     {
         return \get_option(self::SETTING_COOKIE_VERSION);
     }
-    /**
-     * Get the consent duration.
-     *
-     * @return int
-     */
+    // Documented in AbstractConsent
     public function getConsentDuration()
     {
         return \get_option(self::SETTING_CONSENT_DURATION);

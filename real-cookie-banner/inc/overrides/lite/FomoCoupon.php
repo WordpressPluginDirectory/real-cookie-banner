@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\lite;
 
 use DevOwl\RealCookieBanner\Core;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -93,6 +94,6 @@ class FomoCoupon
      */
     protected function getApiUrl()
     {
-        return \defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV') ? 'http://real_commerce_backend:8000/' : 'https://commerce.devowl.io/';
+        return Service::getExternalContainerUrl('commerce');
     }
 }
