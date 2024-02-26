@@ -2,8 +2,6 @@
 
 namespace DevOwl\RealCookieBanner\view\checklist;
 
-use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\view\Checklist;
 use WP_Post;
 // @codeCoverageIgnoreStart
@@ -65,18 +63,5 @@ class PrivacyPolicyMentionUsage extends \DevOwl\RealCookieBanner\view\checklist\
             }
         }
         Checklist::getInstance()->toggle(self::IDENTIFIER, $toggleState);
-    }
-    /**
-     * Automatically check the checklist item if "Real Cookie Banner" is already mentioned in current
-     * privacy policy.
-     *
-     * @see https://app.clickup.com/t/2vqpmwj
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_3_4_13($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '3.4.13', ['3.4.14', '3.5.0'])) {
-            self::recalculate(BannerLink::getInstance()->getLegalLink(BannerLink::PAGE_TYPE_PRIVACY_POLICY, 'id'));
-        }
     }
 }

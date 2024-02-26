@@ -10,7 +10,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\ScriptInlineExtractExternalUrl;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\Localization;
 use DevOwl\RealCookieBanner\settings\Blocker as SettingsBlocker;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\Utils;
@@ -128,18 +127,6 @@ class Blocker
             $this->headlessContentBlocker = $headlessContentBlocker;
         }
         return $this->headlessContentBlocker;
-    }
-    /**
-     * Localize available content blockers for frontend.
-     */
-    public function localize()
-    {
-        $output = [];
-        $blockers = SettingsBlocker::getInstance()->getOrdered();
-        foreach ($blockers as $blocker) {
-            $output[] = \array_merge(['id' => $blocker->ID, 'name' => $blocker->post_title, 'description' => $blocker->post_content], $blocker->metas);
-        }
-        return Core::getInstance()->getCompLanguage()->translateArray($output, \array_merge(SettingsBlocker::SYNC_OPTIONS_COPY, Localization::COMMON_SKIP_KEYS), null, ['legal-text']);
     }
     /**
      * Apply the content blocker attributes to the output buffer when it is enabled.

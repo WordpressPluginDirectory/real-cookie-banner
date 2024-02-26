@@ -102,7 +102,7 @@ class RpmInitiator extends AbstractInitiator
         $stats = \DevOwl\RealCookieBanner\Stats::getInstance();
         $revision = Revision::getInstance();
         $revisionCurrent = $revision->getCurrent();
-        $revisionIndependent = $revision->createIndependent();
+        $revisionIndependent = $revision->getRevision()->createIndependent();
         $decision = $revisionIndependent['revision']['banner']['customizeValuesBanner']['decision'];
         $telemetry->add('rcb_serviceGroup_count', \count($revisionCurrent['revision']['groups']))->add('rcb_service_count', $revisionCurrent['all_cookie_count'])->add('rcb_contentBlocker_count', $revisionCurrent['all_blocker_count'])->add('rcb_services', \DevOwl\RealCookieBanner\Utils::array_flatten(\array_map(function ($group) {
             $items = [];

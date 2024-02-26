@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\tcf\AbstractGvlPersistance;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\tcf\VendorConfiguration;
 /**
  * Abstract implementation of the settings for the TCF compatibility.
@@ -30,14 +31,11 @@ abstract class AbstractTcf extends BaseSettings
      */
     public abstract function getVendorConfigurations();
     /**
-     * Fetch a list of vendors by arguments and return an array of vendors matching
-     * the schema of the official `vendor-list.json`.
+     * Get GVL persistence class.
      *
-     * @see https://vendor-list.consensu.org/v3/vendor-list.json
-     * @param array $args
-     * @return array[]
+     * @return AbstractGvlPersistance
      */
-    public abstract function queryVendors($args = []);
+    public abstract function getGvl();
     /**
      * Changes to the Global Vendor List are published weekly at 5:00 PM Central European Time on Thursdays.
      */
@@ -45,5 +43,15 @@ abstract class AbstractTcf extends BaseSettings
     {
         return \strtotime('next thursday 4:00 PM');
         // convert CET to UTC (+01:00)
+    }
+    /**
+     * Sanitize a 4-letter language code to 2-letter language code as it is the only
+     * one which is currently supported by TCF.
+     *
+     * @param string $language
+     */
+    public static function fourLetterLanguageCodeToTwoLetterCode($language)
+    {
+        return \strtolower(\explode('-', \explode('_', $language)[0])[0]);
     }
 }

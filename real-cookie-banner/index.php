@@ -8,7 +8,7 @@
  * Description:     Obtain GDPR (DSGVO) and ePrivacy (EU cookie law) compliant opt-in consent. Find cookies and fill all legal information in your cookie banner. More than just a cookie notice!
  * Author:          devowl.io
  * Author URI:      https://devowl.io
- * Version:                                                         4.4.1
+ * Version:                                                          4.5.0
  * Text Domain:     real-cookie-banner
  * Domain Path:     /languages
  */
@@ -40,7 +40,7 @@ define('RCB_SLUG_CAMELCASE', lcfirst(str_replace('-', '', ucwords(RCB_SLUG, '-')
 
 define('RCB_SLUG_PRO', 'real-cookie-banner-pro');
 define('RCB_SLUG_LITE', 'real-cookie-banner');
-// define('RCB_PRO_VERSION', 'https://devowl.io/go/real-cookie-banner?source=rcb-lite'); This constant is defined in the core class
+//  define('RCB_PRO_VERSION', 'https://devowl.io/go/real-cookie-banner?source=rcb-lite'); This constant is defined in the core class
 
 // Check PHP Version and print notice if minimum not reached, otherwise start the plugin core
 require_once RCB_INC .

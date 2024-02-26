@@ -119,17 +119,19 @@ class Thumbnail
      */
     public function setThumbnailUrl($thumbnailUrl, $provider = null)
     {
-        switch (\strtolower($provider)) {
-            case 'youtube':
-                $this->alternativeThumbnail = $thumbnailUrl;
-                $thumbnailUrl = \str_replace(['hqdefault'], ['sddefault'], $thumbnailUrl);
-                // Force the ratio to be 16/9 as YouTube adds black bars on top / bottom sides
-                if ($this->forceRatio === null) {
-                    $this->setForceRatio(9 / 16 * 100);
-                }
-                break;
-            default:
-                break;
+        if ($provider !== null) {
+            switch (\strtolower($provider)) {
+                case 'youtube':
+                    $this->alternativeThumbnail = $thumbnailUrl;
+                    $thumbnailUrl = \str_replace(['hqdefault'], ['sddefault'], $thumbnailUrl);
+                    // Force the ratio to be 16/9 as YouTube adds black bars on top / bottom sides
+                    if ($this->forceRatio === null) {
+                        $this->setForceRatio(9 / 16 * 100);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         $this->thumbnailUrl = $thumbnailUrl;
     }

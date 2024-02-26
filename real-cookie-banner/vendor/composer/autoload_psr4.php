@@ -10,7 +10,6 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\MaxMind\\Db\\' => array($vendorDir . '/maxmind-db/reader/src/MaxMind/Db'),
     'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\' => array($vendorDir . '/devowl-wp/utils/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\Embera\\' => array($vendorDir . '/mpratt/embera/src/Embera'),
-    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\TcfVendorListNormalize\\' => array($vendorDir . '/devowl-wp/tcf-vendor-list-normalize/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\' => array($vendorDir . '/devowl-wp/service-cloud-consumer/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\RealUtils\\' => array($vendorDir . '/devowl-wp/real-utils/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\RealQueue\\' => array($vendorDir . '/devowl-wp/real-queue/src'),

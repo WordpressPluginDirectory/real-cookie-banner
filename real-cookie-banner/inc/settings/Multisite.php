@@ -18,6 +18,7 @@ class Multisite extends AbstractMultisite implements IOverrideMultisite
 {
     use LiteMultisite;
     use UtilsProvider;
+    const FORWARDING_QUERY_BLOG_ID = 'blog';
     const OPTION_GROUP = 'options';
     const SETTING_CONSENT_FORWARDING = RCB_OPT_PREFIX . '-consent-forwarding';
     const SETTING_FORWARD_TO = RCB_OPT_PREFIX . '-forward-to';
@@ -51,6 +52,11 @@ class Multisite extends AbstractMultisite implements IOverrideMultisite
     public function register()
     {
         $this->overrideRegister();
+    }
+    // Documented in AbstractMultisite
+    public function getEnvironmentHost()
+    {
+        return \parse_url(\home_url(), \PHP_URL_HOST);
     }
     /**
      * Get singleton instance.

@@ -8,6 +8,7 @@ use DevOwl\RealCookieBanner\Cache;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\Blocker as LiteBlocker;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
+use DevOwl\RealCookieBanner\Localization;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideBlocker;
 use DevOwl\RealCookieBanner\view\Checklist;
 use DevOwl\RealCookieBanner\view\checklist\AddBlocker;
@@ -97,41 +98,6 @@ class Blocker implements IOverrideBlocker
         \register_meta('post', self::META_NAME_VISUAL_DOWNLOAD_THUMBNAIL, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true, 'default' => \false]);
         \register_meta('post', self::META_NAME_VISUAL_HERO_BUTTON_TEXT, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true, 'default' => '']);
         \register_meta('post', self::META_NAME_SHOULD_FORCE_TO_SHOW_VISUAL, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
-    }
-    /**
-     * Modify revision array and add non-visual blockers so they trigger a new "Request new consent".
-     *
-     * @param array $result
-     */
-    public function revisionArray($result)
-    {
-        $nonVisual = [];
-        $blockers = $this->getOrdered();
-        foreach ($blockers as $blocker) {
-            // Visuals should not trigger a new consent
-            if ($blocker->metas[self::META_NAME_IS_VISUAL]) {
-                continue;
-            }
-            $criteria = $blocker->metas[self::META_NAME_CRITERIA];
-            $nonVisualRow = ['id' => $blocker->ID, self::META_NAME_RULES => $blocker->metas[self::META_NAME_RULES]];
-            if ($criteria !== ServicesBlocker::DEFAULT_CRITERIA) {
-                $nonVisualRow[self::META_NAME_CRITERIA] = $criteria;
-            }
-            switch ($blocker->metas[self::META_NAME_CRITERIA]) {
-                case ServicesBlocker::CRITERIA_SERVICES:
-                    $nonVisualRow[self::META_NAME_SERVICES] = $blocker->metas[self::META_NAME_SERVICES];
-                    break;
-                case ServicesBlocker::CRITERIA_TCF_VENDORS:
-                    $nonVisualRow[self::META_NAME_TCF_VENDORS] = $blocker->metas[self::META_NAME_TCF_VENDORS];
-                    $nonVisualRow[self::META_NAME_TCF_PURPOSES] = $blocker->metas[self::META_NAME_TCF_PURPOSES];
-                    break;
-                default:
-                    break;
-            }
-            $nonVisual[] = $nonVisualRow;
-        }
-        $result['nonVisualBlocker'] = $nonVisual;
-        return $result;
     }
     /**
      * A blocker was saved.
@@ -231,6 +197,18 @@ class Blocker implements IOverrideBlocker
         return $posts;
     }
     /**
+     * Localize available content blockers for frontend.
+     */
+    public function toJson()
+    {
+        $output = [];
+        $blockers = $this->getOrdered();
+        foreach ($blockers as $blocker) {
+            $output[] = \array_merge(['id' => $blocker->ID, 'name' => $blocker->post_title, 'description' => $blocker->post_content], $blocker->metas);
+        }
+        return Core::getInstance()->getCompLanguage()->translateArray($output, \array_merge(self::SYNC_OPTIONS_COPY, Localization::COMMON_SKIP_KEYS), null, ['legal-text']);
+    }
+    /**
      * Get a total count of all blockers.
      *
      * @return int
@@ -238,60 +216,6 @@ class Blocker implements IOverrideBlocker
     public function getAllCount()
     {
         return \array_sum(\array_map('intval', \array_values((array) \wp_count_posts(self::CPT_NAME))));
-    }
-    /**
-     * Multiple metadata rename migrations.
-     *
-     * @see https://app.clickup.com/t/2d8dedh
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_0_2($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.0.2', ['3.0.3', '3.1.0'])) {
-            // Get posts which hold post meta which needs to be renamed so we can clear the post cache for them
-            $affectedPostIds = $wpdb->get_col($wpdb->prepare("SELECT p.ID FROM {$wpdb->postmeta} pm\n                    INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                    WHERE pm.meta_key IN (\n                        'criteria', 'visual', 'visualDarkMode', 'forceHidden', 'hosts', 'cookies'\n                    ) AND p.post_type = %s\n                    GROUP BY p.ID", self::CPT_NAME));
-            if (\count($affectedPostIds) > 0) {
-                // Rename the metadata directly through a plain SQL query so hooks like `update_post_meta` are not called
-                // This avoids issues with WPML or PolyLang and their syncing process
-                $wpdb->query($wpdb->prepare("UPDATE {$wpdb->postmeta} pm\n                        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                        SET pm.meta_key = CASE\n                            WHEN pm.meta_key = 'visual' THEN 'isVisual'\n                            WHEN pm.meta_key = 'visualDarkMode' THEN 'isVisualDarkMode'\n                            WHEN pm.meta_key = 'forceHidden' THEN 'shouldForceToShowVisual'\n                            WHEN pm.meta_key = 'hosts' THEN 'rules'\n                            WHEN pm.meta_key = 'cookies' THEN 'services'\n                            ELSE pm.meta_key\n                            END,\n                        pm.meta_value = CASE\n                            WHEN pm.meta_key = 'criteria' AND pm.meta_value = 'cookies' THEN 'services'\n                            ELSE pm.meta_value\n                            END\n                        WHERE p.post_type = %s", self::CPT_NAME));
-                foreach ($affectedPostIds as $affectedPostId) {
-                    \clean_post_cache(\intval($affectedPostId));
-                }
-            }
-        }
-    }
-    /**
-     * Modify already given consents and adjust the metadata field names for "List of consents".
-     *
-     * @see https://app.clickup.com/t/2d8dedh
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyMetaRenameBackwardsCompatibility($revision, $independent)
-    {
-        $renameBlockerFields = ['visual' => 'isVisual', 'visualDarkMode' => 'isVisualDarkMode', 'forceHidden' => 'shouldForceToShowVisual', 'hosts' => 'rules', 'cookies' => 'services'];
-        $useBlockers = [];
-        if ($independent && isset($revision['blocker'])) {
-            $useBlockers =& $revision['blocker'];
-        } elseif (!$independent && isset($revision['nonVisualBlocker'])) {
-            $useBlockers =& $revision['nonVisualBlocker'];
-        }
-        foreach ($useBlockers as &$blocker) {
-            foreach ($renameBlockerFields as $renameBlockerField => $newFieldName) {
-                if (isset($blocker[$renameBlockerField])) {
-                    if ($newFieldName !== \false) {
-                        $blocker[$newFieldName] = $blocker[$renameBlockerField];
-                    }
-                    unset($blocker[$renameBlockerField]);
-                }
-            }
-            // Special cases
-            if (isset($blocker['criteria']) && $blocker['criteria'] === 'cookies') {
-                $blocker['criteria'] = 'services';
-            }
-        }
-        return $revision;
     }
     /**
      * Get singleton instance.

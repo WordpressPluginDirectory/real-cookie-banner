@@ -7,8 +7,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\CssMarginInput;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\Headline;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\RangeInput;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\BannerCustomize;
 use WP_Customize_Color_Control;
 // @codeCoverageIgnoreStart
@@ -211,54 +209,5 @@ class BodyDesign
     public static function getFontWeightChoices()
     {
         return ['lighter' => \__('Lighter', RCB_TD), 'normal' => \__('Normal', RCB_TD), 'bolder' => \__('Bolder', RCB_TD), 'bold' => \__('Bold', RCB_TD)];
-    }
-    /**
-     * Deactivate "Use same stylings as 'Accept all'" as it should not be activated automatically for already existing users.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_17_3($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '2.17.3', ['2.17.4', '2.18.0'])) {
-            \update_option(self::SETTING_BUTTON_ACCEPT_ESSENTIALS_USE_ACCEPT_ALL, '');
-        }
-    }
-    /**
-     * We have renamed the TCF Stacks in customizer to "Accordion" so it is not restricted to TCF-only.
-     *
-     * @see https://app.clickup.com/2088/v/dc/218-357/218-12212?block=block-fc8ad147-87f1-4c73-bdb1-2f8faa1dd462
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_4_3_7($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '4.3.7', ['4.3.8', '4.4.0']) || Core::versionCompareOlderThan($installed, '4.4.0', ['4.4.1', '4.5.0'])) {
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $wpdb->query("INSERT INTO {$wpdb->options} (`option_name`, `option_value`, `autoload`)\n                SELECT\n                    REPLACE(option_name, 'tcf-stacks', 'accordion') AS option_name,\n                    option_value,\n                    'yes' as autoload\n                FROM {$wpdb->options}\n                WHERE option_name LIKE 'rcb-banner-body-design-tcf-stacks%'\n                ON DUPLICATE KEY UPDATE option_value = VALUES(option_value)");
-            // phpcs:enable WordPress.DB.PreparedSQL
-            \wp_cache_delete('alloptions', 'options');
-        }
-    }
-    /**
-     * With version 4.4.0 we have introduced the Google Consent Mode. As it needs an accordion in the first
-     * view of the cookie banner, the "TCF Stacks" got renamed to "Accordion" and moved to the free version.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     * @see https://app.clickup.com/t/apv5uu
-     */
-    public static function applyBackwardsCompatibility($revision, $independent)
-    {
-        if ($independent && isset($revision['banner']['customizeValuesBanner']['bodyDesign'])) {
-            $bodyDesign =& $revision['banner']['customizeValuesBanner']['bodyDesign'];
-            foreach ($bodyDesign as $key => $value) {
-                if (Utils::startsWith($key, 'tcfStacks')) {
-                    $newKey = \str_replace('tcfStacks', 'accordion', $key);
-                    $bodyDesign[$newKey] = $value;
-                    unset($bodyDesign[$key]);
-                }
-            }
-        }
-        return $revision;
     }
 }

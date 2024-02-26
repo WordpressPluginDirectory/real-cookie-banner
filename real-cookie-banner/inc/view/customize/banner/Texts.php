@@ -7,7 +7,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\TinyMCE;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\lite\Forwarding;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Multisite;
 use DevOwl\RealCookieBanner\Utils;
@@ -61,7 +60,8 @@ class Texts
     {
         $defaultButtonTexts = self::getDefaultButtonTexts();
         $consentSettings = Consent::getInstance();
-        $consentForwarding = Multisite::getInstance()->isConsentForwarding() && $this->isPro() ? Forwarding::getInstance()->getExternalHosts() !== \false : \false;
+        $multisite = Multisite::getInstance();
+        $consentForwarding = $multisite->isConsentForwarding() && $this->isPro() ? $multisite->getExternalHosts() !== \false : \false;
         $isDataProcessingInUnsafeCountries = $consentSettings->isDataProcessingInUnsafeCountries();
         $ageNoticeEnabled = $consentSettings->isAgeNoticeEnabled();
         $listServicesNoticeEnabled = $consentSettings->isListServicesNoticeEnabled();
@@ -193,84 +193,5 @@ class Texts
             $defaults = ['WordPress Cookie Plugin by Real Cookie Banner', 'WordPress Cookie Notice by Real Cookie Banner', 'Cookie Consent with Real Cookie Banner', 'GDPR Cookie Consent with Real Cookie Banner', 'Consent Management Platform by Real Cookie Banner', 'Cookie Consent Banner by Real Cookie Banner'];
         }
         return $defaults;
-    }
-    /**
-     * Since 1.10: Moved the texts to the customizer, but keep for backwards-compatibility.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyBlockerTextsBackwardsCompatibility($revision, $independent)
-    {
-        if ($independent && !isset($revision['banner']['customizeValuesBanner']['texts']['blockerHeadline'])) {
-            $revision['banner']['customizeValuesBanner']['texts'] = \array_merge($revision['banner']['customizeValuesBanner']['texts'], Core::getInstance()->getCompLanguage()->translateArray(['blockerHeadline' => \_x('{{name}} blocked due to privacy settings', 'legal-text', RCB_TD), 'blockerLinkShowMissing' => \_x('Show all services you still need to agree to', 'legal-text', RCB_TD), 'blockerLoadButton' => \_x('Accept required services and load content', 'legal-text', RCB_TD), 'blockerAcceptInfo' => \_x('Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future. You have the right to revoke or change your decision at any time.', 'legal-text', RCB_TD)], [], null, ['legal-text']));
-        }
-        return $revision;
-    }
-    /**
-     * Delete the already known, randomly selected powered-by text and regenerate it.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_6_5($installed)
-    {
-        if ($installed && \version_compare($installed, '2.6.5', '<=')) {
-            \delete_option(self::SETTING_POWERED_BY_TEXT);
-        }
-    }
-    /**
-     * With the introduction of the legal basis in Settings > General, we now need to output the
-     * selected legal basis in the cookie banner for the "Data processing in unsafe countries".
-     * For this, we update the configured texts and replace the legal basis with the new `{{legalBasis}}` variable.
-     *
-     * @see https://app.clickup.com/t/863h7nj72
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_3_11_5($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.11.5', ['3.12.0', '3.11.6'])) {
-            // phpcs:disable WordPress.DB
-            $sql = \sprintf("UPDATE {$wpdb->options}\n                SET option_value = REPLACE(REPLACE(option_value, 'Art. 49 Abs. 1 lit. a DSGVO', '{{legalBasis}}'), 'Art. 49 (1) lit. a GDPR', '{{legalBasis}}')\n                WHERE `option_name` LIKE '%s%%'", self::SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES);
-            $count = $wpdb->query($sql);
-            // phpcs:enable WordPress.DB
-            if ($count > 0) {
-                \wp_cache_delete('alloptions', 'options');
-            }
-        }
-    }
-    /**
-     * With the introduction of the age notice age limit in Settings > Consent, we now need to output the
-     * age limit in the cookie banner. For this, we update the configured texts and replace the "16 years"
-     * with the new `{{minAge}} years` variable.
-     *
-     * @see https://app.clickup.com/t/866awy2fr
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_3_12_0($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.12.0', ['3.13.0', '3.12.1'])) {
-            // phpcs:disable WordPress.DB
-            $sql = \sprintf("UPDATE {$wpdb->options}\n                SET option_value = REPLACE(REPLACE(option_value, '16 years', '{{minAge}} years'), '16 Jahre', '{{minAge}} Jahre')\n                WHERE `option_name` LIKE '%s%%' OR `option_name` LIKE '%s%%'", self::SETTING_AGE_NOTICE, self::SETTING_AGE_NOTICE_BLOCKER);
-            $count = $wpdb->query($sql);
-            // phpcs:enable WordPress.DB
-            if ($count > 0) {
-                \wp_cache_delete('alloptions', 'options');
-            }
-        }
-    }
-    /**
-     * Set the default legal basis for older consent records.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyLegalBasisBackwardsCompatibility($revision, $independent)
-    {
-        if (!$independent && !isset($revision['options']['SETTING_TERRITORIAL_LEGAL_BASIS'])) {
-            $revision['options']['SETTING_TERRITORIAL_LEGAL_BASIS'] = 'gdpr-eprivacy';
-        }
-        return $revision;
     }
 }

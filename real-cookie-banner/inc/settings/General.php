@@ -2,8 +2,11 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker as ServicesBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\ServiceGroup;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractGeneral;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\BannerLink as SettingsBannerLink;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\Language;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
@@ -63,7 +66,7 @@ class General extends AbstractGeneral implements IOverrideGeneral
         UtilsUtils::enableOptionAutoload(self::SETTING_BANNER_ACTIVE, self::DEFAULT_BANNER_ACTIVE, 'boolval');
         UtilsUtils::enableOptionAutoload(self::SETTING_BLOCKER_ACTIVE, self::DEFAULT_BLOCKER_ACTIVE, 'boolval');
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_COUNTRY, $this->getDefaultOperatorCountry());
-        UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_ADDRESS, self::DEFAULT_OPERATOR_CONTACT_ADDRESS);
+        UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_ADDRESS, \html_entity_decode(\get_bloginfo('name')));
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_PHONE, self::DEFAULT_OPERATOR_CONTACT_PHONE);
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_EMAIL, $this->getDefaultOperatorContactEmail());
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_FORM_ID, self::DEFAULT_OPERATOR_CONTACT_FORM_ID, 'intval');
@@ -85,16 +88,6 @@ class General extends AbstractGeneral implements IOverrideGeneral
         // WP < 5.3 does not support array types yet, so we need to store serialized
         \register_setting(self::OPTION_GROUP, self::SETTING_TERRITORIAL_LEGAL_BASIS, ['type' => 'string', 'show_in_rest' => \true]);
         $this->overrideRegister();
-    }
-    /**
-     * Localize data about the website operator for the frontend.
-     */
-    public function localizeWebsiteOperator()
-    {
-        $address = $this->getOperatorContactAddress();
-        $contactFormId = Core::getInstance()->getCompLanguage()->getCurrentPostId(\get_option(self::SETTING_OPERATOR_CONTACT_FORM_ID, 0), 'page');
-        $contactFormUrl = Utils::getPermalink($contactFormId);
-        return ['address' => empty($address) ? \html_entity_decode(\get_bloginfo('name')) : $address, 'country' => $this->getOperatorCountry(), 'contactEmail' => $this->getOperatorContactEmail(), 'contactPhone' => $this->getOperatorContactPhone(), 'contactFormUrl' => $contactFormUrl];
     }
     // Documented in AbstractGeneral
     public function isBannerActive()
@@ -139,13 +132,39 @@ class General extends AbstractGeneral implements IOverrideGeneral
     {
         return \array_map(function ($data) {
             return ServiceGroup::fromJson($data);
-        }, \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->toJson(\true));
+        }, \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->toJson());
+    }
+    // Documented in AbstractGeneral
+    public function getBlocker()
+    {
+        return \array_map(function ($data) {
+            return ServicesBlocker::fromJson($data);
+        }, \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->toJson());
+    }
+    // Documented in AbstractGeneral
+    public function getBannerLinks()
+    {
+        return \array_map(function ($data) {
+            return SettingsBannerLink::fromJson($data);
+        }, \DevOwl\RealCookieBanner\settings\BannerLink::getInstance()->toJson());
+    }
+    // Documented in AbstractGeneral
+    public function getLanguages()
+    {
+        return \array_map(function ($data) {
+            return Language::fromJson($data);
+        }, Core::getInstance()->getCompLanguage()->getLanguageSwitcher());
+    }
+    // Documented in AbstractGeneral
+    public function getOperatorContactFormId()
+    {
+        return \get_option(self::SETTING_OPERATOR_CONTACT_FORM_ID, 0);
     }
     // Documented in AbstractGeneral
     public function getOperatorContactFormUrl($default = \false)
     {
         $compLanguage = Core::getInstance()->getCompLanguage();
-        $id = \get_option(self::SETTING_OPERATOR_CONTACT_FORM_ID);
+        $id = $this->getOperatorContactFormId();
         if ($id > 0) {
             $id = $compLanguage->getCurrentPostId($id, 'page');
             $permalink = Utils::getPermalink($id);
@@ -211,56 +230,6 @@ class General extends AbstractGeneral implements IOverrideGeneral
         $contactFormId = \get_option(self::SETTING_OPERATOR_CONTACT_FORM_ID);
         if ($postId === $contactFormId) {
             \update_option(self::SETTING_OPERATOR_CONTACT_FORM_ID, self::DEFAULT_OPERATOR_CONTACT_FORM_ID);
-        }
-    }
-    /**
-     * Set the TCF publisher country as operator country when given from older installations.
-     *
-     * And, calculate the `isProviderCurrentWebsite` for all services.
-     *
-     * @see https://app.clickup.com/t/863h7nj72
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_11_5($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.11.5', ['3.12.0', '3.11.6'])) {
-            $deleteCountryForExistingUsers = \true;
-            if ($this->isPro()) {
-                $tcfPublisherCc = \get_option(\DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_PUBLISHER_CC);
-                if (!empty($tcfPublisherCc)) {
-                    // We need to call this after `enableOptionAutoload`
-                    \add_action('init', function () use($tcfPublisherCc) {
-                        \update_option(self::SETTING_OPERATOR_COUNTRY, $tcfPublisherCc);
-                    }, 11);
-                    \delete_option(\DevOwl\RealCookieBanner\settings\TCF::SETTING_TCF_PUBLISHER_CC);
-                    $deleteCountryForExistingUsers = \false;
-                }
-            }
-            if ($deleteCountryForExistingUsers) {
-                // We need to call this after `enableOptionAutoload`
-                \add_action('init', function () {
-                    \update_option(self::SETTING_OPERATOR_COUNTRY, '');
-                }, 11);
-            }
-            // Get posts which hold post meta which needs to be renamed so we can clear the post cache for them
-            $affectedPostIds = $wpdb->get_col($wpdb->prepare("SELECT DISTINCT(p.ID)\n                    FROM {$wpdb->posts} p\n                    LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'isProviderCurrentWebsite'\n                    WHERE p.post_type = %s AND pm.meta_value IS NULL", \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME));
-            if (\count($affectedPostIds) > 0) {
-                // Insert the metadata directly through a plain SQL query so hooks like `update_post_meta` are not called
-                // This avoids issues with WPML or PolyLang and their syncing process
-                $wpdb->query($wpdb->prepare(
-                    "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) SELECT p.ID, 'isProviderCurrentWebsite',\n                            CASE\n                                WHEN pmPrivacy.meta_value LIKE %s THEN '1'\n                                WHEN pmLegal.meta_value LIKE %s THEN '1'\n                                WHEN pmProvider.meta_value LIKE %s THEN '1'\n                                WHEN pmProvider.meta_value LIKE %s THEN '1'\n                                ELSE ''\n                            END AS isProviderCurrentWebsite\n                        FROM {$wpdb->posts} p\n                        LEFT JOIN {$wpdb->postmeta} pmProvider\n                            ON p.ID = pmProvider.post_id AND pmProvider.meta_key = 'provider'\n                        LEFT JOIN {$wpdb->postmeta} pmPrivacy\n                            ON p.ID = pmPrivacy.post_id AND pmPrivacy.meta_key = 'providerPrivacyPolicyUrl'\n                        LEFT JOIN {$wpdb->postmeta} pmLegal\n                            ON p.ID = pmLegal.post_id AND pmLegal.meta_key = 'providerLegalNoticeUrl'\n                        WHERE p.post_type = %s\n                        AND NOT EXISTS (\n                            SELECT 1 FROM {$wpdb->postmeta} pm\n                            WHERE pm.post_id = p.ID\n                            AND pm.meta_key = 'isProviderCurrentWebsite'\n                        )",
-                    '%' . Utils::host(Utils::HOST_TYPE_MAIN) . '%',
-                    '%' . Utils::host(Utils::HOST_TYPE_MAIN) . '%',
-                    \get_bloginfo('name'),
-                    // needed for backwards-compatibility due to a bug in older Real Cookie Banner versions
-                    \html_entity_decode(\get_bloginfo('name')),
-                    \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME
-                ));
-                foreach ($affectedPostIds as $affectedPostId) {
-                    \clean_post_cache(\intval($affectedPostId));
-                }
-            }
         }
     }
     /**

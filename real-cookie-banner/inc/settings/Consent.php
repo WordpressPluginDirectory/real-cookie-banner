@@ -3,7 +3,6 @@
 namespace DevOwl\RealCookieBanner\settings;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractConsent;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\lite\settings\Consent as LiteConsent;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideConsent;
@@ -108,20 +107,10 @@ class Consent extends AbstractConsent implements IOverrideConsent
     {
         return \get_option(self::SETTING_AGE_NOTICE);
     }
-    /**
-     * Get the configured age limit for the age notice.
-     *
-     * @return int
-     */
-    public function getAgeNoticeAgeLimit()
+    // Documented in AbstractConsent
+    public function getAgeNoticeAgeLimitRaw()
     {
-        $option = \get_option(self::SETTING_AGE_NOTICE_AGE_LIMIT);
-        $operatorCountry = \DevOwl\RealCookieBanner\settings\General::getInstance()->getOperatorCountry();
-        $defaultAge = self::AGE_NOTICE_COUNTRY_AGE_MAP['GDPR'];
-        if ($option === 'INHERIT') {
-            return self::AGE_NOTICE_COUNTRY_AGE_MAP[$operatorCountry] ?? $defaultAge;
-        }
-        return self::AGE_NOTICE_COUNTRY_AGE_MAP[$option] ?? $defaultAge;
+        return \get_option(self::SETTING_AGE_NOTICE_AGE_LIMIT);
     }
     // Documented in AbstractConsent
     public function isListServicesNoticeEnabled()
@@ -142,6 +131,11 @@ class Consent extends AbstractConsent implements IOverrideConsent
     public function getConsentDuration()
     {
         return \get_option(self::SETTING_CONSENT_DURATION);
+    }
+    // Documented in AbstractConsent
+    public function setCookieVersion($version)
+    {
+        \update_option(self::SETTING_COOKIE_VERSION, $version);
     }
     /**
      * The cookie duration may not be greater than 365 days.
@@ -185,99 +179,5 @@ class Consent extends AbstractConsent implements IOverrideConsent
     public static function getInstance()
     {
         return self::$me === null ? self::$me = new \DevOwl\RealCookieBanner\settings\Consent() : self::$me;
-    }
-    /**
-     * Deactivate "Naming of all services in first view" as it should not be activated automatically for already existing users.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_17_3($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '2.17.3', ['2.17.4', '2.18.0'])) {
-            \update_option(self::SETTING_LIST_SERVICES_NOTICE, '');
-        }
-    }
-    /**
-     * Revert to cookie version 1 for users already using RCB.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_3_0_1($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '3.0.1', ['3.0.2', '3.1.0'])) {
-            \update_option(self::SETTING_COOKIE_VERSION, self::COOKIE_VERSION_1);
-        }
-    }
-    /**
-     * Automatically convert ePrivacy USA flag to data processing in unsafe countries.
-     *
-     * @see https://app.clickup.com/t/861m47jgm
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_3_7_2($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.7.2', ['3.7.3', '3.8.0'])) {
-            // Enable new feature
-            $legacyOptionName = RCB_OPT_PREFIX . '-eprivacy-usa';
-            $option = \get_option($legacyOptionName);
-            if ($option) {
-                \update_option(self::SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, \true);
-            }
-            //delete_option($legacyOptionName);
-            // Get posts which hold post meta which needs to be renamed so we can clear the post cache for them
-            $affectedPostIds = $wpdb->get_col($wpdb->prepare("SELECT p.ID FROM {$wpdb->postmeta} pm\n                    INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                    WHERE pm.meta_key IN (\n                        'ePrivacyUSA'\n                    ) AND p.post_type IN (%s, %s)\n                    GROUP BY p.ID", \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'rcb-tcf-vendor-conf'));
-            if (\count($affectedPostIds) > 0) {
-                // Rename the metadata directly through a plain SQL query so hooks like `update_post_meta` are not called
-                // This avoids issues with WPML or PolyLang and their syncing process
-                $wpdb->query($wpdb->prepare("UPDATE {$wpdb->postmeta} pm\n                        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                        SET pm.meta_key = CASE\n                            WHEN pm.meta_key = 'ePrivacyUSA' THEN 'dataProcessingInCountries'\n                            ELSE pm.meta_key\n                            END,\n                        pm.meta_value = CASE\n                            WHEN pm.meta_key = 'ePrivacyUSA' AND pm.meta_value = '1' THEN '[\"US\"]'\n                            WHEN pm.meta_key = 'ePrivacyUSA' AND pm.meta_value <> '1' THEN '[]'\n                            ELSE pm.meta_value\n                            END\n                        WHERE p.post_type IN (%s, %s)", \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'rcb-tcf-vendor-conf'));
-                foreach ($affectedPostIds as $affectedPostId) {
-                    \clean_post_cache(\intval($affectedPostId));
-                }
-            }
-        }
-    }
-    /**
-     * Modify already given consents and adjust the "data processing in unsafe countries" field names for "List of consents".
-     *
-     * @see https://app.clickup.com/t/861m47jgm
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyDataProcessingInUnsafeCountriesBackwardsCompatibility($revision, $independent)
-    {
-        if (!$independent) {
-            if (!isset($revision['options']['SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES'])) {
-                $revision['options']['SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES'] = \false;
-                $revision['options']['SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES'] = '';
-            }
-            foreach ($revision['groups'] as &$group) {
-                foreach ($group['items'] as &$item) {
-                    $item['dataProcessingInCountries'] = $item['dataProcessingInCountries'] ?? [];
-                    $item['dataProcessingInCountriesSpecialTreatments'] = $item['dataProcessingInCountriesSpecialTreatments'] ?? [];
-                }
-            }
-            if (isset($revision['tcf'])) {
-                foreach ($revision['tcf']['vendorConfigurations'] as &$vendorConfiguration) {
-                    $vendorConfiguration['dataProcessingInCountries'] = $vendorConfiguration['dataProcessingInCountries'] ?? [];
-                    $vendorConfiguration['dataProcessingInCountriesSpecialTreatments'] = $vendorConfiguration['dataProcessingInCountriesSpecialTreatments'] ?? [];
-                }
-            }
-        }
-        return $revision;
-    }
-    /**
-     * Modify already given consents and adjust the age limit for the age notice for "List of consents".
-     *
-     * @see https://app.clickup.com/t/866awy2fr
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyAgeNoticeAgeLimitBackwardsCompatibility($revision, $independent)
-    {
-        if ($independent && !isset($revision['ageNoticeAgeLimit'])) {
-            $revision['ageNoticeAgeLimit'] = 16;
-        }
-        return $revision;
     }
 }

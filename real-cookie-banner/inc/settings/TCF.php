@@ -4,7 +4,6 @@ namespace DevOwl\RealCookieBanner\settings;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractTcf;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TCF as LiteTCF;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideTCF;
 // @codeCoverageIgnoreStart
@@ -69,11 +68,6 @@ class TCF extends AbstractTcf implements IOverrideTCF
     public function register()
     {
         $this->overrideRegister();
-    }
-    // Documented in AbstractTcf
-    public function queryVendors($args = [])
-    {
-        return Core::getInstance()->getTcfVendorListNormalizer()->getQuery()->vendors($args);
     }
     /**
      * When a new version of Real Cookie Banner got installed, automatically download the new GVL.

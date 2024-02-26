@@ -28,7 +28,7 @@ class TcfVendorDomainsBlockable extends AbstractBlockable
         parent::__construct($headlessContentBlocker);
         $this->vendorId = $vendorId;
         foreach ($domains as $row) {
-            if (!\in_array($row['domain'], self::SKIP_DOMAINS, \true)) {
+            if (\is_array($row) && !\in_array($row['domain'], self::SKIP_DOMAINS, \true)) {
                 $this->appendFromStringArray([$row['domain']]);
             }
         }

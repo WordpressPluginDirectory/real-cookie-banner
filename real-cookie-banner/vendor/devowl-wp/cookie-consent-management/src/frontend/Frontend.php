@@ -12,6 +12,9 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\servi
  */
 class Frontend
 {
+    const COOKIE_NAME_USER_PREFIX = 'real_cookie_banner';
+    const COOKIE_NAME_SUFFIX_GCM = '-gcm';
+    const COOKIE_NAME_SUFFIX_TCF = '-tcf';
     /**
      * See `CookieConsentManagement`.
      *
@@ -26,6 +29,92 @@ class Frontend
     public function __construct($cookieConsentManagement)
     {
         $this->cookieConsentManagement = $cookieConsentManagement;
+    }
+    /**
+     * Generate an array which can be used for the frontend to show the cookie banner / content
+     * blocker to the website visitor.
+     *
+     * Behind the scenes, it reuses `Revision` where possible.
+     */
+    public function toJson()
+    {
+        $management = $this->getCookieConsentManagement();
+        $settings = $management->getSettings();
+        $revision = $management->getRevision();
+        $general = $settings->getGeneral();
+        $consent = $settings->getConsent();
+        $googleConsentMode = $settings->getGoogleConsentMode();
+        $tcf = $settings->getTcf();
+        $multisite = $settings->getMultisite();
+        $output = [
+            // Also part in revision
+            'groups' => $revision->serviceGroupsToJson(),
+            'links' => $revision->bannerLinkToJson(),
+            'websiteOperator' => $revision->websiteOperatorToJson(),
+            'blocker' => $revision->blockersToJson(),
+            'languageSwitcher' => \array_map(function ($language) {
+                return $language->toJson();
+            }, $general->getLanguages()),
+            // Misc
+            'decisionCookieName' => $this->getCookieName(),
+            'revisionHash' => $revision->getEnsuredCurrentHash(),
+            // Options
+            'territorialLegalBasis' => $general->getTerritorialLegalBasis(),
+            'setCookiesViaManager' => $general->getSetCookiesViaManager(),
+            'isRespectDoNotTrack' => $consent->isRespectDoNotTrack(),
+            'isAcceptAllForBots' => $consent->isAcceptAllForBots(),
+            'isDataProcessingInUnsafeCountries' => $consent->isDataProcessingInUnsafeCountries(),
+            'dataProcessingInUnsafeCountriesSafeCountries' => $consent->getDataProcessingInUnsafeCountriesSafeCountries(),
+            'isAgeNotice' => $consent->isAgeNoticeEnabled(),
+            'ageNoticeAgeLimit' => $consent->getAgeNoticeAgeLimit(),
+            'isListServicesNotice' => $consent->isListServicesNoticeEnabled(),
+            'isTcf' => $tcf->isActive(),
+            'isGcm' => $googleConsentMode->isEnabled(),
+            'isGcmListPurposes' => $googleConsentMode->isListPurposes(),
+        ];
+        if ($tcf->isActive()) {
+            $output['tcf'] = $revision->tcfToJson();
+            $output['tcfMetadata'] = $revision->tcfMetadataToJson();
+        }
+        $consentForwardingExternalHosts = $multisite->getExternalHosts();
+        if (!empty($consentForwardingExternalHosts)) {
+            $output['consentForwardingExternalHosts'] = $consentForwardingExternalHosts;
+        }
+        return $output;
+    }
+    /**
+     * The `toJson` method prepares the data for the complete data of the frontend. Use this function
+     * to outsource lazy-loadable data for the second view in your cookie banner.
+     *
+     * @param array $output
+     * @param boolean $appendStateToOutput If `true`, a `hasLazyData` property will be added to the passe `$output` object
+     */
+    public function prepareLazyData(&$output, $appendStateToOutput = \false)
+    {
+        $lazyLoaded = [];
+        // Remove `additionalInformation`, `urls` and `deviceStorageDisclosure` from the GVL
+        if (isset($output['tcf']) && !empty($output['tcf'])) {
+            $lazyLoaded['tcf'] = ['vendors' => []];
+            foreach ($output['tcf']['vendors'] as $vendorId => &$row) {
+                foreach ([
+                    // This keys are part of the main GVL model
+                    'urls',
+                    'deviceStorageDisclosureUrl',
+                    // This keys are not part of the main GVL model, but inserted into the object by Real Cookie Banner backend
+                    'additionalInformation',
+                    'deviceStorageDisclosure',
+                ] as $key) {
+                    if (isset($row[$key])) {
+                        $lazyLoaded['tcf']['vendors'][$vendorId][$key] = $row[$key];
+                        unset($row[$key]);
+                    }
+                }
+            }
+        }
+        if ($appendStateToOutput) {
+            $output['hasLazyData'] = !empty($lazyLoaded);
+        }
+        return (object) $lazyLoaded;
     }
     /**
      * Generate the "Code on page load" for all our configured services.
@@ -85,6 +174,18 @@ class Frontend
             $output = \sprintf("<script>window.gtag && (()=>{gtag('set', 'url_passthrough', %s);\ngtag('set', 'ads_data_redaction', %s);%s\ngtag('consent', 'default', %s);})()</script>", $gcm->isCollectAdditionalDataViaUrlParameters() ? 'true' : 'false', $gcm->isRedactAdsDataWithoutConsent() ? 'true' : 'false', $regionGtag, \json_encode($defaults));
         }
         return $output;
+    }
+    /**
+     * Get the cookie name for the consent decision.
+     *
+     * @param string $suffix See also constants starting with `COOKIE_NAME_SUFFIX_`
+     */
+    public function getCookieName($suffix = '')
+    {
+        $revision = $this->getCookieConsentManagement()->getRevision()->getPersistence();
+        $implicitString = $revision->getContextVariablesString(\true);
+        $contextString = $revision->getContextVariablesString();
+        return self::COOKIE_NAME_USER_PREFIX . (empty($implicitString) ? '' : '-' . $implicitString) . (empty($contextString) ? '' : '-' . $contextString) . $suffix;
     }
     /**
      * Getter.

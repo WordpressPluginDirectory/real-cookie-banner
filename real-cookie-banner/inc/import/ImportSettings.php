@@ -2,13 +2,14 @@
 
 namespace DevOwl\RealCookieBanner\import;
 
+use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\Multisite;
-use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Utils;
+use ReflectionClass;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -26,10 +27,10 @@ trait ImportSettings
      */
     protected function doImportSettings($settings)
     {
-        $availableOptions = Revision::getInstance()->fromOptions(null, \false, \true);
+        $availableOptions = $this->optionsMap(\true);
         $availableOptionKeys = \array_keys($availableOptions);
         foreach ($settings as $key => $value) {
-            if (\in_array($key, $availableOptionKeys, \true)) {
+            if (\in_array($key, $availableOptionKeys, \true) && \is_scalar($value)) {
                 $optionName = $availableOptions[$key];
                 // Skip already persistent options with the same value (no strict comparision)
                 // phpcs:disable Universal.Operators.StrictComparisons.LooseEqual
@@ -49,6 +50,30 @@ trait ImportSettings
                 $this->addMessageOptionOutdated($key);
             }
         }
+    }
+    /**
+     * Read all available options.
+     *
+     * @param boolean $asOptionName If true, the returned map contains the option name instead of value
+     */
+    public function optionsMap($asOptionName = \false)
+    {
+        $clazzes = [General::class, Consent::class, Multisite::class, TCF::class, CountryBypass::class, GoogleConsentMode::class];
+        $options = [];
+        $excludeOptions = [TCF::SETTING_TCF_FIRST_ACCEPTED_TIME, TCF::SETTING_TCF_ACCEPTED_TIME, TCF::SETTING_TCF_GVL_DOWNLOAD_TIME, CountryBypass::SETTING_COUNTRY_BYPASS_DB_DOWNLOAD_TIME, GoogleConsentMode::SETTING_GCM_SHOW_RECOMMONDATIONS_WITHOUT_CONSENT];
+        foreach ($clazzes as $clazzName) {
+            $clazz = new ReflectionClass($clazzName);
+            $constants = $clazz->getConstants();
+            foreach ($constants as $key => $value) {
+                if (Utils::startsWith($key, 'SETTING_') && !\in_array($value, $excludeOptions, \true)) {
+                    if (!$asOptionName) {
+                        $value = \get_option($value);
+                    }
+                    $options[$key] = $value;
+                }
+            }
+        }
+        return $options;
     }
     /**
      * Handle special cases for settings.

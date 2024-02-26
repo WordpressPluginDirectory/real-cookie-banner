@@ -93,7 +93,7 @@ class ExportConsent
      */
     public function convertToUTF8Charset($string)
     {
-        if (\function_exists('mb_detect_encoding')) {
+        if (\function_exists('mb_detect_encoding') && $string !== null) {
             $charset = \mb_detect_encoding($string);
             return \mb_convert_encoding($string, 'UTF-8', $charset);
         }

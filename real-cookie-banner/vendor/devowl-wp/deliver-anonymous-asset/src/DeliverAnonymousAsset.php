@@ -45,13 +45,32 @@ class DeliverAnonymousAsset
      * Delete all outdated files.
      *
      * @param string[] $deletedHashes
+     * @deprecated This is only implemented for backwards compatibility to delete old files directly placed in `wp-content` instead of a subfolder
      */
     public function deleteOldHashes($deletedHashes)
     {
-        foreach ($deletedHashes as $deletedHash) {
-            $contentPath = $this->getFullPathToFile(\md5($deletedHash . $this->getHandle()));
-            if (\file_exists($contentPath)) {
-                \unlink($contentPath);
+        $contentDir = $this->getBuilder()->getContentDir();
+        // Instead of the old mechanism, we just read the directory for filenames matching MD5
+        /*$extension = pathinfo($this->getFile(), PATHINFO_EXTENSION);
+                foreach ($deletedHashes as $deletedHash) {
+                    $filename = md5($deletedHash . $this->getHandle()) . '.' . $extension;
+                    $filename = $contentDir . $filename;
+        
+                    if (file_exists($filename)) {
+                        unlink($filename);
+                    }
+                }*/
+        // @codeCoverageIgnoreStart
+        if (!\defined('PHPUNIT_FILE')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+        // @codeCoverageIgnoreEnd
+        foreach (\list_files($contentDir, 1) as $file) {
+            if (\strlen(\basename($file)) === 35 && \is_readable($file) && \time() - \filemtime($file) > 28 * 24 * 60 * 60) {
+                $fileContent = \file_get_contents($file);
+                if (\strpos($fileContent, 'realCookieBanner') !== \false || \strpos($fileContent, '__tcfapiLocator') !== \false) {
+                    \unlink($file);
+                }
             }
         }
     }
@@ -60,8 +79,9 @@ class DeliverAnonymousAsset
      */
     public function ready()
     {
+        $builder = $this->getBuilder();
         // Check if folder can be created and is writable
-        if (!self::getContentDir()) {
+        if (!$builder->ensureAnonymousFolder()) {
             return \false;
         }
         $script = \wp_scripts()->query($this->getHandle());
@@ -81,26 +101,16 @@ class DeliverAnonymousAsset
      */
     protected function generateSrc()
     {
-        $output = $this->getBuilder()->readFileAndCorrectSourceMap($this->getFile());
+        $anonymousFolder = $this->getBuilder()->ensureAnonymousFolder(\true);
         $contentDir = \wp_normalize_path(\constant('WP_CONTENT_DIR') . '/');
-        $contentPath = $this->getFullPathToFile($this->getBuilder()->getHash($this->getHandle()));
-        $contentUrl = self::getContentUrl();
-        // At this point, through `ready`, the folder is for sure writable
+        $contentPath = $anonymousFolder . AnonymousAssetBuilder::generateFilename($this->getBuilder()->getHash(), $this->getFile());
+        $contentUrl = Utils::getContentUrl();
         if (!\file_exists($contentPath)) {
-            \file_put_contents($contentPath, $output);
+            // The file does not exist, perhaps it was not part of the passed `$folder` in `AnnonymousAssetBulder` constructor?
+            // This could happen for e.g. libraries in `public/lib/`
+            \file_put_contents($contentPath, Utils::readFileAndCorrectSourceMap($this->getFile()));
         }
         return $contentUrl . \substr($contentPath, \strlen($contentDir));
-    }
-    /**
-     * Get the full path to a file with a given hash.
-     *
-     * @param string $hash
-     */
-    public function getFullPathToFile($hash)
-    {
-        $extension = \pathinfo($this->getFile(), \PATHINFO_EXTENSION);
-        $filename = $hash . '.' . $extension;
-        return $this->getContentDir() . $filename;
     }
     /**
      * Modify CData script tag.
@@ -161,78 +171,5 @@ class DeliverAnonymousAsset
     public function getFile()
     {
         return $this->file;
-    }
-    /**
-     * Get the content directory URL.
-     */
-    public static function getContentUrl()
-    {
-        return \trailingslashit(\set_url_scheme(\constant('WP_CONTENT_URL')));
-    }
-    /**
-     * Get the content directory within `wp-content` and also ensure it is created.
-     *
-     * @return string[]|false
-     */
-    public static function getContentDir()
-    {
-        $contentDir = \wp_normalize_path(\constant('WP_CONTENT_DIR') . '/');
-        /**
-         * Get the content directory where anonymous assets should be placed.
-         *
-         * If you change the directory, the old assets are not deleted automatically as this could break
-         * the cache of caching plugins like WP Rocket.
-         *
-         * Attention: This filter needs to return an absolute path pointing to a directory within your
-         * `WP_CONTENT_DIR` (`wp-content/`) folder so we can safely convert it to an URL, if not, it falls
-         * back to `wp-content/`.
-         *
-         * @hook DevOwl/DeliverAnonymousAsset/ContentDir
-         * @param {string} $folder
-         * @return {string}
-         * @see https://devowl.io/knowledge-base/real-cookie-banner-javascript-files-in-wp-content/
-         * @example <caption>Put the files to `wp-content/uploads`</caption>
-         * <?php
-         * add_filter( 'DevOwl/DeliverAnonymousAsset/ContentDir', function ( $content_dir )  {
-         *     $folder = trailingslashit(wp_upload_dir()['basedir']);
-         *     return $folder;
-         * });
-         */
-        $folder = \wp_normalize_path(\trailingslashit(\apply_filters('DevOwl/DeliverAnonymousAsset/ContentDir', $contentDir)));
-        // Force to use `wp-content` folder
-        if (\strpos($folder, $contentDir) !== 0) {
-            $folder = $contentDir;
-        }
-        if (!\wp_is_writable($folder) && !\wp_mkdir_p($folder)) {
-            return \false;
-        }
-        return $folder;
-    }
-    /**
-     * Remove the files from filesystem. Use this function in your `uninstall.php`.
-     *
-     * @param string $table_name
-     * @param string $handle
-     * @param string[] $extensions
-     */
-    public static function uninstall($table_name, $handle, $extensions = [])
-    {
-        global $wpdb;
-        $contentDir = self::getContentDir();
-        if (!$contentDir) {
-            return;
-        }
-        $sql = "SELECT serve_hash FROM {$table_name}";
-        // phpcs:disable WordPress.DB.PreparedSQL
-        $hashes = $wpdb->get_col($sql);
-        // phpcs:enable WordPress.DB.PreparedSQL
-        foreach ($hashes as $hash) {
-            foreach ($extensions as $extension) {
-                $filename = $contentDir . \md5($hash . $handle) . '.' . $extension;
-                if (\file_exists($filename)) {
-                    \unlink($filename);
-                }
-            }
-        }
     }
 }

@@ -173,7 +173,7 @@ class Hooks
                 if ($activeLanguage !== $currentLanguage) {
                     // Switch to that language context and recreate hash
                     $this->compInstance()->switch($activeLanguage);
-                    $langRevision = Revision::getInstance()->create(\true);
+                    $langRevision = Revision::getInstance()->getRevision()->create(\true);
                     $result['additionalLangHashRecreation'][$activeLanguage] = $langRevision;
                 }
             }
@@ -204,18 +204,6 @@ class Hooks
             return $found;
         }
         return $needs_retrigger;
-    }
-    /**
-     * Modify option value for imprint id so it gets correctly resolved to the current language post id.
-     *
-     * @param string $value
-     */
-    public function revisionOptionValue_pageId($value)
-    {
-        if ($this->compInstance()->isActive() && !empty($value) && \is_numeric($value)) {
-            return $this->compInstance()->getCurrentPostId($value, 'page');
-        }
-        return $value;
     }
     /**
      * Modify content blocker `services` / `tcfVendors` meta field to match the translated post ids.

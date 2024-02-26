@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\ServiceGroup;
 /**
  * Abstract implementation of the settings for general consent management (e.g. is cookie banner active?).
@@ -55,6 +56,12 @@ abstract class AbstractGeneral extends BaseSettings
      */
     public abstract function getOperatorContactEmail();
     /**
+     * Get the operator contact form page ID.
+     *
+     * @return int
+     */
+    public abstract function getOperatorContactFormId();
+    /**
      * Get the operator contact form page URL.
      *
      * @param mixed $default
@@ -79,4 +86,34 @@ abstract class AbstractGeneral extends BaseSettings
      * @return ServiceGroup[]
      */
     public abstract function getServiceGroups();
+    /**
+     * Get the list of content blockers.
+     *
+     * @return Blocker[]
+     */
+    public abstract function getBlocker();
+    /**
+     * Get the list of banner links which should be shown in cookie banner and content blocker.
+     *
+     * @return BannerLink[]
+     */
+    public abstract function getBannerLinks();
+    /**
+     * Get the list of languages in which this website is reachable. This is also used for the language switcher.
+     *
+     * @return Language[]
+     */
+    public abstract function getLanguages();
+    /**
+     * Get the essential service groups.
+     */
+    public function getEssentialServiceGroup()
+    {
+        foreach ($this->getServiceGroups() as $group) {
+            if ($group->isEssential()) {
+                return $group;
+            }
+        }
+        return null;
+    }
 }

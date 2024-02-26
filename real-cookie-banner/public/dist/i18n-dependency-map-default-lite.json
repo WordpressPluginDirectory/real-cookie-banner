@@ -10,12 +10,10 @@
     ],
     "chunk-config-tab-cookies.lite.js": [
         "chunk-config-tab-cookies.lite.js",
-        "573.lite.js",
-        "577.lite.js"
+        "338.lite.js"
     ],
     "chunk-config-tab-tcf.lite.js": [
         "chunk-config-tab-tcf.lite.js",
-        "573.lite.js",
         "106.lite.js"
     ],
     "chunk-config-tab-consent.lite.js": [
@@ -23,8 +21,7 @@
     ],
     "chunk-config-tab-blocker.lite.js": [
         "chunk-config-tab-blocker.lite.js",
-        "573.lite.js",
-        "577.lite.js",
+        "338.lite.js",
         "106.lite.js"
     ],
     "chunk-config-tab-import.lite.js": [

@@ -52,13 +52,19 @@ abstract class AbstractConsent extends BaseSettings
      */
     public abstract function isAgeNoticeEnabled();
     /**
+     * Get the configured age limit for the age notice in raw format.
+     *
+     * @return string|int Can be an integer or `"INHERIT"` string
+     */
+    public abstract function getAgeNoticeAgeLimitRaw();
+    /**
      * Check if list-services notice hint is enabled
      *
      * @return boolean
      */
     public abstract function isListServicesNoticeEnabled();
     /**
-     * Get the cookie duration for the consent cookies.
+     * Get the cookie duration for the consent cookies in days.
      *
      * @return int
      */
@@ -70,7 +76,7 @@ abstract class AbstractConsent extends BaseSettings
      */
     public abstract function getCookieVersion();
     /**
-     * Get the consent duration.
+     * Get the consent duration in months.
      *
      * @return int
      */
@@ -88,9 +94,15 @@ abstract class AbstractConsent extends BaseSettings
      */
     public abstract function getDataProcessingInUnsafeCountriesSafeCountriesRaw();
     /**
+     * Set the cookie version for the consent cookies.
+     *
+     * @param int $version
+     */
+    public abstract function setCookieVersion($version);
+    /**
      * Get safe countries for the data-processing-in-unsafe-countries option with expanded predefined lists.
      *
-     * @param string[]
+     * @return string[]
      */
     public function getDataProcessingInUnsafeCountriesSafeCountries()
     {
@@ -98,12 +110,27 @@ abstract class AbstractConsent extends BaseSettings
         foreach ($this->getDataProcessingInUnsafeCountriesSafeCountriesRaw() as $code) {
             if (\strlen($code) !== 2) {
                 $predefinedList = self::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS[$code] ?? [];
-                $result = \array_merge($result, $predefinedList);
+                $result = \array_values(\array_merge($result, $predefinedList));
             } else {
                 $result[] = $code;
             }
         }
         return $result;
+    }
+    /**
+     * Get the configured age limit for the age notice.
+     *
+     * @return int
+     */
+    public function getAgeNoticeAgeLimit()
+    {
+        $option = $this->getAgeNoticeAgeLimitRaw();
+        $operatorCountry = $this->getSettings()->getGeneral()->getOperatorCountry();
+        $defaultAge = self::AGE_NOTICE_COUNTRY_AGE_MAP['GDPR'];
+        if ($option === 'INHERIT') {
+            return self::AGE_NOTICE_COUNTRY_AGE_MAP[$operatorCountry] ?? $defaultAge;
+        }
+        return self::AGE_NOTICE_COUNTRY_AGE_MAP[$option] ?? $defaultAge;
     }
     /**
      * Calculate configured services which are processing data in unsafe countries.
@@ -138,7 +165,7 @@ abstract class AbstractConsent extends BaseSettings
             }
             // Read TCF vendor names
             if (\count($vendorIds) > 0) {
-                $vendors = $tcf->queryVendors(['in' => $vendorIds])['vendors'];
+                $vendors = $tcf->getGvl()->vendors(['in' => $vendorIds])['vendors'];
                 foreach ($candidates as $key => $candidate) {
                     if (isset($candidate['tcf'])) {
                         $candidates[$key]['name'] = $vendors[$candidate['name']]['name'];

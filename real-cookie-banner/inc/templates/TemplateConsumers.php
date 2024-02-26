@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\templates;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\BannerLink as SettingsBannerLink;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\Core;
@@ -136,10 +137,10 @@ class TemplateConsumers
             },
             // Consumer
             'consumer.privacyPolicyUrl' => function () {
-                return BannerLink::getInstance()->getLegalLink(BannerLink::PAGE_TYPE_PRIVACY_POLICY, 'url');
+                return BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY, 'url');
             },
             'consumer.legalNoticeUrl' => function () {
-                return BannerLink::getInstance()->getLegalLink(BannerLink::PAGE_TYPE_LEGAL_NOTICE, 'url');
+                return BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_LEGAL_NOTICE, 'url');
             },
             'consumer.provider' => function () {
                 $address = General::getInstance()->getOperatorContactAddress();

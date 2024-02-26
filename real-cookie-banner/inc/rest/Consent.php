@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\rest;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\Transaction;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
@@ -223,7 +224,7 @@ class Consent
      * @param WP_REST_Request $request
      *
      * @api {post} /real-cookie-banner/v1/consent Create or update an existing consent
-     * @apiParam {array} consent
+     * @apiParam {array} decision
      * @apiParam {string} buttonClicked
      * @apiParam {boolean} [markAsDoNotTrack]
      * @apiParam {number} [viewPortWidth=0]
@@ -253,20 +254,24 @@ class Consent
         if (IpHandler::getInstance()->isFlooding()) {
             return new WP_Error('rest_rcb_forbidden');
         }
-        $persist = MyConsent::getInstance()->persist($request->get_param('consent'), $markAsDoNotTrack, $buttonClicked, $viewPortWidth, $viewPortHeight, $referer, $blocker, $blockerThumbnail, 0, null, \false, $tcfString, $request->get_param('gcmConsent'), null, $recorderJsonString, $uiView);
+        $transaction = new Transaction();
+        $transaction->decision = $request->get_param('decision');
+        $transaction->markAsDoNotTrack = $markAsDoNotTrack;
+        $transaction->buttonClicked = $buttonClicked;
+        $transaction->viewPortWidth = $viewPortWidth;
+        $transaction->viewPortHeight = $viewPortHeight;
+        $transaction->referer = $referer;
+        $transaction->blocker = $blocker;
+        $transaction->blockerThumbnail = $blockerThumbnail;
+        $transaction->tcfString = $tcfString;
+        $transaction->gcmConsent = $request->get_param('gcmConsent');
+        $transaction->recorderJsonString = $recorderJsonString;
+        $transaction->uiView = $uiView;
+        $persist = MyConsent::getInstance()->persist($transaction);
         if (\is_wp_error($persist)) {
             return $persist;
         }
-        /**
-         * An user has given a new consent. With this filter you can add additional response
-         * to the REST API. Internally this is used e. g. for Consent Forwarding.
-         *
-         * @hook RCB/Consent/Created/Response
-         * @param {array} $result
-         * @param {WP_REST_Request} $request
-         * @return {array}
-         */
-        return new WP_REST_Response(\apply_filters('RCB/Consent/Created/Response', $persist, $request));
+        return new WP_REST_Response($persist);
     }
     /**
      * New instance.

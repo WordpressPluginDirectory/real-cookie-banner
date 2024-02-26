@@ -85,6 +85,13 @@ class ProviderContact
         $this->link = $link;
     }
     /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['phone' => $this->phone, 'email' => $this->email, 'link' => $this->link];
+    }
+    /**
      * Generate a `ProviderContact` object from an array.
      *
      * @param array $data

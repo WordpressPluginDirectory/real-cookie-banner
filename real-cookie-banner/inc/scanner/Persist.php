@@ -5,7 +5,6 @@ namespace DevOwl\RealCookieBanner\scanner;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner\ScanEntry;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -106,29 +105,5 @@ class Persist
     public function getEntries()
     {
         return $this->entries;
-    }
-    /**
-     * Move all found markups to the respective new database table and drop the known markup column.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_15_0($installed)
-    {
-        global $wpdb;
-        $table_name = Core::getInstance()->getTableName(self::TABLE_NAME);
-        $table_name_markup = Core::getInstance()->getTableName(self::TABLE_NAME_MARKUP);
-        if (Core::versionCompareOlderThan($installed, '2.15.0', ['2.16.0', '2.15.1'], function () use($wpdb, $table_name_markup) {
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $exists = $wpdb->get_var("SHOW TABLES LIKE '{$table_name_markup}'") === $table_name_markup;
-            // phpcs:enable WordPress.DB.PreparedSQL
-            return 0 !== $exists;
-        })) {
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $wpdb->query("INSERT IGNORE INTO {$table_name_markup} (markup, markup_hash) SELECT markup, markup_hash FROM {$table_name} WHERE markup IS NOT NULL");
-            // phpcs:enable WordPress.DB.PreparedSQL
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $wpdb->query("ALTER TABLE {$table_name} DROP COLUMN markup");
-            // phpcs:enable WordPress.DB.PreparedSQL
-        }
     }
 }

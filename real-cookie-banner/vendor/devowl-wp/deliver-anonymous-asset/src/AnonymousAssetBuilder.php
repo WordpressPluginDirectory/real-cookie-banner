@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset;
 
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Activator;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 /**
  * Use this to create your database tables and to create the instances
  * of `DeliverAnonymousAsset`.
@@ -15,15 +16,16 @@ class AnonymousAssetBuilder
     const OPTION_NAME_SERVE_NEXT_HASH_SUFFIX = '-serve-next-hash';
     const GENERATE_NEXT_HASH = 60 * 60 * 24 * 7;
     const MAX_SEO_REDIRECTS = 4;
+    const COPY_EXTENSIONS = ['js', 'css'];
     private $table_name;
     private $optionNamePrefix;
+    private $folder;
     /**
-     * If `true`, it also checks the home url + first relative path for a
-     * MD5 hash for backwards-compatibility (to not break caches).
+     * Cache of `Utils::contentDir`.
      *
-     * @var boolean
+     * @var string|false `false` when folder is not writable
      */
-    private $oldBehaviorEnabled;
+    private $contentDir;
     /**
      * The pool of collected built `DeliverAnonymousAsset` instances.
      *
@@ -35,13 +37,13 @@ class AnonymousAssetBuilder
      *
      * @param string $table_name You can use it in conjunction with `TABLE_NAME` constant
      * @param string $optionNamePrefix
-     * @param boolean $oldBehaviorEnabled Deprecated
+     * @param string $folder The absolute path to your original files
      */
-    public function __construct($table_name, $optionNamePrefix, $oldBehaviorEnabled = \false)
+    public function __construct($table_name, $optionNamePrefix, $folder)
     {
         $this->table_name = $table_name;
         $this->optionNamePrefix = $optionNamePrefix;
-        $this->oldBehaviorEnabled = $oldBehaviorEnabled;
+        $this->folder = $folder;
     }
     /**
      * Create an anonymous asset. Do not forget to make it `->ready()` after you enqueued it!
@@ -54,11 +56,6 @@ class AnonymousAssetBuilder
     public function build($handle, $file, $id = null)
     {
         $instance = new DeliverAnonymousAsset($this, $handle, $file);
-        // Create old behavior afterwards to keep the action in `updateHash` intact
-        if ($this->isOldBehaviorEnabled()) {
-            $templateRedirectHash = new TemplateRedirectHash($this, $handle, $file);
-            $templateRedirectHash->templateRedirect();
-        }
         if ($id !== null) {
             $this->pool[$id] = $instance;
         }
@@ -79,28 +76,60 @@ class AnonymousAssetBuilder
         return \false;
     }
     /**
-     * Get the currently used hash for the file or update it.
-     *
-     * @param string $handle
-     * @param boolean $allowRecreate
+     * Get the currently used hash.
      */
-    public function getHash($handle, $allowRecreate = \true)
+    public function getHash()
     {
         $option = \get_option($this->getOptionNamePrefix() . self::OPTION_NAME_SERVE_HASH_SUFFIX);
         $next = \intval(\get_option($this->getOptionNamePrefix() . self::OPTION_NAME_SERVE_NEXT_HASH_SUFFIX));
         if (empty($option) || $next === 0 || \time() > $next) {
-            if ($allowRecreate) {
-                $option = $this->updateHash();
-            } else {
-                return \false;
-            }
+            $option = $this->updateHash();
         }
-        return \md5($option . $handle);
+        return $option;
+    }
+    /**
+     * Create the anonymous folder in `wp-content`. It also uses the original folder path basename (e.g. `dist` or `dev`)
+     * as another subfolder, so it results in e.g. `/var/www/html/wp-content/7e9df1a92be399cb922305d5e7388ab1/dist/`.
+     *
+     * @param boolean $skipExistenceCheck
+     */
+    public function ensureAnonymousFolder($skipExistenceCheck = \false)
+    {
+        $contentDir = $this->getContentDir();
+        if (!$contentDir) {
+            return \false;
+        }
+        $hash = $this->getHash();
+        $folder = $contentDir . $hash . '/' . \basename($this->getFolder()) . '/';
+        if ($skipExistenceCheck) {
+            return $folder;
+        }
+        // Already exists?
+        if (\is_dir($folder)) {
+            return \true;
+        }
+        if (\wp_mkdir_p($folder)) {
+            // Create the anonymous files
+            // @codeCoverageIgnoreStart
+            if (!\defined('PHPUNIT_FILE')) {
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+            }
+            // @codeCoverageIgnoreEnd
+            $filesToCopy = \array_filter(\list_files($this->getFolder(), 1), function ($file) {
+                $extension = \pathinfo($file, \PATHINFO_EXTENSION);
+                return \in_array($extension, self::COPY_EXTENSIONS, \true);
+            });
+            foreach ($filesToCopy as $fileToCopy) {
+                \file_put_contents($folder . self::generateFilename($hash, $fileToCopy), Utils::readFileAndCorrectSourceMap($fileToCopy));
+            }
+            return \true;
+        }
+        return \false;
     }
     /**
      * Generate a new hash for the current served JS file.
      */
-    public function updateHash()
+    protected function updateHash()
     {
         global $wpdb;
         $hash = \md5(\wp_generate_uuid4());
@@ -119,6 +148,8 @@ class AnonymousAssetBuilder
         // phpcs:disable WordPress.DB.PreparedSQL
         $wpdb->query($sql);
         // phpcs:enable WordPress.DB.PreparedSQL
+        // Unlink the old folder
+        $this->purgeHashes($this->getContentDir(), $deletedHashes);
         /**
          * The JavaScript and CSS files, which were previously anonymous, have been rotated and their hashes have been updated.
          *
@@ -129,31 +160,6 @@ class AnonymousAssetBuilder
          */
         \do_action('DevOwl/DeliverAnonymousAsset/Update/' . $this->getOptionNamePrefix(), $deletedHashes, $this);
         return $hash;
-    }
-    /**
-     * Read a JavaScript file and update the sourceMappingUrl parameter in the
-     * file content to the correct one - it allows you to serve any file
-     * via any URL with the correct source map URL.
-     *
-     * @param string $path
-     */
-    public function readFileAndCorrectSourceMap($path)
-    {
-        $output = \explode("\n", \file_get_contents($path));
-        // Check if last line is sourceMappingUrl
-        $lastLine = \array_pop($output);
-        $startWith = '//# sourceMappingURL=';
-        if (\substr($lastLine, 0, \strlen($startWith)) === $startWith) {
-            $mapFile = $path . '.map';
-            $usedFolder = \basename(\dirname($mapFile));
-            $usedFile = \basename($mapFile);
-            if (\file_exists($mapFile)) {
-                $output[] = $startWith . \wp_make_link_relative(\plugins_url('public/' . $usedFolder . '/' . $usedFile, RCB_FILE));
-            }
-        } else {
-            $output[] = $lastLine;
-        }
-        return \join("\n", $output);
     }
     /**
      * Make sure the database table is created.
@@ -186,6 +192,23 @@ class AnonymousAssetBuilder
     }
     /**
      * Getter.
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
+    /**
+     * Getter.
+     */
+    public function getContentDir()
+    {
+        if ($this->contentDir === null) {
+            $this->contentDir = Utils::getContentDir();
+        }
+        return $this->contentDir;
+    }
+    /**
+     * Getter.
      *
      * @codeCoverageIgnore
      */
@@ -194,12 +217,49 @@ class AnonymousAssetBuilder
         return $this->optionNamePrefix;
     }
     /**
-     * Getter.
+     * Generate the filename for a given original filename.
      *
-     * @codeCoverageIgnore
+     * @param string $hash The hash to use
+     * @param string $originalFilenameOrPath
      */
-    public function isOldBehaviorEnabled()
+    public static function generateFilename($hash, $originalFilenameOrPath)
     {
-        return $this->oldBehaviorEnabled;
+        $basename = \basename($originalFilenameOrPath);
+        $extension = \pathinfo($basename, \PATHINFO_EXTENSION);
+        return Utils::simpleHash($hash . $basename) . '.' . $extension;
+    }
+    /**
+     * Hashes got rotated and we can delete old folders from the filesystem.
+     *
+     * @param string $contentDir
+     * @param string[] $hashes
+     */
+    public static function purgeHashes($contentDir, $hashes)
+    {
+        if ($contentDir !== \false) {
+            UtilsUtils::runDirectFilesystem(function ($fs) use($hashes, $contentDir) {
+                foreach ($hashes as $deletedHash) {
+                    $fs->rmdir($contentDir . $deletedHash, \true);
+                }
+            });
+        }
+    }
+    /**
+     * Remove the files from filesystem. Use this function in your `uninstall.php`.
+     *
+     * @param string $table_name
+     */
+    public static function uninstall($table_name)
+    {
+        global $wpdb;
+        $contentDir = Utils::getContentDir();
+        if (!$contentDir) {
+            return;
+        }
+        $sql = "SELECT serve_hash FROM {$table_name}";
+        // phpcs:disable WordPress.DB.PreparedSQL
+        $hashes = $wpdb->get_col($sql);
+        // phpcs:enable WordPress.DB.PreparedSQL
+        self::purgeHashes($contentDir, $hashes);
     }
 }

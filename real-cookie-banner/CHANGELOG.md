@@ -3,6 +3,314 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.5.0 (2024-02-26)
+
+
+### Bug Fixes
+
+* client property value is empty error message when using serialized siteurl option (CU-8693uhwd7)
+* compatibility with Kadence video popups (CU-8693jtbzu)
+* improved compatibility with WP Fastest Cache and cookie banner not loading in customizer (CU-8693h1xfq)
+* output the correct footnote when a custom group is created
+* undefined array key vendorConfigurations (CU-apv5uu)
+
+
+### Documentation
+
+* mention Google Consent Mode in wordpress.org description (CU-apv5uu)
+
+
+### Features
+
+* improve performance for better Google PageSpeed Insights TBT and INP score (CU-8693u3e89)
+
+
+### Performance
+
+* allow to parse big objects localized via wp_localize_script lazily (CU-8693n1cc5)
+* do no longer use webpackMode eager in favor of inline-require (CU-8693n1cc5)
+* improve performance by not removing cookie banner from DOM after accepting for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve performance of applying consent and unblocking consent for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve Total Blocking Time in Page Speed Insights by inlining require statements (CU-8693n1cc5)
+* improve Total Blocking Time in Page Speed Insights by yielding the main thread for TCF cookie banner (CU-8693n1cc5)
+* lazy load data for the second layer / view of the cookie banner (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.13.1</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* empty template name on release warning message (CU-8693uepwd)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.16.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Features
+
+* allow to clear cache of enhance.com domains (NGINX FastCGI, CU-8693cqz75)
+* introduce new filter DevOwl/CacheInvalidate/Custom (CU-8693w2vf0)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.2</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* 404 error in Consent Forwarding when GCM and TCF is deactivated (CU-8693265jz)
+
+
+##### Performance
+
+* lazy load data for the second layer / view of the cookie banner (CU-8693n1cc5)
+
+
+##### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.1</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Performance
+
+* improve performance of applying consent and unblocking consent for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve Total Blocking Time in Page Speed Insights by yielding the main thread for TCF cookie banner (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+##### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.65</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Performance
+
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.10.0</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Features
+
+* introduce new comparator for selector syntax function to match regular expression with //= (CU-33z67qt)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.5</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* strtolower(): Passing null to parameter [#1](https://git.devowl.io/devowlio/devowl-wp/issues/1) () of type string is deprecated (CU-863gympe9)
+* uncaught TypeError: Cannot access offset of type string on string TcfVendorDomainsBlockable.php</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.7</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Kadence video popups (CU-8693jtbzu)
+* initiators for load event should wait also for async scripts (CU-8693wju7t)
+
+
+##### Performance
+
+* improve performance of applying consent and unblocking consent for better INP in Google PageSpeed (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+##### Refactoring
+
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.12.13</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Performance
+
+* cache find i18n key of translation functionality (CU-8693cqz75)
+* use raw database queries and bypass TranslatePress API for translating URLs (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.10.1</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Performance
+
+* do no longer use webpackMode eager in favor of inline-require (CU-8693n1cc5)
+* improve performance by not removing cookie banner from DOM after accepting for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve performance of applying consent and unblocking consent for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve Total Blocking Time in Page Speed Insights by yielding the main thread for TCF cookie banner (CU-8693n1cc5)
+* lazy load data for the second layer / view of the cookie banner (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+##### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.1</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* errors were no longer shown in service edit form for technical definitions (CU-8693wmp4k)
+* show a notice when activating GCM consent mode with Tag Manager integration when previsouly events were active (CU-8693wp05t)
+
+
+##### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 0.1.2</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Bug Fixes
+
+* cookie banner cannot be accepted on old Safari browsers (CU-8693u1wzm)
+
+
+##### Performance
+
+* do no longer use webpackMode eager in favor of inline-require (CU-8693n1cc5)
+* improve performance by not removing cookie banner from DOM after accepting for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve performance of applying consent and unblocking consent for better INP in Google PageSpeed (CU-8693n1cc5)
+* improve Total Blocking Time in Page Speed Insights by yielding the main thread for TCF cookie banner (CU-8693n1cc5)
+* lazy load data for the second layer / view of the cookie banner (CU-8693n1cc5)
+* render shortcodes async and add lazy-require() webpack plugin (CU-8693cqz75)
+
+
+##### Refactoring
+
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.13</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* client property value is empty error message when using serialized siteurl option (CU-8693uhwd7)
+
+
+##### Refactoring
+
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.5.13</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Refactoring
+
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.18.1</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Continuous Integration
+
+* readme-to-json parser did no longer work due to missing taxonomy_exists function (CU-8693wju7t)
+
+
+##### Performance
+
+* allow to parse big objects localized via wp_localize_script lazily (CU-8693n1cc5)
+* do no longer use webpackMode eager in favor of inline-require (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+##### Refactoring
+
+* move all util functions to @devowl-wp/react-utils (CU-8693cqz75)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 0.2.22</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Performance
+
+* improve Total Blocking Time in Page Speed Insights by inlining require statements (CU-8693n1cc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.2</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Performance
+
+* improve performance by not removing cookie banner from DOM after accepting for better INP in Google PageSpeed (CU-8693n1cc5)
+
+
+##### Refactoring
+
+* move all consent relevant structures and procedures to @devowl-wp/cookie-consent-management (CU-8693n1cc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.7</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Performance
+
+* improve Total Blocking Time in Page Speed Insights by yielding the main thread for TCF cookie banner (CU-8693n1cc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.4.1</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Performance
+
+* improve Total Blocking Time in Page Speed Insights by inlining require statements (CU-8693n1cc5)
+* lazy load data for the second layer / view of the cookie banner (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)
+
+
+##### Styling
+
+* reset anchor / link styles in cookie banner correctly when theme overwrites it (CU-8693wx9ec)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 0.2.14</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Performance
+
+* improve Total Blocking Time in Page Speed Insights by inlining require statements (CU-8693n1cc5)
+* use code splitting for the cookie banner and content blocker to reduce initial download time (CU-8693ubj9a)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.28</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Performance
+
+* improve Total Blocking Time in Page Speed Insights by inlining require statements (CU-8693n1cc5)</details>
+
+
+
+
+
 ## 4.4.1 (2024-02-05)
 
 

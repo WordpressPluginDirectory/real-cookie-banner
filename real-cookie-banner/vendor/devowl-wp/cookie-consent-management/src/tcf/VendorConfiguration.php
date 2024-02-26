@@ -39,6 +39,79 @@ class VendorConfiguration
      */
     private $dataProcessingInCountriesSpecialTreatments = [];
     /**
+     * The vendor object from the GVL.
+     *
+     * @var array
+     */
+    private $vendor;
+    /**
+     * An array of used declarations (purposes, special purposes, ...) so the best suitable stacks
+     * can be calculated from that result.
+     *
+     * @var array
+     */
+    private $usedDeclarations = [StackCalculator::DECLARATION_TYPE_PURPOSES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_PURPOSES => [], StackCalculator::DECLARATION_TYPE_FEATURES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_FEATURES => [], StackCalculator::DECLARATION_TYPE_DATA_CATEGORIES => []];
+    /**
+     * "Correct" the restrictive purposes (e.g. `global` scope does not allow configurations) of a
+     * TCF vendor configuration. It fills `$used` with used declarations.
+     *
+     * @param string $scope Can be `global` or `service-specific`
+     */
+    public function applyRestrictivePurposes($scope)
+    {
+        $vendor =& $this->vendor;
+        $restrictivePurposes =& $this->restrictivePurposes;
+        // "Correct" the restrictive purposes (e.g. `global` scope does not allow configurations)
+        if ($scope === 'global') {
+            $restrictivePurposes = ['normal' => (object) [], 'special' => (object) []];
+        } else {
+            $allPurposes = \array_merge($vendor['purposes'] ?? [], $vendor['legIntPurposes'] ?? []);
+            $vendor['purposesAfterRestriction'] = $allPurposes;
+            $vendor['specialPurposesAfterRestriction'] = $vendor['specialPurposes'];
+            foreach ($restrictivePurposes as $type => &$configs) {
+                foreach ($configs as $id => &$config) {
+                    if (empty($config)) {
+                        continue;
+                    }
+                    // Purposes existence
+                    if ($type === 'normal' && !\in_array($id, $allPurposes, \true)) {
+                        unset($configs[$id]);
+                        continue;
+                    }
+                    // Special purposes existence (currently never possible!)
+                    if ($type === 'special' && !\in_array($id, $vendor['specialPurposes'], \true)) {
+                        unset($configs[$id]);
+                        continue;
+                    }
+                    // Legitimate interest
+                    if ($type === 'normal') {
+                        $isFlexible = \in_array($id, $vendor['flexiblePurposes'], \true);
+                        $isLegInt = \in_array($id, $vendor['legIntPurposes'], \true);
+                        $expectedLegInt = $isLegInt ? 'yes' : 'no';
+                        if (!$isFlexible || $config['legInt'] === $expectedLegInt) {
+                            unset($config['legInt']);
+                        }
+                    }
+                    if ($config['enabled'] === \false) {
+                        $deleteFrom = $type === 'normal' ? 'purposesAfterRestriction' : 'specialPurposesAfterRestriction';
+                        \array_splice($vendor[$deleteFrom], \array_search($id, $vendor[$deleteFrom], \true), 1);
+                    }
+                }
+            }
+        }
+        // Make sure both arrays are objects to avoid `[]` typings
+        $restrictivePurposes['normal'] = (object) ($restrictivePurposes['normal'] ?? []);
+        $restrictivePurposes['special'] = (object) ($restrictivePurposes['special'] ?? []);
+        // At the moment, special purposes can not be restricted
+        unset($restrictivePurposes['special']);
+        // Catch up all used (special) purposes and (special) features so we can calculate stacks
+        foreach (StackCalculator::DECLARATION_TYPES as $declaration) {
+            $this->usedDeclarations[$declaration] = \array_unique($vendor[$declaration . 'AfterRestriction'] ?? $vendor[$declaration] ?? []);
+        }
+        unset($vendor['purposesAfterRestriction']);
+        unset($vendor['specialPurposesAfterRestriction']);
+    }
+    /**
      * Getter.
      *
      * @codeCoverageIgnore
@@ -82,6 +155,24 @@ class VendorConfiguration
     public function getDataProcessingInCountriesSpecialTreatments()
     {
         return $this->dataProcessingInCountriesSpecialTreatments;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getVendor()
+    {
+        return $this->vendor;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getUsedDeclarations()
+    {
+        return $this->usedDeclarations;
     }
     /**
      * Setter.
@@ -134,12 +225,30 @@ class VendorConfiguration
         $this->dataProcessingInCountriesSpecialTreatments = $dataProcessingInCountriesSpecialTreatments;
     }
     /**
-     * Generate a `Service` object from an array.
+     * Setter.
+     *
+     * @param array $vendor
+     * @codeCoverageIgnore
+     */
+    public function setVendor($vendor)
+    {
+        $this->vendor = $vendor;
+    }
+    /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['id' => $this->id, 'vendorId' => $this->vendorId, 'restrictivePurposes' => $this->restrictivePurposes, 'dataProcessingInCountries' => $this->dataProcessingInCountries, 'dataProcessingInCountriesSpecialTreatments' => $this->dataProcessingInCountriesSpecialTreatments];
+    }
+    /**
+     * Generate a `VendorConfiguration` object from an array.
      *
      * @param array $data
+     * @param array $vendor The used vendor object for this vendor configuration
      * @return self
      */
-    public static function fromJson(array $data) : self
+    public static function fromJson($data, $vendor)
     {
         $instance = new self();
         $instance->setId($data['id'] ?? 0);
@@ -147,6 +256,7 @@ class VendorConfiguration
         $instance->setRestrictivePurposes($data['restrictivePurposes'] ?? []);
         $instance->setDataProcessingInCountries($data['dataProcessingInCountries'] ?? []);
         $instance->setDataProcessingInCountriesSpecialTreatments($data['dataProcessingInCountriesSpecialTreatments'] ?? []);
+        $instance->setVendor($vendor);
         return $instance;
     }
 }

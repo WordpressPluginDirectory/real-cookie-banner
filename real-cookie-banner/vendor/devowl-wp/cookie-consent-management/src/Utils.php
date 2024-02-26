@@ -8,6 +8,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement;
  */
 class Utils
 {
+    const TEMP_REGEX_AVOID_UNMASK = 'PLEACE_REPLACE_ME_AGAIN';
     /**
      * Check if a string starts with a given needle.
      *
@@ -42,5 +43,35 @@ class Utils
             return \true;
         }
         return \substr($haystack, -$length) === $needle;
+    }
+    /**
+     * Flatten an array.
+     *
+     * @param array $array
+     * @param boolean $recursive
+     */
+    public static function array_flatten($array, $recursive = \false)
+    {
+        $return = [];
+        foreach ($array as $key => $value) {
+            if (\is_array($value)) {
+                $return = \array_merge($return, $recursive ? self::array_flatten($array, $recursive) : $value);
+            } else {
+                $return[$key] = $value;
+            }
+        }
+        return $return;
+    }
+    /**
+     * Create a pattern for `preg_match_all` usage.
+     *
+     * @param string $name
+     */
+    public static function createRegexpPatternFromWildcardName($name)
+    {
+        $name = \str_replace('*', self::TEMP_REGEX_AVOID_UNMASK, $name);
+        $regex = \sprintf('/^%s$/', \str_replace(self::TEMP_REGEX_AVOID_UNMASK, '((?:.|\\n)*)', \preg_quote($name, '/')));
+        // Remove duplicate `(.*)` identifiers to avoid "catastrophical backtrace"
+        return \preg_replace('/(\\((\\(\\?:\\.\\|\\\\n\\)\\*)\\))+/m', '((?:.|\\n)*)', $regex);
     }
 }

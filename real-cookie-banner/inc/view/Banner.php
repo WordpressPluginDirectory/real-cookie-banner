@@ -81,7 +81,7 @@ class Banner
     {
         if (!\is_admin() && $this->shouldLoadAssets(UtilsConstants::ASSETS_TYPE_FRONTEND) && \current_user_can(Core::MANAGE_MIN_CAPABILITY)) {
             if (isset($_GET[self::ACTION_CLEAR_CURRENT_COOKIE])) {
-                MyConsent::getInstance()->setCookie();
+                RealCookieBannerUtils::setCookie(Core::getInstance()->getCookieConsentManagement()->getFrontend()->getCookieName(), '', -1, \constant('COOKIEPATH'), \constant('COOKIE_DOMAIN'), \is_ssl(), \false, 'None');
                 \wp_safe_redirect(\esc_url_raw(\add_query_arg(self::ACTION_CLEAR_CURRENT_COOKIE, \false)));
                 exit;
             }
@@ -203,7 +203,7 @@ class Banner
                 $overlayBgAlpha = $customize->getSetting(BasicLayout::SETTING_OVERLAY_BG_ALPHA);
                 $bgStyle = \sprintf('background-color: %s;', Utils::calculateOverlay($overlayBg, $overlayBgAlpha));
             }
-            echo \sprintf('<div id="%s" class="%s" data-bg="%s" style="%s %s position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;pointer-events:%s;display:none;filter:none;max-width:100vw;max-height:100vh;" %s></div>', Core::getInstance()->getPageRequestUuid4(), $antiAdBlocker ? '' : \sprintf('rcb-banner rcb-banner-%s %s', $type, empty($bgStyle) ? 'overlay-deactivated' : ''), $bgStyle, $bgStyle, $showOverlay && $this->isPro() ? \join('', \array_map(function ($prefix) use($overlayBlur) {
+            echo \sprintf('<div id="%s" class="%s" data-bg="%s" style="%s %s position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;pointer-events:%s;display:none;filter:none;max-width:100vw;max-height:100vh;transform:translateZ(0);" %s></div>', Core::getInstance()->getPageRequestUuid4(), $antiAdBlocker ? '' : \sprintf('rcb-banner rcb-banner-%s %s', $type, empty($bgStyle) ? 'overlay-deactivated' : ''), $bgStyle, $bgStyle, $showOverlay && $this->isPro() ? \join('', \array_map(function ($prefix) use($overlayBlur) {
                 return \sprintf('%sbackdrop-filter:blur(%spx);', $prefix, $overlayBlur);
             }, ['-moz-', '-o-', '-webkit-', ''])) : '', empty($bgStyle) ? 'none' : 'all', Core::getInstance()->getCompLanguage()->getSkipHTMLForTag());
         }

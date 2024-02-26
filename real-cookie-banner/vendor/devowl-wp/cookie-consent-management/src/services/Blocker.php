@@ -135,6 +135,12 @@ class Blocker
      */
     private $presetId = '';
     /**
+     * See `VisualThumbnail`.
+     *
+     * @var VisualThumbnail
+     */
+    private $visualThumbnail;
+    /**
      * Getter.
      *
      * @codeCoverageIgnore
@@ -211,7 +217,7 @@ class Blocker
      *
      * @codeCoverageIgnore
      */
-    public function getIsVisual()
+    public function isVisual()
     {
         return $this->isVisual;
     }
@@ -247,7 +253,7 @@ class Blocker
      *
      * @codeCoverageIgnore
      */
-    public function getIsVisualDarkMode()
+    public function isVisualDarkMode()
     {
         return $this->isVisualDarkMode;
     }
@@ -295,6 +301,15 @@ class Blocker
     public function getPresetId()
     {
         return $this->presetId;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getVisualThumbnail()
+    {
+        return $this->visualThumbnail;
     }
     /**
      * Setter.
@@ -479,10 +494,27 @@ class Blocker
     /**
      * Setter.
      *
+     * @param VisualThumbnail $visualThumbnail
+     * @codecoverageignore
+     */
+    public function setVisualThumbnail($visualThumbnail)
+    {
+        $this->visualThumbnail = $visualThumbnail;
+    }
+    /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['id' => $this->id, 'name' => $this->name, 'description' => $this->description, 'rules' => $this->rules, 'criteria' => $this->criteria, 'tcfVendors' => $this->tcfVendors, 'tcfPurposes' => $this->tcfPurposes, 'services' => $this->services, 'isVisual' => $this->isVisual, 'visualType' => $this->visualType, 'visualMediaThumbnail' => $this->visualMediaThumbnail, 'visualContentType' => $this->visualContentType, 'isVisualDarkMode' => $this->isVisualDarkMode, 'visualBlur' => $this->visualBlur, 'visualDownloadThumbnail' => $this->visualDownloadThumbnail, 'visualHeroButtonText' => $this->visualHeroButtonText, 'shouldForceToShowVisual' => $this->shouldForceToShowVisual, 'presetId' => $this->presetId, 'visualThumbnail' => $this->visualThumbnail ? $this->visualThumbnail->toJson() : null];
+    }
+    /**
+     * Generate a `Blocker` object from an array.
+     *
      * @param array $data
      * @return self
      */
-    public static function fromJson(array $data) : self
+    public static function fromJson($data)
     {
         $instance = new self();
         $instance->setId($data['id'] ?? 0);
@@ -503,6 +535,7 @@ class Blocker
         $instance->setVisualHeroButtonText($data['visualHeroButtonText'] ?? '');
         $instance->setShouldForceToShowVisual($data['shouldForceToShowVisual'] ?? \false);
         $instance->setPresetId($data['presetId'] ?? '');
+        $instance->setVisualThumbnail(isset($data['visualThumbnail']) ? VisualThumbnail::fromJson($data['visualThumbnail']) : null);
         return $instance;
     }
 }

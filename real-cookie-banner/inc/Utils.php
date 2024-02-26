@@ -177,21 +177,6 @@ class Utils
         return null;
     }
     /**
-     * Flatten an array.
-     *
-     * @param array $array
-     * @see https://stackoverflow.com/a/1320259/5506547
-     */
-    public static function flatten($array)
-    {
-        $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
-        $result = [];
-        foreach ($it as $v) {
-            $result[] = $v;
-        }
-        return $result;
-    }
-    /**
      * Check if the current installation is a preinstalled environment.
      *
      * @return string|false
@@ -567,13 +552,13 @@ class Utils
         foreach (['alloptions', 'notoptions'] as $cacheKey) {
             $cache = \wp_cache_get($cacheKey, 'options');
             if (\is_array($cache) && isset($cache[$optionName])) {
-                return $cache[$optionName];
+                return \maybe_unserialize($cache[$optionName]);
             }
         }
         // Fallback to directly read the option from the `options` cache
         $directFromCache = \wp_cache_get($optionName, 'options');
         if ($directFromCache !== \false) {
-            return $directFromCache;
+            return \maybe_unserialize($directFromCache);
         }
         return $default;
     }

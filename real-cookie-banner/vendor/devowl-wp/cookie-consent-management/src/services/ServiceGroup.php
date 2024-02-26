@@ -33,6 +33,12 @@ class ServiceGroup
      */
     private $description = '';
     /**
+     * Is this the essential group?
+     *
+     * @var boolean
+     */
+    private $isEssential = \false;
+    /**
      * The services of the service group.
      *
      * @var Service[]
@@ -73,6 +79,15 @@ class ServiceGroup
     public function getDescription()
     {
         return $this->description;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function isEssential()
+    {
+        return $this->isEssential;
     }
     /**
      * Getter.
@@ -126,12 +141,31 @@ class ServiceGroup
     /**
      * Setter.
      *
+     * @param string $isEssential
+     * @codeCoverageIgnore
+     */
+    public function setIsEssential($isEssential)
+    {
+        $this->isEssential = $isEssential;
+    }
+    /**
+     * Setter.
+     *
      * @param Service[] $items
      * @codeCoverageIgnore
      */
     public function setItems($items)
     {
         $this->items = $items;
+    }
+    /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['id' => $this->id, 'name' => $this->name, 'slug' => $this->slug, 'description' => $this->description, 'isEssential' => $this->isEssential, 'items' => \array_map(function ($item) {
+            return $item->toJson();
+        }, $this->items)];
     }
     /**
      * Generate a `ServiceGroup` object from an array.
@@ -145,6 +179,7 @@ class ServiceGroup
         $instance->setName($data['name'] ?? '');
         $instance->setSlug($data['slug'] ?? '');
         $instance->setDescription($data['description'] ?? '');
+        $instance->setIsEssential($data['isEssential'] ?? \false);
         $instance->setItems(\array_map(function ($data) {
             return Service::fromJson($data);
         }, $data['items'] ?? []));

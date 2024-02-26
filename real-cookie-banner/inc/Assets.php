@@ -8,14 +8,12 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset\DeliverAnonymous
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Freemium\Assets as FreemiumAssets;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\General;
-use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\view\Blocker;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\view\Banner;
@@ -129,7 +127,12 @@ class Assets
             }
         }
         // Localize script with server-side variables
-        $this->anonymous_localize_script($handle, 'realCookieBanner', $this->localizeScript($type), [Cookie::META_NAME_CODE_OPT_IN, Cookie::META_NAME_CODE_OPT_OUT, Cookie::META_NAME_CODE_ON_PAGE_LOAD, 'contactEmail'], !\in_array($type, [Constants::ASSETS_TYPE_FRONTEND, Constants::ASSETS_TYPE_LOGIN], \true) && !\is_customize_preview());
+        $this->anonymous_localize_script($handle, 'realCookieBanner', $this->localizeScript($type), [
+            'makeBase64Encoded' => [Cookie::META_NAME_CODE_OPT_IN, Cookie::META_NAME_CODE_OPT_OUT, Cookie::META_NAME_CODE_ON_PAGE_LOAD, 'contactEmail'],
+            'useCore' => !\in_array($type, [Constants::ASSETS_TYPE_FRONTEND, Constants::ASSETS_TYPE_LOGIN], \true) && !\is_customize_preview(),
+            // Only allow lazy parse in frontend (also not in customizer) as this conflicts with Mobx observables
+            'lazyParse' => \in_array($type, [Constants::ASSETS_TYPE_FRONTEND], \true) && !\is_customize_preview() ? ['others.frontend.tcf', 'others.frontend.groups', 'others.customizeValuesBanner'] : [],
+        ]);
     }
     /**
      * Enqueue admin page (currently only the config).
@@ -211,8 +214,12 @@ class Assets
                 $advancedFeatures[] = Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_DEFER;
                 $advancedFeatures[] = Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_PRELOADING;
             }
-            $this->enableAdvancedEnqueue($preloadJs, $advancedFeatures);
-            $this->enableAdvancedEnqueue($preloadCss, $advancedFeatures, 'style');
+            // Only enable the advanced enqueue when we are not relying on `react-dom` as this could lead to issues with
+            // e.g. WP Fastest Cache which moves `react-dom` to the body footer -> "Undefined variable ReactDOM" error.
+            if (!\is_customize_preview()) {
+                $this->enableAdvancedEnqueue($preloadJs, $advancedFeatures);
+                $this->enableAdvancedEnqueue($preloadCss, $advancedFeatures, 'style');
+            }
             $excludeAssets->byHandle('js', $preloadJs);
             $excludeAssets->byHandle('css', $preloadCss);
         }
@@ -262,16 +269,18 @@ class Assets
         global $wp_version;
         $result = [];
         $core = \DevOwl\RealCookieBanner\Core::getInstance();
+        $cookieConsentManagement = $core->getCookieConsentManagement();
+        $frontend = $cookieConsentManagement->getFrontend();
         $banner = $core->getBanner();
         $bannerCustomize = $banner->getCustomize();
-        $consentSettings = Consent::getInstance();
-        $generalSettings = General::getInstance();
-        $googleConsentMode = GoogleConsentMode::getInstance();
         $notices = $core->getNotices();
         $licenseActivation = $core->getRpmInitiator()->getPluginUpdater()->getCurrentBlogLicense()->getActivation();
         $showLicenseFormImmediate = !$licenseActivation->hasInteractedWithFormOnce();
         $isLicensed = !empty($licenseActivation->getCode());
         $isDevLicense = $licenseActivation->getInstallationType() === License::INSTALLATION_TYPE_DEVELOPMENT;
+        $frontendJson = $frontend->toJson();
+        $lazyLoadedData = $frontend->prepareLazyData($frontendJson, \true);
+        $anonymousAssetBuilder = $core->getAnonymousAssetBuilder();
         if ($context === Constants::ASSETS_TYPE_ADMIN) {
             $colorScheme = \DevOwl\RealCookieBanner\Utils::get_admin_colors();
             if (\count($colorScheme) < 4) {
@@ -279,9 +288,10 @@ class Assets
                 // our graphs and charts we need at least 4
                 $colorScheme[] = $colorScheme[0];
             }
-            $result = ['installationDateIso' => \mysql2date('c', \get_option(\DevOwl\RealCookieBanner\Activator::OPTION_NAME_INSTALLATION_DATE, \time())), 'showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => DeliverAnonymousAsset::getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => UtilsUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'predefinedDataProcessingInSafeCountriesLists' => Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
+            $result = ['installationDateIso' => \mysql2date('c', \get_option(\DevOwl\RealCookieBanner\Activator::OPTION_NAME_INSTALLATION_DATE, \time())), 'showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => $anonymousAssetBuilder->getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => UtilsUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'predefinedDataProcessingInSafeCountriesLists' => Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
         } elseif (\is_customize_preview()) {
             $result = \array_merge($bannerCustomize->localizeIds(), $bannerCustomize->localizeValues(), $bannerCustomize->localizeDefaultValues(), ['poweredByTexts' => $core->getCompLanguage()->translateArray(Texts::getPoweredByLinkTexts()), 'isPoweredByLinkDisabledByException' => $bannerCustomize->isPoweredByLinkDisabledByException()]);
+            $frontendJson['lazyLoadedDataForSecondView'] = $lazyLoadedData;
         } elseif ($banner->shouldLoadAssets($context)) {
             $result = $bannerCustomize->localizeValues();
             $bannerCustomize->expandLocalizeValues($result);
@@ -299,7 +309,7 @@ class Assets
              */
             $result['hints'] = \apply_filters('RCB/Hints', ['deleteCookieGroup' => [], 'deleteCookie' => [], 'export' => [], 'dashboardTile' => [], 'proDialog' => null]);
         }
-        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['languageSwitcher' => $core->getCompLanguage()->getLanguageSwitcher(), 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'userConsentCookieName' => \DevOwl\RealCookieBanner\MyConsent::getInstance()->getCookieName(), 'revisionHash' => Revision::getInstance()->getCurrentHash(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'isTcf' => TCF::getInstance()->isActive(), 'isGcm' => $googleConsentMode->isEnabled(), 'isGcmListPurposes' => $googleConsentMode->isListPurposes(), 'isPreventPreDecision' => $banner->isPreventPreDecision(), 'isAcceptAllForBots' => $consentSettings->isAcceptAllForBots(), 'isRespectDoNotTrack' => $consentSettings->isRespectDoNotTrack(), 'isDataProcessingInUnsafeCountries' => $consentSettings->isDataProcessingInUnsafeCountries(), 'dataProcessingInUnsafeCountriesSafeCountries' => $consentSettings->getDataProcessingInUnsafeCountriesSafeCountries(), 'isAgeNotice' => $consentSettings->isAgeNoticeEnabled(), 'ageNoticeAgeLimit' => $consentSettings->getAgeNoticeAgeLimit(), 'isListServicesNotice' => $consentSettings->isListServicesNoticeEnabled(), 'setCookiesViaManager' => $generalSettings->getSetCookiesViaManager(), 'territorialLegalBasis' => $generalSettings->getTerritorialLegalBasis(), 'essentialGroup' => CookieGroup::getInstance()->getEssentialGroup()->slug, 'groups' => CookieGroup::getInstance()->toJson(), 'bannerLinks' => BannerLink::getInstance()->localize(), 'websiteOperator' => $generalSettings->localizeWebsiteOperator(), 'blocker' => $core->getBlocker()->localize(), 'setVisualParentIfClassOfParent' => Blocker::SET_VISUAL_PARENT_IF_CLASS_OF_PARENT, 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
+        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['frontend' => $frontendJson, 'anonymousHash' => $anonymousAssetBuilder->getContentDir() && !$this->useNonMinifiedSources() ? $anonymousAssetBuilder->getHash() : null, 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'isPreventPreDecision' => $banner->isPreventPreDecision(), 'setVisualParentIfClassOfParent' => Blocker::SET_VISUAL_PARENT_IF_CLASS_OF_PARENT, 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
             'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
             'standardContractualClauses' => \_x('Standard contractual clauses', 'legal-text', RCB_TD),
             'adequacyDecision' => \_x('Adequacy decision', 'legal-text', RCB_TD),

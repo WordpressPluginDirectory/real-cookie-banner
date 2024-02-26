@@ -94,7 +94,7 @@ class TechnicalDefinitions
      *
      * @codeCoverageIgnore
      */
-    public function getIsSessionDuration()
+    public function isSessionDuration()
     {
         return $this->isSessionDuration;
     }
@@ -157,6 +157,13 @@ class TechnicalDefinitions
     public function setIsSessionDuration($isSessionDuration)
     {
         $this->isSessionDuration = $isSessionDuration;
+    }
+    /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['type' => $this->type, 'name' => $this->name, 'host' => $this->host, 'duration' => $this->duration, 'durationUnit' => $this->durationUnit, 'isSessionDuration' => $this->isSessionDuration];
     }
     /**
      * Generate a `ProviderContact` object from an array.

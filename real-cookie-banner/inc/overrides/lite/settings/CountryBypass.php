@@ -36,6 +36,11 @@ trait CountryBypass
         // Silence is golden.
     }
     // Documented in AbstractCountryBypass
+    public function lookupCountryCode($ipAddress)
+    {
+        return '';
+    }
+    // Documented in AbstractCountryBypass
     public function isActive()
     {
         return \false;

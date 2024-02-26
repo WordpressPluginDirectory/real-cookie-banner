@@ -95,13 +95,13 @@ class Utils
         foreach (['alloptions', 'notoptions'] as $cacheKey) {
             $cache = \wp_cache_get($cacheKey, 'options');
             if (\is_array($cache) && isset($cache[$optionName])) {
-                return $cache[$optionName];
+                return \maybe_unserialize($cache[$optionName]);
             }
         }
         // Fallback to directly read the option from the `options` cache
         $directFromCache = \wp_cache_get($optionName, 'options');
         if ($directFromCache !== \false) {
-            return $directFromCache;
+            return \maybe_unserialize($directFromCache);
         }
         return $default;
     }

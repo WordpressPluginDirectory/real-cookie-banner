@@ -2,13 +2,13 @@
 
 namespace DevOwl\RealCookieBanner\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\BannerLink as SettingsBannerLink;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\None;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\Localization;
 use DevOwl\RealCookieBanner\Utils;
-use DevOwl\RealCookieBanner\view\Checklist;
 use DevOwl\RealCookieBanner\view\checklist\PrivacyPolicy;
 use DevOwl\RealCookieBanner\view\checklist\PrivacyPolicyMentionUsage;
 use WP_Error;
@@ -41,15 +41,6 @@ class BannerLink
     const SYNC_META_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_EXTERNAL_URL];
     const SYNC_OPTIONS = ['data' => ['menu_order'], 'meta' => ['copy' => \DevOwl\RealCookieBanner\settings\BannerLink::SYNC_META_COPY, 'copy-once' => \DevOwl\RealCookieBanner\settings\BannerLink::SYNC_META_COPY_ONCE]];
     const META_KEYS = [\DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_PAGE_TYPE, \DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_IS_EXTERNAL_URL, \DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_PAGE_ID, \DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_EXTERNAL_URL, \DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_HIDE_COOKIE_BANNER, \DevOwl\RealCookieBanner\settings\BannerLink::META_NAME_IS_TARGET_BLANK];
-    const PAGE_TYPE_LEGAL_NOTICE = 'legalNotice';
-    const PAGE_TYPE_PRIVACY_POLICY = 'privacyPolicy';
-    const PAGE_TYPE_GENERAL_TERMS_AND_CONDITIONS = 'gtc';
-    const PAGE_TYPE_TERMS_OF_USE = 'tos';
-    const PAGE_TYPE_CANCELLATION_POLICY = 'cancellationPolicy';
-    const PAGE_TYPE_COOKIE_POLICY = 'cookiePolicy';
-    const PAGE_TYPE_DATA_PROCESSING_AGREEMENT = 'dpa';
-    const PAGE_TYPE_DISPUTE_RESOLUTION = 'disputeResolution';
-    const PAGE_TYPE_OTHER = 'other';
     /**
      * Singleton instance.
      *
@@ -70,11 +61,11 @@ class BannerLink
     public function register()
     {
         // Keep this array for translation purposes, so it can be used with `@devowl-wp/multilingual` and auto translate
-        [self::PAGE_TYPE_GENERAL_TERMS_AND_CONDITIONS => \__('General terms and conditions', RCB_TD), self::PAGE_TYPE_TERMS_OF_USE => \__('Terms of use', RCB_TD), self::PAGE_TYPE_CANCELLATION_POLICY => \__('Cancellation policy', RCB_TD), self::PAGE_TYPE_COOKIE_POLICY => \__('Cookie policy', RCB_TD), self::PAGE_TYPE_DATA_PROCESSING_AGREEMENT => \__('Data processing agreement', RCB_TD), self::PAGE_TYPE_DISPUTE_RESOLUTION => \__('Dispute resolution', RCB_TD)];
+        [SettingsBannerLink::PAGE_TYPE_GENERAL_TERMS_AND_CONDITIONS => \__('General terms and conditions', RCB_TD), SettingsBannerLink::PAGE_TYPE_TERMS_OF_USE => \__('Terms of use', RCB_TD), SettingsBannerLink::PAGE_TYPE_CANCELLATION_POLICY => \__('Cancellation policy', RCB_TD), SettingsBannerLink::PAGE_TYPE_COOKIE_POLICY => \__('Cookie policy', RCB_TD), SettingsBannerLink::PAGE_TYPE_DATA_PROCESSING_AGREEMENT => \__('Data processing agreement', RCB_TD), SettingsBannerLink::PAGE_TYPE_DISPUTE_RESOLUTION => \__('Dispute resolution', RCB_TD)];
         $labels = ['name' => \__('Banner links', RCB_TD), 'singular_name' => \__('Banner link', RCB_TD)];
         $args = ['label' => $labels['name'], 'labels' => $labels, 'description' => '', 'public' => \false, 'publicly_queryable' => \false, 'show_ui' => \true, 'show_in_rest' => \true, 'rest_base' => self::CPT_NAME, 'rest_controller_class' => WP_REST_Posts_Controller::class, 'has_archive' => \false, 'show_in_menu' => \false, 'show_in_nav_menus' => \false, 'delete_with_user' => \false, 'exclude_from_search' => \true, 'capabilities' => \DevOwl\RealCookieBanner\settings\Cookie::CAPABILITIES, 'map_meta_cap' => \false, 'hierarchical' => \false, 'rewrite' => \false, 'query_var' => \true, 'supports' => ['title', 'editor', 'custom-fields', 'page-attributes']];
         \register_post_type(self::CPT_NAME, $args);
-        \register_meta('post', self::META_NAME_PAGE_TYPE, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => [self::PAGE_TYPE_LEGAL_NOTICE, self::PAGE_TYPE_PRIVACY_POLICY, self::PAGE_TYPE_GENERAL_TERMS_AND_CONDITIONS, self::PAGE_TYPE_TERMS_OF_USE, self::PAGE_TYPE_CANCELLATION_POLICY, self::PAGE_TYPE_COOKIE_POLICY, self::PAGE_TYPE_DATA_PROCESSING_AGREEMENT, self::PAGE_TYPE_DISPUTE_RESOLUTION, self::PAGE_TYPE_OTHER]]]]);
+        \register_meta('post', self::META_NAME_PAGE_TYPE, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => [SettingsBannerLink::PAGE_TYPE_LEGAL_NOTICE, SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY, SettingsBannerLink::PAGE_TYPE_GENERAL_TERMS_AND_CONDITIONS, SettingsBannerLink::PAGE_TYPE_TERMS_OF_USE, SettingsBannerLink::PAGE_TYPE_CANCELLATION_POLICY, SettingsBannerLink::PAGE_TYPE_COOKIE_POLICY, SettingsBannerLink::PAGE_TYPE_DATA_PROCESSING_AGREEMENT, SettingsBannerLink::PAGE_TYPE_DISPUTE_RESOLUTION, SettingsBannerLink::PAGE_TYPE_OTHER]]]]);
         \register_meta('post', self::META_NAME_IS_EXTERNAL_URL, ['object_subtype' => self::CPT_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_PAGE_ID, ['object_subtype' => self::CPT_NAME, 'type' => 'number', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('post', self::META_NAME_EXTERNAL_URL, ['object_subtype' => self::CPT_NAME, 'type' => 'string', 'single' => \true, 'show_in_rest' => \true]);
@@ -158,7 +149,7 @@ class BannerLink
     /**
      * Localize available banner links for frontend.
      */
-    public function localize()
+    public function toJson()
     {
         $output = [];
         $bannerLinks = $this->getOrdered();
@@ -199,7 +190,7 @@ class BannerLink
                 // There are already links created, skip creation
                 return;
             }
-            $entries = ['privacyPolicy' => ['post_type' => self::CPT_NAME, 'post_title' => \_x('Privacy policy', 'legal-text', Hooks::TD_FORCED), 'post_content' => '', 'menu_order' => 0, 'meta_input' => [self::META_NAME_PAGE_TYPE => self::PAGE_TYPE_PRIVACY_POLICY, self::META_NAME_IS_EXTERNAL_URL => \false, self::META_NAME_PAGE_ID => \DevOwl\RealCookieBanner\settings\General::getInstance()->getDefaultPrivacyPolicy(), self::META_NAME_EXTERNAL_URL => '', self::META_NAME_HIDE_COOKIE_BANNER => \true, self::META_NAME_IS_TARGET_BLANK => \true], 'post_status' => 'publish']];
+            $entries = ['privacyPolicy' => ['post_type' => self::CPT_NAME, 'post_title' => \_x('Privacy policy', 'legal-text', Hooks::TD_FORCED), 'post_content' => '', 'menu_order' => 0, 'meta_input' => [self::META_NAME_PAGE_TYPE => SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY, self::META_NAME_IS_EXTERNAL_URL => \false, self::META_NAME_PAGE_ID => \DevOwl\RealCookieBanner\settings\General::getInstance()->getDefaultPrivacyPolicy(), self::META_NAME_EXTERNAL_URL => '', self::META_NAME_HIDE_COOKIE_BANNER => \true, self::META_NAME_IS_TARGET_BLANK => \true], 'post_status' => 'publish']];
             $backwardsCompatibilityFilters = [];
             // Add legal notice only when the blog language is from DACH
             $wpLanguages = $compLanguage instanceof None ? [\get_locale()] : \array_map([$compLanguage, 'getWordPressCompatibleLanguageCode'], $activeLangauges);
@@ -207,7 +198,7 @@ class BannerLink
                 return Utils::startsWith($l, 'de');
             });
             if ($backwardsCompatibility || \count($dachLanguages) > 0) {
-                $entries['legalNotice'] = ['post_type' => self::CPT_NAME, 'post_title' => \_x('Legal notice', 'legal-text', Hooks::TD_FORCED), 'post_content' => '', 'menu_order' => 1, 'meta_input' => [self::META_NAME_PAGE_TYPE => self::PAGE_TYPE_LEGAL_NOTICE, self::META_NAME_IS_EXTERNAL_URL => \false, self::META_NAME_PAGE_ID => 0, self::META_NAME_EXTERNAL_URL => '', self::META_NAME_HIDE_COOKIE_BANNER => \true, self::META_NAME_IS_TARGET_BLANK => \true], 'post_status' => 'publish'];
+                $entries['legalNotice'] = ['post_type' => self::CPT_NAME, 'post_title' => \_x('Legal notice', 'legal-text', Hooks::TD_FORCED), 'post_content' => '', 'menu_order' => 1, 'meta_input' => [self::META_NAME_PAGE_TYPE => SettingsBannerLink::PAGE_TYPE_LEGAL_NOTICE, self::META_NAME_IS_EXTERNAL_URL => \false, self::META_NAME_PAGE_ID => 0, self::META_NAME_EXTERNAL_URL => '', self::META_NAME_HIDE_COOKIE_BANNER => \true, self::META_NAME_IS_TARGET_BLANK => \true], 'post_status' => 'publish'];
             }
             if ($backwardsCompatibility) {
                 // Load from `wp_options` to get also the ones with `LanguageDependingOption`
@@ -282,7 +273,7 @@ class BannerLink
         }
         if (\get_post_status($new_value) === 'publish') {
             foreach ($this->getOrdered() as $bannerLink) {
-                if ($bannerLink->metas[self::META_NAME_PAGE_TYPE] === self::PAGE_TYPE_PRIVACY_POLICY && !$bannerLink->metas[self::META_NAME_IS_EXTERNAL_URL]) {
+                if ($bannerLink->metas[self::META_NAME_PAGE_TYPE] === SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY && !$bannerLink->metas[self::META_NAME_IS_EXTERNAL_URL]) {
                     \update_post_meta($bannerLink->ID, self::META_NAME_PAGE_ID, $new_value);
                     break;
                 }
@@ -320,7 +311,7 @@ class BannerLink
                 $postId = $compLanguage->getCurrentPostId($postId, 'page');
             }
             \add_action('shutdown', function () use($postId) {
-                if (\get_post_meta($postId, self::META_NAME_PAGE_TYPE, \true) === self::PAGE_TYPE_PRIVACY_POLICY) {
+                if (\get_post_meta($postId, self::META_NAME_PAGE_TYPE, \true) === SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY) {
                     PrivacyPolicyMentionUsage::recalculate($postId);
                     PrivacyPolicy::recalculate($postId);
                 }
@@ -335,90 +326,10 @@ class BannerLink
     public function save_post_page($postId)
     {
         foreach ($this->getOrdered() as $bannerLink) {
-            if ($bannerLink->metas[self::META_NAME_PAGE_TYPE] === self::PAGE_TYPE_PRIVACY_POLICY && $bannerLink->metas[self::META_NAME_PAGE_ID] === $postId && !$bannerLink->metas[self::META_NAME_IS_EXTERNAL_URL]) {
+            if ($bannerLink->metas[self::META_NAME_PAGE_TYPE] === SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY && $bannerLink->metas[self::META_NAME_PAGE_ID] === $postId && !$bannerLink->metas[self::META_NAME_IS_EXTERNAL_URL]) {
                 PrivacyPolicyMentionUsage::recalculate($postId);
                 PrivacyPolicy::recalculate($postId);
             }
-        }
-    }
-    /**
-     * With version 3.12.0 we have introduced banner / footer links in Cookies > Settings > General.
-     * Instead of using the IDs (imprint, privacy policy) from the customizer, we now manage the links
-     * via a Custom Post Type. For backwards-compatibility, we migrate the links accordingly.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     * @see https://app.clickup.com/t/cawgkp
-     */
-    public function applyBackwardsCompatibility($revision, $independent)
-    {
-        // Convert old `websiteOperator.contactForm` (page ID) to `contactFormUrl`
-        $homeUrl = \trailingslashit(\home_url());
-        if (!$independent && isset($revision['websiteOperator']) && isset($revision['websiteOperator']['contactForm'])) {
-            $contactFormId = $revision['websiteOperator']['contactForm'];
-            $revision['websiteOperator']['contactFormUrl'] = $contactFormId > 0 ? \add_query_arg('page_id', $contactFormId, $homeUrl) : '';
-            unset($revision['websiteOperator']['contactForm']);
-        }
-        // Convert old settings to new `links`
-        if ($independent && !isset($revision['links'])) {
-            $customizeLegal = $revision['banner']['customizeValuesBanner']['legal'] ?? [];
-            $linkTarget = $revision['banner']['customizeValuesBanner']['footerDesign']['linkTarget'] ?? [];
-            $pageIdToPermalink = $revision['pageIdToPermalink'] ?? [];
-            $links = [];
-            foreach (['privacyPolicy', 'imprint'] as $pageType) {
-                $pageId = $customizeLegal[$pageType] ?? 0;
-                $isExternalUrl = $customizeLegal[$pageType . 'IsExternalUrl'] ?? \false;
-                $externalUrl = $customizeLegal[$pageType . 'ExternalUrl'] ?? '';
-                $hideCookieBanner = $customizeLegal[$pageType . 'Hide'] ?? \true;
-                $url = '';
-                if ($isExternalUrl) {
-                    $url = $externalUrl;
-                } elseif ($pageId > 0) {
-                    $url = $pageIdToPermalink[$pageId] ?? \add_query_arg('page_id', $pageId, $homeUrl);
-                }
-                $link = ['label' => $customizeLegal[$pageType . 'Label'] ?? '', 'pageType' => $pageType === 'imprint' ? 'legalNotice' : $pageType, 'url' => $url, 'hideCookieBanner' => $hideCookieBanner, 'isTargetBlank' => $linkTarget === '_blank'];
-                if (!empty($link['url']) && !empty($link['label'])) {
-                    $links[] = $link;
-                }
-            }
-            $revision['links'] = $links;
-        }
-        return $revision;
-    }
-    /**
-     * With the introduction of the footer links in Cookies > Settings, we also removed the "Legal" section
-     * in the customizer. The links are now completely customizable via a custom post type.
-     *
-     * @see https://app.clickup.com/t/cawgkp
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_11_5($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '3.11.5', ['3.12.0', '3.11.6'])) {
-            $this->createDefaults(\true);
-        }
-    }
-    /**
-     * With the introduction of the footer links in Cookies > Settings, we had a bug that migrated banner links
-     * did not update the checklist item accordingly.
-     *
-     * @see https://app.clickup.com/t/866ay8jeb
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_12_0($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '3.12.0', ['3.13.0', '3.12.1'])) {
-            \add_action('init', function () {
-                $privacyPolicyId = $this->getLegalLink(self::PAGE_TYPE_PRIVACY_POLICY, 'id');
-                if ($privacyPolicyId > 0) {
-                    if (!Checklist::getInstance()->isChecked(PrivacyPolicy::IDENTIFIER)) {
-                        PrivacyPolicy::recalculate($privacyPolicyId);
-                    }
-                    if (!Checklist::getInstance()->isChecked(PrivacyPolicyMentionUsage::IDENTIFIER)) {
-                        PrivacyPolicyMentionUsage::recalculate($privacyPolicyId);
-                    }
-                }
-            }, 8);
         }
     }
     /**

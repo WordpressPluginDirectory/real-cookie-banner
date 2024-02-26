@@ -11,14 +11,11 @@ use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
-use DevOwl\RealCookieBanner\settings\General;
-use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\checklist\Scanner;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\KeyValueMapOption;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 // @codeCoverageIgnoreStart
@@ -641,26 +638,6 @@ class Notices
     public function getClickedModalHints()
     {
         return \array_keys($this->getStates()->getKeysStartingWith(self::MODAL_HINT_PREFIX));
-    }
-    /**
-     * With the introduction of TCF 2.2, IAB Europe recommends to only use TCF vendors which are really used
-     * while data processing. When there are more than x vendors created previsouly, show a notice.
-     *
-     * @see https://app.clickup.com/t/863gt04va
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_4_0_0($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '4.0.0', ['4.1.0', '4.0.1']) && $this->isPro()) {
-            \add_action('init', function () {
-                if (TCF::getInstance()->isActive()) {
-                    $count = TcfVendorConfiguration::getInstance()->getAllCount();
-                    if ($count > self::TCF_TOO_MUCH_VENDORS) {
-                        $this->getStates()->set(self::NOTICE_TCF_TOO_MUCH_VENDORS, \true);
-                    }
-                }
-            }, 8);
-        }
     }
     /**
      * Reset states of notices which needs to get recalculated when a service / content blocker got updated / deleted.

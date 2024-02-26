@@ -23,6 +23,7 @@ class TranslatePress extends AbstractOutputBufferPlugin
 {
     const EDIT_QUERY_VAR = 'trp-edit-translation';
     private $pendingTranslations = [];
+    private $useRawQueryForRead = \false;
     // Documented in AbstractLanguagePlugin
     public function __construct($domain, $moFile = null, $overrideClass = null)
     {
@@ -174,12 +175,50 @@ class TranslatePress extends AbstractOutputBufferPlugin
         $value = TRP_Translation_Manager::strip_gettext_tags($value);
         return [$key, $value];
     }
+    /**
+     * `translateStrings` but directly accessing the database instead of using the TranslatePress API.
+     * You need to activate this explictely with `$this->setUseRawQueryForRead(true)`.
+     *
+     * @param string[] $content
+     * @param string $locale
+     */
+    protected function translateStringsRawQuery(&$content, $locale)
+    {
+        global $wpdb;
+        if (!$this->useRawQueryForRead) {
+            return \false;
+        }
+        $query = $this->getTrpQueryManager();
+        $table_name = $query->get_table_name($locale);
+        // Read all requested strings
+        $originals = [];
+        foreach ($content as $string) {
+            $originals[] = $wpdb->prepare('%s', $string);
+        }
+        if (\count($originals) === 0) {
+            return \true;
+        }
+        // phpcs:disable WordPress.DB.PreparedSQL
+        $result = $wpdb->get_results("SELECT original, translated FROM {$table_name} WHERE original IN (" . \join(',', $originals) . ') AND status <> 0', ARRAY_A);
+        // phpcs:enable WordPress.DB.PreparedSQL
+        foreach ($content as &$value) {
+            foreach ($result as $translation) {
+                if ($translation['original'] === $value) {
+                    $value = $translation['translated'];
+                }
+            }
+        }
+        return \true;
+    }
     // Documented in AbstractOutputBufferPlugin
     public function translateStrings(&$content, $locale, $context = null)
     {
         global $wp_current_filter;
         if (!$this->isCurrentlyInEditorPreview()) {
             $currentLanguage = $this->getCurrentLanguage();
+            if ($this->translateStringsRawQuery($content, $locale) !== \false) {
+                return;
+            }
             if ($locale !== null) {
                 $this->switch($locale);
             }
@@ -279,6 +318,22 @@ class TranslatePress extends AbstractOutputBufferPlugin
          */
         $languages = $trp->get_component('query');
         return $languages;
+    }
+    /**
+     * Enable this if you want to bypass the TranslatePress API and directly use the TranslatePress
+     * database tables for reading translations. This could improve performance significantely but
+     * keep in mind that this does also skip gettext mechanism.
+     *
+     * This also skips the parsing of the passed string, when it is e.g. a HTML and paragraphs are split
+     * into multiple translations. So, make sure that the passed original strings to `translateArray` are
+     * standalone strings (e.g. URLs).
+     *
+     * @param boolean $state
+     * @codeCoverageIgnore
+     */
+    public function setUseRawQueryForRead($state)
+    {
+        $this->useRawQueryForRead = $state;
     }
     /**
      * Check if TranslatePress is active. We also need to check for XML availability cause we need

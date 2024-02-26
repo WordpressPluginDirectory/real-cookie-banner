@@ -40,6 +40,7 @@ class Config extends WP_REST_Settings_Controller
         $this->register_routes();
         \register_rest_route($namespace, '/checklist', ['methods' => 'GET', 'callback' => [$this, 'routeGetChecklist'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/checklist/(?P<id>[a-zA-Z0-9_-]+)', ['methods' => 'PUT', 'callback' => [$this, 'routePutChecklist'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['state' => ['type' => 'boolean', 'required' => \true]]]);
+        \register_rest_route($namespace, '/revision/second-view', ['methods' => 'GET', 'callback' => [$this, 'routeGetRevisionSecondView'], 'permission_callback' => '__return_true']);
         \register_rest_route($namespace, '/revision/current', ['methods' => 'GET', 'callback' => [$this, 'routeGetRevisionCurrent'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/revision/(?P<hash>[a-zA-Z0-9_-]{32})', ['methods' => 'GET', 'callback' => [$this, 'routeGetRevisionByHash'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['backwardsCompatibility' => ['type' => 'boolean', 'default' => \true]]]);
         \register_rest_route($namespace, '/revision/independent/(?P<hash>[a-zA-Z0-9_-]{32})', ['methods' => 'GET', 'callback' => [$this, 'routeGetRevisionIndependentByHash'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['backwardsCompatibility' => ['type' => 'boolean', 'default' => \true]]]);
@@ -90,6 +91,21 @@ class Config extends WP_REST_Settings_Controller
     {
         Checklist::getInstance()->toggle($request->get_param('id'), $request->get_param('state'));
         return new WP_REST_Response(\array_merge(Checklist::getInstance()->result(), ['overdue' => Checklist::getInstance()->isOverdue(ConfigPage::CHECKLIST_OVERDUE)]));
+    }
+    /**
+     * See API docs.
+     *
+     * @api {get} /real-cookie-banner/v1/revision/second-view Get the current lazy loadable data for the second view
+     * @apiName RevisionSecondView
+     * @apiGroup Config
+     * @apiPermission manage_options
+     * @apiVersion 1.0.0
+     */
+    public function routeGetRevisionSecondView()
+    {
+        $frontend = Core::getInstance()->getCookieConsentManagement()->getFrontend();
+        $output = $frontend->toJson();
+        return new WP_REST_Response($frontend->prepareLazyData($output));
     }
     /**
      * See API docs.

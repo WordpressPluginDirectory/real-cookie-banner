@@ -5,8 +5,6 @@ namespace DevOwl\RealCookieBanner;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview\ImagePreview;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
-use DevOwl\RealCookieBanner\settings\Cookie;
-use DevOwl\RealCookieBanner\settings\CookieGroup;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\view\Blocker;
@@ -44,93 +42,6 @@ class UserConsent
         // Silence is golden.
     }
     /**
-     * Apply a custom decision (e.g. opt-out a single cookie in a cookie group) to a new
-     * consent. This is e.g. helpful if you are providing a Custom Bypass (e.g. Geolocation)
-     * and want to overtake an opt-out / opt-in from the previous consent.
-     *
-     * @param int $essentialGroupId
-     * @param array|string $previousConsent
-     * @param array|string $newConsent
-     * @param string $overtake Can be `opt-in` or `opt-out`
-     */
-    public function applyCustomDecisionFromPreviousConsent($previousConsent, $newConsent, $overtake)
-    {
-        $previousConsent = $this->validate($previousConsent);
-        $newConsent = $this->validate($newConsent);
-        if (\is_wp_error($previousConsent) || \is_wp_error($newConsent)) {
-            return $previousConsent;
-        }
-        $essentialGroupId = CookieGroup::getInstance()->getEssentialGroup()->term_id;
-        $allPreviousCookies = \DevOwl\RealCookieBanner\Utils::flatten($previousConsent);
-        $allCookies = \DevOwl\RealCookieBanner\Utils::flatten($this->validate('all'));
-        if ($overtake === 'opt-out') {
-            foreach ($newConsent as $group => $cookies) {
-                if (\intval($group) === $essentialGroupId) {
-                    // Skip essentials as they need always be accepted
-                    continue;
-                }
-                foreach ($cookies as $idx => $cookie) {
-                    if (!\in_array($cookie, $allPreviousCookies, \true)) {
-                        // Remove from our new consent, too
-                        unset($newConsent[$group][$idx]);
-                        $newConsent[$group] = \array_values($newConsent[$group]);
-                        // Force to be numbered array
-                        continue;
-                    }
-                }
-            }
-        } elseif ($overtake === 'opt-in') {
-            foreach ($previousConsent as $group => $cookies) {
-                if (\intval($group) === $essentialGroupId) {
-                    // Skip essentials as they need always be accepted
-                    continue;
-                }
-                foreach ($cookies as $cookie) {
-                    if (!\in_array($cookie, $allCookies, \true)) {
-                        // Does no longer exist, skip
-                        continue;
-                    }
-                    $newConsent[$group][] = $cookie;
-                }
-            }
-        }
-        return $newConsent;
-    }
-    /**
-     * Check if passed array is valid consent.
-     *
-     * @param array|string $consent
-     * @return array|WP_Error Sanitized consent array
-     */
-    public function validate($consent)
-    {
-        if (\is_array($consent)) {
-            foreach ($consent as $key => &$value) {
-                if (!\is_numeric($key) || !\is_array($value)) {
-                    return new WP_Error('rcb_user_consent_invalid');
-                }
-                foreach ($value as $cookieId) {
-                    if (!\is_numeric($cookieId)) {
-                        return new WP_Error('rcb_user_consent_invalid');
-                    }
-                }
-                $value = \array_map('intval', $value);
-            }
-            return $consent;
-        }
-        if (\is_string($consent)) {
-            // Automatically set cookies to "All"
-            $result = [];
-            foreach ($consent === 'all' ? CookieGroup::getInstance()->getOrdered() : [CookieGroup::getInstance()->getEssentialGroup()] as $group) {
-                $result[$group->term_id] = \array_map(function ($cookie) {
-                    return $cookie->ID;
-                }, Cookie::getInstance()->getOrdered($group->term_id));
-            }
-            return $result;
-        }
-        return new WP_Error('rcb_user_consent_invalid');
-    }
-    /**
      * Delete all available user consents with revisions and stats.
      *
      * @return boolean|array Array with deleted counts of the database tables
@@ -145,7 +56,7 @@ class UserConsent
         $table_name_stats_buttons_clicked = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_BUTTONS_CLICKED);
         $table_name_stats_custom_bypass = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_CUSTOM_BYPASS);
         // The latest revision should not be deleted
-        $revisionHash = Revision::getInstance()->getCurrentHash();
+        $revisionHash = Revision::getInstance()->getRevision()->getEnsuredCurrentHash();
         // phpcs:disable WordPress.DB
         $consent = $wpdb->query("DELETE FROM {$table_name}");
         $revision = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name_revision} WHERE `hash` != %s", $revisionHash));
@@ -474,22 +385,6 @@ class UserConsent
             $wpdb->query("DELETE ri1 FROM {$table_name_revision_independent} ri1\n                LEFT JOIN (\n                    SELECT DISTINCT(ri2.hash) FROM {$table_name_revision_independent} ri2\n                    INNER JOIN {$table_name} c ON ri2.hash = c.revision_independent\n                ) existing\n                ON ri1.hash = existing.hash\n                WHERE existing.hash IS NULL");
         }
         // phpcs:enable WordPress.DB
-    }
-    /**
-     * Fill the `ui_view` database column.
-     *
-     * @see https://app.clickup.com/t/2undj42
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_4_13($installed)
-    {
-        global $wpdb;
-        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
-        if (\DevOwl\RealCookieBanner\Core::versionCompareOlderThan($installed, '3.4.13', ['3.4.14', '3.5.0'])) {
-            // phpcs:disable WordPress.DB
-            $wpdb->query("UPDATE {$table_name} SET ui_view = 'initial' WHERE dnt = 0 AND custom_bypass IS NULL");
-            // phpcs:enable WordPress.DB
-        }
     }
     /**
      * Get singleton instance.

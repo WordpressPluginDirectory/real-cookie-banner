@@ -204,10 +204,12 @@ class Activator
         if ($errorlevel) {
             $wpdb->print_error();
         }
-        // wp_rcb_tcf*
-        \DevOwl\RealCookieBanner\Core::getInstance()->getTcfVendorListNormalizer()->dbDelta($this);
-        if ($errorlevel) {
-            $wpdb->print_error();
+        if ($this->isPro()) {
+            // wp_rcb_tcf*
+            \DevOwl\RealCookieBanner\Core::getInstance()->getTcfVendorListNormalizer()->dbDelta($this);
+            if ($errorlevel) {
+                $wpdb->print_error();
+            }
         }
         // wp_p_queue
         \DevOwl\RealCookieBanner\Core::getInstance()->getRealQueue()->dbDelta($this);
@@ -265,8 +267,6 @@ class Activator
         global $wpdb;
         // Delete anonymous JavaScript files
         $table_name = $wpdb->prefix . RCB_DB_PREFIX . '_' . AnonymousAssetBuilder::TABLE_NAME;
-        foreach (['banner', 'blocker'] as $handle) {
-            DeliverAnonymousAsset::uninstall($table_name, \sprintf('%s-%s', RCB_SLUG, $handle), ['js']);
-        }
+        AnonymousAssetBuilder::uninstall($table_name);
     }
 }

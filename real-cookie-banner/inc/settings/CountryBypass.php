@@ -4,7 +4,6 @@ namespace DevOwl\RealCookieBanner\settings;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractCountryBypass;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\CountryBypass as LiteCountryBypass;
 use DevOwl\RealCookieBanner\overrides\interfce\settings\IOverrideCountryBypass;
 // @codeCoverageIgnoreStart
@@ -61,26 +60,6 @@ class CountryBypass extends AbstractCountryBypass implements IOverrideCountryByp
     public function register()
     {
         $this->overrideRegister();
-    }
-    /**
-     * Add Switzerland (`CH`) to the country bypass list.
-     *
-     * @see https://app.clickup.com/t/863h7nj72
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_11_5($installed)
-    {
-        if ($this->isPro() && Core::versionCompareOlderThan($installed, '3.11.5', ['3.12.0', '3.11.6'])) {
-            // We do not use `getCountries()` as we need the non-expanded country list
-            $countries = \get_option(self::SETTING_COUNTRY_BYPASS_COUNTRIES);
-            if (!empty($countries)) {
-                $countries = \explode(',', $countries);
-                if (!\in_array('CH', $countries, \true)) {
-                    $countries[] = 'CH';
-                    \update_option(self::SETTING_COUNTRY_BYPASS_COUNTRIES, \join(',', $countries));
-                }
-            }
-        }
     }
     /**
      * Get singleton instance.

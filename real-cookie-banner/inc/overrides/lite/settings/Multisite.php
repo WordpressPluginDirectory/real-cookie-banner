@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\lite\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractMultisite;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -27,11 +28,21 @@ trait Multisite
     // Documented in AbstractMultisite
     public function getForwardTo()
     {
-        return $this->isConsentForwarding();
+        return [];
     }
     // Documented in AbstractMultisite
     public function getCrossDomains()
     {
-        return $this->isConsentForwarding();
+        return [];
+    }
+    // Documented in AbstractMultisite
+    public function getConfiguredEndpoints()
+    {
+        return [];
+    }
+    // Documented in AbstractMultisite
+    public function getAvailableEndpoints($filter = AbstractMultisite::ENDPOINT_FILTER_ALL)
+    {
+        return [];
     }
 }

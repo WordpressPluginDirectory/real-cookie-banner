@@ -11,26 +11,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: n/a\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 
 #. Plugin Name of the plugin
+#: index.php
 msgid "Real Cookie Banner"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: inc/view/Banner.php:293
+#: index.php
+#: inc/view/Banner.php:305
 msgid "https://devowl.io/wordpress-real-cookie-banner/"
 msgstr ""
 
 #. Description of the plugin
+#: index.php
 msgid "Obtain GDPR (DSGVO) and ePrivacy (EU cookie law) compliant opt-in consent. Find cookies and fill all legal information in your cookie banner. More than just a cookie notice!"
 msgstr ""
 
 #. Author of the plugin
+#: index.php
 msgid "devowl.io"
 msgstr ""
 
 #. Author URI of the plugin
+#: index.php
 msgid "https://devowl.io"
 msgstr ""
 
@@ -57,11 +62,11 @@ msgstr ""
 #: inc/AdInitiator.php:85
 #: inc/import/ImportBlocker.php:141
 #: inc/import/ImportBlocker.php:205
-#: inc/settings/Blocker.php:131
+#: inc/settings/Blocker.php:132
 #: inc/view/ConfigPage.php:209
-#: inc/view/customize/banner/Texts.php:313
-#: inc/view/Notices.php:456
-#: inc/view/Notices.php:508
+#: inc/view/customize/banner/Texts.php:311
+#: inc/view/Notices.php:453
+#: inc/view/Notices.php:505
 msgid "Content Blocker"
 msgstr ""
 
@@ -117,313 +122,313 @@ msgstr ""
 msgid "Real Cookie Banner is a cookie plugin specially designed for WordPress. It is fully installed in your WordPress as a native plugin. All consents are processed and stored on your server. Nothing is downloaded from a cloud in your visitor's browser, which avoids further legal issues."
 msgstr ""
 
-#: inc/Assets.php:518
+#: inc/Assets.php:512
 msgctxt "legal-text"
 msgid "Appropriate safeguard"
 msgstr ""
 
-#: inc/Assets.php:519
+#: inc/Assets.php:513
 msgctxt "legal-text"
 msgid "Standard contractual clauses"
 msgstr ""
 
-#: inc/Assets.php:520
+#: inc/Assets.php:514
 msgctxt "legal-text"
 msgid "Adequacy decision"
 msgstr ""
 
-#: inc/Assets.php:521
+#: inc/Assets.php:515
 msgctxt "legal-text"
 msgid "Binding corporate rules"
 msgstr ""
 
-#: inc/Assets.php:522
+#: inc/Assets.php:516
 msgctxt "legal-text"
 msgid "Other"
 msgstr ""
 
-#: inc/Assets.php:523
+#: inc/Assets.php:517
 msgctxt "legal-text"
 msgid "Use on legal basis of"
 msgstr ""
 
-#: inc/Assets.php:526
+#: inc/Assets.php:520
 msgctxt "legal-text"
 msgid "Art. 49 (1) lit. a GDPR"
 msgstr ""
 
-#: inc/Assets.php:533
+#: inc/Assets.php:527
 msgctxt "legal-text"
 msgid "Art. 17 (1) lit. a DSG (Switzerland)"
 msgstr ""
 
-#: inc/Assets.php:540
+#: inc/Assets.php:534
 msgctxt "legal-text"
 msgid "Legitimate interest"
 msgstr ""
 
-#: inc/Assets.php:541
+#: inc/Assets.php:535
 msgctxt "legal-text"
 msgid "Compliance with a legal obligation"
 msgstr ""
 
-#: inc/Assets.php:542
+#: inc/Assets.php:536
 msgctxt "legal-text"
 msgid "Consent"
 msgstr ""
 
-#: inc/Assets.php:543
+#: inc/Assets.php:537
 msgctxt "legal-text"
 msgid "We have recognized that you are a crawler/bot. Only natural persons must consent to cookies and processing of personal data. Therefore, the link has no function for you."
 msgstr ""
 
-#: inc/Assets.php:548
+#: inc/Assets.php:542
 msgctxt "legal-text"
 msgid "Technical cookie definition"
 msgstr ""
 
-#: inc/Assets.php:549
+#: inc/Assets.php:543
 msgctxt "legal-text"
 msgid "Uses cookies"
 msgstr ""
 
-#: inc/Assets.php:550
+#: inc/Assets.php:544
 msgctxt "legal-text"
 msgid "Cookie refresh"
 msgstr ""
 
-#: inc/Assets.php:551
+#: inc/Assets.php:545
 msgctxt "legal-text"
 msgid "Uses cookie-like information (LocalStorage, SessionStorage, IndexDB, etc.)"
 msgstr ""
 
-#: inc/Assets.php:556
+#: inc/Assets.php:550
 msgctxt "legal-text"
 msgid "Host"
 msgstr ""
 
-#: inc/Assets.php:557
+#: inc/Assets.php:551
 msgctxt "legal-text"
 msgid "Duration"
 msgstr ""
 
-#: inc/Assets.php:558
+#: inc/Assets.php:552
 msgctxt "legal-text"
 msgid "No expiration"
 msgstr ""
 
-#: inc/Assets.php:559
+#: inc/Assets.php:553
 msgctxt "legal-text"
 msgid "Type"
 msgstr ""
 
-#: inc/Assets.php:560
+#: inc/Assets.php:554
 msgctxt "legal-text"
 msgid "Purpose"
 msgstr ""
 
-#: inc/Assets.php:561
-#: inc/overrides/pro/view/TcfBanner.php:193
+#: inc/Assets.php:555
+#: inc/overrides/pro/view/TcfBanner.php:90
 msgctxt "legal-text"
 msgid "Purposes"
 msgstr ""
 
-#: inc/Assets.php:562
+#: inc/Assets.php:556
 msgctxt "legal-text"
 msgid "History of your privacy settings"
 msgstr ""
 
-#: inc/Assets.php:567
+#: inc/Assets.php:561
 msgctxt "legal-text"
 msgid "Skip to consent choices"
 msgstr ""
 
-#: inc/Assets.php:568
+#: inc/Assets.php:562
 msgctxt "legal-text"
 msgid "Show consent from"
 msgstr ""
 
-#: inc/Assets.php:569
+#: inc/Assets.php:563
 msgctxt "legal-text"
 msgid "Not yet consented to"
 msgstr ""
 
-#: inc/Assets.php:570
+#: inc/Assets.php:564
 msgctxt "legal-text"
 msgid "Provider"
 msgstr ""
 
-#: inc/Assets.php:571
+#: inc/Assets.php:565
 msgctxt "legal-text"
 msgid "Phone"
 msgstr ""
 
-#: inc/Assets.php:572
+#: inc/Assets.php:566
 msgctxt "legal-text"
 msgid "Email"
 msgstr ""
 
-#: inc/Assets.php:573
+#: inc/Assets.php:567
 msgctxt "legal-text"
 msgid "Contact form"
 msgstr ""
 
-#: inc/Assets.php:574
+#: inc/Assets.php:568
 msgctxt "legal-text"
 msgid "Privacy Policy"
 msgstr ""
 
-#: inc/Assets.php:575
-#: inc/settings/BannerLink.php:392
+#: inc/Assets.php:569
+#: inc/settings/BannerLink.php:382
 msgctxt "legal-text"
 msgid "Legal notice"
 msgstr ""
 
-#: inc/Assets.php:576
+#: inc/Assets.php:570
 msgctxt "legal-text"
 msgid "Non-standardized data processing"
 msgstr ""
 
-#: inc/Assets.php:577
+#: inc/Assets.php:571
 msgctxt "legal-text"
 msgid "Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called \"essential services\" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given."
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:583
+#: inc/Assets.php:577
 msgctxt "legal-text"
 msgid "Data processing in unsecure third countries"
 msgstr ""
 
-#: inc/Assets.php:589
+#: inc/Assets.php:583
 msgctxt "legal-text"
 msgid "US data processing"
 msgstr ""
 
-#: inc/Assets.php:592
+#: inc/Assets.php:586
 msgid "second(s)"
 msgstr ""
 
-#: inc/Assets.php:593
+#: inc/Assets.php:587
 msgid "minute(s)"
 msgstr ""
 
-#: inc/Assets.php:594
+#: inc/Assets.php:588
 msgid "hour(s)"
 msgstr ""
 
-#: inc/Assets.php:595
+#: inc/Assets.php:589
 msgid "day(s)"
 msgstr ""
 
-#: inc/Assets.php:596
+#: inc/Assets.php:590
 msgid "month(s)"
 msgstr ""
 
-#: inc/Assets.php:597
+#: inc/Assets.php:591
 msgid "year(s)"
 msgstr ""
 
-#: inc/Assets.php:599
+#: inc/Assets.php:593
 msgid "second"
 msgstr ""
 
-#: inc/Assets.php:600
+#: inc/Assets.php:594
 msgid "minute"
 msgstr ""
 
-#: inc/Assets.php:601
+#: inc/Assets.php:595
 msgid "hour"
 msgstr ""
 
-#: inc/Assets.php:602
+#: inc/Assets.php:596
 msgid "day"
 msgstr ""
 
-#: inc/Assets.php:603
+#: inc/Assets.php:597
 msgid "month"
 msgstr ""
 
-#: inc/Assets.php:604
+#: inc/Assets.php:598
 msgid "year"
 msgstr ""
 
-#: inc/Assets.php:607
+#: inc/Assets.php:601
 msgid "seconds"
 msgstr ""
 
-#: inc/Assets.php:608
+#: inc/Assets.php:602
 msgid "minutes"
 msgstr ""
 
-#: inc/Assets.php:609
+#: inc/Assets.php:603
 msgid "hours"
 msgstr ""
 
-#: inc/Assets.php:610
+#: inc/Assets.php:604
 msgid "days"
 msgstr ""
 
-#: inc/Assets.php:611
+#: inc/Assets.php:605
 msgid "months"
 msgstr ""
 
-#: inc/Assets.php:612
+#: inc/Assets.php:606
 msgid "years"
 msgstr ""
 
-#: inc/Assets.php:615
+#: inc/Assets.php:609
 msgid "Close"
 msgstr ""
 
-#: inc/Assets.php:616
+#: inc/Assets.php:610
 msgid "Close without saving"
 msgstr ""
 
-#: inc/Assets.php:617
+#: inc/Assets.php:611
 msgid "Yes"
 msgstr ""
 
-#: inc/Assets.php:618
+#: inc/Assets.php:612
 msgid "No"
 msgstr ""
 
-#: inc/Assets.php:619
+#: inc/Assets.php:613
 msgid "Unknown"
 msgstr ""
 
-#: inc/Assets.php:620
+#: inc/Assets.php:614
 #: inc/overrides/pro/Stats.php:61
-#: inc/view/customize/banner/BasicLayout.php:351
-#: inc/view/customize/banner/BasicLayout.php:371
-#: inc/view/customize/banner/BodyDesign.php:444
+#: inc/view/customize/banner/BasicLayout.php:350
+#: inc/view/customize/banner/BasicLayout.php:370
+#: inc/view/customize/banner/BodyDesign.php:442
 #: inc/view/customize/banner/Design.php:95
 msgid "None"
 msgstr ""
 
-#: inc/Assets.php:621
+#: inc/Assets.php:615
 msgid "No license activated - not for production use!"
 msgstr ""
 
-#: inc/Assets.php:622
+#: inc/Assets.php:616
 msgid "Product license not for production use!"
 msgstr ""
 
-#: inc/Assets.php:623
-#: inc/Assets.php:656
+#: inc/Assets.php:617
+#: inc/Assets.php:650
 #: inc/view/checklist/GetPro.php:55
-#: inc/view/Notices.php:579
+#: inc/view/Notices.php:576
 msgid "Learn more"
 msgstr ""
 
-#: inc/Assets.php:624
+#: inc/Assets.php:618
 msgid "https://devowl.io/knowledge-base/license-installation-type/"
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:629
+#: inc/Assets.php:623
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:198
-#: inc/view/Notices.php:548
+#: inc/view/Notices.php:545
 msgid " and "
 msgstr ""
 
@@ -559,9 +564,9 @@ msgstr ""
 
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:104
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:150
-#: inc/view/customize/banner/BodyDesign.php:774
-#: inc/view/customize/banner/Decision.php:210
-#: inc/view/customize/banner/individual/SaveButton.php:75
+#: inc/view/customize/banner/BodyDesign.php:772
+#: inc/view/customize/banner/Decision.php:209
+#: inc/view/customize/banner/individual/SaveButton.php:74
 msgid "https://www.datenschutzkonferenz-online.de/media/oh/20211220_oh_telemedien.pdf"
 msgstr ""
 
@@ -1010,6 +1015,29 @@ msgid "We need to inform you that on Feb. 02, 2022, the Belgian Data Protection 
 msgstr ""
 
 #. translators:
+#: inc/comp/RevisionBackwardsCompatibility.php:72
+#: inc/view/customize/banner/Texts.php:530
+msgctxt "legal-text"
+msgid "{{name}} blocked due to privacy settings"
+msgstr ""
+
+#: inc/comp/RevisionBackwardsCompatibility.php:73
+#: inc/view/customize/banner/Texts.php:531
+msgctxt "legal-text"
+msgid "Show all services you still need to agree to"
+msgstr ""
+
+#: inc/comp/RevisionBackwardsCompatibility.php:78
+msgctxt "legal-text"
+msgid "Accept required services and load content"
+msgstr ""
+
+#: inc/comp/RevisionBackwardsCompatibility.php:83
+msgctxt "legal-text"
+msgid "Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future. You have the right to revoke or change your decision at any time."
+msgstr ""
+
+#. translators:
 #: inc/comp/ThirdPartyNotices.php:73
 msgid "<strong>Pixel Manager for WooCommerce</strong> embed trackers by default without waiting for consent. Please activate \"Enable Explicit Consent Mode\" under <a href=\"%1$s\"><i>WooCommerce > Pixel Manager > Advanced > Cookie Consent Management</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"Pixel Manager for WooCommerce\"."
 msgstr ""
@@ -1023,7 +1051,7 @@ msgstr ""
 msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
 msgstr ""
 
-#: inc/Core.php:505
+#: inc/Core.php:404
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1192,33 +1220,33 @@ msgstr ""
 msgid "Setting/Option <strong>%1$s</strong> (key <code>%2$s</code>) cannot be imported. Skipped."
 msgstr ""
 
-#: inc/import/ImportSettings.php:68
+#: inc/import/ImportSettings.php:109
 msgid "Hide on additional pages"
 msgstr ""
 
-#: inc/import/ImportSettings.php:71
+#: inc/import/ImportSettings.php:112
 msgid "Contact form"
 msgstr ""
 
-#: inc/import/ImportSettings.php:104
+#: inc/import/ImportSettings.php:145
 msgid "Forward to"
 msgstr ""
 
-#: inc/import/ImportSettings.php:105
+#: inc/import/ImportSettings.php:146
 msgid "External 'Forward To' endpoints"
 msgstr ""
 
 #. translators:
-#: inc/import/ImportSettings.php:119
-#: inc/import/ImportSettings.php:138
+#: inc/import/ImportSettings.php:160
+#: inc/import/ImportSettings.php:179
 msgid "Setting/Option <code>%1$s</code> (%2$s) cannot be imported because it needs explicit opt-in. Skipped."
 msgstr ""
 
-#: inc/import/ImportSettings.php:124
+#: inc/import/ImportSettings.php:165
 msgid "enabling TCF-compatibility"
 msgstr ""
 
-#: inc/import/ImportSettings.php:143
+#: inc/import/ImportSettings.php:184
 msgid "enabling geo-restriction"
 msgstr ""
 
@@ -1242,15 +1270,11 @@ msgid "You are not allowed to do this in the free version of Real Cookie Banner.
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/comp/language/Hooks.php:99
+#: inc/overrides/pro/comp/language/Hooks.php:81
 msgid "Multilingual %1$s: %2$s"
 msgstr ""
 
-#: inc/overrides/pro/Forwarding.php:256
-msgid "Not found"
-msgstr ""
-
-#: inc/overrides/pro/rest/Forwarding.php:142
+#: inc/overrides/pro/rest/Forwarding.php:145
 msgid "Consent Forwarding is not active."
 msgstr ""
 
@@ -1258,8 +1282,8 @@ msgstr ""
 msgid "The link to Real Cookie Banner is an affiliate link. If you buy the product, we may receive a commission, but the price of the product will not change for you."
 msgstr ""
 
-#: inc/overrides/pro/settings/CountryBypass.php:241
-#: inc/overrides/pro/settings/TCF.php:143
+#: inc/overrides/pro/settings/CountryBypass.php:150
+#: inc/overrides/pro/settings/TCF.php:145
 msgid "This functionality is currently not available."
 msgstr ""
 
@@ -1268,11 +1292,11 @@ msgstr ""
 msgid "Downloading the GVL has failed. Please try again later! (%1$s: %2$s)"
 msgstr ""
 
-#: inc/overrides/pro/settings/TcfVendorConfiguration.php:79
+#: inc/overrides/pro/settings/TcfVendorConfiguration.php:80
 msgid "TCF vendor configurations"
 msgstr ""
 
-#: inc/overrides/pro/settings/TcfVendorConfiguration.php:80
+#: inc/overrides/pro/settings/TcfVendorConfiguration.php:81
 msgid "TCF vendor configuration"
 msgstr ""
 
@@ -1373,130 +1397,130 @@ msgctxt "legal-text"
 msgid "Storing and reading of data related to security (e.g. authentication functionality, fraud prevention, and other user protection)."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:166
+#: inc/overrides/pro/view/TcfBanner.php:63
 msgctxt "legal-text"
 msgid "You also allow data transfer under the TCF standard to {{consentCount}} based on consent, and {{legIntCount}} based on legitimate interest, for the following purposes:"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:171
+#: inc/overrides/pro/view/TcfBanner.php:68
 msgctxt "legal-text"
 msgid "Vendor list"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:172
+#: inc/overrides/pro/view/TcfBanner.php:69
 msgctxt "legal-text"
 msgid "Vendors"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:173
+#: inc/overrides/pro/view/TcfBanner.php:70
 msgctxt "legal-text"
 msgid "partner"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:173
+#: inc/overrides/pro/view/TcfBanner.php:70
 msgctxt "legal-text"
 msgid "partners"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:174
+#: inc/overrides/pro/view/TcfBanner.php:71
 msgctxt "legal-text"
 msgid "data retention period"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:175
+#: inc/overrides/pro/view/TcfBanner.php:72
 msgid "Show more"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:176
-#: inc/view/customize/banner/Decision.php:132
-#: inc/view/customize/banner/Decision.php:154
-#: inc/view/customize/banner/Decision.php:190
+#: inc/overrides/pro/view/TcfBanner.php:73
+#: inc/view/customize/banner/Decision.php:131
+#: inc/view/customize/banner/Decision.php:153
+#: inc/view/customize/banner/Decision.php:189
 msgid "Hide"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:177
+#: inc/overrides/pro/view/TcfBanner.php:74
 msgid "Example"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:178
+#: inc/overrides/pro/view/TcfBanner.php:75
 msgid "Explanation of the legitimate interest"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:179
+#: inc/overrides/pro/view/TcfBanner.php:76
 msgctxt "legal-text"
 msgid "Data processing on the legal basis of:"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:180
+#: inc/overrides/pro/view/TcfBanner.php:77
 msgctxt "legal-text"
 msgid "No vendor requests purposes under this legal basis."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:185
+#: inc/overrides/pro/view/TcfBanner.php:82
 msgctxt "legal-text"
 msgid "Data processing standardized according to TCF"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:186
+#: inc/overrides/pro/view/TcfBanner.php:83
 msgctxt "legal-text"
 msgid "The Transparency and Consent Framework (TCF) is a standard for obtaining consistent consent for processing of personal data and cookie setting. This should enable all parties in the digital (advertising) chain to ensure that they set, process and store data and cookies in accordance with the GDPR and the ePrivacy Directive."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:194
+#: inc/overrides/pro/view/TcfBanner.php:91
 msgctxt "legal-text"
 msgid "Purposes describe for which purpose which providers may set cookies and process personal data. Purposes are pre-selected if there is a legitimate interest for its data processing. For all other purposes, data will only be processed with explicit consent."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:201
+#: inc/overrides/pro/view/TcfBanner.php:98
 msgctxt "legal-text"
 msgid "Special purposes"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:202
+#: inc/overrides/pro/view/TcfBanner.php:99
 msgctxt "legal-text"
 msgid "Special purposes for setting cookies and processing personal data by our vendors describe purposes for which we have a legitimate interest that cannot be rejected. For example, we need to process data to prevent fraud."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:209
+#: inc/overrides/pro/view/TcfBanner.php:106
 msgctxt "legal-text"
 msgid "Features"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:210
+#: inc/overrides/pro/view/TcfBanner.php:107
 msgctxt "legal-text"
 msgid "Features for processing personal data describe how data is used to fulfill one or more purposes. Features cannot be opted out, but in the \"Purposes\" section, purposes that lead to the use of features can be selected or deselected. Any purpose can lead to features being used."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:217
+#: inc/overrides/pro/view/TcfBanner.php:114
 msgctxt "legal-text"
 msgid "Special features"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:218
+#: inc/overrides/pro/view/TcfBanner.php:115
 msgctxt "legal-text"
 msgid "Special features for processing personal data describe how data is used to fulfill one or more purposes in a profound way. Personal data will only be processed in this way with explicit consent."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:225
+#: inc/overrides/pro/view/TcfBanner.php:122
 msgctxt "legal-text"
 msgid "Data categories"
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:226
+#: inc/overrides/pro/view/TcfBanner.php:123
 msgctxt "legal-text"
 msgid "Data categories describe which data is used and obtained while processing personal data."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:304
+#: inc/overrides/pro/view/TcfBanner.php:178
 msgid "The TCF requires that the consent dialogue must \"[cover] all or substantially all of the content of the website\". We therefore recommend displaying the consent dialogue as a banner in the middle of the website. Also make sure that the overlay remains active so that your website cannot be used until the consent decision has been made."
 msgstr ""
 
-#: inc/overrides/pro/view/TcfBanner.php:336
+#: inc/overrides/pro/view/TcfBanner.php:210
 msgid "You currently have TCF mode enabled. Therefore, you are not allowed to change the font size and font thickness for this button."
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/view/TcfBanner.php:360
+#: inc/overrides/pro/view/TcfBanner.php:234
 msgid "Your current contrast ratio between background and font color (%1$s) does not reach the minimum of %2$s. Please adjust your colors!"
 msgstr ""
 
@@ -1541,44 +1565,44 @@ msgstr ""
 msgid "Real Cookie Banner tried to automatically scan your entire website for services and external URLs."
 msgstr ""
 
-#: inc/settings/BannerLink.php:105
+#: inc/settings/BannerLink.php:95
 msgid "General terms and conditions"
 msgstr ""
 
-#: inc/settings/BannerLink.php:106
+#: inc/settings/BannerLink.php:96
 msgid "Terms of use"
 msgstr ""
 
-#: inc/settings/BannerLink.php:107
+#: inc/settings/BannerLink.php:97
 msgid "Cancellation policy"
 msgstr ""
 
-#: inc/settings/BannerLink.php:108
+#: inc/settings/BannerLink.php:98
 msgid "Cookie policy"
 msgstr ""
 
-#: inc/settings/BannerLink.php:109
+#: inc/settings/BannerLink.php:99
 msgid "Data processing agreement"
 msgstr ""
 
-#: inc/settings/BannerLink.php:110
+#: inc/settings/BannerLink.php:100
 msgid "Dispute resolution"
 msgstr ""
 
-#: inc/settings/BannerLink.php:114
+#: inc/settings/BannerLink.php:104
 msgid "Banner links"
 msgstr ""
 
-#: inc/settings/BannerLink.php:115
+#: inc/settings/BannerLink.php:105
 msgid "Banner link"
 msgstr ""
 
-#: inc/settings/BannerLink.php:363
+#: inc/settings/BannerLink.php:353
 msgctxt "legal-text"
 msgid "Privacy policy"
 msgstr ""
 
-#: inc/settings/Blocker.php:130
+#: inc/settings/Blocker.php:131
 msgid "Content Blockers"
 msgstr ""
 
@@ -1588,66 +1612,70 @@ msgstr ""
 msgid "Cookies"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:73
+#: inc/settings/Cookie.php:631
+msgid "Not found"
+msgstr ""
+
+#: inc/settings/CookieGroup.php:71
 #: inc/view/customize/banner/individual/Group.php:82
 msgid "Service groups"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:74
+#: inc/settings/CookieGroup.php:72
 msgid "Service group"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:377
-#: inc/settings/CookieGroup.php:398
-#: inc/templates/TemplateConsumers.php:276
+#: inc/settings/CookieGroup.php:370
+#: inc/settings/CookieGroup.php:391
+#: inc/templates/TemplateConsumers.php:277
 msgid "Essential"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:378
-#: inc/settings/CookieGroup.php:399
-#: inc/templates/TemplateConsumers.php:279
+#: inc/settings/CookieGroup.php:371
+#: inc/settings/CookieGroup.php:392
+#: inc/templates/TemplateConsumers.php:280
 msgid "Functional"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:379
-#: inc/settings/CookieGroup.php:400
-#: inc/templates/TemplateConsumers.php:282
+#: inc/settings/CookieGroup.php:372
+#: inc/settings/CookieGroup.php:393
+#: inc/templates/TemplateConsumers.php:283
 msgid "Statistics"
 msgstr ""
 
 #. translators: Keep this for backwards-compatibility (usually it is "Statistics")
-#: inc/settings/CookieGroup.php:382
-#: inc/settings/CookieGroup.php:427
+#: inc/settings/CookieGroup.php:375
+#: inc/settings/CookieGroup.php:420
 msgid "Statistic"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:383
-#: inc/settings/CookieGroup.php:401
-#: inc/templates/TemplateConsumers.php:285
+#: inc/settings/CookieGroup.php:376
+#: inc/settings/CookieGroup.php:394
+#: inc/templates/TemplateConsumers.php:286
 msgid "Marketing"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:404
+#: inc/settings/CookieGroup.php:397
 msgctxt "legal-text"
 msgid "Essential services are required for the basic functionality of the website. They only contain technically necessary services. These services cannot be objected to."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:409
+#: inc/settings/CookieGroup.php:402
 msgctxt "legal-text"
 msgid "Functional services are necessary to provide features beyond the essential functionality such as prettier fonts, video playback or interactive web 2.0 features. Content from e.g. video platforms and social media platforms are blocked by default, and can be consented to. If the service is agreed to, this content is loaded automatically without further manual consent."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:414
+#: inc/settings/CookieGroup.php:407
 msgctxt "legal-text"
 msgid "Statistics services are needed to collect pseudonymous data about the visitors of the website. The data enables us to understand visitors better and to optimize the website."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:419
+#: inc/settings/CookieGroup.php:412
 msgctxt "legal-text"
 msgid "Marketing services are used by us and third parties to track the behaviour of individual visitors (across multiple pages), analyse the data collected and, for example, display personalized advertisements. These services enable us to track visitors across multiple websites."
 msgstr ""
 
-#: inc/settings/Revision.php:509
+#: inc/settings/Revision.php:193
 msgid "Without context"
 msgstr ""
 
@@ -1805,76 +1833,76 @@ msgstr ""
 msgid "Make it easy with just two colors."
 msgstr ""
 
-#: inc/templates/ServiceLocalDataSource.php:49
+#: inc/templates/ServiceLocalDataSource.php:48
 msgid "Real Cookie Banner asks website visitors for consent to set cookies and process personal data. For this purpose, a UUID (pseudonymous identification of the user) is assigned to each website visitor, which is valid until the cookie expires to store the consent. Cookies are used to test whether cookies can be set, to store reference to documented consent, to store which services from which service groups the visitor has consented to, and, if consent is obtained under the Transparency & Consent Framework (TCF), to store consent in TCF partners, purposes, special purposes, features and special features. As part of the obligation to disclose according to GDPR, the collected consent is fully documented. This includes, in addition to the services and service groups to which the visitor has consented, and if consent is obtained according to the TCF standard, to which TCF partners, purposes and features the visitor has consented, all cookie banner settings at the time of consent as well as the technical circumstances (e.g. size of the displayed area at the time of consent) and the user interactions (e.g. clicking on buttons) that led to consent. Consent is collected once per language."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:245
+#: inc/templates/TemplateConsumers.php:246
 msgid "Load content"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:248
+#: inc/templates/TemplateConsumers.php:249
 msgid "Load map"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:251
+#: inc/templates/TemplateConsumers.php:252
 msgid "Load form"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:254
+#: inc/templates/TemplateConsumers.php:255
 #: inc/view/ConfigPage.php:191
 #: inc/view/customize/banner/FooterDesign.php:243
 msgid "Disabled"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:255
+#: inc/templates/TemplateConsumers.php:256
 msgid "Already created"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:256
+#: inc/templates/TemplateConsumers.php:257
 msgid "You have already created a Content Blocker with this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:260
+#: inc/templates/TemplateConsumers.php:261
 msgid "You have already created a Service (Cookie) with this template."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:265
+#: inc/templates/TemplateConsumers.php:266
 msgid "This service template is optimized to work with %s."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:267
+#: inc/templates/TemplateConsumers.php:268
 msgid "Please activate %s in settings to use this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:271
+#: inc/templates/TemplateConsumers.php:272
 msgid "A suitable content blocker for this service can be created automatically."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:290
+#: inc/templates/TemplateConsumers.php:291
 msgid "This template is currently disabled because the respective WordPress plugin is not installed or the desired function is not active. <a href=\"%s\" target=\"_blank\">Learn more</a>"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:294
+#: inc/templates/TemplateConsumers.php:295
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-disabled-cookie-templates/"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:297
+#: inc/templates/TemplateConsumers.php:298
 msgid "TCF required"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:298
+#: inc/templates/TemplateConsumers.php:299
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
-#: inc/UserConsent.php:300
+#: inc/UserConsent.php:197
 msgid "Invalid IP address. Please insert a valid IPv4 or IPv6 address."
 msgstr ""
 
-#: inc/view/Banner.php:101
+#: inc/view/Banner.php:113
 msgid "Show cookie banner again"
 msgstr ""
 
@@ -1980,15 +2008,15 @@ msgstr ""
 msgid "Legally required pages must be accessible even if the cookie banner covers your website. Therefore, the privacy policy should be linked in the footer of the cookie banner."
 msgstr ""
 
-#: inc/view/checklist/PrivacyPolicyMentionUsage.php:31
+#: inc/view/checklist/PrivacyPolicyMentionUsage.php:29
 msgid "Explain data processing of cookie banner in privacy policy"
 msgstr ""
 
-#: inc/view/checklist/PrivacyPolicyMentionUsage.php:36
+#: inc/view/checklist/PrivacyPolicyMentionUsage.php:34
 msgid "You must explain to your website visitors in your privacy policy which data Real Cookie Banner processes and stores to obtain consent. We provide you with text suggestion that you can copy and paste into your privacy policy."
 msgstr ""
 
-#: inc/view/checklist/PrivacyPolicyMentionUsage.php:49
+#: inc/view/checklist/PrivacyPolicyMentionUsage.php:47
 msgid "Copy suggested text"
 msgstr ""
 
@@ -2061,274 +2089,274 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:76
+#: inc/view/customize/banner/BasicLayout.php:75
 msgid "The animation you choose will have a negative impact on your PageSpeed Insights score. Please choose an animation where the cookie banner is animated from outside the website to achieve the best website loading speed!"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:84
+#: inc/view/customize/banner/BasicLayout.php:83
 msgid "Basic Layout"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:88
+#: inc/view/customize/banner/BasicLayout.php:87
 #: inc/view/customize/banner/individual/Layout.php:41
 msgid "Layout"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:91
+#: inc/view/customize/banner/BasicLayout.php:90
 msgid "Dialog"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:92
+#: inc/view/customize/banner/BasicLayout.php:91
 msgid "Banner"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:100
+#: inc/view/customize/banner/BasicLayout.php:99
 #: inc/view/customize/banner/individual/Layout.php:54
 #: inc/view/customize/banner/individual/Layout.php:78
 msgid "Maximum width"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:115
-#: inc/view/customize/banner/BasicLayout.php:143
+#: inc/view/customize/banner/BasicLayout.php:114
+#: inc/view/customize/banner/BasicLayout.php:142
 msgid "Position"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:118
+#: inc/view/customize/banner/BasicLayout.php:117
 msgid "Top left"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:119
+#: inc/view/customize/banner/BasicLayout.php:118
 msgid "Top center"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:120
+#: inc/view/customize/banner/BasicLayout.php:119
 msgid "Top right"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:121
+#: inc/view/customize/banner/BasicLayout.php:120
 msgid "Middle left"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:122
-#: inc/view/customize/banner/BodyDesign.php:304
-#: inc/view/customize/banner/BodyDesign.php:1081
+#: inc/view/customize/banner/BasicLayout.php:121
+#: inc/view/customize/banner/BodyDesign.php:302
+#: inc/view/customize/banner/BodyDesign.php:1079
 #: inc/view/customize/banner/Mobile.php:114
 msgid "Center"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:123
+#: inc/view/customize/banner/BasicLayout.php:122
 msgid "Middle right"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:124
+#: inc/view/customize/banner/BasicLayout.php:123
 msgid "Bottom left"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:125
+#: inc/view/customize/banner/BasicLayout.php:124
 msgid "Bottom center"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:126
+#: inc/view/customize/banner/BasicLayout.php:125
 msgid "Bottom right"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:135
-#: inc/view/customize/banner/BodyDesign.php:423
+#: inc/view/customize/banner/BasicLayout.php:134
+#: inc/view/customize/banner/BodyDesign.php:421
 #: inc/view/customize/banner/HeaderDesign.php:167
 msgid "Margin"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:136
+#: inc/view/customize/banner/BasicLayout.php:135
 msgid "Define outer distance of the dialog."
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:146
+#: inc/view/customize/banner/BasicLayout.php:145
 #: inc/view/customize/banner/Mobile.php:113
 msgid "Top"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:147
+#: inc/view/customize/banner/BasicLayout.php:146
 #: inc/view/customize/banner/Mobile.php:115
 msgid "Bottom"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:155
+#: inc/view/customize/banner/BasicLayout.php:154
 msgid "Maximum content width"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:170
+#: inc/view/customize/banner/BasicLayout.php:169
 msgid "Dialog border radius"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:185
+#: inc/view/customize/banner/BasicLayout.php:184
 msgid "Button border radius"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:200
+#: inc/view/customize/banner/BasicLayout.php:199
 msgid "Animation on display"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:204
-#: inc/view/customize/banner/BasicLayout.php:246
-#: inc/view/customize/banner/BodyDesign.php:611
-#: inc/view/customize/banner/BodyDesign.php:783
-#: inc/view/customize/banner/BodyDesign.php:930
-#: inc/view/customize/banner/individual/SaveButton.php:85
+#: inc/view/customize/banner/BasicLayout.php:203
+#: inc/view/customize/banner/BasicLayout.php:245
+#: inc/view/customize/banner/BodyDesign.php:609
+#: inc/view/customize/banner/BodyDesign.php:781
+#: inc/view/customize/banner/BodyDesign.php:928
+#: inc/view/customize/banner/individual/SaveButton.php:84
 msgid "Type"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:218
-#: inc/view/customize/banner/BasicLayout.php:255
+#: inc/view/customize/banner/BasicLayout.php:217
+#: inc/view/customize/banner/BasicLayout.php:254
 msgid "Duration"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:233
-#: inc/view/customize/banner/BasicLayout.php:270
+#: inc/view/customize/banner/BasicLayout.php:232
+#: inc/view/customize/banner/BasicLayout.php:269
 msgid "Animation only on mobile devices"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:242
+#: inc/view/customize/banner/BasicLayout.php:241
 msgid "Animation on hide"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:279
+#: inc/view/customize/banner/BasicLayout.php:278
 msgid "Overlay"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:280
+#: inc/view/customize/banner/BasicLayout.php:279
 msgid "The overlay prevents clicks outside the consent dialog until consent is given and seperates the consent dialog from the rest of the website."
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:287
+#: inc/view/customize/banner/BasicLayout.php:286
 msgid "Block content and show overlay until consent"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:297
+#: inc/view/customize/banner/BasicLayout.php:296
 msgid "Overlay background color"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:305
+#: inc/view/customize/banner/BasicLayout.php:304
 msgid "Overlay opacity"
 msgstr ""
 
-#: inc/view/customize/banner/BasicLayout.php:320
+#: inc/view/customize/banner/BasicLayout.php:319
 msgid "Blur effect"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:210
+#: inc/view/customize/banner/BodyDesign.php:208
 msgid "Body"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:215
-#: inc/view/customize/banner/BodyDesign.php:432
-#: inc/view/customize/banner/BodyDesign.php:566
-#: inc/view/customize/banner/BodyDesign.php:626
-#: inc/view/customize/banner/BodyDesign.php:790
-#: inc/view/customize/banner/BodyDesign.php:936
+#: inc/view/customize/banner/BodyDesign.php:213
+#: inc/view/customize/banner/BodyDesign.php:430
+#: inc/view/customize/banner/BodyDesign.php:564
+#: inc/view/customize/banner/BodyDesign.php:624
+#: inc/view/customize/banner/BodyDesign.php:788
+#: inc/view/customize/banner/BodyDesign.php:934
 #: inc/view/customize/banner/FooterDesign.php:117
 #: inc/view/customize/banner/HeaderDesign.php:111
 #: inc/view/customize/banner/individual/Group.php:185
-#: inc/view/customize/banner/individual/SaveButton.php:98
+#: inc/view/customize/banner/individual/SaveButton.php:97
 msgid "Padding"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:216
+#: inc/view/customize/banner/BodyDesign.php:214
 msgid "Define inner distance of the body."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:224
+#: inc/view/customize/banner/BodyDesign.php:222
 msgid "Adopt font size for description block"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:233
+#: inc/view/customize/banner/BodyDesign.php:231
 msgid "Description font size"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:248
+#: inc/view/customize/banner/BodyDesign.php:246
 msgid "Adopt font size for service groups"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:257
+#: inc/view/customize/banner/BodyDesign.php:255
 msgid "Service groups font size"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:273
+#: inc/view/customize/banner/BodyDesign.php:271
 msgid "Bullet color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:282
+#: inc/view/customize/banner/BodyDesign.php:280
 msgid "Additional teachings"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:283
+#: inc/view/customize/banner/BodyDesign.php:281
 msgid "Texts for data processing in unsafe third country and the age notice."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:290
+#: inc/view/customize/banner/BodyDesign.php:288
 #: inc/view/customize/banner/FooterDesign.php:98
 #: inc/view/customize/banner/HeaderDesign.php:92
 msgid "Adopt text align"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:299
-#: inc/view/customize/banner/BodyDesign.php:644
-#: inc/view/customize/banner/BodyDesign.php:808
-#: inc/view/customize/banner/BodyDesign.php:954
+#: inc/view/customize/banner/BodyDesign.php:297
+#: inc/view/customize/banner/BodyDesign.php:642
+#: inc/view/customize/banner/BodyDesign.php:806
+#: inc/view/customize/banner/BodyDesign.php:952
 #: inc/view/customize/banner/Design.php:83
 #: inc/view/customize/banner/FooterDesign.php:107
 #: inc/view/customize/banner/HeaderDesign.php:101
-#: inc/view/customize/banner/individual/SaveButton.php:116
+#: inc/view/customize/banner/individual/SaveButton.php:115
 msgid "Text align"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:302
-#: inc/view/customize/banner/BodyDesign.php:1079
+#: inc/view/customize/banner/BodyDesign.php:300
+#: inc/view/customize/banner/BodyDesign.php:1077
 #: inc/view/customize/banner/HeaderDesign.php:156
 msgid "Left"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:303
-#: inc/view/customize/banner/BodyDesign.php:1080
+#: inc/view/customize/banner/BodyDesign.php:301
+#: inc/view/customize/banner/BodyDesign.php:1078
 #: inc/view/customize/banner/HeaderDesign.php:157
 msgid "Right"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:305
-#: inc/view/customize/banner/BodyDesign.php:1082
+#: inc/view/customize/banner/BodyDesign.php:303
+#: inc/view/customize/banner/BodyDesign.php:1080
 msgid "Justify"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:313
+#: inc/view/customize/banner/BodyDesign.php:311
 msgid "Enable visual separator"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:323
+#: inc/view/customize/banner/BodyDesign.php:321
 msgid "Separator"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:329
+#: inc/view/customize/banner/BodyDesign.php:327
 #: inc/view/customize/banner/Design.php:115
 #: inc/view/customize/banner/individual/Group.php:237
 msgid "Width"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:344
+#: inc/view/customize/banner/BodyDesign.php:342
 #: inc/view/customize/banner/FooterDesign.php:218
 #: inc/view/customize/banner/HeaderDesign.php:248
 msgid "Height"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:360
-#: inc/view/customize/banner/BodyDesign.php:409
-#: inc/view/customize/banner/BodyDesign.php:510
-#: inc/view/customize/banner/BodyDesign.php:541
-#: inc/view/customize/banner/BodyDesign.php:590
-#: inc/view/customize/banner/BodyDesign.php:676
-#: inc/view/customize/banner/BodyDesign.php:716
-#: inc/view/customize/banner/BodyDesign.php:840
-#: inc/view/customize/banner/BodyDesign.php:880
-#: inc/view/customize/banner/BodyDesign.php:986
-#: inc/view/customize/banner/BodyDesign.php:1026
+#: inc/view/customize/banner/BodyDesign.php:358
+#: inc/view/customize/banner/BodyDesign.php:407
+#: inc/view/customize/banner/BodyDesign.php:508
+#: inc/view/customize/banner/BodyDesign.php:539
+#: inc/view/customize/banner/BodyDesign.php:588
+#: inc/view/customize/banner/BodyDesign.php:674
+#: inc/view/customize/banner/BodyDesign.php:714
+#: inc/view/customize/banner/BodyDesign.php:838
+#: inc/view/customize/banner/BodyDesign.php:878
+#: inc/view/customize/banner/BodyDesign.php:984
+#: inc/view/customize/banner/BodyDesign.php:1024
 #: inc/view/customize/banner/Design.php:124
 #: inc/view/customize/banner/Design.php:156
 #: inc/view/customize/banner/Design.php:272
@@ -2340,229 +2368,229 @@ msgstr ""
 #: inc/view/customize/banner/individual/Group.php:246
 #: inc/view/customize/banner/individual/Group.php:285
 #: inc/view/customize/banner/individual/Group.php:315
-#: inc/view/customize/banner/individual/SaveButton.php:146
-#: inc/view/customize/banner/individual/SaveButton.php:184
+#: inc/view/customize/banner/individual/SaveButton.php:145
+#: inc/view/customize/banner/individual/SaveButton.php:183
 msgid "Color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:369
-#: inc/view/customize/banner/BodyDesign.php:654
-#: inc/view/customize/banner/BodyDesign.php:818
-#: inc/view/customize/banner/BodyDesign.php:964
+#: inc/view/customize/banner/BodyDesign.php:367
+#: inc/view/customize/banner/BodyDesign.php:652
+#: inc/view/customize/banner/BodyDesign.php:816
+#: inc/view/customize/banner/BodyDesign.php:962
 #: inc/view/customize/banner/Design.php:132
 #: inc/view/customize/banner/FooterDesign.php:126
 #: inc/view/customize/banner/HeaderDesign.php:175
-#: inc/view/customize/banner/individual/SaveButton.php:126
+#: inc/view/customize/banner/individual/SaveButton.php:125
 msgid "Font"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:375
+#: inc/view/customize/banner/BodyDesign.php:373
 msgid "Adopt font size"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:384
-#: inc/view/customize/banner/BodyDesign.php:525
-#: inc/view/customize/banner/BodyDesign.php:574
-#: inc/view/customize/banner/BodyDesign.php:660
-#: inc/view/customize/banner/BodyDesign.php:824
-#: inc/view/customize/banner/BodyDesign.php:970
+#: inc/view/customize/banner/BodyDesign.php:382
+#: inc/view/customize/banner/BodyDesign.php:523
+#: inc/view/customize/banner/BodyDesign.php:572
+#: inc/view/customize/banner/BodyDesign.php:658
+#: inc/view/customize/banner/BodyDesign.php:822
+#: inc/view/customize/banner/BodyDesign.php:968
 #: inc/view/customize/banner/Design.php:136
 #: inc/view/customize/banner/FooterDesign.php:130
 #: inc/view/customize/banner/HeaderDesign.php:138
 #: inc/view/customize/banner/HeaderDesign.php:179
 #: inc/view/customize/banner/individual/Group.php:260
 #: inc/view/customize/banner/individual/Group.php:299
-#: inc/view/customize/banner/individual/SaveButton.php:130
+#: inc/view/customize/banner/individual/SaveButton.php:129
 msgid "Size"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:399
+#: inc/view/customize/banner/BodyDesign.php:397
 msgid "Adopt font color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:418
+#: inc/view/customize/banner/BodyDesign.php:416
 msgid "Accordions and list"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:424
+#: inc/view/customize/banner/BodyDesign.php:422
 msgid "Define outer distance of the container."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:433
+#: inc/view/customize/banner/BodyDesign.php:431
 msgid "Define inner distance of one stack."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:441
+#: inc/view/customize/banner/BodyDesign.php:439
 msgid "Arrow type"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:445
+#: inc/view/customize/banner/BodyDesign.php:443
 msgid "Filled"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:446
+#: inc/view/customize/banner/BodyDesign.php:444
 msgid "Outlined"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:455
+#: inc/view/customize/banner/BodyDesign.php:453
 msgid "Arrow color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:464
-#: inc/view/customize/banner/BodyDesign.php:636
-#: inc/view/customize/banner/BodyDesign.php:736
-#: inc/view/customize/banner/BodyDesign.php:800
-#: inc/view/customize/banner/BodyDesign.php:900
-#: inc/view/customize/banner/BodyDesign.php:946
-#: inc/view/customize/banner/BodyDesign.php:1046
+#: inc/view/customize/banner/BodyDesign.php:462
+#: inc/view/customize/banner/BodyDesign.php:634
+#: inc/view/customize/banner/BodyDesign.php:734
+#: inc/view/customize/banner/BodyDesign.php:798
+#: inc/view/customize/banner/BodyDesign.php:898
+#: inc/view/customize/banner/BodyDesign.php:944
+#: inc/view/customize/banner/BodyDesign.php:1044
 #: inc/view/customize/banner/Design.php:75
 #: inc/view/customize/banner/FooterDesign.php:90
 #: inc/view/customize/banner/HeaderDesign.php:84
 #: inc/view/customize/banner/individual/Group.php:91
 #: inc/view/customize/banner/individual/Group.php:145
 #: inc/view/customize/banner/individual/Group.php:176
-#: inc/view/customize/banner/individual/SaveButton.php:108
-#: inc/view/customize/banner/individual/SaveButton.php:202
+#: inc/view/customize/banner/individual/SaveButton.php:107
+#: inc/view/customize/banner/individual/SaveButton.php:201
 msgid "Background color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:473
+#: inc/view/customize/banner/BodyDesign.php:471
 msgid "Background color when active"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:482
+#: inc/view/customize/banner/BodyDesign.php:480
 msgid "Background color on hover"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:491
-#: inc/view/customize/banner/BodyDesign.php:694
-#: inc/view/customize/banner/BodyDesign.php:858
-#: inc/view/customize/banner/BodyDesign.php:1004
+#: inc/view/customize/banner/BodyDesign.php:489
+#: inc/view/customize/banner/BodyDesign.php:692
+#: inc/view/customize/banner/BodyDesign.php:856
+#: inc/view/customize/banner/BodyDesign.php:1002
 #: inc/view/customize/banner/Design.php:104
 #: inc/view/customize/banner/individual/Group.php:99
 #: inc/view/customize/banner/individual/Group.php:224
-#: inc/view/customize/banner/individual/SaveButton.php:164
+#: inc/view/customize/banner/individual/SaveButton.php:163
 msgid "Border"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:501
+#: inc/view/customize/banner/BodyDesign.php:499
 msgid "Border width (px)"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:519
+#: inc/view/customize/banner/BodyDesign.php:517
 msgid "Title"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:549
-#: inc/view/customize/banner/BodyDesign.php:598
-#: inc/view/customize/banner/BodyDesign.php:684
-#: inc/view/customize/banner/BodyDesign.php:848
-#: inc/view/customize/banner/BodyDesign.php:994
+#: inc/view/customize/banner/BodyDesign.php:547
+#: inc/view/customize/banner/BodyDesign.php:596
+#: inc/view/customize/banner/BodyDesign.php:682
+#: inc/view/customize/banner/BodyDesign.php:846
+#: inc/view/customize/banner/BodyDesign.php:992
 #: inc/view/customize/banner/Design.php:185
 #: inc/view/customize/banner/FooterDesign.php:175
 #: inc/view/customize/banner/HeaderDesign.php:224
 #: inc/view/customize/banner/individual/Group.php:275
-#: inc/view/customize/banner/individual/SaveButton.php:154
+#: inc/view/customize/banner/individual/SaveButton.php:153
 msgid "Font weight"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:559
+#: inc/view/customize/banner/BodyDesign.php:557
 #: inc/view/customize/banner/individual/Group.php:293
 #: inc/view/customize/banner/individual/Texts.php:60
-#: inc/view/customize/banner/Texts.php:123
+#: inc/view/customize/banner/Texts.php:121
 msgid "Description"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:567
+#: inc/view/customize/banner/BodyDesign.php:565
 msgid "Define inner distance of the description paragraph."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:608
+#: inc/view/customize/banner/BodyDesign.php:606
 msgid "Button: Accept all"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:616
+#: inc/view/customize/banner/BodyDesign.php:614
 msgid "Align buttons side by side"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:627
-#: inc/view/customize/banner/BodyDesign.php:791
-#: inc/view/customize/banner/BodyDesign.php:937
+#: inc/view/customize/banner/BodyDesign.php:625
+#: inc/view/customize/banner/BodyDesign.php:789
+#: inc/view/customize/banner/BodyDesign.php:935
 msgid "Define inner distance of the button/link."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:707
-#: inc/view/customize/banner/BodyDesign.php:871
-#: inc/view/customize/banner/BodyDesign.php:1017
+#: inc/view/customize/banner/BodyDesign.php:705
+#: inc/view/customize/banner/BodyDesign.php:869
+#: inc/view/customize/banner/BodyDesign.php:1015
 #: inc/view/customize/banner/individual/Group.php:112
-#: inc/view/customize/banner/individual/SaveButton.php:175
+#: inc/view/customize/banner/individual/SaveButton.php:174
 msgid "Border width"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:725
-#: inc/view/customize/banner/BodyDesign.php:889
-#: inc/view/customize/banner/BodyDesign.php:1035
+#: inc/view/customize/banner/BodyDesign.php:723
+#: inc/view/customize/banner/BodyDesign.php:887
+#: inc/view/customize/banner/BodyDesign.php:1033
 #: inc/view/customize/banner/FooterDesign.php:184
-#: inc/view/customize/banner/individual/SaveButton.php:193
+#: inc/view/customize/banner/individual/SaveButton.php:192
 msgid "Transition on hover"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:728
-#: inc/view/customize/banner/BodyDesign.php:892
-#: inc/view/customize/banner/BodyDesign.php:1038
-#: inc/view/customize/banner/individual/SaveButton.php:194
+#: inc/view/customize/banner/BodyDesign.php:726
+#: inc/view/customize/banner/BodyDesign.php:890
+#: inc/view/customize/banner/BodyDesign.php:1036
+#: inc/view/customize/banner/individual/SaveButton.php:193
 msgid "When the user moves the mouse over the button/link, it changes its color."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:745
-#: inc/view/customize/banner/BodyDesign.php:909
-#: inc/view/customize/banner/BodyDesign.php:1055
+#: inc/view/customize/banner/BodyDesign.php:743
+#: inc/view/customize/banner/BodyDesign.php:907
+#: inc/view/customize/banner/BodyDesign.php:1053
 #: inc/view/customize/banner/individual/Group.php:330
-#: inc/view/customize/banner/individual/SaveButton.php:211
+#: inc/view/customize/banner/individual/SaveButton.php:210
 msgid "Font color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:754
-#: inc/view/customize/banner/BodyDesign.php:918
-#: inc/view/customize/banner/BodyDesign.php:1064
+#: inc/view/customize/banner/BodyDesign.php:752
+#: inc/view/customize/banner/BodyDesign.php:916
+#: inc/view/customize/banner/BodyDesign.php:1062
 #: inc/view/customize/banner/individual/Group.php:121
 #: inc/view/customize/banner/individual/Group.php:154
-#: inc/view/customize/banner/individual/SaveButton.php:220
+#: inc/view/customize/banner/individual/SaveButton.php:219
 msgid "Border color"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:763
+#: inc/view/customize/banner/BodyDesign.php:761
 msgid "Button: Continue without consent"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:767
-#: inc/view/customize/banner/individual/SaveButton.php:68
+#: inc/view/customize/banner/BodyDesign.php:765
+#: inc/view/customize/banner/individual/SaveButton.php:67
 msgid "Use the same stylings as for \"Accept all\""
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/BodyDesign.php:770
-#: inc/view/customize/banner/individual/SaveButton.php:71
+#: inc/view/customize/banner/BodyDesign.php:768
+#: inc/view/customize/banner/individual/SaveButton.php:70
 msgid "According to the <a href=\"%s\" target=\"_blank\">guidance of the data protection authorities in Germany (German)</a>, there must be an equivalent way for your visitors to express their choice (agree to everything, continue without consent or an indivudual decision). Equivalent does not necessarily mean that the buttons/links must look exactly the same. However, you should be safest if they look exactly the same."
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:927
+#: inc/view/customize/banner/BodyDesign.php:925
 msgid "Button: Individual privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:1091
+#: inc/view/customize/banner/BodyDesign.php:1089
 msgid "Lighter"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:1092
+#: inc/view/customize/banner/BodyDesign.php:1090
 msgid "Normal"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:1093
+#: inc/view/customize/banner/BodyDesign.php:1091
 msgid "Bolder"
 msgstr ""
 
-#: inc/view/customize/banner/BodyDesign.php:1094
+#: inc/view/customize/banner/BodyDesign.php:1092
 msgid "Bold"
 msgstr ""
 
@@ -2591,130 +2619,130 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:85
+#: inc/view/customize/banner/Decision.php:84
 msgid "The options \"Accept all\" and \"Continue without consent\" should be of the same type. Therefore, both should be a button or a link."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:93
+#: inc/view/customize/banner/Decision.php:92
 msgid "Please note that from a legal point of view you have to give your visitor this option. With the currently selected setting, you are taking a risk."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:101
+#: inc/view/customize/banner/Decision.php:100
 msgid "Please note that from a legal perspective, you must give your visitor an equivalent way to give or refuse consent. In some countries of the EU it is also allowed to display an \"X\" in the upper right corner of the cookie banner instead of a button/link. With the currently selected setting you are taking a risk!"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:109
+#: inc/view/customize/banner/Decision.php:108
 msgid "Consent options"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:118
+#: inc/view/customize/banner/Decision.php:117
 msgid "Accept all"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Decision.php:121
+#: inc/view/customize/banner/Decision.php:120
 msgid "According to the %1$sGDPR recital 32%2$s, you are not allowed to pre-select services in the form of pre-selected checkboxes for the visitor. However, the GDPR and ePrivacy Directive do not prohibit the use of a button to agree to all services, if there is also a button to agree only to the essential services or to make a user-defined selection."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:125
+#: inc/view/customize/banner/Decision.php:124
 msgid "https://gdpr-info.eu/recitals/no-32/"
+msgstr ""
+
+#: inc/view/customize/banner/Decision.php:129
+#: inc/view/customize/banner/Decision.php:151
+#: inc/view/customize/banner/Decision.php:187
+#: inc/view/customize/banner/individual/SaveButton.php:87
+msgid "Button"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:130
 #: inc/view/customize/banner/Decision.php:152
 #: inc/view/customize/banner/Decision.php:188
-#: inc/view/customize/banner/individual/SaveButton.php:88
-msgid "Button"
-msgstr ""
-
-#: inc/view/customize/banner/Decision.php:131
-#: inc/view/customize/banner/Decision.php:153
-#: inc/view/customize/banner/Decision.php:189
 #: inc/view/customize/banner/individual/Group.php:323
-#: inc/view/customize/banner/individual/SaveButton.php:89
+#: inc/view/customize/banner/individual/SaveButton.php:88
 msgid "Link"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:145
+#: inc/view/customize/banner/Decision.php:144
 msgid "Continue without consent"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:146
+#: inc/view/customize/banner/Decision.php:145
 msgid "The GDPR (EU 2016/679) and ePrivacy Directive (EU 2009/136/EC) defines that visitors must be able to easily reject services, whereby essential services can be set in any case. Therefore, the visitor should be given this option in a similar manner to the \"Accept all\" button/link."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:167
+#: inc/view/customize/banner/Decision.php:166
 msgid "Show close icon, to continue without consent"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:168
+#: inc/view/customize/banner/Decision.php:167
 msgid "An \"X\" icon is displayed at the top right of the cookie banner, which allows website visitors to close the cookie banner. It has the same function as clicking on the \"Continue without consent\" button/link."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:181
+#: inc/view/customize/banner/Decision.php:180
 msgid "Individual privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:182
+#: inc/view/customize/banner/Decision.php:181
 msgid "According to the GDPR and the ePrivacy Directive, the user must be free to choose which services to use and be informed about their purpose before giving consent. Therefore, the user must be given the opportunity to access the page with the individual privacy settings."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:203
+#: inc/view/customize/banner/Decision.php:202
 msgid "Order of the buttons"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Decision.php:206
+#: inc/view/customize/banner/Decision.php:205
 msgid "According to the <a href=\"%s\" target=\"_blank\">guidance of the data protection authorities in Germany (German)</a>, there must be an equivalent way for your visitors to express their choice (agree to everything, continue without consent or an indivudual decision). Which order of options is considered equivalent is unclear. Therefore, the options should be arranged according to the cultural conditions of the main target country."
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:221
+#: inc/view/customize/banner/Decision.php:220
 msgid "Service groups as bullet list"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:225
+#: inc/view/customize/banner/Decision.php:224
 msgid "Show service groups as bullet list"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:234
+#: inc/view/customize/banner/Decision.php:233
 msgid "Custom choice in first view"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:243
+#: inc/view/customize/banner/Decision.php:242
 msgid "Save button"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:246
+#: inc/view/customize/banner/Decision.php:245
 msgid "Show save button always"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:247
+#: inc/view/customize/banner/Decision.php:246
 msgid "Show save button only after a change by the user"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:248
+#: inc/view/customize/banner/Decision.php:247
 msgid "Text of \"Accept all\" changes when user changes selection"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:270
-#: inc/view/customize/banner/Texts.php:497
+#: inc/view/customize/banner/Decision.php:269
+#: inc/view/customize/banner/Texts.php:495
 msgctxt "legal-text"
 msgid "Accept all"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:272
-#: inc/view/customize/banner/Texts.php:498
+#: inc/view/customize/banner/Decision.php:271
+#: inc/view/customize/banner/Texts.php:496
 msgctxt "legal-text"
 msgid "Continue without consent"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:274
+#: inc/view/customize/banner/Decision.php:273
 #: inc/view/customize/banner/individual/Texts.php:119
 msgctxt "legal-text"
 msgid "Individual privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/Decision.php:276
+#: inc/view/customize/banner/Decision.php:275
 #: inc/view/customize/banner/individual/Texts.php:138
 msgctxt "legal-text"
 msgid "Save custom choices"
@@ -2722,7 +2750,7 @@ msgstr ""
 
 #: inc/view/customize/banner/Design.php:70
 #: inc/view/customize/banner/individual/Texts.php:46
-#: inc/view/customize/banner/Texts.php:111
+#: inc/view/customize/banner/Texts.php:109
 msgid "General"
 msgstr ""
 
@@ -2891,8 +2919,8 @@ msgstr ""
 
 #: inc/view/customize/banner/individual/Group.php:254
 #: inc/view/customize/banner/individual/Texts.php:52
-#: inc/view/customize/banner/Texts.php:115
-#: inc/view/customize/banner/Texts.php:321
+#: inc/view/customize/banner/Texts.php:113
+#: inc/view/customize/banner/Texts.php:319
 msgid "Headline"
 msgstr ""
 
@@ -2909,21 +2937,21 @@ msgstr ""
 msgid "Description text align"
 msgstr ""
 
-#: inc/view/customize/banner/individual/SaveButton.php:64
+#: inc/view/customize/banner/individual/SaveButton.php:63
 msgid "\"Save\" button"
 msgstr ""
 
-#: inc/view/customize/banner/individual/SaveButton.php:99
+#: inc/view/customize/banner/individual/SaveButton.php:98
 msgid "Define the inner distance of the button."
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:41
-#: inc/view/customize/banner/Texts.php:106
+#: inc/view/customize/banner/Texts.php:104
 msgid "Texts"
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:61
-#: inc/view/customize/banner/Texts.php:124
+#: inc/view/customize/banner/Texts.php:122
 msgid "Use <code>{{privacyPolicy}}privacy policy{{/privacyPolicy}}</code> as a placeholder for the privacy policy link."
 msgstr ""
 
@@ -2948,13 +2976,13 @@ msgid "If you need to place additional instructions in your country, such as an 
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:122
-#: inc/view/customize/banner/Texts.php:486
+#: inc/view/customize/banner/Texts.php:484
 msgctxt "legal-text"
 msgid "We use cookies and similar technologies on our website and process your personal data (e.g. IP address), for example, to personalize content and ads, to integrate media from third-party providers or to analyze traffic on our website. Data processing may also happen as a result of cookies being set. We share this data with third parties that we name in the privacy settings."
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:127
-#: inc/view/customize/banner/Texts.php:491
+#: inc/view/customize/banner/Texts.php:489
 msgctxt "legal-text"
 msgid "The data processing may take place with your consent or on the basis of a legitimate interest, which you can object to in the privacy settings. You have the right not to consent and to change or revoke your consent at a later time. For more information on the use of your data, please visit our {{privacyPolicy}}privacy policy{{/privacyPolicy}}."
 msgstr ""
@@ -3015,226 +3043,203 @@ msgid "The vertical distance between elements can be decreased or increased rela
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:89
+#: inc/view/customize/banner/Texts.php:87
 msgid "Use <code>{{minAge}}</code> as a placeholder for the age limit for minors in your country. Each country in the EU has its own age limits, which we have included in Real Cookie Banner. You can adjust the age limit in the %1$sage notice settings%2$s."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:139
+#: inc/view/customize/banner/Texts.php:137
 msgid "\"Accept all\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:146
+#: inc/view/customize/banner/Texts.php:144
 msgid "\"Continue without consent\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:153
+#: inc/view/customize/banner/Texts.php:151
 msgid "\"Individual privacy preferences\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:160
+#: inc/view/customize/banner/Texts.php:158
 msgid "\"Powered by\" link text"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:169
+#: inc/view/customize/banner/Texts.php:167
 msgid "Consent for data processing in unsecure third countries"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:177
+#: inc/view/customize/banner/Texts.php:175
 msgid "Data processing notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:178
+#: inc/view/customize/banner/Texts.php:176
 msgid "Use <code>{{legalBasis}}</code> as a placeholder for the legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:197
+#: inc/view/customize/banner/Texts.php:195
 msgid "Age notice"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:203
+#: inc/view/customize/banner/Texts.php:201
 msgid "Age notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:220
+#: inc/view/customize/banner/Texts.php:218
 msgid "Age notice in content blocker"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:236
+#: inc/view/customize/banner/Texts.php:234
 msgid "List of services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:242
+#: inc/view/customize/banner/Texts.php:240
 msgid "Naming of all services requiring consent in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:244
+#: inc/view/customize/banner/Texts.php:242
 msgid "Use <code>{{services}}</code> and <code>{{serviceGroups}}</code> as a placeholder for a list of services and groups."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:264
+#: inc/view/customize/banner/Texts.php:262
 msgid "Naming of all services on the legal basis of the legitimate interest in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:269
+#: inc/view/customize/banner/Texts.php:267
 msgid "Use <code>{{services}}</code> as a placeholder for a list of services with legitimate interest as legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:289
+#: inc/view/customize/banner/Texts.php:287
 msgid "Consent Forwarding"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:294
+#: inc/view/customize/banner/Texts.php:292
 msgid "Consent forwarding to other websites"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:296
+#: inc/view/customize/banner/Texts.php:294
 msgid "Use <code>{{websites}}</code> as a placeholder for the external website URLs."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:314
+#: inc/view/customize/banner/Texts.php:312
 msgid "At the moment we do not provide a live preview for content blocker texts."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:322
+#: inc/view/customize/banner/Texts.php:320
 msgid "Use <code>{{name}}</code> as a placeholder for the content blocker name."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:333
+#: inc/view/customize/banner/Texts.php:331
 msgid "Link text, to show all required services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:341
+#: inc/view/customize/banner/Texts.php:339
 msgid "\"Load content\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:349
+#: inc/view/customize/banner/Texts.php:347
 msgid "Additional info below the \"Load content\" button"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:368
+#: inc/view/customize/banner/Texts.php:366
 msgid "The standard texts in the cookie banner are worded carefully. If you customize them, make sure they are not misleading or riveting. According to the <a href=\"%s\" target=\"_blank\">Data Protection Commissioner of Baden-Wuerttemberg, Germany (Section B, 1.3.7.; German)</a>, for example, a headline \"We love cookies\" is already misleading."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:372
+#: inc/view/customize/banner/Texts.php:370
 msgid "https://www.baden-wuerttemberg.datenschutz.de/faq-zu-cookies-und-tracking-2/#13_informiertheit)"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:387
+#: inc/view/customize/banner/Texts.php:385
 msgid "Consent for data processing in unsecure third countries is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:411
+#: inc/view/customize/banner/Texts.php:409
 msgid "Age notice is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:435
+#: inc/view/customize/banner/Texts.php:433
 msgid "Naming of all services in first view is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:459
+#: inc/view/customize/banner/Texts.php:457
 msgid "Consent Forwarding is currently disabled or no external hosts have been defined (a different domain than the current website domain). Please navigate to %1$sSettings > Consent Forwarding%2$s to configure it."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:483
+#: inc/view/customize/banner/Texts.php:481
 msgctxt "legal-text"
 msgid "Privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:499
+#: inc/view/customize/banner/Texts.php:497
 msgctxt "legal-text"
 msgid "Set privacy settings individually"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:500
+#: inc/view/customize/banner/Texts.php:498
 msgctxt "legal-text"
 msgid "Some services process personal data in unsecure third countries. By consenting to the use of these services, you also consent to the processing of your data in these unsecure third countries in accordance with {{legalBasis}}. This involves risks that your data will be processed by authorities for control and monitoring purposes, perhaps without the possibility of a legal recourse."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:505
+#: inc/view/customize/banner/Texts.php:503
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Then you cannot consent to optional services. Ask your parents or legal guardians to agree to these services with you."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:510
+#: inc/view/customize/banner/Texts.php:508
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Unfortunately, you are not permitted to consent to this service to view this content. Please ask your parents or guardians to agree to the service with you!"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:515
+#: inc/view/customize/banner/Texts.php:513
 msgctxt "legal-text"
 msgid "By accepting all services, you allow {{services}} to be loaded. These services are divided into groups {{serviceGroups}} according to their purpose (belonging marked with superscript numbers)."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:520
+#: inc/view/customize/banner/Texts.php:518
 msgctxt "legal-text"
 msgid "In addition, {{services}} are loaded based on a legitimate interest."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:525
+#: inc/view/customize/banner/Texts.php:523
 msgctxt "legal-text"
 msgid "Your consent is also applicable on {{websites}}."
 msgstr ""
 
-#. translators:
-#: inc/view/customize/banner/Texts.php:532
-#: inc/view/customize/banner/Texts.php:609
-msgctxt "legal-text"
-msgid "{{name}} blocked due to privacy settings"
-msgstr ""
-
-#: inc/view/customize/banner/Texts.php:533
-#: inc/view/customize/banner/Texts.php:610
-msgctxt "legal-text"
-msgid "Show all services you still need to agree to"
-msgstr ""
-
-#: inc/view/customize/banner/Texts.php:538
+#: inc/view/customize/banner/Texts.php:536
 msgctxt "legal-text"
 msgid "Accept services and load content"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:539
+#: inc/view/customize/banner/Texts.php:537
 msgctxt "legal-text"
 msgid "Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:572
+#: inc/view/customize/banner/Texts.php:570
 msgid "WordPress Cookie Plugin by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:573
+#: inc/view/customize/banner/Texts.php:571
 msgid "WordPress Cookie Notice by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:574
+#: inc/view/customize/banner/Texts.php:572
 msgid "Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:575
+#: inc/view/customize/banner/Texts.php:573
 msgid "GDPR Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:576
+#: inc/view/customize/banner/Texts.php:574
 msgid "Consent Management Platform by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:577
+#: inc/view/customize/banner/Texts.php:575
 msgid "Cookie Consent Banner by Real Cookie Banner"
-msgstr ""
-
-#: inc/view/customize/banner/Texts.php:615
-msgctxt "legal-text"
-msgid "Accept required services and load content"
-msgstr ""
-
-#: inc/view/customize/banner/Texts.php:620
-msgctxt "legal-text"
-msgid "Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future. You have the right to revoke or change your decision at any time."
 msgstr ""
 
 #: inc/view/navmenu/NavMenuLinks.php:90
@@ -3272,117 +3277,117 @@ msgstr ""
 msgid "Add to Menu"
 msgstr ""
 
-#: inc/view/Notices.php:447
+#: inc/view/Notices.php:444
 msgid "Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:461
-#: inc/view/Notices.php:512
+#: inc/view/Notices.php:458
+#: inc/view/Notices.php:509
 msgid "Service (Cookie)"
 msgstr ""
 
-#: inc/view/Notices.php:473
+#: inc/view/Notices.php:470
 msgid "Review changes"
 msgstr ""
 
-#: inc/view/Notices.php:484
-#: inc/view/Notices.php:561
-#: inc/view/Notices.php:613
-#: inc/view/Notices.php:647
+#: inc/view/Notices.php:481
+#: inc/view/Notices.php:558
+#: inc/view/Notices.php:610
+#: inc/view/Notices.php:644
 msgid "Dismiss this notice"
 msgstr ""
 
-#: inc/view/Notices.php:499
+#: inc/view/Notices.php:496
 msgid "Templates in Real Cookie Banner have been replaced by new templates. You should check whether you want to replace the new service and/or content blocker with the new one in order to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:551
+#: inc/view/Notices.php:548
 msgid "Replace"
 msgstr ""
 
-#: inc/view/Notices.php:575
+#: inc/view/Notices.php:572
 msgid "Activate Google Consent Mode"
 msgstr ""
 
-#: inc/view/Notices.php:578
+#: inc/view/Notices.php:575
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-google-consent-mode-setup/"
 msgstr ""
 
-#: inc/view/Notices.php:586
+#: inc/view/Notices.php:583
 msgid "You are obtaining consent for Google services and have activated Google Consent Mode at the same time. However, you have not yet specified in the named services which consent types should be requested in accordance with Google Consent Mode. Please add these in the following services:"
 msgstr ""
 
-#: inc/view/Notices.php:603
-#: inc/view/Notices.php:637
+#: inc/view/Notices.php:600
+#: inc/view/Notices.php:634
 msgid "Edit service"
 msgstr ""
 
-#: inc/view/Notices.php:620
+#: inc/view/Notices.php:617
 msgid "You have activated Google Consent Mode and agreed to recommendations for the use of Google services without consent. At the same time, you only allow the following services to be loaded after obtaining consent. Please check whether you want to use the following services on your website based on a legitimate interest (even before Google receiving consent into consent types accordance with Google Consent Mode and therefore e.g. not setting advertising cookies):"
 msgstr ""
 
-#: inc/view/Notices.php:654
+#: inc/view/Notices.php:651
 msgid "You obtain consent for <strong>Google Analytics 4</strong> using Real Cookie Banner. In order to continue to create audiences in Google Analytics 4, you must have configured Google Consent Mode in your cookie banner as of March 2024."
 msgstr ""
 
-#: inc/view/Notices.php:668
+#: inc/view/Notices.php:665
 msgid "I do not use \"Audiences\" in Google Analytics 4"
 msgstr ""
 
-#: inc/view/Notices.php:679
+#: inc/view/Notices.php:676
 msgid "You obtain consent for <strong>Google Ads Conversion Tracking and Remarketing</strong> using Real Cookie Banner. From March 2024, conversions will only be processed by Google Ads if consent is obtained using Google Consent Mode. This data is also required in order to be able to continue to run remarketing campaigns in Google Ads."
 msgstr ""
 
-#: inc/view/Notices.php:693
+#: inc/view/Notices.php:690
 msgid "Ignore"
 msgstr ""
 
-#: inc/view/Notices.php:1023
+#: inc/view/Notices.php:1020
 msgid "There are no privacy policies with further information linked for the following services in your cookie banner. We now consider these to be mandatory in order to comply with the information obligations under the GDPR. Please provide a privacy policy for each service!"
 msgstr ""
 
-#: inc/view/Notices.php:1035
+#: inc/view/Notices.php:1032
 msgid "Set privacy policy URL"
 msgstr ""
 
 #. translators:s
-#: inc/view/Notices.php:1070
+#: inc/view/Notices.php:1067
 msgid "<strong>%1$s</strong> is processing data to %2$s"
 msgstr ""
 
-#: inc/view/Notices.php:1084
+#: inc/view/Notices.php:1081
 msgid "Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission."
 msgstr ""
 
-#: inc/view/Notices.php:1127
+#: inc/view/Notices.php:1124
 msgid "<strong>[ACTION REQUIRED]</strong> As of January 16, 2024, Google AdSense will only display advertising on your website if you obtain consent in accordance with the TCF standard. You must act now to continue earning advertising revenue!"
 msgstr ""
 
-#: inc/view/Notices.php:1131
+#: inc/view/Notices.php:1128
 msgid "You are currently obtaining non-standard compliant consent for Google Adsense via Real Cookie Banner. Please delete the Google AdSense service and Google AdSense content blocker in the Real Cookie Banner settings and then configure the TCF integration."
 msgstr ""
 
-#: inc/view/Notices.php:1135
+#: inc/view/Notices.php:1132
 msgid "https://devowl.io/knowledge-base/google-adsense-tcf-consent-wordpress/"
 msgstr ""
 
-#: inc/view/Notices.php:1136
+#: inc/view/Notices.php:1133
 msgid "Read instructions for Google AdSense configuration with TCF consents"
 msgstr ""
 
-#: inc/view/Notices.php:1175
+#: inc/view/Notices.php:1172
 msgid "You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!"
 msgstr ""
 
-#: inc/view/Notices.php:1188
+#: inc/view/Notices.php:1185
 msgid "Scan website again"
 msgstr ""
 
-#: inc/view/Notices.php:1214
+#: inc/view/Notices.php:1211
 msgid "Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don't use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!"
 msgstr ""
 
-#: inc/view/Notices.php:1221
+#: inc/view/Notices.php:1218
 msgid "Configure TCF vendors"
 msgstr ""
 

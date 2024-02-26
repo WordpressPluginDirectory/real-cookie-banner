@@ -27,7 +27,9 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\OneComImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\RaidboxesImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\BunnyCDNCacheImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\CloudflareRocketLoader;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\CustomCacheImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\DebloatImpl;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\EnhanceComNginxFastCgiImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\OptimizePressImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\PerfmattersCacheImpl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\caches\PoweredCacheImpl;
@@ -40,7 +42,7 @@ use Exception;
  */
 class CacheInvalidator
 {
-    const CACHE_IMPLEMENTATIONS = [AutoptimizeCacheImpl::IDENTIFIER => AutoptimizeCacheImpl::class, WpSuperCacheImpl::IDENTIFIER => WpSuperCacheImpl::class, WpRocketImpl::IDENTIFIER => WpRocketImpl::class, W3TotalCacheImpl::IDENTIFIER => W3TotalCacheImpl::class, WpFastestCacheImpl::IDENTIFIER => WpFastestCacheImpl::class, LiteSpeedCacheImpl::IDENTIFIER => LiteSpeedCacheImpl::class, BreezeImpl::IDENTIFIER => BreezeImpl::class, WpOptimizeImpl::IDENTIFIER => WpOptimizeImpl::class, SGOptimizeImpl::IDENTIFIER => SGOptimizeImpl::class, HummingbirdImpl::IDENTIFIER => HummingbirdImpl::class, CacheEnablerImpl::IDENTIFIER => CacheEnablerImpl::class, NginxHelperImpl::IDENTIFIER => NginxHelperImpl::class, CometCacheImpl::IDENTIFIER => CometCacheImpl::class, BorlabsCacheImpl::IDENTIFIER => BorlabsCacheImpl::class, SwiftPerformanceCacheImpl::IDENTIFIER => SwiftPerformanceCacheImpl::class, MergeMinifyRefreshImpl::IDENTIFIER => MergeMinifyRefreshImpl::class, ThemifyImpl::IDENTIFIER => ThemifyImpl::class, NitroPackImpl::IDENTIFIER => NitroPackImpl::class, CloudflareImpl::IDENTIFIER => CloudflareImpl::class, OneComImpl::IDENTIFIER => OneComImpl::class, RaidboxesImpl::IDENTIFIER => RaidboxesImpl::class, IonosPerformanceCacheImpl::IDENTIFIER => IonosPerformanceCacheImpl::class, BunnyCDNCacheImpl::IDENTIFIER => BunnyCDNCacheImpl::class, AssetCleanupCacheImpl::IDENTIFIER => AssetCleanupCacheImpl::class, PoweredCacheImpl::IDENTIFIER => PoweredCacheImpl::class, PerfmattersCacheImpl::IDENTIFIER => PerfmattersCacheImpl::class, WpMeteorImpl::IDENTIFIER => WpMeteorImpl::class, OptimizePressImpl::IDENTIFIER => OptimizePressImpl::class, CloudflareRocketLoader::IDENTIFIER => CloudflareRocketLoader::class, DebloatImpl::IDENTIFIER => DebloatImpl::class];
+    const CACHE_IMPLEMENTATIONS = [AutoptimizeCacheImpl::IDENTIFIER => AutoptimizeCacheImpl::class, WpSuperCacheImpl::IDENTIFIER => WpSuperCacheImpl::class, WpRocketImpl::IDENTIFIER => WpRocketImpl::class, W3TotalCacheImpl::IDENTIFIER => W3TotalCacheImpl::class, WpFastestCacheImpl::IDENTIFIER => WpFastestCacheImpl::class, LiteSpeedCacheImpl::IDENTIFIER => LiteSpeedCacheImpl::class, BreezeImpl::IDENTIFIER => BreezeImpl::class, WpOptimizeImpl::IDENTIFIER => WpOptimizeImpl::class, SGOptimizeImpl::IDENTIFIER => SGOptimizeImpl::class, HummingbirdImpl::IDENTIFIER => HummingbirdImpl::class, CacheEnablerImpl::IDENTIFIER => CacheEnablerImpl::class, NginxHelperImpl::IDENTIFIER => NginxHelperImpl::class, CometCacheImpl::IDENTIFIER => CometCacheImpl::class, BorlabsCacheImpl::IDENTIFIER => BorlabsCacheImpl::class, SwiftPerformanceCacheImpl::IDENTIFIER => SwiftPerformanceCacheImpl::class, MergeMinifyRefreshImpl::IDENTIFIER => MergeMinifyRefreshImpl::class, ThemifyImpl::IDENTIFIER => ThemifyImpl::class, NitroPackImpl::IDENTIFIER => NitroPackImpl::class, CloudflareImpl::IDENTIFIER => CloudflareImpl::class, OneComImpl::IDENTIFIER => OneComImpl::class, RaidboxesImpl::IDENTIFIER => RaidboxesImpl::class, IonosPerformanceCacheImpl::IDENTIFIER => IonosPerformanceCacheImpl::class, BunnyCDNCacheImpl::IDENTIFIER => BunnyCDNCacheImpl::class, AssetCleanupCacheImpl::IDENTIFIER => AssetCleanupCacheImpl::class, PoweredCacheImpl::IDENTIFIER => PoweredCacheImpl::class, PerfmattersCacheImpl::IDENTIFIER => PerfmattersCacheImpl::class, WpMeteorImpl::IDENTIFIER => WpMeteorImpl::class, OptimizePressImpl::IDENTIFIER => OptimizePressImpl::class, CloudflareRocketLoader::IDENTIFIER => CloudflareRocketLoader::class, DebloatImpl::IDENTIFIER => DebloatImpl::class, EnhanceComNginxFastCgiImpl::IDENTIFIER => EnhanceComNginxFastCgiImpl::class, CustomCacheImpl::IDENTIFIER => CustomCacheImpl::class];
     /**
      * Singleton instance.
      *
@@ -93,7 +95,10 @@ class CacheInvalidator
     {
         $result = [];
         foreach ($this->getCaches() as $key => $instance) {
-            $result[$key] = $instance->label();
+            $label = $instance->label();
+            if (!empty($label)) {
+                $result[$key] = $label;
+            }
         }
         return $result;
     }

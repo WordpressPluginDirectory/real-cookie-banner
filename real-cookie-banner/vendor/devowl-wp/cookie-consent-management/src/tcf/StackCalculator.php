@@ -1,6 +1,6 @@
 <?php
 
-namespace DevOwl\RealCookieBanner\Vendor\DevOwl\TcfVendorListNormalize;
+namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\tcf;
 
 /**
  * Quote from docs: Stacks may be used to substitute Initial Layer information about two or more Purposes
@@ -13,7 +13,13 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\TcfVendorListNormalize;
  */
 class StackCalculator
 {
-    const STACK_DECLARATIONS = [Persist::DECLARATION_TYPE_PURPOSES, Persist::DECLARATION_TYPE_SPECIAL_FEATURES];
+    const DECLARATION_TYPE_PURPOSES = 'purposes';
+    const DECLARATION_TYPE_SPECIAL_PURPOSES = 'specialPurposes';
+    const DECLARATION_TYPE_FEATURES = 'features';
+    const DECLARATION_TYPE_SPECIAL_FEATURES = 'specialFeatures';
+    const DECLARATION_TYPE_DATA_CATEGORIES = 'dataCategories';
+    const DECLARATION_TYPES = [self::DECLARATION_TYPE_PURPOSES, self::DECLARATION_TYPE_SPECIAL_PURPOSES, self::DECLARATION_TYPE_FEATURES, self::DECLARATION_TYPE_SPECIAL_FEATURES, self::DECLARATION_TYPE_DATA_CATEGORIES];
+    const STACK_DECLARATIONS = [self::DECLARATION_TYPE_PURPOSES, self::DECLARATION_TYPE_SPECIAL_FEATURES];
     /**
      * Clone stacks so we can obtain the original object by ID for the result.
      */

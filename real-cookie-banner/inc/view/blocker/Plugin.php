@@ -42,6 +42,7 @@ use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
 use DevOwl\RealCookieBanner\lite\view\TcfBanner;
+use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
 // @codeCoverageIgnoreStart
@@ -78,6 +79,8 @@ class Plugin extends AbstractPlugin
             'a[href][data-elementor-lightbox-video]',
             // [Plugin Comp] https://promo-theme.com/
             'a[data-popup-json]',
+            // [Plugin Comp] Kadence Blocks
+            'a[href][class*="kadence-video-popup-link":delegateClick()]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a
@@ -149,6 +152,8 @@ class Plugin extends AbstractPlugin
             'sober-map' => ['class'],
             // [Plugin Comp] https://wordpress.org/plugins/bold-page-builder/
             'bt_bb_google_maps_map' => ['class'],
+            // [Plugin Comp] Kadence Blocks
+            'kadence-video-popup-link' => ['class', 'href'],
         ]);
         $cb->addVisualParentIfClass([
             // [Theme Comp] FloThemes
@@ -307,17 +312,18 @@ class Plugin extends AbstractPlugin
             // [Plugin Comp] https://wordpress.org/plugins/foobox-image-lightbox/
             'foobox',
         ]);
-        if ($this->isPro()) {
+        if ($this->isPro() && TCF::getInstance()->isActive()) {
             /**
              * Plugin.
              *
              * @var TcfForwardGdprStringInUrl
              */
             $tcfForwardGdprStringInUrl = $cb->addPlugin(TcfForwardGdprStringInUrl::class);
-            $vendors = TcfBanner::getInstance()->localize(\true)['vendors'] ?? [];
-            foreach ($vendors as $vendorId => $vendor) {
+            $vendorConfigurations = TCF::getInstance()->getVendorConfigurations();
+            foreach ($vendorConfigurations as $vendorConfiguration) {
+                $vendor = $vendorConfiguration->getVendor();
                 if (isset($vendor['deviceStorageDisclosure']) && isset($vendor['deviceStorageDisclosure']['domains'])) {
-                    $tcfForwardGdprStringInUrl->addVendorDisclosureDomains($vendorId, $vendor['deviceStorageDisclosure']['domains']);
+                    $tcfForwardGdprStringInUrl->addVendorDisclosureDomains($vendorConfiguration->getId(), $vendor['deviceStorageDisclosure']['domains']);
                 }
             }
         }

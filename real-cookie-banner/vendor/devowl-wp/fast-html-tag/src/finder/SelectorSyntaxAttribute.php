@@ -26,7 +26,8 @@ class SelectorSyntaxAttribute
     const COMPARATOR_CONTAINS = '*=';
     const COMPARATOR_STARTS_WITH = '^=';
     const COMPARATOR_ENDS_WITH = '$=';
-    const ALLOWED_COMPARATORS = [self::COMPARATOR_EQUAL, self::COMPARATOR_CONTAINS, self::COMPARATOR_STARTS_WITH, self::COMPARATOR_ENDS_WITH];
+    const COMPARATOR_REGULAR_EXPRESSION = '//=';
+    const ALLOWED_COMPARATORS = [self::COMPARATOR_EQUAL, self::COMPARATOR_CONTAINS, self::COMPARATOR_STARTS_WITH, self::COMPARATOR_ENDS_WITH, self::COMPARATOR_REGULAR_EXPRESSION];
     /**
      * C'tor.
      *
@@ -65,6 +66,8 @@ class SelectorSyntaxAttribute
                 return Utils::startsWith($value, $this->getValue());
             case SelectorSyntaxAttribute::COMPARATOR_ENDS_WITH:
                 return Utils::endsWith($value, $this->value);
+            case SelectorSyntaxAttribute::COMPARATOR_REGULAR_EXPRESSION:
+                return \is_string($value) && \preg_match(\sprintf('/%s/', $this->getValue()), $value) > 0;
             // @codeCoverageIgnoreStart
             default:
                 return \false;

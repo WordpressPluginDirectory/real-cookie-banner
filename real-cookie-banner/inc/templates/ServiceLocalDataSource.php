@@ -2,11 +2,10 @@
 
 namespace DevOwl\RealCookieBanner\templates;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\Frontend;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
-use DevOwl\RealCookieBanner\MyConsent;
 use DevOwl\RealCookieBanner\settings\Consent;
-use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\consumer\ServiceCloudConsumer;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\datasources\LocalDataSource;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
@@ -55,31 +54,9 @@ class ServiceLocalDataSource extends LocalDataSource
         }
         $s->legalBasis = Service::LEGAL_BASIS_LEGAL_REQUIREMENT;
         $s->isProviderCurrentWebsite = \true;
-        $s->technicalDefinitions = [['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*-tcf', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '*-gcm', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => MyConsent::COOKIE_NAME_USER_PREFIX . '-test', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false]];
+        $s->technicalDefinitions = [['type' => 'http', 'name' => Frontend::COOKIE_NAME_USER_PREFIX . '*', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => Frontend::COOKIE_NAME_USER_PREFIX . '*-tcf', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => Frontend::COOKIE_NAME_USER_PREFIX . '*-gcm', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false], ['type' => 'http', 'name' => Frontend::COOKIE_NAME_USER_PREFIX . '-test', 'host' => 'main+subdomains', 'duration' => $cookieDuration, 'durationUnit' => 'd', 'isSessionDuration' => \false]];
         $s->deleteTechnicalDefinitionsAfterOptOut = \false;
         $s->tier = 'free';
         $this->add($s);
-    }
-    /**
-     * We have updated our Real Cookie Banner template and we need to automatically apply the patch to the
-     * Real Cookie Banner service.
-     *
-     * @param string|false $installed
-     * @see https://app.clickup.com/t/1td2xu0
-     */
-    public static function new_version_installation_after_2_11_0($installed)
-    {
-        if ($installed && \version_compare($installed, '2.11.0', '<=')) {
-            // Lazy it, to be compatible with other plugins like WPML or PolyLang...
-            \add_action('init', function () {
-                $realCookieBannerService = Cookie::getInstance()->getServiceByIdentifier('real-cookie-banner');
-                if ($realCookieBannerService !== null) {
-                    $template = \DevOwl\RealCookieBanner\templates\TemplateConsumers::getCurrentServiceConsumer()->retrieveBy('identifier', 'real-cookie-banner', \true);
-                    if (\count($template) > 0) {
-                        \DevOwl\RealCookieBanner\templates\TemplateConsumers::getInstance()->createFromTemplate($template[0], null, $realCookieBannerService->ID);
-                    }
-                }
-            }, 20);
-        }
     }
 }

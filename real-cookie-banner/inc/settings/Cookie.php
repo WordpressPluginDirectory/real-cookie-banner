@@ -244,6 +244,24 @@ class Cookie
         return $realCookieBannerService[0] ?? null;
     }
     /**
+     * Get all available services by an unique name.
+     *
+     * @param string $slug
+     */
+    public function getServiceByUniqueName($slug)
+    {
+        $result = [];
+        // unique IDs because we fetch multiple times
+        $byMeta = \get_posts(Core::getInstance()->queryArguments(['post_type' => \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'posts_per_page' => -1, 'meta_query' => [['key' => \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_UNIQUE_NAME, 'value' => $slug, 'compare' => '=']]], 'forwardingGetUniqueNameByMeta'));
+        foreach ($byMeta as $row) {
+            $result[$row->ID] = $row;
+        }
+        if (\count($result) === 0) {
+            return new WP_Error('not_found', \__('Not found'), ['status' => 404]);
+        }
+        return \array_values($this->getOrdered(null, \false, $result));
+    }
+    /**
      * Modify the cookie item schema and allow to pass the opt-in codes as base64-encoded strings
      * so they do not get inspected as XSS e.g. in Cloudflare.
      *
@@ -263,172 +281,6 @@ class Cookie
             return $properties;
         };
         return $schema;
-    }
-    /**
-     * Multiple metadata rename migrations.
-     *
-     * @see https://app.clickup.com/t/2d8dedh
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_0_2($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.0.2', ['3.0.3', '3.1.0'])) {
-            // Get posts which hold post meta which needs to be renamed so we can clear the post cache for them
-            $setCookiesViaManager = \DevOwl\RealCookieBanner\settings\General::getInstance()->getSetCookiesViaManager();
-            $affectedPostIds = $wpdb->get_col(
-                // phpcs:disable WordPress.DB.PreparedSQL
-                $wpdb->prepare("SELECT p.ID FROM {$wpdb->postmeta} pm\n                    INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                    WHERE pm.meta_key IN ('" . \join("','", \array_merge(['providerPrivacyPolicy', 'codeOptOutDelete', 'noTechnicalDefinitions', 'technicalDefinitions'], ($setCookiesViaManager === 'none' ? [] : $setCookiesViaManager === 'googleTagManager') ? ['googleTagManagerInEventName', 'googleTagManagerOutEventName', 'codeOptInNoGoogleTagManager', 'codeOptOutNoGoogleTagManager'] : ['matomoTagManagerInEventName', 'matomoTagManagerOutEventName', 'codeOptInNoMatomoTagManager', 'codeOptOutNoMatomoTagManager'])) . "') AND p.post_type = %s\n                    GROUP BY p.ID", self::CPT_NAME)
-            );
-            if (\count($affectedPostIds) > 0) {
-                // Rename the metadata directly through a plain SQL query so hooks like `update_post_meta` are not called
-                // This avoids issues with WPML or PolyLang and their syncing process
-                $wpdb->query(
-                    // phpcs:disable WordPress.DB.PreparedSQL
-                    $wpdb->prepare("UPDATE {$wpdb->postmeta} pm\n                        INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID\n                        SET pm.meta_key = CASE\n                            WHEN pm.meta_key = 'providerPrivacyPolicy' THEN 'providerPrivacyPolicyUrl'\n                            WHEN pm.meta_key = 'codeOptOutDelete' THEN 'deleteTechnicalDefinitionsAfterOptOut'\n                            WHEN pm.meta_key = 'noTechnicalDefinitions' THEN 'isEmbeddingOnlyExternalResources'\n                            " . \join(' ', $setCookiesViaManager === 'googleTagManager' ? ["WHEN pm.meta_key = 'googleTagManagerInEventName' THEN 'tagManagerOptInEventName'", "WHEN pm.meta_key = 'googleTagManagerOutEventName' THEN 'tagManagerOptOutEventName'", "WHEN pm.meta_key = 'codeOptInNoGoogleTagManager' THEN 'executeCodeOptInWhenNoTagManagerConsentIsGiven'", "WHEN pm.meta_key = 'codeOptOutNoGoogleTagManager' THEN 'executeCodeOptOutWhenNoTagManagerConsentIsGiven'"] : ["WHEN pm.meta_key = 'matomoTagManagerInEventName' THEN 'tagManagerOptInEventName'", "WHEN pm.meta_key = 'matomoTagManagerOutEventName' THEN 'tagManagerOptOutEventName'", "WHEN pm.meta_key = 'codeOptInNoMatomoTagManager' THEN 'executeCodeOptInWhenNoTagManagerConsentIsGiven'", "WHEN pm.meta_key = 'codeOptOutNoMatomoTagManager' THEN 'executeCodeOptOutWhenNoTagManagerConsentIsGiven'"]) . "\n                            ELSE pm.meta_key\n                            END,\n                        pm.meta_value = CASE\n                            WHEN pm.meta_key = 'technicalDefinitions' THEN REPLACE(`meta_value`, '\"sessionDuration\"', '\"isSessionDuration\"')\n                            ELSE pm.meta_value\n                            END\n                        WHERE p.post_type = %s", self::CPT_NAME)
-                );
-                foreach ($affectedPostIds as $affectedPostId) {
-                    \clean_post_cache(\intval($affectedPostId));
-                }
-            }
-        }
-    }
-    /**
-     * Rename `consentForwardingUniqueName` to `uniqueName` and create one if missing.
-     *
-     * @see https://app.clickup.com/t/2unhn5x
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_4_13($installed)
-    {
-        global $wpdb;
-        if (Core::versionCompareOlderThan($installed, '3.4.13', ['3.4.14', '3.5.0'])) {
-            // Get posts which hold post meta which needs to be renamed so we can clear the post cache for them
-            // If `consentForwardingUniqueNameMetaId` is `NULL` you need to insert into that database table
-            $result = $wpdb->get_results(
-                // phpcs:disable WordPress.DB.PreparedSQL
-                $wpdb->prepare("SELECT\n                        p.ID, p.post_name,\n                        pmConsentForwardingUniqueName.meta_id AS consentForwardingUniqueNameMetaId,\n                        pmConsentForwardingUniqueName.meta_value AS consentForwardingUniqueName,\n                        pmUniqueName.meta_value AS uniqueName,\n                        pmTemplateId.meta_value AS presetId,\n                        IFNULL(pmTemplateId.meta_value, p.post_name) AS potentialUniqueName\n                    FROM {$wpdb->posts} p\n                    LEFT JOIN {$wpdb->postmeta} pmConsentForwardingUniqueName\n                        ON pmConsentForwardingUniqueName.post_id = p.ID AND pmConsentForwardingUniqueName.meta_key = 'consentForwardingUniqueName'\n                    LEFT JOIN {$wpdb->postmeta} pmUniqueName\n                        ON pmUniqueName.post_id = p.ID AND pmUniqueName.meta_key = 'uniqueName'\n                    LEFT JOIN {$wpdb->postmeta} pmTemplateId\n                        ON pmTemplateId.post_id = p.ID AND pmTemplateId.meta_key = 'presetId'\n                    WHERE post_type = %s", self::CPT_NAME),
-                ARRAY_A
-            );
-            $affectedPostIds = \array_map(function ($row) {
-                return $row['ID'];
-            }, $result);
-            if (\count($affectedPostIds) > 0) {
-                // Rename or create the metadata directly through a plain SQL query so hooks like `update_post_meta` are not called
-                // This avoids issues with WPML or PolyLang and their syncing process
-                foreach ($result as $row) {
-                    if (!empty($row['consentForwardingUniqueNameMetaId']) && !empty($row['consentForwardingUniqueName'])) {
-                        // Rename meta_key to `uniqueName`´
-                        $wpdb->query(
-                            // phpcs:disable WordPress.DB.PreparedSQL
-                            $wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_key = 'uniqueName', meta_value = %s WHERE meta_id = %d", $row['potentialUniqueName'], $row['consentForwardingUniqueNameMetaId']),
-                            ARRAY_A
-                        );
-                    } elseif (empty($row['consentForwardingUniqueNameMetaId']) && empty($row['uniqueName'])) {
-                        // Insert new meta `uniqueName`
-                        $wpdb->query(
-                            // phpcs:disable WordPress.DB.PreparedSQL
-                            $wpdb->prepare("INSERT IGNORE INTO {$wpdb->postmeta} (`post_id`, `meta_key`, `meta_value`) VALUES (%d, 'uniqueName', %s)", $row['ID'], $row['potentialUniqueName']),
-                            ARRAY_A
-                        );
-                    }
-                }
-                foreach ($affectedPostIds as $affectedPostId) {
-                    \clean_post_cache(\intval($affectedPostId));
-                }
-            }
-        }
-    }
-    /**
-     * Modify already given consents and adjust the metadata field names for "List of consents".
-     *
-     * @see https://app.clickup.com/t/2d8dedh
-     * @see https://app.clickup.com/t/2unhn5x
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyMetaRenameBackwardsCompatibility($revision, $independent)
-    {
-        if (!$independent && isset($revision['groups'])) {
-            $renameCookieFields = [
-                'providerPrivacyPolicy' => 'providerPrivacyPolicyUrl',
-                'codeOptOutDelete' => 'deleteTechnicalDefinitionsAfterOptOut',
-                'noTechnicalDefinitions' => 'isEmbeddingOnlyExternalResources',
-                'consentForwardingUniqueName' => 'uniqueName',
-                'thisIsGoogleTagManager' => \false,
-                // remove field
-                'thisIsMatomoTagManager' => \false,
-            ];
-            $setCookiesViaManager = $revision['options']['SETTING_SET_COOKIES_VIA_MANAGER'] ?? 'none';
-            if ($setCookiesViaManager === 'googleTagManager') {
-                $renameCookieFields['googleTagManagerInEventName'] = 'tagManagerOptInEventName';
-                $renameCookieFields['googleTagManagerOutEventName'] = 'tagManagerOptOutEventName';
-                $renameCookieFields['codeOptInNoGoogleTagManager'] = 'executeCodeOptInWhenNoTagManagerConsentIsGiven';
-                $renameCookieFields['codeOptOutNoGoogleTagManager'] = 'executeCodeOptOutWhenNoTagManagerConsentIsGiven';
-                $renameCookieFields['matomoTagManagerInEventName'] = \false;
-                $renameCookieFields['matomoTagManagerOutEventName'] = \false;
-                $renameCookieFields['codeOptInNoMatomoTagManager'] = \false;
-                $renameCookieFields['codeOptOutNoMatomoTagManager'] = \false;
-            } else {
-                $renameCookieFields['matomoTagManagerInEventName'] = 'tagManagerOptInEventName';
-                $renameCookieFields['matomoTagManagerOutEventName'] = 'tagManagerOptOutEventName';
-                $renameCookieFields['codeOptInNoMatomoTagManager'] = 'executeCodeOptInWhenNoTagManagerConsentIsGiven';
-                $renameCookieFields['codeOptOutNoMatomoTagManager'] = 'executeCodeOptOutWhenNoTagManagerConsentIsGiven';
-                $renameCookieFields['googleTagManagerInEventName'] = \false;
-                $renameCookieFields['googleTagManagerOutEventName'] = \false;
-                $renameCookieFields['codeOptInNoGoogleTagManager'] = \false;
-                $renameCookieFields['codeOptOutNoGoogleTagManager'] = \false;
-            }
-            foreach ($revision['groups'] as &$group) {
-                if (isset($group['items'])) {
-                    foreach ($group['items'] as &$cookie) {
-                        foreach ($renameCookieFields as $renameCookieField => $newFieldName) {
-                            if (isset($cookie[$renameCookieField])) {
-                                if ($newFieldName !== \false) {
-                                    $cookie[$newFieldName] = $cookie[$renameCookieField];
-                                }
-                                unset($cookie[$renameCookieField]);
-                            }
-                        }
-                        // Special cases
-                        if (isset($cookie['technicalDefinitions']) && \is_array($cookie['technicalDefinitions'])) {
-                            $cookie['technicalDefinitions'] = \json_decode(\str_replace('"sessionDuration"', '"isSessionDuration"', \json_encode($cookie['technicalDefinitions'])), ARRAY_A);
-                        }
-                    }
-                }
-            }
-        }
-        return $revision;
-    }
-    /**
-     * Modify already given consents and adjust the metadata field for legal notice URL and provider contact
-     * information for "List of consents".
-     *
-     * @see https://app.clickup.com/t/2wpbbhr
-     * @see https://app.clickup.com/t/863h7nj72
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyMetaLegalNoticeUrlBackwardsCompatibility($revision, $independent)
-    {
-        if (!$independent && isset($revision['groups'])) {
-            $makeEmpty = [self::META_NAME_PROVIDER_LEGAL_NOTICE_URL];
-            foreach ($revision['groups'] as &$group) {
-                if (isset($group['items'])) {
-                    foreach ($group['items'] as &$cookie) {
-                        foreach ($makeEmpty as $me) {
-                            if (!isset($cookie[$me])) {
-                                $cookie[$me] = '';
-                            }
-                        }
-                        if (!isset($cookie['providerContact'])) {
-                            $cookie['providerContact'] = ['phone' => '', 'email' => '', 'link' => ''];
-                        }
-                    }
-                }
-            }
-        }
-        return $revision;
     }
     /**
      * Opposite of `registerPostTypeCapToRoles`.

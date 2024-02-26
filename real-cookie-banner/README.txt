@@ -1,7 +1,7 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
 Tags: cookie banner, cookie plugin, cookie consent, cookie scanner, gdpr, dsgvo, rgpd, eprivacy, eu cookie law, cookie policy, cookie, consent, consent management
-Stable tag: 4.4.1
+Stable tag: 4.5.0
 Requires at least: 5.8
 Requires PHP: 7.4.0
 Tested up to: 6.4
@@ -107,11 +107,17 @@ _Some of the features listed below are only available in the [PRO version of Rea
 * **WCAG 2.2 Level AA fulfilled:** Our cookie banner and content blocker have been technically engineered to comply with the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) Level AA standard, ensuring an accessible and user-friendly experience for all website visitors.
 * **Accessibility score for design settings:** Your design settings are evaluated using an accessibility score to ensure you comply with legal requirements. All design presets are of course accessible according to WCAG 2.2 Level AA.
 
-**TCF Compatibility** _// obtain standardized consents_
+**Transparency and Consent Framework (TCF)** _// obtain standardized consents_
 
-* **TCF 2.1+ compatibility*:** [Transparency and Consent Framework (TCF)](https://iabeurope.eu/transparency-consent-framework/) is a standard of the European digital marketing industry association IAB Europe. It allows standardized consent to be obtained. We support the widely used standard TCF 2.1 and newer.
+* **TCF compatibility*:** [Transparency and Consent Framework (TCF)](https://iabeurope.eu/transparency-consent-framework/) is a standard of the European digital marketing industry association IAB Europe. It allows standardized consent to be obtained. We support the widely used standard TCF 2.2 and newer.
 * **Configuration with user interface*:** TCF is mostly very technical and can be set up only with code. Not with us! You can configure all important features, vendors etc. in one interface with understandable explanations of the terms used in the standard.
 * **Google certified CMP:** Real Cookie Banner is a CMP, [certified by Google for Adsense](https://support.google.com/adsense/answer/13554116#google-certified-cmps) and [IAB Europe](https://iabeurope.eu/cmp-list/). All requirements of the TCF standard are implemented*. This allows you to display Adsense ads on your website according to Google’s specifications.
+
+**Google Consent Mode** _// obtain consents according to Digital Market Act_
+
+* **Google Consent Mode compatibility**: [Google Consent Mode](https://support.google.com/analytics/answer/9976101?hl=en) is a standard used by Google to transmit consents. From March 2024, it will be mandatory for many Google services due to the [Digital Market Act](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32022R1925). We support the standard in v2 and newer versions.
+* **Explicit consent for consent types**: Purposes (consent types) are displayed transparently in the cookie banner and consent is explicitly obtained. Website visitors have the option of consenting to individual purposes on an informed and free basis.
+* **Google Tag Manager integration**: Consents for all services are transferred via so-called “additional consents” so that tags can be triggered via the consent management of Google Tag Manager after consent has been given.
 
 **Special Features** _// made for professional users_
 

@@ -8,7 +8,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\CustomHTML;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\Headline;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\RangeInput;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\view\BannerCustomize;
 use WP_Customize_Color_Control;
 // @codeCoverageIgnoreStart
@@ -103,18 +102,5 @@ class BasicLayout
         $result = \apply_filters('RCB/Customize/Animation/Out', ['none' => \__('None', RCB_TD), 'fadeOut' => 'fadeOut']);
         \asort($result);
         return $result;
-    }
-    /**
-     * Reset "Animation only on mobile devices" default to `false` as it should not be activated
-     * automatically for already existing users.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_15_0($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '2.15.0', ['2.16.0', '2.15.1'])) {
-            \update_option(self::SETTING_ANIMATION_IN_ONLY_MOBILE, \false);
-            \update_option(self::SETTING_ANIMATION_OUT_ONLY_MOBILE, \false);
-        }
     }
 }

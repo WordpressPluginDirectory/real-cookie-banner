@@ -157,37 +157,6 @@ class Stats implements IOverrideStats
         );
     }
     /**
-     * Create direct aggregates in database instead of calculating from consents.
-     *
-     * @see https://app.clickup.com/t/2z4e99b
-     * @param string|false $installed
-     */
-    public function new_version_installation_after_3_4_13($installed)
-    {
-        global $wpdb;
-        $table_name_stats_buttons_clicked = $this->getTableName(self::TABLE_NAME_BUTTONS_CLICKED);
-        $table_name_stats_custom_bypass = $this->getTableName(self::TABLE_NAME_CUSTOM_BYPASS);
-        $table_name_consent = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
-        if (\DevOwl\RealCookieBanner\Core::versionCompareOlderThan($installed, '3.4.13', ['3.4.14', '3.5.0'], function () use($wpdb, $table_name_stats_buttons_clicked) {
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $exists = $wpdb->get_var("SHOW TABLES LIKE '{$table_name_stats_buttons_clicked}'") === $table_name_stats_buttons_clicked;
-            // phpcs:enable WordPress.DB.PreparedSQL
-            if ($exists) {
-                // phpcs:disable WordPress.DB.PreparedSQL
-                $countRows = \intval($wpdb->get_var("SELECT COUNT(*) AS cnt FROM {$table_name_stats_buttons_clicked}"));
-                // phpcs:enable WordPress.DB.PreparedSQL
-                // Only execute the migration once
-                return $countRows === 0;
-            }
-            return \false;
-        })) {
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $wpdb->query("INSERT IGNORE INTO {$table_name_stats_buttons_clicked} (context, `day`, button_clicked, `count`)\n                SELECT context, CONVERT(created, DATE) AS `day`, button_clicked, COUNT(DISTINCT uuid) AS cnt\n                    FROM {$table_name_consent}\n                    WHERE forwarded IS NULL\n                    GROUP BY 1, 2, 3");
-            $wpdb->query("INSERT IGNORE INTO {$table_name_stats_custom_bypass} (context, `day`, custom_bypass, `count`)\n                SELECT context, CONVERT(created, DATE) AS `day`, IFNULL(custom_bypass, CASE WHEN dnt = 1 THEN 'dnt' ELSE 'none' END) AS custom_bypass, COUNT(DISTINCT uuid) AS cnt\n                    FROM {$table_name_consent}\n                    WHERE forwarded IS NULL\n                    GROUP BY 1, 2, 3");
-            // phpcs:enable WordPress.DB.PreparedSQL
-        }
-    }
-    /**
      * Get singleton instance.
      *
      * @codeCoverageIgnore

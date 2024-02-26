@@ -121,7 +121,9 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      */
     public static function fromExpression($expression)
     {
-        $singleAttributeRegexp = \sprintf(self::EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE, \join('|', \array_map('preg_quote', SelectorSyntaxAttribute::ALLOWED_COMPARATORS)));
+        $singleAttributeRegexp = \sprintf(self::EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE, \join('|', \array_map(function ($comp) {
+            return \preg_quote($comp, '/');
+        }, SelectorSyntaxAttribute::ALLOWED_COMPARATORS)));
         $fullExpressionRegexp = \sprintf(SelectorSyntaxFinder::EXPRESSION_REGEXP, $singleAttributeRegexp);
         if (\preg_match($fullExpressionRegexp, $expression)) {
             $split = \explode('[', $expression, 2);

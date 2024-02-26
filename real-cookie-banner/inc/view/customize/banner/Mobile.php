@@ -45,17 +45,4 @@ class Mobile
             return \intval($value);
         }]]]];
     }
-    /**
-     * Disable mobile experience for older revisions.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyBackwardsCompatibility($revision, $independent)
-    {
-        if ($independent && !isset($revision['banner']['customizeValuesBanner']['mobile'])) {
-            $revision['banner']['customizeValuesBanner']['mobile'] = ['enabled' => \false, 'maxHeight' => self::DEFAULT_MAX_HEIGHT, 'hideHeader' => self::DEFAULT_HIDE_HEADER, 'alignment' => self::DEFAULT_ALIGNMENT, 'scalePercent' => self::DEFAULT_SCALE_PERCENT, 'scalePercentVertical' => self::DEFAULT_SCALE_PERCENT_VERTICAL];
-        }
-        return $revision;
-    }
 }

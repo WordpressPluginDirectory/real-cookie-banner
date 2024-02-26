@@ -49,6 +49,7 @@ abstract class AbstractLanguagePlugin
      * Current translations hold as an instance.
      */
     protected $currentTranslationEntries = null;
+    protected $findI18nKeyOfTranslationCache = [];
     protected $lockCurrentTranslations = \false;
     /**
      * C'tor.
@@ -597,13 +598,42 @@ abstract class AbstractLanguagePlugin
         return [$key, $value];
     }
     /**
+     * The same as `findI18nKeyOfTranslationRaw`, but with caching enabled as this could be called very often.
+     *
+     * @param string $input
+     * @param boolean $found
+     * @param string[] $contexts
+     */
+    public function findI18nKeyOfTranslation($input, &$found, &$contexts)
+    {
+        if ($this->currentTranslationEntries === null) {
+            return $this->findI18nKeyOfTranslationRaw($input, $found, $contexts);
+        }
+        $cacheKey = $this->domain . '-' . $this->currentTranslationEntries['locale'];
+        $this->findI18nKeyOfTranslationCache[$cacheKey] = $this->findI18nKeyOfTranslationCache[$cacheKey] ?? [];
+        $cache =& $this->findI18nKeyOfTranslationCache[$cacheKey];
+        if (isset($cache[$input])) {
+            list($result, $useFound, $useContexts) = $cache[$input];
+            $found = $useFound;
+            \array_push($contexts, ...$useContexts);
+            return $result;
+        }
+        $useFound = \false;
+        $useContexts = [];
+        $result = $this->findI18nKeyOfTranslationRaw($input, $useFound, $useContexts);
+        $found = $useFound;
+        \array_push($contexts, ...$useContexts);
+        $cache[$input] = [$result, $useFound, $contexts];
+        return $result;
+    }
+    /**
      * Find an i18n key for `__()` from a given translated string.
      *
      * @param string $input
      * @param boolean $found Sets to `true` when a translation got found
      * @param string[] $contexts
      */
-    public function findI18nKeyOfTranslation($input, &$found, &$contexts)
+    public function findI18nKeyOfTranslationRaw($input, &$found, &$contexts)
     {
         $found = \false;
         if ($this->currentTranslationEntries !== null) {

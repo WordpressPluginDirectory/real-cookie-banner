@@ -72,4 +72,9 @@ trait TCF
     {
         return [];
     }
+    // Documented in AbstractTcf
+    public function getGvl()
+    {
+        return null;
+    }
 }

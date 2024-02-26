@@ -8,11 +8,8 @@ use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
 use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\Blocker;
-use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
-use DevOwl\RealCookieBanner\settings\CountryBypass;
-use DevOwl\RealCookieBanner\settings\Revision;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -43,12 +40,7 @@ class Export
      */
     public function appendSettings()
     {
-        // Deactivate some filters to the options does not get modified
-        \remove_filter('RCB/Revision/Option/' . CountryBypass::SETTING_COUNTRY_BYPASS_COUNTRIES, [CountryBypass::getInstance(), 'revisionOptionCountriesExpandPredefinedLists']);
-        \remove_filter('RCB/Revision/Option/' . Consent::SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES, [Consent::getInstance(), 'revisionOptionCountriesExpandPredefinedLists']);
-        $this->data['settings'] = Revision::getInstance()->fromOptions();
-        \add_filter('RCB/Revision/Option/' . CountryBypass::SETTING_COUNTRY_BYPASS_COUNTRIES, [CountryBypass::getInstance(), 'revisionOptionCountriesExpandPredefinedLists']);
-        \remove_filter('RCB/Revision/Option/' . Consent::SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES, [Consent::getInstance(), 'revisionOptionCountriesExpandPredefinedLists']);
+        $this->data['settings'] = \DevOwl\RealCookieBanner\import\Import::instance([])->optionsMap();
         return $this;
     }
     /**

@@ -217,7 +217,7 @@ class Service
      *
      * @codeCoverageIgnore
      */
-    public function getIsProviderCurrentWebsite()
+    public function isProviderCurrentWebsite()
     {
         return $this->isProviderCurrentWebsite;
     }
@@ -244,7 +244,7 @@ class Service
      *
      * @codeCoverageIgnore
      */
-    public function getIsEmbeddingOnlyExternalResources()
+    public function isEmbeddingOnlyExternalResources()
     {
         return $this->isEmbeddingOnlyExternalResources;
     }
@@ -650,6 +650,15 @@ class Service
     public function setPresetId($presetId)
     {
         $this->presetId = $presetId;
+    }
+    /**
+     * Create a JSON representation of this object.
+     */
+    public function toJson()
+    {
+        return ['id' => $this->id, 'name' => $this->name, 'purpose' => $this->purpose, 'providerContact' => $this->providerContact->toJson(), 'isProviderCurrentWebsite' => $this->isProviderCurrentWebsite, 'provider' => $this->provider, 'uniqueName' => $this->uniqueName, 'isEmbeddingOnlyExternalResources' => $this->isEmbeddingOnlyExternalResources, 'legalBasis' => $this->legalBasis, 'dataProcessingInCountries' => $this->dataProcessingInCountries, 'dataProcessingInCountriesSpecialTreatments' => $this->dataProcessingInCountriesSpecialTreatments, 'technicalDefinitions' => \array_map(function ($technicalDefinition) {
+            return $technicalDefinition->toJson();
+        }, $this->technicalDefinitions), 'codeDynamics' => $this->codeDynamics, 'providerPrivacyPolicyUrl' => $this->providerPrivacyPolicyUrl, 'providerLegalNoticeUrl' => $this->providerLegalNoticeUrl, 'tagManagerOptInEventName' => $this->tagManagerOptInEventName, 'tagManagerOptOutEventName' => $this->tagManagerOptOutEventName, 'googleConsentModeConsentTypes' => $this->googleConsentModeConsentTypes, 'codeOptIn' => $this->codeOptIn, 'executeCodeOptInWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptInWhenNoTagManagerConsentIsGiven, 'codeOptOut' => $this->codeOptOut, 'executeCodeOptOutWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptOutWhenNoTagManagerConsentIsGiven, 'deleteTechnicalDefinitionsAfterOptOut' => $this->deleteTechnicalDefinitionsAfterOptOut, 'codeOnPageLoad' => $this->codeOnPageLoad, 'presetId' => $this->presetId];
     }
     /**
      * Generate a `Service` object from an array.

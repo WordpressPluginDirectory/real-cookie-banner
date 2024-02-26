@@ -49,6 +49,7 @@ class Constants
     const ASSETS_HANDLE_REACT_DOM = 'react-dom';
     const ASSETS_HANDLE_MOBX = 'mobx';
     const ASSETS_ADVANCED_ENQUEUE_FEATURE_DEFER = 'defer';
+    const ASSETS_ADVANCED_ENQUEUE_FEATURE_ASYNC = 'async';
     const ASSETS_ADVANCED_ENQUEUE_FEATURE_PRELOADING = 'preloading';
     const ASSETS_ADVANCED_ENQUEUE_FEATURE_PRIORITY_QUEUE = 'priority-queue';
 }

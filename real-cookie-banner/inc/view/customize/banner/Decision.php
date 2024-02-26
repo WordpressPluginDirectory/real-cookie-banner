@@ -6,7 +6,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\AbstractCustomizePanel;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\CustomHTML;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\Headline;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\view\BannerCustomize;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -95,34 +94,5 @@ class Decision
             }, $permutation));
         }
         return $result;
-    }
-    /**
-     * Activate bullet list as it should not be deactivated automatically for already existing users.
-     *
-     * @param string|false $installed
-     */
-    public static function new_version_installation_after_2_17_3($installed)
-    {
-        if (Core::versionCompareOlderThan($installed, '2.17.3', ['2.17.4', '2.18.0'])) {
-            \update_option(self::SETTING_SHOW_GROUPS, '1');
-        }
-    }
-    /**
-     * Enable bullet groups + default button order for older revision.
-     *
-     * @param array $revision
-     * @param boolean $independent
-     */
-    public static function applyBackwardsCompatibility($revision, $independent)
-    {
-        if ($independent) {
-            if (!isset($revision['banner']['customizeValuesBanner']['decision']['showGroups'])) {
-                $revision['banner']['customizeValuesBanner']['decision']['showGroups'] = \true;
-            }
-            if (!isset($revision['banner']['customizeValuesBanner']['decision']['buttonOrder'])) {
-                $revision['banner']['customizeValuesBanner']['decision']['buttonOrder'] = self::DEFAULT_BUTTON_ORDER;
-            }
-        }
-        return $revision;
     }
 }

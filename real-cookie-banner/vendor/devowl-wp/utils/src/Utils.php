@@ -293,4 +293,33 @@ class Utils
         }
         return \str_replace(', {{andSeparator}}, ', $andSeparator, \join(', ', $array));
     }
+    /**
+     * Allows to set an array value by passing a key path like `my.awesome.key`.
+     *
+     * @param array $array
+     * @param string $keyPath
+     * @param callable $callback
+     */
+    public static function arrayModifyByKeyPath(&$array, $keyPath, $callback)
+    {
+        $keys = \explode('.', $keyPath);
+        $current =& $array;
+        $pathExists = \true;
+        foreach ($keys as $i => $key) {
+            if (!isset($current[$key])) {
+                $pathExists = \false;
+                break;
+            }
+            if ($i < \count($keys) - 1) {
+                $current =& $current[$key];
+            }
+        }
+        // If the path exists, use the callback to set the new value.
+        if ($pathExists) {
+            $lastKey = \end($keys);
+            if (isset($current[$lastKey])) {
+                $current[$lastKey] = $callback($current[$lastKey]);
+            }
+        }
+    }
 }

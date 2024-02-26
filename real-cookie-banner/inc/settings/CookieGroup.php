@@ -36,7 +36,6 @@ class CookieGroup
      * @var CookieGroup
      */
     private static $me = null;
-    private $toJsonCache = null;
     private $cacheGetOrdered = [];
     /**
      * C'tor.
@@ -148,7 +147,7 @@ class CookieGroup
         $includingHidden = \get_terms(Core::getInstance()->queryArguments(['taxonomy' => self::TAXONOMY_NAME, 'orderby' => 'meta_value_num', 'order' => 'ASC', 'hide_empty' => \false, 'meta_query' => [['key' => self::META_NAME_ORDER, 'type' => 'NUMERIC']]], 'cookieGroupsGetOrdered'));
         // Filter hidden
         foreach ($includingHidden as $term) {
-            if ($term->count > 0 || \get_term_meta($term->term_id, self::META_NAME_IS_ESSENTIAL)) {
+            if ($term->count > 0 || \get_term_meta($term->term_id, self::META_NAME_IS_ESSENTIAL, \true)) {
                 $terms[] = $term;
             }
         }
@@ -171,18 +170,13 @@ class CookieGroup
     }
     /**
      * Localize available cookie groups for frontend.
-     *
-     * @param boolean $useCache
      */
-    public function toJson($useCache = \false)
+    public function toJson()
     {
-        if ($useCache && $this->toJsonCache !== null) {
-            return $this->toJsonCache;
-        }
         $output = [];
         $groups = \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->getOrdered();
         foreach ($groups as $group) {
-            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'items' => []];
+            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'isEssential' => $group->metas[self::META_NAME_IS_ESSENTIAL], 'items' => []];
             // Populate cookies
             $cookies = \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getOrdered($group->term_id);
             foreach ($cookies as $cookie) {
