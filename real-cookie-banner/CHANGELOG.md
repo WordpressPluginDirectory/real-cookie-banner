@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.5.1 (2024-02-26)
+
+
+### Bug Fixes
+
+* cookie banner not loaded when anti ad block system is deactivated (CU-8693ubj9a)
+
+
+### Documentation
+
+* adaptation of README.txt to new guidelines from wordpress.prg (CU-8693xh2mk)
+
+
+
+
+
+
+
 # 4.5.0 (2024-02-26)
 
 

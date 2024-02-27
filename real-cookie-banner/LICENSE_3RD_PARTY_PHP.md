@@ -45,7 +45,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### devowl-wp/cache-invalidate (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/cache-invalidate (Version dev-perf/inline-require | no sha)
 Provide a single entry point to trigger cache invalidation of known caching plugins
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -58,7 +58,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/cookie-consent-management (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/cookie-consent-management (Version dev-perf/inline-require | no sha)
 Provide cookie consent management with adapters to your environment
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -71,7 +71,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/customize (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/customize (Version dev-perf/inline-require | no sha)
 Abstract utility for live preview (customize)
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -84,7 +84,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/deliver-anonymous-asset (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/deliver-anonymous-asset (Version dev-perf/inline-require | no sha)
 Provide a functionality to deliver assets anonymous
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -97,7 +97,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/fast-html-tag (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/fast-html-tag (Version dev-perf/inline-require | no sha)
 Find tags within HTML content and modify it in speed of light
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -110,7 +110,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/freemium (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/freemium (Version dev-perf/inline-require | no sha)
 Make your plugin to a freemium plugin with predefined Envato support
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -123,7 +123,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/headless-content-blocker (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/headless-content-blocker (Version dev-perf/inline-require | no sha)
 Block HTML content by URLs and selector syntax
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -136,7 +136,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/multilingual (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/multilingual (Version dev-perf/inline-require | no sha)
 Provide helper functionality for multilingual plugins like WPML and PolyLang
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -149,7 +149,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-product-manager-wp-client (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/real-product-manager-wp-client (Version dev-perf/inline-require | no sha)
 A WordPress client for Real Product Manager
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -162,7 +162,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-queue (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/real-queue (Version dev-perf/inline-require | no sha)
 Provide a promise-based queue system working in frontend for client and server tasks
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -175,7 +175,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-utils (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/real-utils (Version dev-perf/inline-require | no sha)
 Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -188,7 +188,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/service-cloud-consumer (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/service-cloud-consumer (Version dev-perf/inline-require | no sha)
 Consume service and blocker templates from service cloud
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -201,20 +201,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/tcf-vendor-list-normalize (Version dev-feat/rcb-gcm | no sha)
-Download and persist vendor-list.json to database
-Homepage: Not configured.
-Licenses Used: GPL-3.0-or-later
-Provide a single entry point to trigger cache invalidation of known caching plugins
-Copyright (C) 2020 DevOwl
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-### devowl-wp/utils (Version dev-feat/rcb-gcm | no sha)
+### devowl-wp/utils (Version dev-perf/inline-require | no sha)
 Utility functionality for all your WordPress plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later

@@ -1,7 +1,7 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
-Tags: cookie banner, cookie plugin, cookie consent, cookie scanner, gdpr, dsgvo, rgpd, eprivacy, eu cookie law, cookie policy, cookie, consent, consent management
-Stable tag: 4.5.0
+Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
+Stable tag: 4.5.1
 Requires at least: 5.8
 Requires PHP: 7.4.0
 Tested up to: 6.4
@@ -41,7 +41,7 @@ You want to try Real Cookie Banner before installing? **Take a free sandbox** an
 
 **Native in WordPress:** Real Cookie Banner is a cookie plugin specially designed for WordPress. It is fully installed in your WordPress as a native plugin. All consents are processed and stored on your server. Nothing is downloaded from a cloud in your visitor's browser, which avoids further legal issues.
 
-You want a list of all features? _Get it by scrolling down!_
+You want a list of all features? [_Check it out on our website!_](https://devowl.io/wordpress-real-cookie-banner/#all-features)
 
 === Supported Languages ===
 
@@ -51,91 +51,9 @@ More languages will be added soon! In the meantime, you can also customize and t
 
 === All Features of Real Cookie Banner ===
 
-_Some of the features listed below are only available in the [PRO version of Real Cookie Banner](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description). They are marked with an asterisk._
+Real Cookie Banner offers you a beginner-friendly consent management with content blocker. Consents are fully documented. The design is finely customizable and checked for compliance with the European Accessibility Act and WCAG 2.2 Level AA. Special features for professional users (only in PRO version) include geo-restriction, support for Google Tag Manager and Matomo Tag Manager, Google Consent Mode support, Transparency and Consent Framework (TCF) 2.2+ support and consent forwarding. In addition, Real Cookie Banner is a Google certified CMP for Google Adsense. It also offers support for WPML, Polylang, TranslatePress and Weglot, WordPress Multisite and a comprehensive documentation.
 
-**Beginner-friendly** _// solution for the cookie hassle – for everyone_
-
-* **Guided configuration:** After installation, we will guide you through the setup step by step. With easy to understand explanations.
-* **Checklist for potential legally compliant setup:** A checklist shows you all the steps to be able to set up your cookie banner in a legally compliant way. Written in non-legal language for everyone.
-* **Scan your website:** Automatically search your entire website. Find used services with templates and embedded external URLs effortlessly.
-* **Free version available:** Start at no cost and pay only when you really need additional features. All features for a legally compliant setup are included in the free version.
-* **Support with focus on solutions:** You have questions? We are here for you with people who really care about your problem. Promised! (limited for users of the free version)
-* **Fully translated:** Our WordPress plugin is translated into English, German (informal and formal), French, Italian, Spanish, Portuguese, Polish, Dutch (informal and formal), Czech, Danish, Swedish and Norwegian Bokmål.
-
-**Consent Management** _// we take care of compliant consents_
-
-* **Cookies and processing of personal data:** We obtain consents for you in accordance with the [ePrivacy Directive](https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32002L0058) and [GDPR](https://gdpr-text.com/) (suitable for [Swiss DSG](https://www.fedlex.admin.ch/eli/cc/2022/491/de) as well). For more than just cookies!
-* **150+ service and 120+ content blocker templates*:** We’ve already collected all the necessary technical and legal stuff for 150+ popular services, so you can avoid the hassle.
-* **Individual groups for services:** Make it easy for your visitors to opt-in by grouping services together. Automatically suggested groups for services with templates.
-* **Technical specifications of HTTP cookies and cookie-like information:** You can store all necessary information about HTTP cookies, Local Storage, Session Storage and IndexedDB.
-* **Execution of opt-in and opt-out scripts:** After the consent or its revocation HTML/JavaScript code can be executed per service.
-* **Legal links:** View history of consent and change or revoke consent. You can (and must legally) offer this with simple WordPress menu items or shortcodes anywhere on your website.
-* **Youth protection according to GDPR:** We take care that also minors can give consents on your website according to [Art. 8 GDPR](https://gdpr-text.com/read/article-8/). With support for country-specific age limits. Avoid ineffective consent for underage website visitors!
-* **Consent to data processing in insecure third countries*:** For data processing in insecure third countries in terms of data protection, we obtain consent in accordance [Art. 49 GDPR](https://gdpr-text.com/read/article-49/), considering [standard contractual clauses](https://commission.europa.eu/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_en) and the [Trans-Atlantic Data Privacy Framework](https://www.dataprivacyframework.gov/s/).
-* **Hide cookie banner legally compliant:** Legal notice (imprint) and privacy policy must be accessible without cookie banner. On other pages, e.g. landing pages, conversation rates increase*. Works with us quite simply!
-* **Automatically obtain of new consents:** You change something on the cookie banner? We will notify you automatically when you need to get a new consent!
-* **Accepting all cookies for bots:** For more visibility in search engines, bots can automatically consent and see the full content of your website.
-* **Use of “Do Not Track” header:** Don’t annoy your visitors who are already signaling that they don’t want to consent. You can respect the “Do Not Track” HTTP-header.
-
-**Documentation** _// truly fully documented consents_
-
-* **Documentation of consents with revision:** All services, its consents, service groups, settings and design customizations are saved. Fulfill the duty of proof according to GDPR!
-* **Creation of consents afterwards traceable*:** View retrospectively how consent was obtained through an interactive visualization of the cookie banner or content blocker.
-* **Statistics about consents*:** Necessarily documented information about the consents are aggregated for statistics. This allows you for example to extrapolate your data in Google Analytics.
-
-**Content Blocker** _// load services only with consent_
-
-* **Block already integrated link, script and iframe HTML tags:** Already included elements by your theme or plugins can be blocked based on the HTML tag. Works for every HTML element on initial load of your website!
-* **URL blocking:** Elements that may only be loaded after consent can be blocked based on the URL. Works also for inline scripts and retina images.
-* **Custom element blocking:** You can block elements based on custom defined rule e.g. via their CSS class. With an easy to understand and flexible syntax. Not only for software developers.
-* **@font-face fonts blocking**: Inline loaded fonts from external servers can be blocked fine granular. You can be privacy-compliant even if Google Fonts can not be disabled in your theme!
-* **Inline style splitting:** Some page builders download files in inline styles for which you need consent. We split styles so that your website loads correctly while listening for consents.
-* **Privacy-compliant lazy loading**: Embeds are post-loaded after the consent check depending on the viewport of your website visitor, which makes your initial page load faster.
-* **Visual content blockers**: They ask for consent from visitors if they have declined services in the cookie banner. Replace e.g. YouTube videos with similar-looking privacy-compliant imitations*.
-* **Automatic video playback after consent:** If your visitor allows the loading of an external video only via a content blocker, he must start the video manually afterwards. We save him the click and start YouTube, Vimeo and more videos automatically.
-* **Content Blocker connected with services:** Each content blocker is associated with one or more services. With it, content is automatically unblocked when consent is given in the cookie banner.
-
-**Design** _// always fits perfectly into your website_
-
-* **Cookie banner and content blocker layout:** You can customize the design of your cookie banner with more than 200 options*. So, it will fit perfectly with your corporate design!
-* **Live preview of design and text changes:** All visual changes to your cookie banner will be displayed live on your website in the WordPress Customizer. Without annoying reloading!
-* **20+ cookie banner design presets*:** Don’t waste your time tinkering with the design forever. Just use one of our templates. There is something for every taste!
-
-**Accessibility** _// accessible for everyone on your website_
-
-* **Compliance with European Accessibility Act:** The [European Accessibility Act](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019L0882) requires most website operators to have an accessible website by June 2025. We meet requirements and local implementations of all supported countries.
-* **WCAG 2.2 Level AA fulfilled:** Our cookie banner and content blocker have been technically engineered to comply with the [WCAG 2.2](https://www.w3.org/TR/WCAG22/) Level AA standard, ensuring an accessible and user-friendly experience for all website visitors.
-* **Accessibility score for design settings:** Your design settings are evaluated using an accessibility score to ensure you comply with legal requirements. All design presets are of course accessible according to WCAG 2.2 Level AA.
-
-**Transparency and Consent Framework (TCF)** _// obtain standardized consents_
-
-* **TCF compatibility*:** [Transparency and Consent Framework (TCF)](https://iabeurope.eu/transparency-consent-framework/) is a standard of the European digital marketing industry association IAB Europe. It allows standardized consent to be obtained. We support the widely used standard TCF 2.2 and newer.
-* **Configuration with user interface*:** TCF is mostly very technical and can be set up only with code. Not with us! You can configure all important features, vendors etc. in one interface with understandable explanations of the terms used in the standard.
-* **Google certified CMP:** Real Cookie Banner is a CMP, [certified by Google for Adsense](https://support.google.com/adsense/answer/13554116#google-certified-cmps) and [IAB Europe](https://iabeurope.eu/cmp-list/). All requirements of the TCF standard are implemented*. This allows you to display Adsense ads on your website according to Google’s specifications.
-
-**Google Consent Mode** _// obtain consents according to Digital Market Act_
-
-* **Google Consent Mode compatibility**: [Google Consent Mode](https://support.google.com/analytics/answer/9976101?hl=en) is a standard used by Google to transmit consents. From March 2024, it will be mandatory for many Google services due to the [Digital Market Act](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex%3A32022R1925). We support the standard in v2 and newer versions.
-* **Explicit consent for consent types**: Purposes (consent types) are displayed transparently in the cookie banner and consent is explicitly obtained. Website visitors have the option of consenting to individual purposes on an informed and free basis.
-* **Google Tag Manager integration**: Consents for all services are transferred via so-called “additional consents” so that tags can be triggered via the consent management of Google Tag Manager after consent has been given.
-
-**Special Features** _// made for professional users_
-
-* **Geo-restriction*:** Cookie banners are not necessary for users from all countries. Internationally oriented websites can decide per country whether a cookie banner should be displayed. This way you avoid unnecessary distraction from your content!
-* **Support for Google Tag Manager and Matomo Tag Manager*:** Load your tag manager in a privacy-friendly way only after consent. Then process consents directly in your tag manager as events (with fallback for visitors without consent for the tag manager).
-* **Consent Forwarding*:** Forward a visitor’s consents and avoid multiple consents from a visitor on multiple websites of your company (with WordPress Multisites or multiple WordPress installations; forwarding as one-way sync or two-way sync of consents).
-
-**Technical** _// perfection in detail – for WordPress_
-
-* **Support for multilingual websites:** Your cookie banner also works in multilingual websites with [WPML](https://wpml.org/), [Polylang](https://polylang.pro/), [TranslatePress](https://translatepress.com/) and [Weglot](https://weglot.com/). We have built explicit integrations for these plugins.
-* **Native solution in WordPress:** Real Cookie Banner is installed in your WordPress. Consents are processed and stored exclusively on your server. Nothing is downloaded from the cloud in the browser of your visitors!
-* **PageSpeed Insights optimized:** Loading time of your website matters! Real Cookie Banner is optimized for PageSpeed Insights, Lighthouse and Web Vitals. You can achieve a PageSpeed Score of 100 with an active cookie banner.
-* **Automatic deletion of 1st-party cookies:** In the event of an opt-out, 1st-party cookies can be automatically deleted on the client- and server-side to ensure due diligence.
-* **Support for automatic flushing of all known page caches:** After a change to the cookie banner or content blocker, we automatically clear your page cache plugin. No more problems with outdated caches!
-* **Anti-Ad-Blocker system:** Cookie banners are annoying and many people block them. We have implemented special mechanisms that make your cookie banner almost impossible to block. Because you should get your consents!
-* **Import and export:** All settings and consents can be exported at any time. Use already defined settings in new websites and save time if you are an agency building many websites!
-* **Support for WordPress Multisites:** You use a WordPress Mulisite? No problem! Real Cookie Banner also works with such a setup.
-* **API for developers:** You want to extend Real Cookie Banner? We have documented WordPress actions & filters and our REST API for you.
+[**You find a list of all features with comprehensive details on our website!**](https://devowl.io/wordpress-real-cookie-banner/#all-features)
 
 === Templates & Compatibility ===
 
@@ -143,7 +61,7 @@ _Some of the features listed below are only available in the [PRO version of Rea
 
 We have verified that major Google and Facebook services, YouTube, Vimeo or Matomo as well as popular WordPress plugins like Elementor, Jetpack, WooCommerce, Wordfence or Contact Form 7 and many more are compatible.
 
-**The PRO Version of Real Cookie Banner comes with 150+ service templates and 120+ content blocker templates*.** These templates save you a lot of time by giving you all the relevant legal and technical information for a service to use it in accordance with the ePrivacy Directive and GDPR. Check out the [complete list of all services with templates](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description#templates) on our website.
+**The PRO Version of Real Cookie Banner comes with 150+ service templates and 120+ content blocker templates.** These templates save you a lot of time by giving you all the relevant legal and technical information for a service to use it in accordance with the ePrivacy Directive and GDPR. Check out the [complete list of all services with templates](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description#templates) on our website.
 
 === Developer Friendly ===
 
@@ -189,7 +107,7 @@ However, the service scanner is not a cookie scanner. A cookie scanner could, if
 The PRO Version offers you many additional features like 
 
 consent to data processing in insecure third countries, statistics about consents, advanced visual content blockers, cookie banner design presets, TCF support, geo-restriction
-Google Tag Manager and Matomo Tag Managerspport, consent forwarding or many service templates and content blocker templates. [**Learn more about the PRO version.**](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description)
+Google Tag Manager and Matomo Tag Manager support, consent forwarding or many service templates and content blocker templates. [**Learn more about the PRO version.**](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description)
 
 = What is the GDPR (also known as DSGVO, RGPD, RODO, AVG)? =
 
