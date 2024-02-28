@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.5.2 (2024-02-28)
+
+
+### Bug Fixes
+
+* compatibility with WP Fastest Cache when cookie banner does no longer get loaded (CU-8693ubj9a)
+
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.66</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Bug Fixes
+
+* compatibility with WP Fastest Cache when cookie banner does no longer get loaded (CU-8693ubj9a)
+* switch from free to PRO version sometimes did not recreate the JavaScript files for the cookie banner (CU-8693ubj9a)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.10.2</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* when changing consent and WordPress is too slow no changes are saved (CU-8693n1cc5)</details>
+
+
+
+
+
 ## 4.5.1 (2024-02-26)
 
 

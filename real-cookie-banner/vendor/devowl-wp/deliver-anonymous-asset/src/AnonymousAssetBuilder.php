@@ -46,6 +46,16 @@ class AnonymousAssetBuilder
         $this->folder = $folder;
     }
     /**
+     * Get the URL to the anonymous folder.
+     */
+    public function generateFolderSrc()
+    {
+        $anonymousFolder = $this->ensureAnonymousFolder(\true);
+        $contentDir = \wp_normalize_path(\constant('WP_CONTENT_DIR') . '/');
+        $contentUrl = Utils::getContentUrl();
+        return \trailingslashit($contentUrl . \substr($anonymousFolder, \strlen($contentDir)));
+    }
+    /**
      * Create an anonymous asset. Do not forget to make it `->ready()` after you enqueued it!
      * This must be done in `wp` hook as it is the first available hook.
      *
@@ -91,9 +101,9 @@ class AnonymousAssetBuilder
      * Create the anonymous folder in `wp-content`. It also uses the original folder path basename (e.g. `dist` or `dev`)
      * as another subfolder, so it results in e.g. `/var/www/html/wp-content/7e9df1a92be399cb922305d5e7388ab1/dist/`.
      *
-     * @param boolean $skipExistenceCheck
+     * @param boolean|null $skipExistenceCheck
      */
-    public function ensureAnonymousFolder($skipExistenceCheck = \false)
+    public function ensureAnonymousFolder($skipExistenceCheck = null)
     {
         $contentDir = $this->getContentDir();
         if (!$contentDir) {
@@ -101,11 +111,11 @@ class AnonymousAssetBuilder
         }
         $hash = $this->getHash();
         $folder = $contentDir . $hash . '/' . \basename($this->getFolder()) . '/';
-        if ($skipExistenceCheck) {
+        if ($skipExistenceCheck === \true) {
             return $folder;
         }
         // Already exists?
-        if (\is_dir($folder)) {
+        if ($skipExistenceCheck === null && \is_dir($folder)) {
             return \true;
         }
         if (\wp_mkdir_p($folder)) {

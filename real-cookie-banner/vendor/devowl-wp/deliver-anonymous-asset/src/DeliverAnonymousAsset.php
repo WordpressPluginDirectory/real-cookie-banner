@@ -107,8 +107,8 @@ class DeliverAnonymousAsset
         $contentUrl = Utils::getContentUrl();
         if (!\file_exists($contentPath)) {
             // The file does not exist, perhaps it was not part of the passed `$folder` in `AnnonymousAssetBulder` constructor?
-            // This could happen for e.g. libraries in `public/lib/`
-            \file_put_contents($contentPath, Utils::readFileAndCorrectSourceMap($this->getFile()));
+            // This could happen for e.g. libraries in `public/lib/` or switching from free version to PRO version
+            $this->getBuilder()->ensureAnonymousFolder(\false);
         }
         return $contentUrl . \substr($contentPath, \strlen($contentDir));
     }
