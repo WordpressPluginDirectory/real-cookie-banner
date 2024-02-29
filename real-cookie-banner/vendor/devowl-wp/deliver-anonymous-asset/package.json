@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/deliver-anonymous-asset",
-    "version": "0.2.66",
+    "version": "0.2.67",
     "private": true,
     "description": "Provide a functionality to deliver assets anonymous",
     "homepage": "https://devowl.io",

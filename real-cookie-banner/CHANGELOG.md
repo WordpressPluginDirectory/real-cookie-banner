@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.5.3 (2024-02-29)
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.67</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Bug Fixes
+
+* compatibility with latest TCF stub version not loading (CU-8693ubj9a)</details>
+
+
+
+
+
 ## 4.5.2 (2024-02-28)
 
 
