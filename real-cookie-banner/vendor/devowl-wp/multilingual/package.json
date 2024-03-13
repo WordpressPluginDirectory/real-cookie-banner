@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.12.13",
+    "version": "1.12.14",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",
@@ -100,8 +100,8 @@
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.12",
         "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/utils": "^1.18.1",
-        "@devowl-wp/webpack-config": "^0.2.28",
+        "@devowl-wp/utils": "^1.18.2",
+        "@devowl-wp/webpack-config": "^0.2.29",
         "@types/jest": "~29.5.5",
         "jest": "~29.7.0",
         "ts-node": "~10.9.1",

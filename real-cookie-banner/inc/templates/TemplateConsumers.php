@@ -208,6 +208,9 @@ class TemplateConsumers
             'serviceScan' => function () {
                 return Core::getInstance()->getScanner()->getQuery()->getScannedTemplateStats();
             },
+            'serviceScanIgnored' => function () {
+                return Core::getInstance()->getNotices()->getScannerIgnored()['templates'];
+            },
             // I18n
             'i18n.ContentTypeButtonTextMiddleware.loadContent' => function () {
                 return \__('Load content', Hooks::TD_FORCED);

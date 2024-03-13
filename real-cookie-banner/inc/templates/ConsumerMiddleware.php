@@ -57,13 +57,13 @@ class ConsumerMiddleware extends AbstractConsumerMiddleware
         }
     }
     // Documented in AbstractConsumerMiddleware
-    public function beforeUseTemplate()
+    public function beforeUseTemplate($template)
     {
         // Do literally the same
         $this->beforeDownloadAndPersistFromDataSource();
     }
     // Documented in AbstractConsumerMiddleware
-    public function afterUseTemplate()
+    public function afterUseTemplate($template)
     {
         // Do literally the same
         $this->afterDownloadAndPersistFromDataSource(null);

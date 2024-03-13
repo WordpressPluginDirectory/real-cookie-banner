@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use Exception;
 /**
  * Abstract implementation of a middleware for consumer life cycles.
@@ -37,13 +38,15 @@ abstract class AbstractConsumerMiddleware extends AbstractMiddleware
     /**
      * Before using a template and running all the middlewares of `AbstractTemplateMiddleware`.
      *
+     * @param AbstractTemplate $template
      * @return void
      */
-    public abstract function beforeUseTemplate();
+    public abstract function beforeUseTemplate($template);
     /**
      * Teardown of `beforeDownloadAndPersistFromDataSource`.
      *
+     * @param AbstractTemplate $template
      * @return void
      */
-    public abstract function afterUseTemplate();
+    public abstract function afterUseTemplate($template);
 }

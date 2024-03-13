@@ -159,6 +159,7 @@ class ComposerStaticInitc2e4938eca8a1eea2087f310c8fde29b
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\PoweredCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/PoweredCacheImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\RaidboxesImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/RaidboxesImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SGOptimizeImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/SGOptimizeImpl.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SwiftPerformanceAiCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/SwiftPerformanceAiCacheImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SwiftPerformanceCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/SwiftPerformanceCacheImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\ThemifyImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/ThemifyImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\W3TotalCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/W3TotalCacheImpl.php',

@@ -5,6 +5,7 @@ namespace DevOwl\RealCookieBanner\scanner;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
 use DevOwl\RealCookieBanner\view\Scanner;
@@ -90,18 +91,6 @@ class Query
         return $rows;
     }
     /**
-     * Get all ignored hosts. This is needed e.g. to re-ignore new scan entries.
-     */
-    public function getIgnoredHosts()
-    {
-        global $wpdb;
-        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
-        // phpcs:disable WordPress.DB.PreparedSQL
-        $rows = $wpdb->get_col("SELECT blocked_url_host FROM {$table_name} WHERE ignored = 1 GROUP BY blocked_url_host");
-        // phpcs:enable WordPress.DB.PreparedSQL
-        return $rows;
-    }
-    /**
      * Remove scanned entries by source urls. This can be useful if you know a page got deleted.
      *
      * @param string[] $urls
@@ -125,30 +114,6 @@ class Query
         return 0;
     }
     /**
-     * Ignore blocked URLs by host.
-     *
-     * @param string[] $hosts
-     * @param boolean $state Set to `false` to unignore the host
-     * @return int
-     */
-    public function ignoreBlockedUrlHosts($hosts, $state = \true)
-    {
-        global $wpdb;
-        if (\count($hosts) > 0) {
-            $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
-            $hosts = \array_map(function ($url) use($wpdb) {
-                return $wpdb->prepare('%s', $url);
-            }, $hosts);
-            $sqlIn = \join(',', $hosts);
-            \delete_transient(Scanner::TRANSIENT_SERVICES_FOR_NOTICE);
-            \delete_transient(self::TRANSIENT_SCANNED_EXTERNAL_URLS);
-            // phpcs:disable WordPress.DB.PreparedSQL
-            return $wpdb->query($wpdb->prepare("UPDATE {$table_name} SET ignored = %d WHERE blocked_url_host IN ({$sqlIn})", $state ? 1 : 0));
-            // phpcs:enable WordPress.DB.PreparedSQL
-        }
-        return 0;
-    }
-    /**
      * Get a list of found templates and external URL hosts.
      */
     public function getScannedCombinedResults()
@@ -158,7 +123,7 @@ class Query
         // phpcs:disable WordPress.DB.PreparedSQL
         $result = $wpdb->get_row("SELECT\n                GROUP_CONCAT(DISTINCT IF(preset <> '', preset, NULL) ORDER BY preset) AS templates,\n                GROUP_CONCAT(DISTINCT IF(preset = '', blocked_url_host, NULL) ORDER BY blocked_url_host) AS externalHosts\n            FROM {$table_name}", ARRAY_A);
         // phpcs:enable WordPress.DB.PreparedSQL
-        return [\explode(',', $result['templates']), \explode(',', $result['externalHosts'])];
+        return [\explode(',', $result['templates'] ?? ''), \explode(',', $result['externalHosts'] ?? '')];
     }
     /**
      * Get a list of scanned templates.
@@ -208,22 +173,21 @@ class Query
         return $result;
     }
     /**
-     * Get scanned templates with details about the amount of found times, if ignored
-     * by the user, and the last scanned. This does not return template-instances, for this you
-     * need to use `getScannedTemplates`.
+     * Get scanned templates with details about the amount of found times, and the last scanned.
+     * This does not return template-instances, for this you need to use `getScannedTemplates`.
      */
     public function getScannedTemplateStats()
     {
         global $wpdb;
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
         // phpcs:disable WordPress.DB.PreparedSQL
-        $rows = $wpdb->get_results("SELECT\n                preset,\n                COUNT(1) AS foundCount,\n                COUNT(DISTINCT source_url_hash) AS foundOnSitesCount,\n                IF(SUM(ignored) > 0, 1, 0) AS ignored,\n                MAX(created) AS lastScanned\n            FROM {$table_name} scan\n            WHERE preset <> ''\n            GROUP BY preset\n            ORDER BY preset", ARRAY_A);
+        $rows = $wpdb->get_results("SELECT\n                preset,\n                COUNT(1) AS foundCount,\n                COUNT(DISTINCT source_url_hash) AS foundOnSitesCount,\n                MAX(created) AS lastScanned\n            FROM {$table_name} scan\n            WHERE preset <> ''\n            GROUP BY preset\n            ORDER BY preset", ARRAY_A);
         // phpcs:enable WordPress.DB.PreparedSQL
         $result = [];
         foreach ($rows as $row) {
             $templateIdentifier = $row['preset'];
             // Cast result
-            $result[$templateIdentifier] = ['foundCount' => \intval($row['foundCount']), 'foundOnSitesCount' => \intval($row['foundOnSitesCount']), 'ignored' => \intval($row['ignored']) > 0, 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false)];
+            $result[$templateIdentifier] = ['foundCount' => \intval($row['foundCount']), 'foundOnSitesCount' => \intval($row['foundOnSitesCount']), 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false)];
         }
         return $result;
     }
@@ -245,15 +209,16 @@ class Query
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
         $expressions = $this->getExistingUrlExpressions();
         $expressionSql = $this->transformExpressionsToMySQL($expressions, 'blocked_url');
+        $ignored = Core::getInstance()->getNotices()->getScannerIgnored()['hosts'];
         // phpcs:disable WordPress.DB.PreparedSQL
-        $rows = $wpdb->get_results("SELECT\n                blocked_url_host AS host,\n                COUNT(1) AS foundCount,\n                COUNT(DISTINCT source_url) AS foundOnSitesCount,\n                SUM(IF({$expressionSql}, 1, 0)) AS blockedCount,\n                IF(SUM(ignored) > 0, 1, 0) AS ignored,\n                MAX(created) AS lastScanned,\n                GROUP_CONCAT(DISTINCT tag) AS tags\n            FROM {$table_name} scan\n            WHERE blocked_url_hash IS NOT NULL\n                AND preset = ''\n            GROUP BY blocked_url_host\n            ORDER BY 1", ARRAY_A);
+        $rows = $wpdb->get_results("SELECT\n                blocked_url_host AS host,\n                COUNT(1) AS foundCount,\n                COUNT(DISTINCT source_url) AS foundOnSitesCount,\n                SUM(IF({$expressionSql}, 1, 0)) AS blockedCount,\n                MAX(created) AS lastScanned,\n                GROUP_CONCAT(DISTINCT tag) AS tags\n            FROM {$table_name} scan\n            WHERE blocked_url_hash IS NOT NULL\n                AND preset = ''\n            GROUP BY blocked_url_host\n            ORDER BY 1", ARRAY_A);
         // phpcs:enable WordPress.DB.PreparedSQL
         // Cast properties
         $result = [];
         foreach ($rows as &$row) {
             $host = $row['host'];
             // Cast result
-            $result[$host] = ['host' => $host, 'foundCount' => \intval($row['foundCount']), 'foundOnSitesCount' => \intval($row['foundOnSitesCount']), 'blockedCount' => \intval($row['blockedCount']), 'ignored' => \intval($row['ignored']) > 0, 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false), 'tags' => \explode(',', $row['tags'])];
+            $result[$host] = ['host' => $host, 'foundCount' => \intval($row['foundCount']), 'foundOnSitesCount' => \intval($row['foundOnSitesCount']), 'blockedCount' => \intval($row['blockedCount']), 'ignored' => \in_array($host, $ignored, \true), 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false), 'tags' => \explode(',', $row['tags'])];
         }
         \set_transient(self::TRANSIENT_SCANNED_EXTERNAL_URLS, $result, 2 * DAY_IN_SECONDS);
         return $result;
@@ -272,7 +237,7 @@ class Query
         $expressions = $this->getExistingUrlExpressions();
         $expressionSql = $this->transformExpressionsToMySQL($expressions, 'blocked_url');
         // phpcs:disable WordPress.DB.PreparedSQL
-        $sql = "SELECT id,\n                blocked_url AS blockedUrl,\n                IF(markup_hash <> '' , 1, 0) AS markup,\n                source_url AS sourceUrl,\n                IF({$expressionSql}, 1, 0) AS blocked,\n                ignored,\n                created AS lastScanned,\n                tag\n            FROM {$table_name} scan\n            WHERE " . ($by === 'host' ? $wpdb->prepare("blocked_url_host = %s AND preset = ''", $value) : $wpdb->prepare('preset = %s', $value)) . ' ORDER BY blocked_url';
+        $sql = "SELECT id,\n                blocked_url AS blockedUrl,\n                IF(markup_hash <> '' , 1, 0) AS markup,\n                source_url AS sourceUrl,\n                IF({$expressionSql}, 1, 0) AS blocked,\n                created AS lastScanned,\n                tag\n            FROM {$table_name} scan\n            WHERE " . ($by === 'host' ? $wpdb->prepare("blocked_url_host = %s AND preset = ''", $value) : $wpdb->prepare('preset = %s', $value)) . ' ORDER BY blocked_url';
         $rows = $wpdb->get_results($sql, ARRAY_A);
         // phpcs:enable WordPress.DB.PreparedSQL
         // Collect markup ids so we can run the content blocker on the HTML
@@ -282,7 +247,7 @@ class Query
         foreach ($rows as &$row) {
             $id = \intval($row['id']);
             // Cast result
-            $row = ['id' => $id, 'blockedUrl' => $row['blockedUrl'], 'markup' => \intval($row['markup']) > 0, 'sourceUrl' => $row['sourceUrl'], 'blocked' => \intval($row['blocked']) > 0, 'ignored' => \intval($row['ignored']) > 0, 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false), 'tag' => $row['tag']];
+            $row = ['id' => $id, 'blockedUrl' => $row['blockedUrl'], 'markup' => \intval($row['markup']) > 0, 'sourceUrl' => $row['sourceUrl'], 'blocked' => \intval($row['blocked']) > 0, 'lastScanned' => \mysql2date('c', $row['lastScanned'], \false), 'tag' => $row['tag']];
             $result[] = $row;
             if ($row['markup'] && !$row['blocked'] && (empty($row['blockedUrl']) || \in_array($row['tag'], ['link'], \true))) {
                 $checkMarkup[] = $row['id'];

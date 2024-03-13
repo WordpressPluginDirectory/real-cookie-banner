@@ -47,6 +47,27 @@ class WpRocketImpl extends AbstractCache
                 });
             }
         }
+        /**
+         * Safelisting a CSS file in WP Rocket's UI: This does not prevent the file from being removed from the HTML. Instead,
+         * it allows the "Remove Unused CSS" feature to add the entire content of the CSS file to the "Used CSS" styles.
+         *
+         * Preventing CSS Removal: The only method to ensure a CSS file is not removed from the HTML is by using a specific
+         * helper plugin called "WP Rocket | Exclude CSS files from Remove Unused CSS". This requires modifying the helper
+         * plugin by specifying the CSS file you wish to exclude.
+         *
+         * Using rocket_rucss_skip_styles_with_attr Filter: This filter instructs WP Rocket to skip adding the content of
+         * specified stylesheets to the "Used CSS", but it does not prevent the stylesheet from being removed from the HTML.
+         *
+         * Effect of Adding skip-rucss to Stylesheets: Adding this attribute does not have the intended effect because it
+         * does not prevent the removal of the stylesheet from the HTML.
+         *
+         * Using rocket_rucss_external_exclusions Filter: To prevent a stylesheet from being removed from the HTML, this filter
+         * should be used alongside rocket_rucss_skip_styles_with_attr. This combination ensures the stylesheet remains in the HTML.
+         */
+        \add_filter('rocket_rucss_external_exclusions', function ($excluded) use($excludeAssets) {
+            $path = $excludeAssets->getAllUrlPath('css');
+            return \array_merge($excluded, $path);
+        });
         // @deprecated Does no longer work as this filter is applied before the `wp_enqueue_script` filter
         // and therefore the handles of the excluded assets are no longer know. We need to use the `skip-rucss`
         // attribute for this now.

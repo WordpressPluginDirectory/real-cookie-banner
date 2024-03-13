@@ -16,7 +16,6 @@ use DevOwl\RealCookieBanner\view\Blocker as BlockerView;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\blockable\BlockerPostType;
 use DevOwl\RealCookieBanner\view\Scanner as ViewScanner;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\Core as RealQueueCore;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\queue\Job;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 use stdClass;
@@ -76,8 +75,6 @@ class Scanner
         // Get Job for this scan process
         $jobId = \intval($_GET[self::QUERY_ARG_JOB_ID] ?? 0);
         $job = $jobId > 0 ? Core::getInstance()->getRealQueue()->getQuery()->fetchById($jobId) : null;
-        // Memorize currently ignored hosts so we can re-ignore them
-        $ignoredHosts = $query->getIgnoredHosts();
         // Memorize all found templates and external URL hosts so we can diff on them
         list($beforeTemplates, $beforeExternalHosts) = $query->getScannedCombinedResults();
         // Delete all known scan-entries for the current URL
@@ -94,7 +91,6 @@ class Scanner
          */
         $contentBlockerScanner = Core::getInstance()->getBlocker()->getHeadlessContentBlocker()->getPluginsByClassName(BlockableScanner::class)[0];
         $contentBlockerScanner->filterFalsePositives();
-        $contentBlockerScanner->applyIgnoreByHosts($ignoredHosts);
         $scanEntries = $contentBlockerScanner->flushResults();
         // Persist scan entries to database but only when the current URL is not a `/wp-admin` URL.
         // When can this happen? This can happen, when a Custom Post Type is configured `public`

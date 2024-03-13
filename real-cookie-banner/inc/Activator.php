@@ -238,7 +238,7 @@ class Activator
         $table_name = $this->getTableName(Persist::TABLE_NAME);
         $max_index_length_site_entry = $max_index_length - (32 + 32 + 20 + 32);
         // subtract length of other varchar fields
-        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            preset varchar(200) NOT NULL,\n            blocked_url text,\n            blocked_url_host tinytext,\n            blocked_url_hash char(32) NOT NULL,\n            markup_hash char(32),\n            tag varchar(20) NOT NULL,\n            post_id bigint(20),\n            source_url tinytext NOT NULL,\n            source_url_hash char(32) NOT NULL,\n            ignored tinyint(1) NOT NULL,\n            created datetime NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `site_entry` (`preset`({$max_index_length_site_entry}), `blocked_url_hash`, `source_url_hash`, `tag`, `markup_hash`)\n        ) {$charset_collate};";
+        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            preset varchar(200) NOT NULL,\n            blocked_url text,\n            blocked_url_host tinytext,\n            blocked_url_hash char(32) NOT NULL,\n            markup_hash char(32),\n            tag varchar(20) NOT NULL,\n            post_id bigint(20),\n            source_url tinytext NOT NULL,\n            source_url_hash char(32) NOT NULL,\n            created datetime NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `site_entry` (`preset`({$max_index_length_site_entry}), `blocked_url_hash`, `source_url_hash`, `tag`, `markup_hash`)\n        ) {$charset_collate};";
         \dbDelta($sql);
         if ($errorlevel) {
             $wpdb->print_error();

@@ -7,6 +7,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
+use DevOwl\RealCookieBanner\scanner\Persist;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Cookie;
@@ -45,7 +46,8 @@ class Notices
     const TCF_TOO_MUCH_VENDORS = 30;
     const CHECKLIST_PREFIX = 'checklist-';
     const MODAL_HINT_PREFIX = 'modal-hint-';
-    const SCANNER_IGNORE_ADMIN_BAR_PREFIX = 'scanner-ignore-admin-bar-';
+    const SCANNER_IGNORED_TEMPALTES = 'scanner-ignored-templates';
+    const SCANNER_IGNORED_EXTERNAL_HOSTS = 'scanner-ignored-hosts';
     const DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-upgrade-notice';
     const DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG = 'rcb-dismiss-successor-notice';
     const DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES = 'rcb-dismiss-gcm-no-consent-types';
@@ -86,6 +88,23 @@ class Notices
             }
             \delete_option($optionName);
             return $result;
+        })->registerMigrationForKey(self::SCANNER_IGNORED_EXTERNAL_HOSTS, function () {
+            global $wpdb;
+            $table_name = $this->getTableName(Persist::TABLE_NAME);
+            // phpcs:disable WordPress.DB.PreparedSQL
+            $existingColumns = $wpdb->get_results("SHOW COLUMNS FROM {$table_name}", ARRAY_A);
+            // phpcs:enable WordPress.DB.PreparedSQL
+            $ignoredExternalHosts = [];
+            // This column is only available in older versions of Real Cookie Banner
+            foreach ($existingColumns as $existingColumn) {
+                if (\in_array(\strtolower($existingColumn['Field']), ['ignored'], \true)) {
+                    // phpcs:disable WordPress.DB.PreparedSQL
+                    $ignoredExternalHosts = $wpdb->get_col("SELECT DISTINCT(blocked_url_host) FROM {$table_name} WHERE ignored = 1 AND preset = ''");
+                    // phpcs:enable WordPress.DB.PreparedSQL
+                    break;
+                }
+            }
+            return $ignoredExternalHosts;
         })->registerMigration(function ($result) {
             global $wpdb;
             $table_name = $wpdb->options;
@@ -105,14 +124,6 @@ class Notices
             $modalHints = \json_decode(\get_option($optionName, '[]'), ARRAY_A);
             foreach ($modalHints as $modalHint) {
                 $result[self::MODAL_HINT_PREFIX . $modalHint] = \true;
-            }
-            \delete_option($optionName);
-            return $result;
-        })->registerMigration(function ($result) {
-            $optionName = RCB_OPT_PREFIX . '-scanner-notice-dismissed';
-            $scannerIgnoreAdminBar = \get_option($optionName, []);
-            foreach ($scannerIgnoreAdminBar as $service) {
-                $result[self::SCANNER_IGNORE_ADMIN_BAR_PREFIX . $service] = \true;
             }
             \delete_option($optionName);
             return $result;
@@ -609,6 +620,34 @@ class Notices
         if ($this->isPro() && TCF::getInstance()->isActive() && $this->getStates()->get(self::NOTICE_TCF_TOO_MUCH_VENDORS, \false) && TcfVendorConfiguration::getInstance()->getAllCount() > self::TCF_TOO_MUCH_VENDORS) {
             echo \sprintf('<div class="notice notice-warning" style="position:relative"><p>%s &bull; <a href="%s">%s</a></p>%s</div>', \__('Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don\'t use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!', RCB_TD), Core::getInstance()->getConfigPage()->getUrl() . '#/cookies/tcf-vendors', \__('Configure TCF vendors', RCB_TD), \sprintf('<button type="button" class="notice-dismiss" onClick="%s"></button>', \esc_js($this->getStates()->noticeDismissOnClickHandler(self::NOTICE_TCF_TOO_MUCH_VENDORS, 'false'))));
         }
+    }
+    /**
+     * Set a scan result as ignored/unignored.
+     *
+     * @param string $type Can be `template` or `host`
+     * @param string $value
+     * @param boolean $state
+     */
+    public function setScannerIgnored($type, $value, $state)
+    {
+        $useKey = $type === 'template' ? self::SCANNER_IGNORED_TEMPALTES : self::SCANNER_IGNORED_EXTERNAL_HOSTS;
+        $ignored = $this->getStates()->get($useKey, []);
+        if ($state) {
+            $ignored[] = $value;
+        } else {
+            $searchIdx = \array_search($value, $ignored, \true);
+            if ($searchIdx !== \false) {
+                unset($ignored[$searchIdx]);
+            }
+        }
+        return $this->getStates()->set($useKey, \array_values(\array_unique($ignored)));
+    }
+    /**
+     * Get a list of ignored scanner results mapped by template and external host.
+     */
+    public function getScannerIgnored()
+    {
+        return ['templates' => $this->getStates()->get(self::SCANNER_IGNORED_TEMPALTES, []), 'hosts' => $this->getStates()->get(self::SCANNER_IGNORED_EXTERNAL_HOSTS, [])];
     }
     /**
      * Set checklist item as open/closed.

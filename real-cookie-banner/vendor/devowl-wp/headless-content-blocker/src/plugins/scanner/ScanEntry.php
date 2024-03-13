@@ -92,12 +92,6 @@ class ScanEntry
      */
     public $source_url_hash;
     /**
-     * Got his entry ignored?
-     *
-     * @var boolean
-     */
-    public $ignored;
-    /**
      * Created time (ISO).
      *
      * @var string

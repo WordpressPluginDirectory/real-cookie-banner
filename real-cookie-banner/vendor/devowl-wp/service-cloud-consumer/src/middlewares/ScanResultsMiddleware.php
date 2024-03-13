@@ -2,7 +2,6 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares;
 
-use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 /**
  * Allows to read scan results for a given service and blocker template.
  * @internal
@@ -24,7 +23,9 @@ class ScanResultsMiddleware extends AbstractTemplateMiddleware
     {
         $variableResolver = $this->getVariableResolver();
         $scanResults = $variableResolver->resolveDefault('serviceScan', []);
+        $scanIgnored = $variableResolver->resolveDefault('serviceScanIgnored', []);
         $templateScanResult = $scanResults[$template->identifier] ?? null;
         $template->consumerData['scan'] = \is_array($templateScanResult) ? $templateScanResult : \false;
+        $template->consumerData['isIgnored'] = \in_array($template->identifier, $scanIgnored, \true);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.11.13",
+    "version": "1.11.14",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -103,8 +103,8 @@
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.12",
         "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/utils": "^1.18.1",
-        "@devowl-wp/webpack-config": "^0.2.28",
+        "@devowl-wp/utils": "^1.18.2",
+        "@devowl-wp/webpack-config": "^0.2.29",
         "@types/jest": "~29.5.5",
         "@types/jquery": "~3.5.16",
         "@types/react": "~16.14.54",

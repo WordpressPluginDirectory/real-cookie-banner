@@ -40,6 +40,7 @@ class TemplatesPluginIntegrations
     const OPTION_NAME_EXACTMETRICS_SITE_PROFILE = 'exactmetrics_site_profile';
     const OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE = 'monsterinsights_site_profile';
     const OPTION_NAME_GA_GOOGLE_ANALYTICS = 'gap_options';
+    const OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO = 'gapro_configure';
     const OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS = 'woocommerce_google_analytics_settings';
     const OPTION_NAME_WP_PIWIK = 'wp-piwik_global-track_mode';
     const OPTION_NAME_MATOMO_PLUGIN = 'matomo-global-option';
@@ -52,7 +53,7 @@ class TemplatesPluginIntegrations
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
-    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS];
+    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS];
     const INVALIDATE_WHEN_SITE_OPTION_CHANGES = [self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL];
     /**
      * Singleton instance.
@@ -251,6 +252,11 @@ class TemplatesPluginIntegrations
             case self::SLUG_MONSTERINSIGHTS_FREE:
                 return \function_exists('monsterinsights_get_ua') && !empty(\monsterinsights_get_ua()) || \function_exists('monsterinsights_get_v4_id') && !empty(\monsterinsights_get_v4_id());
             case self::SLUG_GA_GOOGLE_ANALYTICS_PRO:
+                if (!\function_exists('ga_google_analytics_pro_options')) {
+                    return \false;
+                }
+                $option = \ga_google_analytics_pro_options();
+                return \is_array($option) && isset($option['gapro_id']) && !empty($option['gapro_id']);
             case self::SLUG_GA_GOOGLE_ANALYTICS_FREE:
                 if (!\function_exists('ga_google_analytics_options')) {
                     return \false;

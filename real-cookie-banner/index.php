@@ -8,7 +8,7 @@
  * Description:     Obtain GDPR (DSGVO) and ePrivacy (EU cookie law) compliant opt-in consent. Find cookies and fill all legal information in your cookie banner. More than just a cookie notice!
  * Author:          devowl.io
  * Author URI:      https://devowl.io
- * Version:                                                             4.5.3
+ * Version:                                                               4.6.0
  * Text Domain:     real-cookie-banner
  * Domain Path:     /languages
  */

@@ -50,6 +50,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\PoweredCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/PoweredCacheImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\RaidboxesImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/RaidboxesImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SGOptimizeImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/SGOptimizeImpl.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SwiftPerformanceAiCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/SwiftPerformanceAiCacheImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\SwiftPerformanceCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/SwiftPerformanceCacheImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\ThemifyImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/ThemifyImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\W3TotalCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/W3TotalCacheImpl.php',

@@ -138,8 +138,11 @@ abstract class AbstractTemplate
      * isRecommended            = boolean
      * -- Is this template recommended within this consumer environment (e.g. Cloudflare detected).
      *
-     * scan                     = { foundCount: number; foundOnSitesCount: number; ignored: boolean; lastScanned?: string; }
+     * scan                     = { foundCount: number; foundOnSitesCount: number; lastScanned?: string; }
      * -- Scan results for a given template by identifier.
+     *
+     * isIgnored                = boolean
+     * -- Is this template ignored within this consumer environment (e.g. ignored in scanner results).
      *
      * successorOf              = Array<{ identifier: string; id: int; }>
      * -- If a template is a successor to another template, this array holds infos about the ID of the record within the consumer environment using this template

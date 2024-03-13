@@ -41,7 +41,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\tcf\Tcf
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
-use DevOwl\RealCookieBanner\lite\view\TcfBanner;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
@@ -216,6 +215,9 @@ class Plugin extends AbstractPlugin
             'SEOPRESS_DATA',
             // [Plugin Comp] https://codecanyon.net/item/superfly-responsive-wordpress-menu-plugin/8012790
             'SFM_template',
+            // [Plugin Comp] Surecart
+            '/window\\.surecartComponents\\s*=/m',
+            '/window\\.SureCartAffiliatesConfig\\s*=/m',
         ]);
         $cb->setInlineStyleDummyUrlPath(\plugins_url('public/images/', RCB_FILE));
         /**
@@ -261,6 +263,8 @@ class Plugin extends AbstractPlugin
         $removeAlwaysCssClasses->addClassNames([
             // [Plugin Comp] https://wpbeaveraddons.com/demo/video/
             'pp-video-iframe',
+            // [Plugin Comp] Bricks Builder
+            'bricks-lazy-hidden',
         ]);
         $cb->addPlugin(CustomElementBlocker::class);
         $cb->addPlugin(ReattachDom::class);

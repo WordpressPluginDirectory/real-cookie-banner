@@ -39,6 +39,8 @@ class Blocker
         'ast-oembed-container' => 1,
         // [Plugin Comp] WP Bakery
         'wpb_video_wrapper' => 1,
+        // [Plugin Comp] GoodLayers page builder
+        'gdlr-core-pbf-background-video' => '.gdlr-core-pbf-background-wrap',
     ];
     /**
      * Before trying to create a visual content blocker, check if the node is inside a given container and

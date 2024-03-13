@@ -151,7 +151,7 @@ class Language
         $instance = new self();
         $instance->setName($data['name']);
         $instance->setIsCurrent($data['current']);
-        $instance->setFlag($data['flag']);
+        $instance->setFlag($data['flag'] ?? '');
         $instance->setUrl($data['url']);
         $instance->setLocale($data['locale']);
         return $instance;

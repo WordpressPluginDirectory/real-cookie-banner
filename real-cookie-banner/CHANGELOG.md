@@ -3,6 +3,136 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.6.0 (2024-03-13)
+
+
+### Bug Fixes
+
+* allow also to ignore/unignore service templates in scanner results (CU-31mh4np)
+* compatibility with AppThemes Vantage and Google Maps
+* compatibility with Bricks Builder and lazy loaded iframes (CU-8693z2tw6)
+* compatibility with GoodLayers page builder and unblocking background videos (CU-8693wxcad)
+* compatibility with latest GA Google Analytics PRO version (CU-86941x3bv)
+* compatibility with SureCart (CU-861mwehmt)
+* deprecated:explode(): Passing null to parameter [#2](https://git.devowl.io/devowlio/devowl-wp/issues/2) () of type string is deprecated
+
+
+### Features
+
+* introduce a new customizer option to define a maximum height for the cookie banner (CU-86940n0a0)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.17.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Features
+
+* support Swift Performance AI (CU-8693xe6a6)
+
+
+##### Performance
+
+* avoid that the cookie banner gets the LCP when WP Rocket is active (CU-86939bd3z)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.4</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* undefined array key flag PHP warning</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.6</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* allow also to ignore/unignore service templates in scanner results (CU-31mh4np)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.8</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* allow to avoid visual content blocker deduplication through custom class rcb-avoid-deduplication on parent element (CU-86940a5nt)
+* compatibility with GoodLayers page builder and unblocking background videos (CU-8693wxcad)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.11.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* show service group with partial icon when a service with opt-out is configure (CU-86941b3h8)
+
+
+##### Features
+
+* introduce a new customizer option to define a maximum height for the cookie banner (CU-86940n0a0)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.3</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* allow also to ignore/unignore service templates in scanner results (CU-31mh4np)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.5.2</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* allow also to ignore/unignore service templates in scanner results (CU-31mh4np)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.5.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Features
+
+* introduce a new customizer option to define a maximum height for the cookie banner (CU-86940n0a0)
+
+
+##### Styling
+
+* break all links when viewport gets too small on mobile in second view of cookie banner</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 0.3.0</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Features
+
+* introduce a new customizer option to define a maximum height for the cookie banner (CU-86940n0a0)</details>
+
+
+
+
+
+## 4.5.4 (2024-03-04) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.29</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Bug Fixes
+
+* do not index admin UI in search engines (CU-8693yzxhv)</details>
+
+
+
+
+
 ## 4.5.3 (2024-02-29)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.

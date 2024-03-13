@@ -50,6 +50,7 @@ class RevisionBackwardsCompatibility
         $this->migration_866awy2fr();
         $this->migration_apv5uu();
         $this->migration_8693n1cc5();
+        $this->migration_86940n0a0();
         return $this->revision;
     }
     /**
@@ -470,6 +471,18 @@ class RevisionBackwardsCompatibility
             $frontend = Core::getInstance()->getCookieConsentManagement()->getFrontend();
             $lazyLoadedData = $frontend->prepareLazyData($this->revision);
             $this->revision['lazyLoadedDataForSecondView'] = $lazyLoadedData;
+        }
+    }
+    /**
+     * Disable maximum height customize setting for the cookie banner.
+     *
+     * @see https://app.clickup.com/t/86940n0a0
+     */
+    public function migration_86940n0a0()
+    {
+        if ($this->independent && !isset($this->revision['banner']['customizeValuesBanner']['layout']['maxHeightEnabled'])) {
+            $this->revision['banner']['customizeValuesBanner']['layout']['maxHeightEnabled'] = \false;
+            $this->revision['banner']['customizeValuesBanner']['layout']['maxHeight'] = 700;
         }
     }
 }

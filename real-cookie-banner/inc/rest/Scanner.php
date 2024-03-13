@@ -6,6 +6,7 @@ use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\scanner\AutomaticScanStarter;
+use DevOwl\RealCookieBanner\scanner\Query;
 use DevOwl\RealCookieBanner\view\Scanner as ViewScanner;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use WP_Error;
@@ -40,7 +41,7 @@ class Scanner
         \register_rest_route($namespace, '/scanner/result/externals', ['methods' => 'GET', 'callback' => [$this, 'routeResultExternalUrls'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/scanner/result/externals/host/(?P<host>[a-zA-Z0-9\\._-]+)', ['methods' => 'GET', 'callback' => [$this, 'routeResultAllExternalUrlsByHost'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/scanner/result/externals/template/(?P<template>[a-zA-Z0-9_-]+)', ['methods' => 'GET', 'callback' => [$this, 'routeResultAllExternalUrlsByTemplate'], 'permission_callback' => [$this, 'permission_callback']]);
-        \register_rest_route($namespace, '/scanner/result/externals/(?P<host>[a-zA-Z0-9\\._-]+)', ['methods' => 'PUT', 'callback' => [$this, 'routeResultExternalUrlPatch'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['ignored' => ['type' => 'boolean']]]);
+        \register_rest_route($namespace, '/scanner/result/ignore', ['methods' => 'POST', 'callback' => [$this, 'routeResultIgnorePost'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['type' => ['type' => 'string', 'enum' => ['template', 'host'], 'required' => \true], 'value' => ['type' => 'string', 'required' => \true], 'ignored' => ['type' => 'boolean', 'required' => \true]]]);
         \register_rest_route($namespace, '/scanner/result/markup/(?P<id>\\d+)', ['methods' => 'GET', 'callback' => [$this, 'routeResultMarkupById'], 'permission_callback' => [$this, 'permission_callback']]);
     }
     /**
@@ -147,25 +148,24 @@ class Scanner
      *
      * @param WP_REST_Request $request
      *
-     * @api {put} /real-cookie-banner/v1/scanner/result/externals/:host Update an external URL host
+     * @api {put} /real-cookie-banner/v1/scanner/result/ignore Set a template or external host as ignored or unignored
      * @apiHeader {string} X-WP-Nonce
-     * @apiParam {string} host Replace dots with underscores as some security plugins do not allow hosts in URL path
-     * @apiParam {boolean} [ignored]
-     * @apiName ExternalUrlIgnore
+     * @apiParam {string} type Can be `template` or `host`
+     * @apiParam {string} value The host or template identifier
+     * @apiParam {boolean} ignored
+     * @apiName ScanResultIgnore
      * @apiGroup Scanner
      * @apiVersion 1.0.0
      * @apiPermission manage_options
      */
-    public function routeResultExternalUrlPatch($request)
+    public function routeResultIgnorePost($request)
     {
+        $type = $request->get_param('type');
+        $value = $request->get_param('value');
         $ignored = $request->get_param('ignored');
-        $host = \str_replace('_', '.', $request->get_param('host'));
-        $query = Core::getInstance()->getScanner()->getQuery();
-        $result = [];
-        if ($ignored !== null) {
-            $result['ignored'] = $query->ignoreBlockedUrlHosts([$host], $ignored);
-        }
-        return new WP_REST_Response((object) $result);
+        \delete_transient(ViewScanner::TRANSIENT_SERVICES_FOR_NOTICE);
+        \delete_transient(Query::TRANSIENT_SCANNED_EXTERNAL_URLS);
+        return new WP_REST_Response(['updated' => Core::getInstance()->getNotices()->setScannerIgnored($type, $value, $ignored)]);
     }
     /**
      * See API docs.

@@ -79,7 +79,7 @@ class Persist
             $entry->calculateFields();
             // Generate `VALUES` SQL
             // phpcs:disable WordPress.DB.PreparedSQL
-            $rows[] = \str_ireplace(["'NULL'", '= NULL'], ['NULL', 'IS NULL'], $wpdb->prepare('%s, %s, %s, %s, %s, %s, %d, %s, %s, %d, %s', $entry->template, $entry->blocked_url ?? 'NULL', $entry->blocked_url_host ?? 'NULL', $entry->blocked_url_hash, $entry->markup === null ? '' : $entry->markup->getId(), $entry->tag, $entry->post_id !== \false ? $post_id : 'NULL', $entry->source_url, $entry->source_url_hash, $entry->ignored ? 1 : 0, \current_time('mysql')));
+            $rows[] = \str_ireplace(["'NULL'", '= NULL'], ['NULL', 'IS NULL'], $wpdb->prepare('%s, %s, %s, %s, %s, %s, %d, %s, %s, %s', $entry->template, $entry->blocked_url ?? 'NULL', $entry->blocked_url_host ?? 'NULL', $entry->blocked_url_hash, $entry->markup === null ? '' : $entry->markup->getId(), $entry->tag, $entry->post_id !== \false ? $post_id : 'NULL', $entry->source_url, $entry->source_url_hash, \current_time('mysql')));
             // phpcs:enable WordPress.DB.PreparedSQL
         }
         // Allow to update fields if already exists
@@ -90,7 +90,7 @@ class Persist
         // Chunk to boost performance
         $chunks = \array_chunk($rows, 150);
         foreach ($chunks as $sqlInsert) {
-            $sql = "INSERT INTO {$table_name}\n                    (`preset`, `blocked_url`, `blocked_url_host`, `blocked_url_hash`, `markup_hash`, `tag`, `post_id`, `source_url`, `source_url_hash`, `ignored`, `created`)\n                    VALUES (" . \implode('),(', $sqlInsert) . ')
+            $sql = "INSERT INTO {$table_name}\n                    (`preset`, `blocked_url`, `blocked_url_host`, `blocked_url_hash`, `markup_hash`, `tag`, `post_id`, `source_url`, `source_url_hash`, `created`)\n                    VALUES (" . \implode('),(', $sqlInsert) . ')
                     ON DUPLICATE KEY UPDATE ' . \join(', ', $overwriteSql);
             // phpcs:disable WordPress.DB.PreparedSQL
             $wpdb->query($sql);

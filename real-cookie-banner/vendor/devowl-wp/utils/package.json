@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.18.1",
+    "version": "1.18.2",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",
@@ -112,7 +112,7 @@
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.12",
         "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/webpack-config": "^0.2.28",
+        "@devowl-wp/webpack-config": "^0.2.29",
         "@types/jest": "~29.5.5",
         "@types/jquery": "~3.5.16",
         "@types/json-form-data": "^1.7.2",

@@ -49,7 +49,8 @@ use Exception;
  * service.consumer   = * Service cloud consumer for service templates
  * tier               = * "free" | "pro"
  * manager            = * "none" | "googleTagManager" | "googleTagManagerWithGcm" | "matomoTagManager"
- * serviceScan        = Record<string (identifier), { foundCount: number; foundOnSitesCount: number; ignored: boolean; lastScanned: string; }>;
+ * serviceScan        = Record<string (identifier), { foundCount: number; foundOnSitesCount: number; lastScanned: string; }>;
+ * serviceScanIgnored = string[]
  * isTcfActive        = boolean
  * ```
  *

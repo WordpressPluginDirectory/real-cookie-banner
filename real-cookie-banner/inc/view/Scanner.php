@@ -4,7 +4,6 @@ namespace DevOwl\RealCookieBanner\view;
 
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\scanner\Query;
 use DevOwl\RealCookieBanner\view\checklist\Scanner as ChecklistScanner;
 use WP_Admin_Bar;
 // @codeCoverageIgnoreStart
@@ -28,7 +27,7 @@ class Scanner
      */
     private function __construct()
     {
-        $this->probablyDismiss();
+        // Silence is golden.
     }
     /**
      * Show a "Show banner again" button in the admin toolbar in frontend.
@@ -59,7 +58,7 @@ class Scanner
         ), 'href' => $scannerUrl, 'meta' => ['class' => 'menupop', 'html' => \sprintf('<div class="ab-sub-wrapper">
     <style>
         #wp-admin-bar-%1$s,
-        #wp-admin-bar-%7$s {
+        #wp-admin-bar-%5$s {
             background: #A67F2A !important;
         }
 
@@ -67,11 +66,11 @@ class Scanner
             color: white !important;
         }
 
-        #wp-admin-bar-%7$s > .ab-item > .custom-icon:nth-child(1) {
+        #wp-admin-bar-%5$s > .ab-item > .custom-icon:nth-child(1) {
             display: none !important;
         }
 
-        #wp-admin-bar-%7$s > .ab-item > .custom-icon:nth-child(2) {
+        #wp-admin-bar-%5$s > .ab-item > .custom-icon:nth-child(2) {
             display: inline-block !important;
         }
 
@@ -105,13 +104,10 @@ class Scanner
     </ul>
     <ul class="ab-sub-secondary ab-submenu">
         <li>
-            <a class="ab-item" href="%5$s"><span class="wp-exclude-emoji">&#10140</span> %3$s</a>
-        </li>
-        <li>
-            <a class="ab-item" href="%6$s"><span class="wp-exclude-emoji">&#x2715;</span> %4$s</a>
+            <a class="ab-item" href="%4$s"><span class="wp-exclude-emoji">&#10140</span> %3$s</a>
         </li>
     </ul>
-</div>', self::ACTION_SCANNER_FOUND_SERVICES, $this->generateNoticeTextFromServices($services, $countAll), \__('Take action now', RCB_TD), \__('Ignore hint', RCB_TD), $scannerUrl, \esc_url(\add_query_arg(self::QUERY_ARG_DISMISS, 1)), \DevOwl\RealCookieBanner\view\ConfigPage::ADMIN_BAR_TOP_LEVEL_NODE_ID)]]);
+</div>', self::ACTION_SCANNER_FOUND_SERVICES, $this->generateNoticeTextFromServices($services, $countAll), \__('Review', RCB_TD), $scannerUrl, \DevOwl\RealCookieBanner\view\ConfigPage::ADMIN_BAR_TOP_LEVEL_NODE_ID)]]);
     }
     /**
      * Generate the notice text from services.
@@ -135,21 +131,6 @@ class Scanner
         return $text;
     }
     /**
-     * Check if the query argument isset and dismiss the notice.
-     */
-    protected function probablyDismiss()
-    {
-        if (\did_action('init') && isset($_GET[self::QUERY_ARG_DISMISS])) {
-            foreach ($this->getServicesForNotice()[2] as $identifier) {
-                Core::getInstance()->getNotices()->getStates()->set(\DevOwl\RealCookieBanner\view\Notices::SCANNER_IGNORE_ADMIN_BAR_PREFIX . $identifier, \true);
-            }
-            \delete_transient(\DevOwl\RealCookieBanner\view\Scanner::TRANSIENT_SERVICES_FOR_NOTICE);
-            \delete_transient(Query::TRANSIENT_SCANNED_EXTERNAL_URLS);
-            \wp_safe_redirect(\esc_url_raw(\remove_query_arg(self::QUERY_ARG_DISMISS)));
-            exit;
-        }
-    }
-    /**
      * Get a list of found services + external URLs which should be listed in the admin notice.
      *
      * Attention: This query is cached to a transient as it is very expensive! Use
@@ -165,13 +146,12 @@ class Scanner
             return $value;
         }
         $result = [];
-        $dismissedItems = \array_keys(Core::getInstance()->getNotices()->getStates()->getKeysStartingWith(\DevOwl\RealCookieBanner\view\Notices::SCANNER_IGNORE_ADMIN_BAR_PREFIX));
         $scannerQuery = Core::getInstance()->getScanner()->getQuery();
         $templates = $scannerQuery->getScannedTemplates('never');
         $externalHosts = $scannerQuery->getScannedExternalUrls();
         // Find not-created templates
         foreach ($templates as $template) {
-            if ($template->consumerData['isCreated'] || \in_array($template->identifier, $dismissedItems, \true)) {
+            if ($template->consumerData['isCreated'] || $template->consumerData['isIgnored']) {
                 continue;
             }
             $scanResult = $template->consumerData['scan'] ?? \false;
@@ -179,7 +159,7 @@ class Scanner
         }
         // Find not-blocked external hosts
         foreach ($externalHosts as $host) {
-            if (!$host['ignored'] && $host['foundCount'] !== $host['blockedCount'] && !\in_array($host['host'], $dismissedItems, \true)) {
+            if (!$host['ignored'] && $host['foundCount'] !== $host['blockedCount']) {
                 $result[] = ['identifier' => $host['host'], 'name' => $host['host'], 'priority' => \strtotime($host['lastScanned'])];
             }
         }

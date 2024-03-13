@@ -215,21 +215,6 @@ class BlockableScanner extends AbstractPlugin
         $this->results = $falsePositivesProcess->process();
     }
     /**
-     * If you are providing a UI scanner, you can apply `ignore` to be `true` again
-     * for already ignored entries.
-     *
-     * @param string[] $hosts
-     */
-    public function applyIgnoreByHosts($hosts)
-    {
-        foreach ($this->results as $entry) {
-            $entry->calculateFields();
-            if (\in_array($entry->blocked_url_host, $hosts, \true)) {
-                $entry->ignored = \true;
-            }
-        }
-    }
-    /**
      * Check if a given URL is not excluded from our hosts.
      *
      * @param string $url

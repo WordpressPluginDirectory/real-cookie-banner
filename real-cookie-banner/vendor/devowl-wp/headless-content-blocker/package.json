@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/headless-content-blocker",
-    "version": "0.16.5",
+    "version": "0.16.6",
     "private": true,
     "description": "Block HTML content by URLs and selector syntax",
     "homepage": "https://devowl.io",

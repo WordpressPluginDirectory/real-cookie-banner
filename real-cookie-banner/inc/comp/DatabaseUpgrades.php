@@ -82,6 +82,7 @@ class DatabaseUpgrades
         $result[] = $this->migration_866awy2fr();
         $result[] = $this->migration_863gt04va();
         $result[] = $this->migration_apv5uu();
+        $result[] = $this->migration_86940n0a0();
         //error_log('---> ' . json_encode($result));
     }
     /**
@@ -555,6 +556,19 @@ class DatabaseUpgrades
             $wpdb->query("INSERT INTO {$wpdb->options} (`option_name`, `option_value`, `autoload`)\n                SELECT\n                    REPLACE(option_name, 'tcf-stacks', 'accordion') AS option_name,\n                    option_value,\n                    'yes' as autoload\n                FROM {$wpdb->options}\n                WHERE option_name LIKE 'rcb-banner-body-design-tcf-stacks%'\n                ON DUPLICATE KEY UPDATE option_value = VALUES(option_value)");
             // phpcs:enable WordPress.DB.PreparedSQL
             \wp_cache_delete('alloptions', 'options');
+            return \true;
+        }
+        return \false;
+    }
+    /**
+     * Disable maximum height customize setting for the cookie banner for already existing users.
+     *
+     * @see https://app.clickup.com/t/86940n0a0
+     */
+    protected function migration_86940n0a0()
+    {
+        if (Core::versionCompareOlderThan($this->installed, '4.5.4', ['4.5.5', '4.6.0'])) {
+            \update_option(BasicLayout::SETTING_MAX_HEIGHT_ENABLED, '');
             return \true;
         }
         return \false;
