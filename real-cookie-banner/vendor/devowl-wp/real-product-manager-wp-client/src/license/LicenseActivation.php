@@ -197,8 +197,7 @@ class LicenseActivation
         }
         $transientValue = $expireOption->get();
         $result = \false;
-        if (!$transientValue) {
-            $expireOption->set('1');
+        if (!$transientValue && $expireOption->set('1')) {
             $result = \true;
             if (\did_action($minimumWpHook)) {
                 \call_user_func($actionOrExpire);

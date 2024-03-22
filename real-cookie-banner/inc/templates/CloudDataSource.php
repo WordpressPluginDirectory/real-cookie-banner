@@ -59,7 +59,8 @@ class CloudDataSource extends AbstractDataSource
      */
     public function shouldFetchFromApi()
     {
-        $shouldFetchFromApi = $this->getConsumer()->getStorage()->shouldInvalidate();
+        // Only load from service cloud when storage is expired, but not when using e.g. `retrieve` with `$forceInvalidate`
+        $shouldFetchFromApi = $this->getConsumer()->isInvalidatedThroughStorage();
         // Check for valid license key
         if ($shouldFetchFromApi && empty($this->getLicense()->getActivation()->getCode())) {
             return \false;

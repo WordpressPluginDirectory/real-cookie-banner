@@ -491,7 +491,7 @@ class TemplateConsumers
                 continue;
             }
             $consumer = $pool->getConsumer(ServiceTemplate::class);
-            if ($consumer !== null && $consumer->getStorage()->shouldInvalidate()) {
+            if ($consumer !== null && $consumer->isInvalidatedThroughStorage()) {
                 $consumer->retrieve();
             }
         }

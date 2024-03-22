@@ -53,20 +53,20 @@ msgstr ""
 msgid "You have already activated a license for this plugin. Please deactivate it first!"
 msgstr ""
 
-#: license/PluginUpdateLicensePool.php:62
+#: license/PluginUpdateLicensePool.php:69
 msgid "You need to provide at least one license!"
 msgstr ""
 
-#: license/PluginUpdateLicensePool.php:85
+#: license/PluginUpdateLicensePool.php:92
 msgid "You must provide an email address and a name if you want to subscribe to the newsletter!"
 msgstr ""
 
-#: license/PluginUpdateLicensePool.php:127
+#: license/PluginUpdateLicensePool.php:134
 msgid "You must have at least one license of a site in use within your multisite."
 msgstr ""
 
 #. translators:
-#: license/PluginUpdateLicensePool.php:163
+#: license/PluginUpdateLicensePool.php:170
 msgid "The license server for checking the license cannot be reached. Please check if you are blocking access to %s e.g. by a firewall."
 msgstr ""
 

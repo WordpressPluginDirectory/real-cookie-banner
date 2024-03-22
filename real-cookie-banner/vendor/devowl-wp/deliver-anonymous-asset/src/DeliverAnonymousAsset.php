@@ -2,6 +2,8 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset;
 
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
+use WP_Filesystem_Direct;
 use WP_Scripts;
 /**
  * Deliver anonymous assets through `wp-content/uploads`.
@@ -109,6 +111,15 @@ class DeliverAnonymousAsset
             // The file does not exist, perhaps it was not part of the passed `$folder` in `AnnonymousAssetBulder` constructor?
             // This could happen for e.g. libraries in `public/lib/`
             \file_put_contents($contentPath, Utils::readFileAndCorrectSourceMap($this->getFile()));
+            UtilsUtils::runDirectFilesystem(function ($fs) use($contentPath) {
+                /**
+                 * WP_Filesystem_Direct.
+                 *
+                 *  @var WP_Filesystem_Direct
+                 */
+                $fs = $fs;
+                $fs->chmod($contentPath, \constant('FS_CHMOD_FILE'));
+            });
             // ...or switching from free version to PRO version
             $this->getBuilder()->ensureAnonymousFolder(\false);
         }

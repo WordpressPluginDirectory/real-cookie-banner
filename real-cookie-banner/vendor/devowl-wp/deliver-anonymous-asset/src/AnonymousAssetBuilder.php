@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset;
 
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Activator;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
+use WP_Filesystem_Direct;
 /**
  * Use this to create your database tables and to create the instances
  * of `DeliverAnonymousAsset`.
@@ -110,7 +111,8 @@ class AnonymousAssetBuilder
             return \false;
         }
         $hash = $this->getHash();
-        $folder = $contentDir . $hash . '/' . \basename($this->getFolder()) . '/';
+        $hashFolderPath = $contentDir . $hash . '/';
+        $folder = $hashFolderPath . \basename($this->getFolder()) . '/';
         if ($skipExistenceCheck === \true) {
             return $folder;
         }
@@ -125,12 +127,34 @@ class AnonymousAssetBuilder
                 require_once ABSPATH . 'wp-admin/includes/file.php';
             }
             // @codeCoverageIgnoreEnd
+            // As we create the folder in `wp-content`, we could have wrong permission for the created
+            // anonymous folder due to `wp_mkdir_p()` as it inherits the `chmod` from the parent folder
+            UtilsUtils::runDirectFilesystem(function ($fs) use($hashFolderPath, $folder) {
+                /**
+                 * WP_Filesystem_Direct.
+                 *
+                 *  @var WP_Filesystem_Direct
+                 */
+                $fs = $fs;
+                $fs->chmod($hashFolderPath, \constant('FS_CHMOD_DIR'));
+                $fs->chmod($folder, \constant('FS_CHMOD_DIR'));
+            });
             $filesToCopy = \array_filter(\list_files($this->getFolder(), 1), function ($file) {
                 $extension = \pathinfo($file, \PATHINFO_EXTENSION);
                 return \in_array($extension, self::COPY_EXTENSIONS, \true);
             });
             foreach ($filesToCopy as $fileToCopy) {
-                \file_put_contents($folder . self::generateFilename($hash, $fileToCopy), Utils::readFileAndCorrectSourceMap($fileToCopy));
+                $filename = $folder . self::generateFilename($hash, $fileToCopy);
+                \file_put_contents($filename, Utils::readFileAndCorrectSourceMap($fileToCopy));
+                UtilsUtils::runDirectFilesystem(function ($fs) use($filename) {
+                    /**
+                     * WP_Filesystem_Direct.
+                     *
+                     *  @var WP_Filesystem_Direct
+                     */
+                    $fs = $fs;
+                    $fs->chmod($filename, \constant('FS_CHMOD_FILE'));
+                });
             }
             return \true;
         }

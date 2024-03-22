@@ -410,6 +410,7 @@ trait Localization
     {
         $downloadErrorTransientName = \sprintf('%s_language_pack_error-%s', $slug, $domain);
         $downloadError = new ExpireOption($downloadErrorTransientName, \true, 60 * 60 * 3);
+        $downloadError->enableAutoload();
         return $downloadError;
     }
     /**

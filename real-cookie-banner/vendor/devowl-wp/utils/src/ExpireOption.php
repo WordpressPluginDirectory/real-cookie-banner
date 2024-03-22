@@ -26,6 +26,7 @@ class ExpireOption
     private $name;
     private $siteWide;
     private $expiration;
+    private $keepValueAfterExpire;
     private $transientMigration;
     /**
      * C'tor.
@@ -33,13 +34,15 @@ class ExpireOption
      * @param string $name Your option name
      * @param boolean $siteWide Use e. g. `get_site_transient` instead of `get_transient`
      * @param int $expiration Time until expiration in seconds
+     * @param boolean $keepValueAfterExpire If you use `get(false, $respectExpire = false)` it is recommend to keep the value in the database after expiration
      * @codeCoverageIgnore
      */
-    public function __construct($name, $siteWide, $expiration)
+    public function __construct($name, $siteWide, $expiration, $keepValueAfterExpire = \false)
     {
         $this->name = $name;
         $this->siteWide = $siteWide;
         $this->expiration = $expiration;
+        $this->keepValueAfterExpire = $keepValueAfterExpire;
         $this->transientMigration = self::TRANSIENT_MIGRATION_DISABLED;
     }
     /**
@@ -56,16 +59,38 @@ class ExpireOption
     {
         if ($respectExpire) {
             // Get time
-            $expire = $this->isSiteWide() ? \get_site_option($this->getExpireName(), 0) : \get_option($this->getExpireName(), 0);
+            $expire = $this->getExpire();
             if (\time() > $expire) {
                 // Fallback to transient migration value
                 if ($expire === 0 && $this->getTransientMigration() !== self::TRANSIENT_MIGRATION_DISABLED) {
                     return $this->handleMigration($fallback);
                 }
+                // Delete value (not the option itself!) from database so the next `->set()` can return `true`
+                // Effective, the value gets empty (empty string).
+                if (!$this->keepValueAfterExpire) {
+                    \update_option($this->getName(), '');
+                }
                 return $fallback;
             }
         }
-        return $this->isSiteWide() ? \get_site_option($this->getName(), $fallback) : \get_option($this->getName(), $fallback);
+        $value = $this->isSiteWide() ? \get_site_option($this->getName(), $fallback) : \get_option($this->getName(), $fallback);
+        return $value === '' || $value === null ? $fallback : $value;
+    }
+    /**
+     * Get the expiration timestamp. Returns `0` if the value is not yet persisted to database.
+     */
+    public function getExpire()
+    {
+        return \intval($this->isSiteWide() ? \get_site_option($this->getExpireName(), 0) : \get_option($this->getExpireName(), 0));
+    }
+    /**
+     * Persist the option to database if not yet available so it gets autoloaded via `wp_load_alloptions()`.
+     */
+    public function enableAutoload()
+    {
+        if ($this->getExpire() === 0) {
+            $this->set('');
+        }
     }
     /**
      * Handle the migration and return the correct value.
@@ -78,7 +103,7 @@ class ExpireOption
         $transientValue = $siteWide ? \get_site_transient($this->getName()) : \get_transient($this->getName());
         if ($transientValue === \false) {
             // Save in database as `NULL` for further autoloading queries
-            $this->set(null);
+            $this->set('');
             return $fallback;
         } else {
             // Re-save in database
@@ -93,7 +118,7 @@ class ExpireOption
     /**
      * Set option value.
      *
-     * @param mixed $value
+     * @param mixed $value Do not pass `null` as `null` is automatically converted to an empty string in `wp_options`
      * @param int $expiration
      * @see https://developer.wordpress.org/reference/functions/set_site_transient/
      * @see https://developer.wordpress.org/reference/functions/set_transient/
@@ -107,8 +132,8 @@ class ExpireOption
             \update_site_option($this->getExpireName(), $expire);
             return \update_site_option($this->getName(), $value);
         } else {
-            \update_option($this->getExpireName(), $expire);
-            return \update_option($this->getName(), $value);
+            \update_option($this->getExpireName(), $expire, \true);
+            return \update_option($this->getName(), $value, \true);
         }
     }
     /**
@@ -166,7 +191,7 @@ class ExpireOption
      */
     public function isSiteWide()
     {
-        return $this->siteWide;
+        return $this->siteWide && \is_multisite();
     }
     /**
      * Get expiration in seconds.
@@ -185,5 +210,15 @@ class ExpireOption
     public function getTransientMigration()
     {
         return $this->transientMigration;
+    }
+    /**
+     * Setter.
+     *
+     * @param boolean $state
+     * @codeCoverageIgnore
+     */
+    public function setKeepValueAfterExpire($state)
+    {
+        $this->keepValueAfterExpire = $state;
     }
 }

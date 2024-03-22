@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",

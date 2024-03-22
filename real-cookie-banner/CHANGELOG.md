@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.6.1 (2024-03-22)
+
+
+### Bug Fixes
+
+* avoid race conditions when contacting our backend servers to avoid triggering rate limit notice (CU-86939q6ce)
+* close cookie banner in multi-tab scenario in all tabs (CU-8693gvgkh)
+* compatibility with WordPress 6.5 (CU-869434yv9)
+* do not allow to block the cookie banner overlay by a rule (CU-86943585g)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.3</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* close cookie banner in multi-tab scenario in all tabs (CU-8693gvgkh)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.69</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Bug Fixes
+
+* correctly set chmod for anti-ad-block files in wp-content folder (CU-8694394ga)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.11.1</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* close cookie banner in multi-tab scenario in all tabs (CU-8693gvgkh)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.15</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* avoid race conditions when contacting our backend servers to avoid triggering rate limit notice (CU-86939q6ce)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.5.3</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* avoid race conditions when contacting our backend servers to avoid triggering rate limit notice (CU-86939q6ce)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.18.3</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* avoid race conditions when contacting our backend servers to avoid triggering rate limit notice (CU-86939q6ce)</details>
+
+
+
+
+
 # 4.6.0 (2024-03-13)
 
 

@@ -23,6 +23,12 @@ trait PluginUpdateLicensePool
      * @var License[]
      */
     private $licenses;
+    /**
+     * License instances cached, can be also partial within a multisite (not all subsites).
+     *
+     * @var License[]
+     */
+    private $licenseCache = [];
     private $suppressGetLicensesWpDie = \false;
     /**
      * License activation client.
@@ -172,7 +178,7 @@ trait PluginUpdateLicensePool
     {
         if (\is_multisite()) {
             $transientName = \sprintf('%s-licensedBlogIds_v2_%s', RPM_WP_CLIENT_OPT_PREFIX, $this->getInitiator()->getPluginSlug());
-            $expireOption = new ExpireOption($transientName, \true, 1 * DAY_IN_SECONDS);
+            $expireOption = new ExpireOption($transientName, \true, 1 * DAY_IN_SECONDS, \true);
             if ($invalidate === 'never') {
                 return $expireOption->get(['_' => []], \false);
             }
@@ -237,7 +243,9 @@ trait PluginUpdateLicensePool
                 if ($licensedBlogIds !== \false && isset($licensedBlogIds[$host])) {
                     $hostBlogId = $licensedBlogIds[$host][0];
                 }
-                $hostLicenses[$host] = new License($this, $host, $hostBlogId);
+                $cacheKey = $host . ':' . $hostBlogId;
+                $hostLicenses[$host] = $this->licenseCache[$cacheKey] ?? new License($this, $host, $hostBlogId);
+                $this->licenseCache[$cacheKey] = $hostLicenses[$host];
             }
             // Create licenses per blog ID and point to hostname-license
             if ($inBlogIds === null) {

@@ -56,6 +56,12 @@ class ServiceCloudConsumer
      */
     private $pools = [];
     /**
+     * See getter.
+     */
+    private $invalidatedThroughStorage = \false;
+    private $invalidatedThroughStorageCurrentTransaction = \false;
+    private $retrievingDataTransactionCount = 0;
+    /**
      * C'tor.
      *
      * @param string $typeClass Should be the class which extends from `AbstractTemplate`
@@ -74,29 +80,48 @@ class ServiceCloudConsumer
      */
     public function retrieve($forceInvalidate = \false)
     {
-        if ($forceInvalidate !== 'never' && ($forceInvalidate || $this->storage->shouldInvalidate())) {
-            // Force usage from data source
-            if (!$this->downloadAndPersistFromDataSource()) {
-                return $this->retrieve('never');
+        ++$this->retrievingDataTransactionCount;
+        try {
+            /**
+             * Only modify this variable when we are in the first `retrieve` transaction, to make
+             * `$this->isInvalidatedThroughStorage()` also work for recursive calls.
+             */
+            $modifyInvalidatedThroughStorage = $this->retrievingDataTransactionCount === 1;
+            if ($modifyInvalidatedThroughStorage) {
+                $this->invalidatedThroughStorage = \false;
             }
-        } elseif (!\is_array($this->templates)) {
-            // No results known yet, get from storage
-            $storageResult = $this->storage->retrieve($forceInvalidate);
-            if ($storageResult === \false) {
-                // The storage does not know anything about templates yet, so usage from data source
-                if ($forceInvalidate !== 'never') {
-                    $this->downloadAndPersistFromDataSource();
+            if ($forceInvalidate !== 'never' && ($forceInvalidate || ($this->invalidatedThroughStorageCurrentTransaction = $this->storage->shouldInvalidate()))) {
+                if ($modifyInvalidatedThroughStorage) {
+                    $this->invalidatedThroughStorage = $this->invalidatedThroughStorageCurrentTransaction;
                 }
-            } else {
-                $this->templates = $this->filterTemplates($storageResult);
+                // Force usage from data source
+                if (!$this->downloadAndPersistFromDataSource()) {
+                    return $this->retrieve('never');
+                }
+            } elseif (!\is_array($this->templates)) {
+                // No results known yet, get from storage
+                $storageResult = $this->storage->retrieve($forceInvalidate);
+                if ($storageResult === \false) {
+                    // The storage does not know anything about templates yet, so usage from data source
+                    if ($forceInvalidate !== 'never') {
+                        $this->downloadAndPersistFromDataSource();
+                    }
+                } else {
+                    $this->templates = $this->filterTemplates($storageResult);
+                }
             }
-        }
-        if (\is_array($this->templates)) {
-            foreach ($this->templates as $template) {
-                $template->retrieved();
+            if (\is_array($this->templates)) {
+                foreach ($this->templates as $template) {
+                    $template->retrieved();
+                }
             }
+            if ($modifyInvalidatedThroughStorage) {
+                $this->invalidatedThroughStorage = \false;
+            }
+            return \is_array($this->templates) ? $this->templates : [];
+        } finally {
+            --$this->retrievingDataTransactionCount;
         }
-        return \is_array($this->templates) ? $this->templates : [];
     }
     /**
      * Get a single template instance by criteria.
@@ -108,31 +133,50 @@ class ServiceCloudConsumer
      */
     public function retrieveBy($field, $value, $forceInvalidate = \false)
     {
-        $result = [];
-        if ($forceInvalidate !== 'never' && ($forceInvalidate || $this->storage->shouldInvalidate())) {
-            // Force usage from data source
-            if (!$this->downloadAndPersistFromDataSource()) {
-                return $this->retrieveBy($field, $value, 'never');
+        ++$this->retrievingDataTransactionCount;
+        try {
+            $result = [];
+            /**
+             * Only modify this variable when we are in the first `retrieve` transaction, to make
+             * `$this->isInvalidatedThroughStorage()` also work for recursive calls.
+             */
+            $modifyInvalidatedThroughStorage = $this->retrievingDataTransactionCount === 1;
+            if ($modifyInvalidatedThroughStorage) {
+                $this->invalidatedThroughStorage = \false;
             }
-            $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
-            $result = $storageResult === \false ? [] : $this->filterTemplates($storageResult);
-        } else {
-            $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
-            if ($storageResult === \false) {
-                // The storage does not know anything about templates yet, so usage from data source
-                if ($forceInvalidate !== 'never') {
-                    $this->downloadAndPersistFromDataSource();
-                    $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
-                    $result = $storageResult === \false ? [] : $this->filterTemplates($storageResult);
+            if ($forceInvalidate !== 'never' && ($forceInvalidate || ($this->invalidatedThroughStorageCurrentTransaction = $this->storage->shouldInvalidate()))) {
+                if ($modifyInvalidatedThroughStorage) {
+                    $this->invalidatedThroughStorage = $this->invalidatedThroughStorageCurrentTransaction;
                 }
+                // Force usage from data source
+                if (!$this->downloadAndPersistFromDataSource()) {
+                    return $this->retrieveBy($field, $value, 'never');
+                }
+                $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
+                $result = $storageResult === \false ? [] : $this->filterTemplates($storageResult);
             } else {
-                $result = $this->filterTemplates($storageResult);
+                $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
+                if ($storageResult === \false) {
+                    // The storage does not know anything about templates yet, so usage from data source
+                    if ($forceInvalidate !== 'never') {
+                        $this->downloadAndPersistFromDataSource();
+                        $storageResult = $this->storage->retrieveBy($field, $value, $forceInvalidate);
+                        $result = $storageResult === \false ? [] : $this->filterTemplates($storageResult);
+                    }
+                } else {
+                    $result = $this->filterTemplates($storageResult);
+                }
             }
+            foreach ($result as $template) {
+                $template->retrieved();
+            }
+            if ($modifyInvalidatedThroughStorage) {
+                $this->invalidatedThroughStorage = \false;
+            }
+            return $result;
+        } finally {
+            --$this->retrievingDataTransactionCount;
         }
-        foreach ($result as $template) {
-            $template->retrieved();
-        }
-        return $result;
     }
     /**
      * Add data source to our consumer.
@@ -401,5 +445,27 @@ class ServiceCloudConsumer
     public function getVariableResolver()
     {
         return $this->variableResolver;
+    }
+    /**
+     * Checks if the current `retrieve()`/`retrieveBy()` statement got invalidated through the storage.
+     * Use this within your middlewares so you can e.g. determine to fetch from an external source or not.
+     *
+     * @param boolean $includePools If you run within a pool, it checks the other service cloud consumers within the pool, too
+     */
+    public function isInvalidatedThroughStorage($includePools = \true)
+    {
+        if ($this->invalidatedThroughStorage) {
+            return \true;
+        }
+        if ($includePools) {
+            foreach ($this->getPools() as $pool) {
+                foreach ($pool->getConsumers() as $consumer) {
+                    if ($consumer->isInvalidatedThroughStorage(\false)) {
+                        return \true;
+                    }
+                }
+            }
+        }
+        return \false;
     }
 }

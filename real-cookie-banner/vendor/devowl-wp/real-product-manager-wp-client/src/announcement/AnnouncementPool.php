@@ -77,7 +77,7 @@ class AnnouncementPool
     {
         $this->pluginUpdate = $pluginUpdate;
         $this->view = AnnouncementView::instance($this);
-        $this->option = new ExpireOption(self::OPTION_NAME . '_' . $pluginUpdate->getInitiator()->getPluginSlug(), \is_multisite(), self::OPTION_EXPIRE);
+        $this->option = new ExpireOption(self::OPTION_NAME . '_' . $pluginUpdate->getInitiator()->getPluginSlug(), \is_multisite(), self::OPTION_EXPIRE, \true);
         $this->client = ClientAnnouncement::instance($pluginUpdate);
     }
     /**

@@ -87,10 +87,7 @@ class RateLimitNotice
     public function getFailedUrl()
     {
         $option = new ExpireOption(self::NOTICE_ID, \false, 60 * 60 * 3);
-        // Initially set to "" so it gets autoloaded
-        if ($option->get(\false, \false) === '') {
-            $option->set('');
-        }
+        $option->enableAutoload();
         return $option;
     }
     /**

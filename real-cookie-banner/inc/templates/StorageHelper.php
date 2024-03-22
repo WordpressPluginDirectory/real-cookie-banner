@@ -196,7 +196,6 @@ class StorageHelper
             $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE context = %s AND type = %s AND identifier NOT IN (" . \join(',', $persistedIdentifierInSql) . ')', $context, $type));
             // phpcs:enable WordPress.DB.PreparedSQL
         }
-        $this->getExpireOption()->set($this->getCacheInvalidateKey());
         return $inserted;
     }
     /**
@@ -215,7 +214,7 @@ class StorageHelper
     {
         $option = $this->getExpireOption();
         $cache = $option->get();
-        return $cache !== $this->getCacheInvalidateKey();
+        return $cache !== $this->getCacheInvalidateKey() && $option->set($this->getCacheInvalidateKey());
     }
     /**
      * Get type as string from template type class.
