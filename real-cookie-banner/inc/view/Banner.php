@@ -52,14 +52,6 @@ class Banner
      */
     const HTML_ATTRIBUTE_UNIQUE_WRITE_NAME = 'unique-write-name';
     /**
-     * For "Code on page load" we need to ensure no other plugin is lazy loading it. E.g.
-     * WP Rocket transforms inline scripts to `rocketlazyloadscript`.
-     *
-     * `js-extra` is a common string which does caching plugins or lazy loading plugins ignore
-     * as it is similar to the `wp_localize_script` output tag.
-     */
-    const HTML_ATTRIBUTE_SKIP_LAZY_LOADING_PLUGINS = 'data-skip-lazy-load="js-extra"';
-    /**
      * The customize handler
      *
      * @var BannerCustomize
@@ -146,8 +138,7 @@ class Banner
      */
     public function wp_head()
     {
-        $cacheExcludeAttributes = CacheInvalidator::getInstance()->getExcludeHtmlAttributesString();
-        $additionalTags = \sprintf('%s %s', self::HTML_ATTRIBUTE_SKIP_LAZY_LOADING_PLUGINS, $cacheExcludeAttributes);
+        $additionalTags = CacheInvalidator::getInstance()->getExcludeHtmlAttributesString();
         $frontend = Core::getInstance()->getCookieConsentManagement()->getFrontend();
         $output = $frontend->generateCodeOnPageLoad(function ($html, $service) use($additionalTags) {
             return AttributesHelper::skipHtmlTagsInContentBlocker($html, $additionalTags);

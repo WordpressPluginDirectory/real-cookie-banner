@@ -260,7 +260,7 @@ class AnonymousAssetBuilder
     {
         $basename = \basename($originalFilenameOrPath);
         $extension = \pathinfo($basename, \PATHINFO_EXTENSION);
-        return Utils::simpleHash($hash . $basename) . '.' . $extension;
+        return UtilsUtils::simpleHash($hash . $basename) . '.' . $extension;
     }
     /**
      * Hashes got rotated and we can delete old folders from the filesystem.

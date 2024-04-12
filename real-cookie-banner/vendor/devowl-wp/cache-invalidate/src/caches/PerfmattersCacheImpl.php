@@ -36,7 +36,7 @@ class PerfmattersCacheImpl extends AbstractCache
     {
         \add_filter('perfmatters_delay_js_exclusions', function ($excluded) use($excludeAssets) {
             $path = $excludeAssets->getAllUrlPath('js');
-            return \array_merge($excluded, $path, ['data-dont-merge']);
+            return \array_merge($excluded, $path, ['data-skip-lazy-load']);
         });
         \add_filter('perfmatters_rucss_excluded_stylesheets', function ($excluded) use($excludeAssets) {
             $path = $excludeAssets->getAllUrlPath('css');

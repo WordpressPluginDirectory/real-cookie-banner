@@ -62,6 +62,7 @@ class Frontend
             'territorialLegalBasis' => $general->getTerritorialLegalBasis(),
             'setCookiesViaManager' => $general->getSetCookiesViaManager(),
             'isRespectDoNotTrack' => $consent->isRespectDoNotTrack(),
+            'failedConsentDocumentationHandling' => $consent->getFailedConsentDocumentationHandling(),
             'isAcceptAllForBots' => $consent->isAcceptAllForBots(),
             'isDataProcessingInUnsafeCountries' => $consent->isDataProcessingInUnsafeCountries(),
             'dataProcessingInUnsafeCountriesSafeCountries' => $consent->getDataProcessingInUnsafeCountriesSafeCountries(),
@@ -166,12 +167,12 @@ class Frontend
             // Implicit consent for users from third countries which automatically accept all cookies
             $regionGtag = '';
             if ($countryBypass->isActive() && $countryBypass->getType() === AbstractCountryBypass::TYPE_ALL) {
-                $regionGtag = \sprintf("\ngtag('consent', 'default', %s );", \json_encode(\array_merge(\array_fill_keys($consentTypes, $granted), ['region' => \array_values(
+                $regionGtag = \sprintf("\ngtag('consent', 'default', %s );", \json_encode(\array_merge(\array_fill_keys($consentTypes, $granted), ['wait_for_update' => 1000, 'region' => \array_values(
                     // TODO: extract from external package
                     \array_diff(\array_keys(Iso3166OneAlpha2::getCodes()), $countryBypass->getCountries())
                 )])));
             }
-            $output = \sprintf("<script>window.gtag && (()=>{gtag('set', 'url_passthrough', %s);\ngtag('set', 'ads_data_redaction', %s);%s\ngtag('consent', 'default', %s);})()</script>", $gcm->isCollectAdditionalDataViaUrlParameters() ? 'true' : 'false', $gcm->isRedactAdsDataWithoutConsent() ? 'true' : 'false', $regionGtag, \json_encode($defaults));
+            $output = \sprintf("<script>window.gtag && (()=>{gtag('set', 'url_passthrough', %s);\ngtag('set', 'ads_data_redaction', %s);%s\ngtag('consent', 'default', %s);})()</script>", $gcm->isCollectAdditionalDataViaUrlParameters() ? 'true' : 'false', $gcm->isRedactAdsDataWithoutConsent() ? 'true' : 'false', $regionGtag, \json_encode(\array_merge($defaults, ['wait_for_update' => 1000])));
         }
         return $output;
     }

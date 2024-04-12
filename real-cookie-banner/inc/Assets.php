@@ -19,6 +19,7 @@ use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\view\Banner;
 use DevOwl\RealCookieBanner\view\customize\banner\BasicLayout;
 use DevOwl\RealCookieBanner\view\customize\banner\CustomCss;
+use DevOwl\RealCookieBanner\view\customize\banner\StickyLinks;
 use DevOwl\RealCookieBanner\view\customize\banner\Texts;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Core as RpmWpClientCore;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license\License;
@@ -201,7 +202,7 @@ class Assets
         }
         // animate.css (only when animations are enabled)
         $customize = \DevOwl\RealCookieBanner\Core::getInstance()->getBanner()->getCustomize();
-        $hasAnimations = $customize->getSetting(BasicLayout::SETTING_ANIMATION_IN) !== 'none' || $customize->getSetting(BasicLayout::SETTING_ANIMATION_OUT) !== 'none';
+        $hasAnimations = $customize->getSetting(BasicLayout::SETTING_ANIMATION_IN) !== 'none' || $customize->getSetting(BasicLayout::SETTING_ANIMATION_OUT) !== 'none' || $customize->getSetting(StickyLinks::SETTING_ENABLED);
         if (\is_customize_preview() || $hasAnimations) {
             $handleAnimateCss = $this->enqueueLibraryStyle('animate-css', [[$useNonMinifiedSources, 'animate.css/animate.css'], 'animate.css/animate.min.css']);
             $excludeAssets->byHandle('css', $handleAnimateCss);
@@ -334,6 +335,7 @@ class Assets
             'headerTitlePrivacyPolicyHistory' => \_x('History of your privacy settings', 'legal-text', RCB_TD),
             'skipToConsentChoices' => \_x('Skip to consent choices', 'legal-text', RCB_TD),
             'historyLabel' => \_x('Show consent from', 'legal-text', RCB_TD),
+            'historyItemLoadError' => \_x('Reading the consent has failed. Please try again later!', 'legal-text', RCB_TD),
             'historySelectNone' => \_x('Not yet consented to', 'legal-text', RCB_TD),
             Cookie::META_NAME_PROVIDER => \_x('Provider', 'legal-text', RCB_TD),
             Cookie::META_NAME_PROVIDER_CONTACT_PHONE => \_x('Phone', 'legal-text', RCB_TD),

@@ -19,6 +19,7 @@ use DevOwl\RealCookieBanner\view\customize\banner\Texts;
 use DevOwl\RealCookieBanner\view\customize\banner\Mobile;
 use DevOwl\RealCookieBanner\view\customize\banner\individual\SaveButton;
 use DevOwl\RealCookieBanner\view\customize\banner\individual\Texts as IndividualTexts;
+use DevOwl\RealCookieBanner\view\customize\banner\StickyLinks;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\Utils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -69,6 +70,10 @@ class BannerCustomize extends AbstractCustomizePanel
         new LanguageDependingOption($comp, IndividualTexts::SETTING_SHOW_MORE, $adminDefaultTextsBannerIndividual['showMore']);
         new LanguageDependingOption($comp, IndividualTexts::SETTING_HIDE_MORE, $adminDefaultTextsBannerIndividual['hideMore']);
         new LanguageDependingOption($comp, IndividualTexts::SETTING_POSTAMBLE, $adminDefaultTextsBannerIndividual['postamble']);
+        new LanguageDependingOption($comp, Texts::SETTING_STICKY_CHANGE, $adminDefaultTextsBanner['stickyChange']);
+        new LanguageDependingOption($comp, Texts::SETTING_STICKY_HISTORY, $adminDefaultTextsBanner['stickyHistory']);
+        new LanguageDependingOption($comp, Texts::SETTING_STICKY_REVOKE, $adminDefaultTextsBanner['stickyRevoke']);
+        new LanguageDependingOption($comp, Texts::SETTING_STICKY_REVOKE_SUCCESS_MESSAGE, $adminDefaultTextsBanner['stickyRevokeSuccessMessage']);
     }
     // Documented in AbstractCustomizePanel
     public function localizeValues($skipControlClasses = [])
@@ -146,7 +151,7 @@ class BannerCustomize extends AbstractCustomizePanel
     // Documented in AbstractCustomizePanel
     public function resolveSections()
     {
-        return [BasicLayout::SECTION => (new BasicLayout())->args(), Decision::SECTION => (new Decision())->args(), Design::SECTION => (new Design())->args(), HeaderDesign::SECTION => (new HeaderDesign())->args(), BodyDesign::SECTION => (new BodyDesign())->args(), FooterDesign::SECTION => (new FooterDesign())->args(), Texts::SECTION => (new Texts())->args(), Layout::SECTION => (new Layout())->args(), Group::SECTION => (new Group())->args(), SaveButton::SECTION => (new SaveButton())->args(), IndividualTexts::SECTION => (new IndividualTexts())->args(), Mobile::SECTION => (new Mobile())->args(), CustomCss::SECTION => (new CustomCss())->args()];
+        return [BasicLayout::SECTION => (new BasicLayout())->args(), Decision::SECTION => (new Decision())->args(), Design::SECTION => (new Design())->args(), HeaderDesign::SECTION => (new HeaderDesign())->args(), BodyDesign::SECTION => (new BodyDesign())->args(), FooterDesign::SECTION => (new FooterDesign())->args(), Texts::SECTION => (new Texts())->args(), Layout::SECTION => (new Layout())->args(), Group::SECTION => (new Group())->args(), SaveButton::SECTION => (new SaveButton())->args(), IndividualTexts::SECTION => (new IndividualTexts())->args(), Mobile::SECTION => (new Mobile())->args(), StickyLinks::SECTION => (new StickyLinks())->args(), CustomCss::SECTION => (new CustomCss())->args()];
     }
     // Documented in AbstractCustomizePanel
     protected function sectionDefaults()

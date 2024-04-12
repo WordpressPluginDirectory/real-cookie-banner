@@ -24,6 +24,7 @@ class Consent extends AbstractConsent implements IOverrideConsent
     const SETTING_RESPECT_DO_NOT_TRACK = RCB_OPT_PREFIX . '-respect-do-not-track';
     const SETTING_COOKIE_DURATION = RCB_OPT_PREFIX . '-cookie-duration';
     const SETTING_COOKIE_VERSION = RCB_OPT_PREFIX . '-cookie-version';
+    const SETTING_FAILED_CONSENT_DOCUMENTATION_HANDLING = RCB_OPT_PREFIX . '-failed-consent-documentation-handling';
     const SETTING_SAVE_IP = RCB_OPT_PREFIX . '-save-ip';
     const SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES = RCB_OPT_PREFIX . '-data-processing-in-unsafe-countries';
     const SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES = RCB_OPT_PREFIX . '-data-processing-in-unsafe-countries-safe-countries';
@@ -34,6 +35,7 @@ class Consent extends AbstractConsent implements IOverrideConsent
     const DEFAULT_ACCEPT_ALL_FOR_BOTS = \true;
     const DEFAULT_RESPECT_DO_NOT_TRACK = \false;
     const DEFAULT_COOKIE_DURATION = 365;
+    const DEFAULT_FAILED_CONSENT_DOCUMENTATION_HANDLING = self::FAILED_CONSENT_DOCUMENTATION_HANDLING_ESSENTIALS_ONLY;
     const DEFAULT_SAVE_IP = \false;
     const DEFAULT_DATA_PROCESSING_IN_UNSAFE_COUNTRIES = \false;
     const DEFAULT_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES = 'GDPR,ADEQUACY';
@@ -64,6 +66,7 @@ class Consent extends AbstractConsent implements IOverrideConsent
         Utils::enableOptionAutoload(self::SETTING_RESPECT_DO_NOT_TRACK, self::DEFAULT_RESPECT_DO_NOT_TRACK, 'boolval');
         Utils::enableOptionAutoload(self::SETTING_COOKIE_DURATION, self::DEFAULT_COOKIE_DURATION, 'intval');
         Utils::enableOptionAutoload(self::SETTING_COOKIE_VERSION, self::DEFAULT_COOKIE_VERSION, 'intval');
+        Utils::enableOptionAutoload(self::SETTING_FAILED_CONSENT_DOCUMENTATION_HANDLING, self::DEFAULT_FAILED_CONSENT_DOCUMENTATION_HANDLING);
         Utils::enableOptionAutoload(self::SETTING_SAVE_IP, self::DEFAULT_SAVE_IP, 'boolval');
         Utils::enableOptionAutoload(self::SETTING_AGE_NOTICE, self::DEFAULT_AGE_NOTICE, 'boolval');
         Utils::enableOptionAutoload(self::SETTING_AGE_NOTICE_AGE_LIMIT, self::DEFAULT_AGE_NOTICE_AGE_LIMIT);
@@ -80,6 +83,7 @@ class Consent extends AbstractConsent implements IOverrideConsent
         \register_setting(self::OPTION_GROUP, self::SETTING_RESPECT_DO_NOT_TRACK, ['type' => 'boolean', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_COOKIE_DURATION, ['type' => 'number', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_COOKIE_VERSION, ['type' => 'number', 'show_in_rest' => \true]);
+        \register_setting(self::OPTION_GROUP, self::SETTING_FAILED_CONSENT_DOCUMENTATION_HANDLING, ['type' => 'boolean', 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => self::FAILED_CONSENT_DOCUMENTATION_HANDLINGS]]]);
         \register_setting(self::OPTION_GROUP, self::SETTING_SAVE_IP, ['type' => 'boolean', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_AGE_NOTICE, ['type' => 'boolean', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_AGE_NOTICE_AGE_LIMIT, ['type' => 'boolean', 'show_in_rest' => ['schema' => ['type' => 'string', 'enum' => \array_keys(self::AGE_NOTICE_COUNTRY_AGE_MAP)]]]);
@@ -96,6 +100,11 @@ class Consent extends AbstractConsent implements IOverrideConsent
     public function isRespectDoNotTrack()
     {
         return \get_option(self::SETTING_RESPECT_DO_NOT_TRACK);
+    }
+    // Documented in AbstractConsent
+    public function getFailedConsentDocumentationHandling()
+    {
+        return \get_option(self::SETTING_FAILED_CONSENT_DOCUMENTATION_HANDLING);
     }
     // Documented in AbstractConsent
     public function isSaveIpEnabled()

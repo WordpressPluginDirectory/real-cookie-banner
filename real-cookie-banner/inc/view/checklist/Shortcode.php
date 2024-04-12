@@ -2,6 +2,8 @@
 
 namespace DevOwl\RealCookieBanner\view\checklist;
 
+use DevOwl\RealCookieBanner\Core;
+use DevOwl\RealCookieBanner\view\customize\banner\StickyLinks;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -18,7 +20,7 @@ class Shortcode extends \DevOwl\RealCookieBanner\view\checklist\AbstractChecklis
     // Documented in AbstractChecklistItem
     public function isChecked()
     {
-        return $this->getFromOption(self::IDENTIFIER);
+        return $this->getFromOption(self::IDENTIFIER) || Core::getInstance()->getBanner()->getCustomize()->getSetting(StickyLinks::SETTING_ENABLED);
     }
     // Documented in AbstractChecklistItem
     public function toggle($state)

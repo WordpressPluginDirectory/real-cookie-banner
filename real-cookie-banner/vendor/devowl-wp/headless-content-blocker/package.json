@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/headless-content-blocker",
-    "version": "0.16.6",
+    "version": "0.16.8",
     "private": true,
     "description": "Block HTML content by URLs and selector syntax",
     "homepage": "https://devowl.io",
@@ -44,7 +44,7 @@
         "@devowl-wp/node-gitlab-ci": "^0.7.12",
         "@devowl-wp/npm-licenses": "^0.1.13",
         "@devowl-wp/phpcs-config": "^0.1.14",
-        "@devowl-wp/phpunit-config": "^0.1.12",
+        "@devowl-wp/phpunit-config": "^0.1.13",
         "@devowl-wp/ts-config": "^0.1.12",
         "ts-node": "~10.9.1",
         "tslib": "^2.5.0",

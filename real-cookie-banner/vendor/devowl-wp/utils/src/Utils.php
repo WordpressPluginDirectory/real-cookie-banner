@@ -322,4 +322,65 @@ class Utils
             }
         }
     }
+    /**
+     * This hash function is used to generate a simple hash from a given string. This is very simple
+     * so it can be used in frontend (e.g. Webpack chunk loading).
+     *
+     * @param string $s
+     */
+    public static function simpleHash($s)
+    {
+        $a = 0;
+        foreach (\str_split($s) as $char) {
+            $charCode = \ord($char);
+            // Force PHP to perform integer arithmetic by using bitwise operations.
+            // Use & to ensure the result stays within PHP's integer size.
+            $a = ($a << 5 & \PHP_INT_MAX) - $a + $charCode;
+            // Use a bitwise AND with a large prime number to ensure the result stays within 64-bit bounds
+            // and to avoid negative numbers on systems where PHP ints are 64 bits.
+            $a = $a & 0x7fffffff;
+            // This is the largest 31-bit positive integer
+        }
+        return $a;
+    }
+    /**
+     * This obfuscate function is used to generate a simple encrypted string from a text and secret. This is very
+     * simple so it can be used in frontend (e.g. URL obfuscating). This is not a real encryption as it uses
+     * the Vignere Cipher implementation.
+     *
+     * @param string $input
+     * @param string $key The key needs to contain only alphanumeric values, e.g. no spaces
+     * @param boolean $encipher
+     * @see https://www.programmingalgorithms.com/algorithm/vigenere-cipher/php/
+     */
+    public static function simpleObfuscate($input, $key, $encipher)
+    {
+        $keyLen = \strlen($key);
+        if (!\ctype_alnum($key)) {
+            return '';
+        }
+        $output = '';
+        $nonAlphaCharCount = 0;
+        $inputLen = \strlen($input);
+        for ($i = 0; $i < $inputLen; ++$i) {
+            if (\ctype_alpha($input[$i])) {
+                $cIsUpper = \ctype_upper($input[$i]);
+                $offset = \ord($cIsUpper ? 'A' : 'a');
+                $keyIndex = ($i - $nonAlphaCharCount) % $keyLen;
+                $keyChar = $key[$keyIndex];
+                if (\is_numeric($keyChar)) {
+                    $k = \intval($keyChar);
+                } else {
+                    $k = \ord($cIsUpper ? \strtoupper($keyChar) : \strtolower($keyChar)) - $offset;
+                }
+                $k = $encipher ? $k : -$k;
+                $ch = \chr(((\ord($input[$i]) + $k - $offset) % 26 + 26) % 26 + $offset);
+                $output .= $ch;
+            } else {
+                $output .= $input[$i];
+                ++$nonAlphaCharCount;
+            }
+        }
+        return $output;
+    }
 }

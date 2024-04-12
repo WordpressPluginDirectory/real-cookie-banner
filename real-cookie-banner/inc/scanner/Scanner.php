@@ -340,6 +340,7 @@ class Scanner
      */
     public function addUrlsToQueue($urls, $purgeUnused = \false)
     {
+        global $wpdb;
         if ($purgeUnused) {
             $urls = \array_values(\array_merge(ComingSoonPlugins::getInstance()->getComputedUrlsForSitemap(), $urls));
         }
@@ -385,6 +386,12 @@ class Scanner
             // This is a complete sitemap
             $this->purgeUnused($urls);
             Cache::getInstance()->invalidate();
+            // Update URLs in existing scanner results to avoid issues when a website got cloned (e.g. `source_url_hash` represents the old URL)
+            $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
+            // phpcs:disable WordPress.DB
+            $wpdb->query("UPDATE IGNORE {$table_name} SET source_url_hash = MD5(source_url)");
+            $wpdb->query("DELETE FROM {$table_name} WHERE source_url_hash <> MD5(source_url)");
+            // phpcs:enable WordPress.DB
         }
         return $persist->commit();
     }
@@ -449,7 +456,7 @@ class Scanner
             case self::REAL_QUEUE_TYPE:
                 return \sprintf(
                     // translators:
-                    \__('%1$d pages failed to be scanned.', RCB_TD),
+                    \_n('%1$d pages failed to be scanned.', '%1$d pages failed to be scanned.', $remaining['failure'], RCB_TD),
                     $remaining['failure']
                 );
             case \DevOwl\RealCookieBanner\scanner\AutomaticScanStarter::REAL_QUEUE_TYPE:

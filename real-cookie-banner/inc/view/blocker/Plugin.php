@@ -218,6 +218,10 @@ class Plugin extends AbstractPlugin
             // [Plugin Comp] Surecart
             '/window\\.surecartComponents\\s*=/m',
             '/window\\.SureCartAffiliatesConfig\\s*=/m',
+            // [Plugin Comp] wl-api-connector
+            'valuationConfig',
+            // [Plugin Comp] Slider Revolution
+            '/window\\.SR7\\s*\\?\\?=/m',
         ]);
         $cb->setInlineStyleDummyUrlPath(\plugins_url('public/images/', RCB_FILE));
         /**

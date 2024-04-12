@@ -37,15 +37,15 @@ msgstr ""
 msgid "You have not yet activated a license for this plugin on your website."
 msgstr ""
 
-#: license/License.php:318
+#: license/License.php:320
 msgid "The license has been automatically deactivated because your website is running on a new domain. Please activate the license again!"
 msgstr ""
 
-#: license/License.php:324
+#: license/License.php:326
 msgid "License key"
 msgstr ""
 
-#: license/License.php:389
+#: license/License.php:391
 msgid "No programmatic activation found for this plugin."
 msgstr ""
 

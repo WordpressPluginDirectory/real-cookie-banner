@@ -130,6 +130,7 @@ class Revision
             $result['isBlockerActive'] = $general->isBlockerActive();
             $result['hidePageIds'] = $general->getAdditionalPageHideIds();
             $result['isRespectDoNotTrack'] = $consent->isRespectDoNotTrack();
+            $result['failedConsentDocumentationHandling'] = $consent->getFailedConsentDocumentationHandling();
             $result['isSaveIp'] = $consent->isSaveIpEnabled();
             $result['consentDuration'] = $consent->getConsentDuration();
         }

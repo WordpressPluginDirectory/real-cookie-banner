@@ -56,7 +56,7 @@ class PrivacyPolicyMentionUsage extends \DevOwl\RealCookieBanner\view\checklist\
         if ($postId > 0) {
             $content = \get_post($postId);
             if ($content instanceof WP_Post) {
-                $content = $content->post_content;
+                $content = \apply_filters('the_content', $content->post_content);
                 if (\stripos($content, 'real cookie banner') !== \false) {
                     $toggleState = \true;
                 }

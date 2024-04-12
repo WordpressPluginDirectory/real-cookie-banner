@@ -3,6 +3,326 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.3 (2024-04-12)
+
+
+### Bug Fixes
+
+* the newly added notice about REST API shows errors about 403 Forbidden, we added another tip for the cause (CU-86949561p)
+* the newly added notice about REST API shows errors about cURL timeouts (CU-86949561p)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.9</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* deprecation warning in PHP log about Requests_Response class (CU-86949561p)
+* the newly added notice about REST API shows errors about 403 Forbidden, we added another tip for the cause (CU-86949561p)</details>
+
+
+
+
+
+## 4.7.2 (2024-04-10)
+
+
+### Bug Fixes
+
+* cURL error 60: SSL: no alternative certificate subject name matches target host name (CU-86949561p)
+* show another tip about REST API issues when cURL throws an error (CU-86949561p)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.8</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* show another tip about REST API issues when cURL throws an error (CU-86949561p)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.10.2</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* uppercase <A tag leads to scanner results (CU-869496hwj)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.8</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* uppercase <A tag leads to scanner results (CU-869496hwj)
+
+
+##### Testing
+
+* rename test (CU-869496hwj)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.1</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* update stubs (CU-86949561p)</details>
+
+
+
+
+
+## 4.7.1 (2024-04-09)
+
+
+### Documentation
+
+* mention new translations Greek, Romanian, Hungarian, Slovakian and Finnish in wordpress.org plugin description (CU-86947y4pv)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.5</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* cookie banner not shown in older Safari versions (Hotfix, CU-86947y4pv)</details>
+
+
+
+
+
+# 4.7.0 (2024-04-09)
+
+
+### Bug Fixes
+
+* compatibility with NS Clonser Site Copier and a PHP fatal error while cloning (CU-86941hv75)
+* compatibility with Perfmatters DelayJS functionality and Code on page load scripts (CU-869465a82)
+* compatibility with Slider Revolution v7 not loading
+* compatibility with wl-api-connector
+* compatibility with WS Forms and Google Maps field (CU-86947u85x)
+* implement a mechanism detecting a defect Consent REST API and recommend knowledgebase articles (CU-8693zknc0)
+* introduce a fallback system when the remote server is not available (CU-1xpcvre)
+* privacy policy mention usage checklist item is not checked when using Gutenberg patterns (CU-869454cmr)
+* scanner recommandation does not get removed after cloning website (CU-86948fqwy)
+* typo (CU-861myr2cq)
+
+
+### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+### Features
+
+* allow to delete consents individually in List of consents table (CU-86944k7fc)
+* introduce sticky legal links widget in customizer (CU-1za40xb)
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.17.2</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Bug Fixes
+
+* compatibility with Perfmatters DelayJS functionality and Code on page load scripts (CU-869465a82)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.6</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* implement a mechanism detecting a defect Consent REST API and recommend knowledgebase articles (CU-8693zknc0)
+* implement wait_for_update in Google Consent Mode to avoid issues with too early fired events (CU-86946wnva)
+* introduce a fallback system when the remote server is not available (CU-1xpcvre)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.4</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* also sync the unblocking of a visual content blocker with other tabs (CU-8693gvgkh)
+* introduce a fallback system when the remote server is not available (CU-1xpcvre)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.0</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+##### Features
+
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.70</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Bug Fixes
+
+* use vigenere cipher for obfuscating the REST API URL (CU-8693zknc0)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.7</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* correctly block link HTML tags with multiple rels (CU-86945vky4)
+* scanner finds Google Maps for MyListing theme when Mapbox instead of Google Maps is used (CU-86947zz6j)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.9</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* window.onload assignment should behave like window load event (CU-86947my22)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.0</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+##### Features
+
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.12.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* also sync the unblocking of a visual content blocker with other tabs (CU-8693gvgkh)
+* introduce a fallback system when the remote server is not available (CU-1xpcvre)
+
+
+##### Features
+
+* introduce sticky legal links widget in customizer (CU-1za40xb)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.5</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* introduce a fallback system when the remote server is not available (CU-1xpcvre)
+* reset all template fields in edit form</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.16</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* deactivate license domain detection when running WordPress through WP CLI (CU-869482eaf)
+
+
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.6.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+##### Features
+
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.0</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+##### Features
+
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.0</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* compatibility with Perfmatters DelayJS functionality and Code on page load scripts (CU-869465a82)
+* implement a mechanism detecting a defect Consent REST API and recommend knowledgebase articles (CU-8693zknc0)
+* use vigenere cipher for obfuscating the REST API URL (CU-8693zknc0)
+
+
+##### Build Process
+
+* remove minimal translations el fi and fix localization system (CU-861myr2cq)
+
+
+##### Features
+
+* translations into Hungarian, Romanian, Greek, Finnish and Slovak (CU-863gr8e97)</details>
+
+<details><summary>Development dependency update @devowl-wp/phpunit-config 0.1.13</summary>
+
+
+**_Purpose of dependency:_** _Predefined functionalities for PHPUnit._
+##### Bug Fixes
+
+* scanner finds Google Maps for MyListing theme when Mapbox instead of Google Maps is used (CU-86947zz6j)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.6.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Features
+
+* introduce sticky legal links widget in customizer (CU-1za40xb)</details>
+
+
+
+
+
+## 4.6.2 (2024-03-24) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.12.16</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* compatibility with latest PolyLang version and REST API (CU-86942c147)</details>
+
+
+
+
+
 ## 4.6.1 (2024-03-22)
 
 

@@ -1,7 +1,7 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
 Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
-Stable tag: 4.6.1
+Stable tag: 4.7.3
 Requires at least: 5.8
 Requires PHP: 7.4.0
 Tested up to: 6.5
@@ -45,7 +45,7 @@ You want a list of all features? [_Check it out on our website!_](https://devowl
 
 === Supported Languages ===
 
-**Real Cookie Banner is available in English, German (informal and formal), French, Italian, Spanish, Portuguese, Polish, Dutch (informal and formal), Czech, Danish, Swedish and Norwegian Bokmål.** Texts provided in service templates and content blocker templates are translated only in parts.
+**Real Cookie Banner is available in English, German (informal and formal), French, Italian, Spanish, Portuguese, Polish, Dutch (informal and formal), Czech, Danish, Swedish, Norwegian Bokmål, Finnish, Greek, Romanian, Hungarian and Slovakian.** Texts provided in service templates and content blocker templates are translated only in parts.
 
 More languages will be added soon! In the meantime, you can also customize and translate all the texts yourself.
 

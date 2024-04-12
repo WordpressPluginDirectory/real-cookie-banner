@@ -79,25 +79,4 @@ class Utils
         }
         return $folder;
     }
-    /**
-     * This hash function is used to generate a simple hash from a given string. This is very simple
-     * so it can be used in frontend (e.g. Webpack chunk loading).
-     *
-     * @param string $s
-     */
-    public static function simpleHash($s)
-    {
-        $a = 0;
-        foreach (\str_split($s) as $char) {
-            $charCode = \ord($char);
-            // Force PHP to perform integer arithmetic by using bitwise operations.
-            // Use & to ensure the result stays within PHP's integer size.
-            $a = ($a << 5 & \PHP_INT_MAX) - $a + $charCode;
-            // Use a bitwise AND with a large prime number to ensure the result stays within 64-bit bounds
-            // and to avoid negative numbers on systems where PHP ints are 64 bits.
-            $a = $a & 0x7fffffff;
-            // This is the largest 31-bit positive integer
-        }
-        return $a;
-    }
 }

@@ -48,7 +48,25 @@ class LinkRelBlocker extends AbstractPlugin
      */
     public function checkResult($result, $matcher, $match)
     {
-        $isLink = $match->getTag() === 'link' && $match->hasAttribute('rel') && \in_array($match->getAttribute('rel'), self::REL, \true);
+        $isLink = $match->getTag() === 'link' && $match->hasAttribute('rel') && \count(\array_intersect(\explode(' ', $match->getAttribute('rel')), self::REL)) > 0;
+        // Split a `<link rel="dns-prefetch preconnect"` into multiple nodes and rerun the content blocker
+        if ($isLink && \strpos($match->getAttribute('rel'), ' ') !== \false) {
+            $result->disableBlocking();
+            $result->setData(BlockableScanner::BLOCKED_RESULT_DATA_KEY_IGNORE_IN_SCANNER, \true);
+            $beforeTag = $match->getBeforeTag();
+            $firstRel = '';
+            foreach (\explode(' ', $match->getAttribute('rel')) as $key => $relRow) {
+                $match->setAttribute('rel', $relRow);
+                if ($key === 0) {
+                    $firstRel = $relRow;
+                } else {
+                    $beforeTag .= $match->render();
+                }
+                $match->setAttribute('rel', $firstRel);
+            }
+            $match->setAfterTag($beforeTag);
+            return $result;
+        }
         // Never touch e.g. `dns-prefetch` as they are GDPR compliant
         if ($isLink && \in_array($match->getAttribute('rel'), \array_merge($this->doNotTouch, self::DO_NOT_TOUCH), \true)) {
             $result->disableBlocking();

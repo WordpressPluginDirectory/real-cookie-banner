@@ -241,7 +241,8 @@ class License
         $code = $this->getActivation()->getCode();
         $isLicensed = !empty($code);
         $dynamic = \defined('RPM_WP_CLIENT_SKIP_DYNAMIC_HOST_CHECK') && \constant('RPM_WP_CLIENT_SKIP_DYNAMIC_HOST_CHECK');
-        if (!Utils::isRedirected() && $isLicensed && !empty($currentHostname) && \filter_var(\preg_replace('/:[0-9]+/', '', $currentHostname), \FILTER_VALIDATE_IP) === \false && \parse_url($currentHostname) !== \false && !$dynamic && !\in_array($currentHostname, self::VALIDATE_NEW_HOSTNAME_SKIP, \true) && !\preg_match(self::VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP, $currentHostname)) {
+        $isWpCli = \defined('WP_CLI') && \constant('WP_CLI');
+        if (!$isWpCli && !Utils::isRedirected() && $isLicensed && !empty($currentHostname) && \filter_var(\preg_replace('/:[0-9]+/', '', $currentHostname), \FILTER_VALIDATE_IP) === \false && \parse_url($currentHostname) !== \false && !$dynamic && !\in_array($currentHostname, self::VALIDATE_NEW_HOSTNAME_SKIP, \true) && !\preg_match(self::VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP, $currentHostname)) {
             // Backwards-compatibility, save option of current host
             if (empty($persistedHostname)) {
                 \update_option(self::OPTION_NAME_HOST_NAME . $this->getSlug(), \base64_encode($currentHostname));

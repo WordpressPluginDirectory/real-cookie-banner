@@ -2,7 +2,6 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils;
 
-use Exception;
 use WP_REST_Response;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -61,7 +60,7 @@ class Service
     public function request($queryVars)
     {
         $offset = self::getObfuscateOffset();
-        if (!empty($offset) && isset($queryVars['rest_route']) && \preg_match('/(.*\\/)([01])(\\w{32})[\\/](.*)$/m', $queryVars['rest_route'], $match) && $match[3] === $offset) {
+        if (!empty($offset) && isset($queryVars['rest_route']) && \preg_match('/(.*\\/)([01])(\\w{16})[\\/](.*)$/m', $queryVars['rest_route'], $match) && $match[3] === $offset) {
             $beforeOffset = $match[1];
             $mode = $match[2];
             $afterOffset = $match[4];
@@ -201,67 +200,45 @@ class Service
         }
         // As the salt should not be exposed to public, but the obfuscate-offset will be,
         // we take only the first x characters and hash it. It should be enough for uniqueness.
-        return \md5(\substr($salt, 0, 6));
+        return \substr(\md5(\substr($salt, 0, 6)), 0, 16);
     }
     /**
      * A helper function which obfuscates a given path string with a given offset.
      *
-     * @param string|number $offset
+     * @param string $offset
+     * @param string $str
+     * @param string $mode Can be `full` or `keep-last-part`
+     */
+    public static function obfuscatePath($offset, $str, $mode = 'keep-last-part')
+    {
+        $parts = \explode('/', $str);
+        $result = [];
+        foreach ($parts as $i => $part) {
+            if ($mode === 'keep-last-part' && $i === \count($parts) - 1) {
+                $result[] = $part;
+                continue;
+            }
+            $result[] = Utils::simpleObfuscate($part, $offset, \true);
+        }
+        $modeInt = $mode === 'full' ? 1 : 0;
+        \array_splice($result, \count($result) - 1, 0, "{$modeInt}{$offset}");
+        return \implode('/', $result);
+    }
+    /**
+     * A helper function which obfuscates a given path string with a given offset.
+     *
+     * @param string $offset
      * @param string $str
      */
     public static function deObfuscatePath($offset, $str)
     {
-        try {
-            $offsetEveryXCharacters = 4;
-            $offsetBase64 = \strtolower(\base64_encode($offset));
-            $result = \explode('/', $str);
-            foreach ($result as &$part) {
-                if (!empty($part)) {
-                    $equalCharacters = \intval(\substr($part, -1));
-                    $part = \substr_replace($part, '', -1) . \str_repeat('=', $equalCharacters);
-                    $part = self::base32Decode(\strtoupper($part));
-                    $part = \preg_replace_callback('/\\/(\\d+)\\//', function ($m) use($offsetBase64) {
-                        return $offsetBase64[\intval($m[1])] ?? '';
-                    }, $part);
-                    $newPart = '';
-                    for ($i = 0; $i < \strlen($part); $i += $offsetEveryXCharacters + 1) {
-                        for ($j = 0; $j < $offsetEveryXCharacters; $j++) {
-                            $newPart .= $part[$i + $j] ?? '';
-                        }
-                    }
-                    $part = $newPart;
-                }
-            }
-            return \join('/', $result);
-        } catch (Exception $e) {
-            return $str;
-        }
-    }
-    /**
-     * Decode a given base32-decoded string.
-     *
-     * @param string $str
-     */
-    private static function base32Decode($str)
-    {
-        // Define the base32 decoding table
-        // prettier-ignore
-        $base32Table = ['A' => 0, 'B' => 1, 'C' => 2, 'D' => 3, 'E' => 4, 'F' => 5, 'G' => 6, 'H' => 7, 'I' => 8, 'J' => 9, 'K' => 10, 'L' => 11, 'M' => 12, 'N' => 13, 'O' => 14, 'P' => 15, 'Q' => 16, 'R' => 17, 'S' => 18, 'T' => 19, 'U' => 20, 'V' => 21, 'W' => 22, 'X' => 23, 'Y' => 24, 'Z' => 25, '2' => 26, '3' => 27, '4' => 28, '5' => 29, '6' => 30, '7' => 31];
-        $str = \rtrim($str, '=');
-        $bits = 0;
-        $value = 0;
-        $output = '';
-        for ($i = 0; $i < \strlen($str); $i++) {
-            $char = $str[$i];
-            $charValue = $base32Table[$char];
-            $value = $value << 5 | $charValue;
-            $bits += 5;
-            if ($bits >= 8) {
-                $output .= \chr($value >> $bits - 8 & 0xff);
-                $bits -= 8;
+        $result = \explode('/', $str);
+        foreach ($result as &$part) {
+            if (!empty($part)) {
+                $part = Utils::simpleObfuscate($part, $offset, \false);
             }
         }
-        return \base64_decode($output);
+        return \join('/', $result);
     }
     /**
      * When saving JSON in a registered post meta we need to convert the JavaScript `JSON.stringify`ied result

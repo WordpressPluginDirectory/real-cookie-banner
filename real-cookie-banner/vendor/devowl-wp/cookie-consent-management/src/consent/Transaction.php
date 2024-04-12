@@ -105,6 +105,12 @@ class Transaction
      */
     public $customBypass;
     /**
+     * The ISO string of `new Date().toISOString()` on client side which reflects the time of consent given (not persist time).
+     *
+     * @var string
+     */
+    public $createdClientTime;
+    /**
      * Recorder JSON string for Replays.
      *
      * @var string
@@ -123,6 +129,11 @@ class Transaction
      * @var string
      */
     public $userCountry;
+    /**
+     * When `false`, the newly added transaction will not return any `SetCookie` instances. Use this, if you just want to save / persist
+     * a consent to the database but should not be updated on client side (e.g. delayed consents when server was not reachable).
+     */
+    public $setCookies = \true;
     /**
      * C'tor.
      *

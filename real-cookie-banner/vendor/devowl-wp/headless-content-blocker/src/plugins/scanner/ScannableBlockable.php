@@ -10,6 +10,10 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContent
  */
 class ScannableBlockable extends AbstractBlockable
 {
+    /**
+     * Every rule is within this group.
+     */
+    const DEFAULT_GROUP = '__default__';
     private $identifier;
     private $extended;
     /**
@@ -24,6 +28,8 @@ class ScannableBlockable extends AbstractBlockable
      * @var Rule[]
      */
     private $rules = [];
+    // See `addRules`
+    private $currentlyAddingRules = \false;
     /**
      * C'tor.
      *
@@ -60,15 +66,25 @@ class ScannableBlockable extends AbstractBlockable
         $this->identifier = $identifier;
         $this->extended = $extended;
         $this->addRules($rules, $ruleGroups);
+        $this->ruleGroups[self::DEFAULT_GROUP] = new RuleGroup($this, self::DEFAULT_GROUP, \false, \true);
+    }
+    // Documented in AbstractBlockable
+    public function appendFromStringArray($blockers)
+    {
+        parent::appendFromStringArray($blockers);
+        if (!$this->currentlyAddingRules) {
+            $this->addRules($blockers, [], \false);
+        }
     }
     /**
      * Allows to add rules and rule groups dynamically.
      *
-     * @param Rule[]|array[] $rules A list of expressions which hold different scan options; you can also pass
+     * @param Rule[]|array[]|string[] $rules A list of expressions which hold different scan options; you can also pass
      *                              an array which gets automatically converted to `Rule`.
      * @param RuleGroup[]|array[] $ruleGroups You can also pass an array which gets automatically converted to `RuleGroup`.
+     * @param boolean $appendFromStringArray Run `$this->appendFromStringArray()` for the added rules
      */
-    public function addRules($rules, $ruleGroups = [])
+    public function addRules($rules, $ruleGroups = [], $appendFromStringArray = \true)
     {
         // Create rule groups
         foreach ($ruleGroups as $ruleGroup) {
@@ -81,15 +97,17 @@ class ScannableBlockable extends AbstractBlockable
         // Create host rule instances
         foreach ($rules as $rule) {
             if (\is_array($rule)) {
-                $this->rules[] = new Rule($this, $rule['expression'], $rule['assignedToGroups'] ?? [], $rule['queryArgs'] ?? [], $rule['needsRequiredSiblingRule'] ?? \false);
+                $newRule = new Rule($this, $rule['expression'], $rule['assignedToGroups'] ?? [], $rule['queryArgs'] ?? [], $rule['needsRequiredSiblingRule'] ?? \false);
             } elseif ($rule instanceof Rule) {
-                $this->rules[] = $rule;
+                $newRule = $rule;
+            } elseif (\is_string($rule)) {
+                $newRule = new Rule($this, $rule);
             } else {
                 continue;
             }
             // Create rule group if not yet existing
-            $latestRule = $this->rules[\count($this->rules) - 1];
-            foreach ($latestRule->getAssignedToGroups() as $assignedToGroup) {
+            $this->rules[] = $newRule;
+            foreach ($newRule->getAssignedToGroups() as $assignedToGroup) {
                 if (!isset($this->ruleGroups[$assignedToGroup])) {
                     $this->ruleGroups[$assignedToGroup] = new RuleGroup($this, $assignedToGroup);
                 }
@@ -100,7 +118,11 @@ class ScannableBlockable extends AbstractBlockable
         foreach ($this->rules as $rule) {
             $expressions[] = $rule->getExpression();
         }
-        $this->appendFromStringArray($expressions);
+        if ($appendFromStringArray) {
+            $this->currentlyAddingRules = \true;
+            $this->appendFromStringArray($expressions);
+            $this->currentlyAddingRules = \false;
+        }
     }
     // Documented in AbstractBlockable
     public function getBlockerId()

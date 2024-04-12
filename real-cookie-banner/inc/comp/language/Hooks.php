@@ -28,7 +28,7 @@ class Hooks
     /**
      * See `self::getActiveMinimalTranslations`.
      */
-    const MINIMAL_TRANSLATION_CODES = ['tr_TR', 'ru_RU', 'bg_BG', 'fi', 'el'];
+    const MINIMAL_TRANSLATION_CODES = ['tr_TR', 'ru_RU', 'bg_BG'];
     /**
      * Temporary text domain.
      *

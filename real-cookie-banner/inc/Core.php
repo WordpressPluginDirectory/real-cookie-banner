@@ -220,6 +220,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_service_using_template_which_got_deleted']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_tcf_too_much_vendors']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notices_services_with_empty_privacy_policy']);
+        \add_action('admin_notices', [$this->getNotices(), 'admin_notices_check_saving_consent_via_rest_api_endpoint_working']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_updated_templates']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_successor_templates']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_google_consent_mode_adjustments']);
@@ -238,6 +239,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_filter('option_' . Consent::SETTING_COOKIE_DURATION, [Consent::getInstance(), 'option_cookie_duration']);
         \add_filter('option_' . Consent::SETTING_CONSENT_DURATION, [Consent::getInstance(), 'option_consent_duration']);
         \add_action('update_option_' . Consent::SETTING_CONSENT_DURATION, [Consent::getInstance(), 'update_option_consent_transient_deletion'], 10, 2);
+        \add_action('update_option_' . General::SETTING_BANNER_ACTIVE, [$this->getNotices(), 'update_option_banner_active']);
         \add_filter('pre_update_option', function ($value, $optionName, $oldValue) {
             // See https://wordpress.stackexchange.com/a/330290/83335
             if ($value !== $oldValue && \in_array($optionName, [General::SETTING_SET_COOKIES_VIA_MANAGER, GoogleConsentMode::SETTING_GCM_ENABLED], \true)) {

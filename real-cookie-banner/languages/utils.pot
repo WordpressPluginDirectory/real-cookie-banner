@@ -38,19 +38,19 @@ msgid "I have solved the problem (hide the message until the next occurrence of 
 msgstr ""
 
 #. translators:
-#: Service.php:117
+#: Service.php:116
 msgid "<strong>An unexpected network error has occurred!</strong> One or more WordPress plugins tried to call the WordPress REST API, which failed. Most likely a <strong>security plugin%s</strong>, a web <strong>server configuration</strong> or active <strong>ad-blocker extension</strong> installed on your browser disabled the REST API. Please make sure that the following REST API namespaces are reachable to use your plugin without problems:"
 msgstr ""
 
 #. translators:
-#: Service.php:125
+#: Service.php:124
 msgid "What is the WordPress REST API and how to enable it? %1$sLearn more%2$s."
 msgstr ""
 
-#: Service.php:128
+#: Service.php:127
 msgid "https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/"
 msgstr ""
 
-#: Service.php:136
+#: Service.php:135
 msgid "In the text box below you will find a technical listing of the last 10 failed network requests:"
 msgstr ""

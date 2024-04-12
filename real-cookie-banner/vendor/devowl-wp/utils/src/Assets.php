@@ -737,6 +737,8 @@ JS;
 (()=>{var x=%5$s,t=(e,t)=>new Proxy(e,{get:(e,n)=>{let r=Reflect.get(e,n);return n===t&&"string"==typeof r&&(r=JSON.parse(r,x),Reflect.set(e,n,r)),r}}),n=JSON.parse(document.getElementById("a%1$s1-js-extra").innerHTML,x);%6$s;window.%3$s=n})();
 </script>', $uuid, \wp_json_encode($l10n), $object_name, \join(' ', [
                     // TODO: shouldn't this be part of @devowl-wp/cache-invalidate?
+                    // Compatibility with most caching plugins which lazy load JavaScript
+                    'data-skip-lazy-load="js-extra"',
                     // Compatibility with WP Fastest Cache and "Eliminate render blocking script"
                     // as WPFC is moving all scripts (even with `type="text/plain"`).
                     'data-skip-moving="true"',

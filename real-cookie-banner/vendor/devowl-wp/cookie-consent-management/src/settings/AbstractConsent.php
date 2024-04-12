@@ -20,6 +20,9 @@ abstract class AbstractConsent extends BaseSettings
         'ADEQUACY' => ['AD', 'AR', 'CA', 'FO', 'GG', 'IL', 'IM', 'JP', 'JE', 'NZ', 'KR', 'CH', 'GB', 'UY', 'US'],
     ];
     const AGE_NOTICE_COUNTRY_AGE_MAP = ['INHERIT' => 0, 'GDPR' => 16, 'BE' => 13, 'DK' => 13, 'EE' => 13, 'FI' => 13, 'IS' => 13, 'LV' => 13, 'NO' => 13, 'PT' => 13, 'SE' => 13, 'MT' => 13, 'AT' => 14, 'BG' => 14, 'CY' => 14, 'IT' => 14, 'LT' => 14, 'ES' => 14, 'CZ' => 15, 'FR' => 15, 'GR' => 15, 'SI' => 15, 'DE' => 16, 'HR' => 16, 'HU' => 16, 'LI' => 16, 'LU' => 16, 'NL' => 16, 'PL' => 16, 'RO' => 16, 'SK' => 16, 'IE' => 16, 'CH' => 13];
+    const FAILED_CONSENT_DOCUMENTATION_HANDLING_OPTIMISTIC = 'optimistic';
+    const FAILED_CONSENT_DOCUMENTATION_HANDLING_ESSENTIALS_ONLY = 'essentials';
+    const FAILED_CONSENT_DOCUMENTATION_HANDLINGS = [self::FAILED_CONSENT_DOCUMENTATION_HANDLING_OPTIMISTIC, self::FAILED_CONSENT_DOCUMENTATION_HANDLING_ESSENTIALS_ONLY];
     /**
      * Search the coding for difference.
      */
@@ -39,6 +42,12 @@ abstract class AbstractConsent extends BaseSettings
      * @return boolean
      */
     public abstract function isRespectDoNotTrack();
+    /**
+     * Get the behavior what should be done when documentating the consent fails. See als `FAILED_CONSENT_HANDLINGS`.
+     *
+     * @return string
+     */
+    public abstract function getFailedConsentDocumentationHandling();
     /**
      * Check if IPs should be saved in plain in database.
      *

@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\view;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\SavingConsentViaRestApiEndpointChecker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
@@ -12,12 +13,14 @@ use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
+use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\checklist\Scanner;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\KeyValueMapOption;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service as UtilsService;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -43,6 +46,7 @@ class Notices
     const NOTICE_SERVICES_WITH_UPDATED_TEMPLATES = 'services-with-updated-templates';
     const NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES = 'services-with-successor-templates';
     const NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS = 'services-with-gcm-adjustments';
+    const NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING = 'check-saving-consent-via-rest-api-endpoint-working-result';
     const TCF_TOO_MUCH_VENDORS = 30;
     const CHECKLIST_PREFIX = 'checklist-';
     const MODAL_HINT_PREFIX = 'modal-hint-';
@@ -128,6 +132,9 @@ class Notices
             \delete_option($optionName);
             return $result;
         })->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, \sprintf('/%s[a-z_-]+/', self::MODAL_HINT_PREFIX), ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_TCF_TOO_MUCH_VENDORS, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_GET_PRO_MAIN_BUTTON, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_USING_TEMPLATES_WHICH_GOT_DELETED, ['type' => 'boolean']);
+        if (isset($_GET[self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING])) {
+            $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
+        }
     }
     /**
      * When a plugin got toggled show scanner notice.
@@ -151,6 +158,14 @@ class Notices
                 $this->getStates()->set(self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, \true);
             }
         }
+        $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, null);
+    }
+    /**
+     * When the cookie banner gets enabled or disabled, do some checks again.
+     */
+    public function update_option_banner_active()
+    {
+        $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, null);
     }
     /**
      * When a service / TCF vendor got updated check if the service is now processing data in unsafe countries.
@@ -278,6 +293,141 @@ class Notices
                 echo \sprintf('<div class="notice notice-warning">%s</div>', $value);
             }
         }
+    }
+    /**
+     * Get the notice HTML for a check if saving of a consent via the REST API works as expected.
+     */
+    public function checkSavingConsentViaRestApiEndpointWorkingHtml()
+    {
+        if (!General::getInstance()->isBannerActive()) {
+            return '';
+        }
+        $result = $this->getStates()->get(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
+        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0];
+        if (!\is_array($result) || \time() > $result[1] + 60 * 30) {
+            $result = [];
+            $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
+            $html = '';
+            // Include Basic auth in loopback requests.
+            if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+                $args['headers']['Authorization'] = 'Basic ' . \base64_encode(\wp_unslash($_SERVER['PHP_AUTH_USER']) . ':' . \wp_unslash($_SERVER['PHP_AUTH_PW']));
+            }
+            // Include all cookies except WordPress login cookies
+            foreach ($_COOKIE as $key => $value) {
+                // Exclude authentication cookies: https://github.com/WordPress/WordPress/blob/06615abcf77d4e87df3906381f5d362e5eff5943/wp-includes/default-constants.php#L270-L289
+                if (!Utils::startsWith($key, 'wordpress_') && !\in_array($key, [
+                    // Disable existing session as this could lead to errors in loopback requests and lead to the following error:
+                    // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
+                    'PHPSESSID',
+                ], \true)) {
+                    $args['cookies'][$key] = $value;
+                }
+            }
+            $url = \rest_url($consentEndpoint);
+            $result[$url] = [];
+            $checker = new SavingConsentViaRestApiEndpointChecker();
+            $checker->start();
+            // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
+            $args['sslverify'] = \apply_filters('https_local_ssl_verify', \false);
+            $response = \wp_remote_post($url, $args);
+            if (\is_wp_error($response)) {
+                $result[$url][] = $response->get_error_message();
+                $result[$url][] = \sprintf(
+                    // translators:
+                    \__('There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href="%s">Tools > Site Health</a> whether errors regarding the REST API are listed there.', RCB_TD),
+                    \admin_url('site-health.php')
+                );
+            } else {
+                // @codeCoverageIgnoreStart
+                if (!\defined('PHPUNIT_FILE')) {
+                    require_once ABSPATH . 'wp-admin/includes/file.php';
+                }
+                // @codeCoverageIgnoreEnd
+                $htaccess = \get_home_path() . '.htaccess';
+                $hostname = \gethostname();
+                $result[$url] = $checker->teardown($response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);
+            }
+            $result = [$result, \time()];
+            // Add timestamp so we can do this check every x hours
+            $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, $result);
+        }
+        $result = $result[0];
+        if (\count(Utils::array_flatten($result)) > 0) {
+            $html = \sprintf('<p>%1$s</p>', \__('<strong>Consent cannot be saved in the cookie banner:</strong> Website visitors (not logged into WordPress) currently cannot save consents in the cookie banner. This may result in the cookie banner being displayed again each time the website visitor visits a page.', RCB_TD));
+            foreach ($result as $url => $errors) {
+                $html .= \sprintf('<p>%s</p><ul style="list-style: initial;padding-inline-start:27px;"><li>%2$s</li></ul>', \sprintf(
+                    // translators:
+                    \__('The consent would be saved via the WP REST API route %s. The following problems with your WordPress installation were detected during the automatic error analysis:', RCB_TD),
+                    \sprintf('<a style="word-break:break-all;" target="_blank" href="%s">%s</a>', \add_query_arg(\array_merge($args['body'], ['_method' => 'POST']), $url), $url)
+                ), \join('</li><li>', \array_map(function ($error) {
+                    if (\is_array($error)) {
+                        $code = $error[0];
+                        switch ($code) {
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_ERROR_CODE:
+                                return \sprintf(
+                                    // translators:
+                                    \__('HTTP error code <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/%1$d" target="_blank"><code>%1$d</code></a> has been returned by the server. This indicates that the <a href="%2$s" target="_blank">WP REST API may have been proactively blocked</a>.', RCB_TD),
+                                    $error[1],
+                                    \__('https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#how-can-i-enable-the-wordpress-rest-api-in-my-website', RCB_TD)
+                                );
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_RESPONSE_BODY:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Response from the server is malformed. This indicates, for example, that another plugin is manipulating the response. In the following, you find the server response:', RCB_TD),
+                                    $error[1]
+                                ) . \sprintf('<br /><code>%s</code>', $error[1]);
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_NO_COOKIES:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Cookie with the saved consent (name starts with <code>real_cookie_banner</code>) was not part of the server response. Perhaps you have configured your <a href="%s" target="_blank">webserver to drop all cookies before sending the response</a>.', RCB_TD),
+                                    \__('https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-4-server-discards-all-cookies', RCB_TD)
+                                );
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_COOKIE_PATH:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Cookie <code>%1$s</code> with saved consent has been responded by server, but with the invalid cookie path <code>%2$s</code>. You may have an <a href="%3$s" target="_blank">error in your WordPress configuration file</a>.', RCB_TD),
+                                    $error[1],
+                                    $error[2],
+                                    \__('https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-2-incorrect-cookie-path', RCB_TD)
+                                );
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_COOKIE_HTTP_ONLY:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Cookie <code>%1$s</code> with saved consent has been responded to by the server, but with a <code>HttpOnly</code> flag, which means that the Real Cookie Banner JavaScript does not have permission to read it. You probably have <a href="%2$s" target="_blank">too strict security settings configured in your web server</a>.', RCB_TD),
+                                    $error[1],
+                                    \__('https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-3-cookie-not-accessible-via-javascript', RCB_TD)
+                                );
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_REDIRECT:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Response of the server contains a <code>Location</code> header, which leads to a redirection of the save request instead of saving. You probably have an <a href="%2$s" target="_blank">incorrect trailing slash configuration in your web server</a>.', RCB_TD),
+                                    $error[1],
+                                    \__('https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#i-can-read-data-but-not-write', RCB_TD)
+                                );
+                            case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_403_FORBIDDEN_HTACCESS_DENY:
+                                return \sprintf(
+                                    // translators:
+                                    \__('Since the request returned a <code>403</code> error, it is possible that the IP of your server has been blocked for internal loopback requests. We have checked the <code>.htaccess</code> file and found that the following line could be the trigger for this, which you should check and remove: <code>%s</code>.', RCB_TD),
+                                    $error[1]
+                                );
+                            default:
+                                return \json_encode($error);
+                        }
+                    } else {
+                        return $error;
+                    }
+                }, $errors)));
+            }
+            $html .= \sprintf('<p>%s</p>', \sprintf(
+                // translators:
+                \__('We have <a href="%s" target="_blank">explained typical misconfigurations and solutions</a> for this issue in a detailed article. If you do not know how to solve this problem, please contact the technical contact person for your website!', RCB_TD),
+                \__('https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/', RCB_TD)
+            ));
+            $dismissLink = \add_query_arg(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, '1', UtilsUtils::isRest() ? Core::getInstance()->getConfigPage()->getUrl() : $_SERVER['REQUEST_URI']);
+            $html .= '<p><a class="button button-primary" href="' . \esc_url($dismissLink) . '">' . \__('Check consent storage process again', RCB_TD) . '</a></p>';
+            return $html;
+        }
+        return null;
     }
     /**
      * Get the notice HTML of services and content blockers with a template update.
@@ -501,6 +651,19 @@ class Notices
         $html = $this->serviceWithEmptyPrivacyPolicyNoticeHtml();
         if (\is_string($html)) {
             echo \sprintf('<div class="notice notice-warning">%s</div>', $html);
+        }
+    }
+    /**
+     * Create an admin notice for the REST API check if consents can be saved.
+     */
+    public function admin_notices_check_saving_consent_via_rest_api_endpoint_working()
+    {
+        if (Core::getInstance()->getConfigPage()->isVisible()) {
+            return;
+        }
+        $html = $this->checkSavingConsentViaRestApiEndpointWorkingHtml();
+        if (\is_string($html) && !empty($html)) {
+            echo \sprintf('<div class="notice notice-error">%s</div>', $html);
         }
     }
     /**

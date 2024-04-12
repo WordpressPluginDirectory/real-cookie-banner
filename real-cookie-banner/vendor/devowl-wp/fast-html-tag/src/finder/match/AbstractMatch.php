@@ -48,7 +48,7 @@ abstract class AbstractMatch
     {
         $this->finder = $finder;
         $this->originalMatch = $originalMatch;
-        $this->tag = $tag;
+        $this->tag = \strtolower($tag);
         $this->attributes = $attributes ?? [];
         $this->transformBase64DataUrls();
     }

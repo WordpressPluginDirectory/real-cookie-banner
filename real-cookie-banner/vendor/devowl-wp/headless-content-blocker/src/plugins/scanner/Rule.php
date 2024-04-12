@@ -77,6 +77,7 @@ class Rule
         $this->assignedToGroups = \is_array($assignedToGroups) ? $assignedToGroups : [$assignedToGroups];
         $this->queryArgs = $queryArgs;
         $this->needsRequiredSiblingRule = $needsRequiredSiblingRule;
+        $this->assignedToGroups[] = ScannableBlockable::DEFAULT_GROUP;
     }
     /**
      * Check if a given URL matches our query argument validations.

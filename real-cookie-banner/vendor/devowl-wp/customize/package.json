@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.11.15",
+    "version": "1.12.1",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -101,9 +101,9 @@
         "@devowl-wp/node-gitlab-ci": "^0.7.12",
         "@devowl-wp/npm-licenses": "^0.1.13",
         "@devowl-wp/phpcs-config": "^0.1.14",
-        "@devowl-wp/phpunit-config": "^0.1.12",
+        "@devowl-wp/phpunit-config": "^0.1.13",
         "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/utils": "^1.18.3",
+        "@devowl-wp/utils": "^1.19.1",
         "@devowl-wp/webpack-config": "^0.2.29",
         "@types/jest": "~29.5.5",
         "@types/jquery": "~3.5.16",
@@ -155,7 +155,12 @@
             "nb_NO": "nb_NO",
             "cs_CZ": "cs",
             "pt_PT": "pt@formal",
-            "pt_BR": false
+            "pt_BR": false,
+            "hu_HU": "hu",
+            "ro_RO": "ro",
+            "el": "el",
+            "fi": "fi",
+            "sk_SK": "sk"
         },
         "thresholds": {
             "de@informal": 100,
@@ -170,7 +175,12 @@
             "sv": 100,
             "nb_NO": 100,
             "cs": 100,
-            "pt@formal": 100
+            "pt@formal": 100,
+            "hu_HU": 100,
+            "ro_RO": 100,
+            "el": 100,
+            "fi": 100,
+            "sk_SK": 100
         },
         "machineTranslation": {
             "fr@formal": [
@@ -205,6 +215,21 @@
             ],
             "pt@formal": [
                 "deepl"
+            ],
+            "hu": [
+                "deepl"
+            ],
+            "ro": [
+                "deepl"
+            ],
+            "el": [
+                "deepl"
+            ],
+            "fi": [
+                "deepl"
+            ],
+            "sk": [
+                "deepl"
             ]
         },
         "copyFiles": {
@@ -238,6 +263,12 @@
             ],
             "pt_PT.(po)$": [
                 "pt_BR.$1"
+            ],
+            "el_GR.(po)$": [
+                "el.$1"
+            ],
+            "fi_FI.(po)$": [
+                "fi.$1"
             ]
         },
         "projects": {

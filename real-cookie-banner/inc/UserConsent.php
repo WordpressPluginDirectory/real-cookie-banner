@@ -174,7 +174,7 @@ class UserConsent
             // This is especially useful for `COUNT` statements
             $where[] = '(context = "" OR context <> "")';
         }
-        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'c.ipv4', 'c.ipv6', 'c.ipv4_hash', 'c.ipv6_hash', 'c.uuid', 'c.previous_decision', 'c.decision', 'c.created', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'c.referer as viewed_page', 'c.url_imprint', 'c.url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'c.previous_tcf_string', 'c.tcf_string', 'c.previous_gcm_consent', 'c.gcm_consent', 'c.recorder', 'c.ui_view'];
+        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'c.ipv4', 'c.ipv6', 'c.ipv4_hash', 'c.ipv6_hash', 'c.uuid', 'c.previous_decision', 'c.decision', 'c.created', 'c.created_client_time', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'c.referer as viewed_page', 'c.url_imprint', 'c.url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'c.previous_tcf_string', 'c.tcf_string', 'c.previous_gcm_consent', 'c.gcm_consent', 'c.recorder', 'c.ui_view'];
         if ($returnType === self::BY_CRITERIA_RESULT_TYPE_COUNT) {
             $sql = \sprintf('SELECT COUNT(1) AS cnt FROM %s AS cs WHERE %s', $table_name, \join(' AND ', $where));
         } else {
@@ -240,6 +240,7 @@ class UserConsent
             $row->blocker_thumbnail = $row->blocker_thumbnail === null ? null : \intval($row->blocker_thumbnail);
             $row->dnt = $row->dnt === '1';
             $row->created = \mysql2date('c', $row->created, \false);
+            $row->created_client_time = \mysql2date('c', $row->created_client_time, \false);
             $row->viewport_width = \intval($row->viewport_width);
             $row->viewport_height = \intval($row->viewport_height);
             $row->forwarded = $row->forwarded === null ? null : \intval($row->forwarded);

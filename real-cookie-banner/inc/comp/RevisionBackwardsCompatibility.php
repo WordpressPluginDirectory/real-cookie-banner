@@ -51,6 +51,8 @@ class RevisionBackwardsCompatibility
         $this->migration_apv5uu();
         $this->migration_8693n1cc5();
         $this->migration_86940n0a0();
+        $this->migration_1za40xb();
+        $this->migration_1xpcvre();
         return $this->revision;
     }
     /**
@@ -483,6 +485,28 @@ class RevisionBackwardsCompatibility
         if ($this->independent && !isset($this->revision['banner']['customizeValuesBanner']['layout']['maxHeightEnabled'])) {
             $this->revision['banner']['customizeValuesBanner']['layout']['maxHeightEnabled'] = \false;
             $this->revision['banner']['customizeValuesBanner']['layout']['maxHeight'] = 700;
+        }
+    }
+    /**
+     * Disable sticky legal links for older revisions.
+     *
+     * @see https://app.clickup.com/t/1za40xb
+     */
+    protected function migration_1za40xb()
+    {
+        if ($this->independent && !isset($this->revision['banner']['customizeValuesBanner']['sticky'])) {
+            $this->revision['banner']['customizeValuesBanner']['sticky'] = ['enabled' => \false];
+        }
+    }
+    /**
+     * Introducing a default value for `Handling of failed consent documentation`.
+     *
+     * @see https://app.clickup.com/t/1xpcvre
+     */
+    public function migration_1xpcvre()
+    {
+        if ($this->independent && !isset($this->revision['options']['failedConsentDocumentationHandling'])) {
+            $this->revision['options']['failedConsentDocumentationHandling'] = AbstractConsent::FAILED_CONSENT_DOCUMENTATION_HANDLING_ESSENTIALS_ONLY;
         }
     }
 }

@@ -16,6 +16,10 @@ if (\defined('ABSPATH')) {
             if ($compLanguage->isActive()) {
                 $currentLanguage = $compLanguage->getCurrentLanguage();
                 $restQuery['_dataLocale'] = $currentLanguage;
+                // PolyLang compatibility: It expects a `lang` parameter as it gets overriden by PolyLang itself after `rest_api_init`
+                if ($compLanguage instanceof PolyLang) {
+                    $restQuery['lang'] = $currentLanguage;
+                }
             }
             return $restQuery;
         });

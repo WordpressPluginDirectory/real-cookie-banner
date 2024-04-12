@@ -110,11 +110,20 @@ class CacheInvalidator
      */
     public function getExcludeHtmlAttributesString()
     {
-        $result = [];
+        $result = [
+            /**
+             * For "Code on page load" we need to ensure no other plugin is lazy loading it. E.g.
+             * WP Rocket transforms inline scripts to `rocketlazyloadscript`.
+             *
+             * `js-extra` is a common string which does caching plugins or lazy loading plugins ignore
+             * as it is similar to the `wp_localize_script` output tag.
+             */
+            'data-skip-lazy-load="js-extra"',
+        ];
         foreach ($this->getCaches() as $instance) {
             $result[] = $instance->excludeHtmlAttribute();
         }
-        return \join(' ', $result);
+        return \join(' ', \array_unique($result));
     }
     /**
      * Invalidate all available caches.

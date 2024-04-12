@@ -203,7 +203,7 @@ class Consent
         if ($gcmCookie !== null) {
             $setCookie[] = $gcmCookie;
         }
-        return ['response' => ['uuid' => $this->getUuid(), 'revisionHash' => $this->getRevisionHash(), 'decision' => $this->getDecision(), 'consentId' => $consentId, 'forward' => $forward], 'setCookie' => $setCookie];
+        return ['response' => ['uuid' => $this->getUuid(), 'revisionHash' => $this->getRevisionHash(), 'decision' => $this->getDecision(), 'consentId' => $consentId, 'forward' => $forward], 'setCookie' => $transaction->setCookies ? $setCookie : []];
     }
     /**
      * When country bypass is active, automatically calculate the user country so it

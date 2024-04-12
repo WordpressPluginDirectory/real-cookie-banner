@@ -49,6 +49,7 @@ class Consent
         \register_rest_route($namespace, '/consent', ['methods' => 'GET', 'callback' => [$this, 'routeGet'], 'permission_callback' => '__return_true']);
         \register_rest_route($namespace, '/consent/dynamic-predecision', ['methods' => 'POST', 'callback' => [$this, 'routePostDynamicPredecision'], 'args' => ['viewPortWidth' => ['type' => 'number', 'default' => 0], 'viewPortHeight' => ['type' => 'number', 'default' => 0]], 'permission_callback' => '__return_true']);
         \register_rest_route($namespace, '/consent', ['methods' => 'POST', 'callback' => [$this, 'routePost'], 'permission_callback' => '__return_true', 'args' => [
+            'dummy' => ['type' => 'boolean', 'default' => \false],
             'markAsDoNotTrack' => ['type' => 'boolean', 'default' => \false],
             // Also ported to wp-api/consent.post.tsx
             'buttonClicked' => ['type' => 'string', 'enum' => UserConsent::CLICKABLE_BUTTONS, 'required' => \true],
@@ -61,7 +62,10 @@ class Consent
             'tcfString' => ['type' => 'string'],
             'recorderJsonString' => ['type' => 'string'],
             'uiView' => ['type' => 'string'],
+            'createdClientTime' => ['type' => 'string'],
+            'setCookies' => ['type' => 'boolean', 'default' => \true],
         ]]);
+        \register_rest_route($namespace, '/consent/(?P<id>[0-9]+)', ['methods' => 'DELETE', 'callback' => [$this, 'routeDelete'], 'permission_callback' => [$this, 'permission_callback']]);
     }
     /**
      * Check if user is allowed to call this service requests.
@@ -226,6 +230,7 @@ class Consent
      * @api {post} /real-cookie-banner/v1/consent Create or update an existing consent
      * @apiParam {array} decision
      * @apiParam {string} buttonClicked
+     * @apiParam {boolean} [dummy]
      * @apiParam {boolean} [markAsDoNotTrack]
      * @apiParam {number} [viewPortWidth=0]
      * @apiParam {number} [viewPortHeight=0]
@@ -235,12 +240,15 @@ class Consent
      * @apiParam {array} [gcmConsent]
      * @apiParam {string} [recorderJsonString]
      * @apiParam {string} [uiView]
+     * @apiParam {string} [createdClientTime]
+     * @apiParam {string} [setCookies=true]
      * @apiName Create
      * @apiGroup Consent
      * @apiVersion 1.0.0
      */
     public function routePost($request)
     {
+        $dummy = $request->get_param('dummy');
         $markAsDoNotTrack = $request->get_param('markAsDoNotTrack');
         $buttonClicked = $request->get_param('buttonClicked');
         $viewPortWidth = $request->get_param('viewPortWidth');
@@ -250,6 +258,8 @@ class Consent
         $uiView = $request->get_param('uiView');
         $blocker = $request->get_param('blocker');
         $blockerThumbnail = $request->get_param('blockerThumbnail');
+        $createdClientTime = $request->get_param('createdClientTime');
+        $setCookies = $request->get_param('setCookies');
         $referer = \wp_get_raw_referer();
         if (IpHandler::getInstance()->isFlooding()) {
             return new WP_Error('rest_rcb_forbidden');
@@ -267,11 +277,31 @@ class Consent
         $transaction->gcmConsent = $request->get_param('gcmConsent');
         $transaction->recorderJsonString = $recorderJsonString;
         $transaction->uiView = $uiView;
-        $persist = MyConsent::getInstance()->persist($transaction);
+        $transaction->setCookies = $setCookies;
+        if ($createdClientTime !== null && \strtotime($createdClientTime) > 0) {
+            $transaction->createdClientTime = $createdClientTime;
+        }
+        $persist = MyConsent::getInstance()->persist($transaction, $dummy);
         if (\is_wp_error($persist)) {
             return $persist;
         }
         return new WP_REST_Response($persist);
+    }
+    /**
+     * See API docs.
+     *
+     * @param WP_REST_Request $request
+     *
+     * @api {delete} /real-cookie-banner/v1/consent/:id Create or update an existing consent
+     * @apiName Delete
+     * @apiGroup Consent
+     * @apiVersion 1.0.0
+     */
+    public function routeDelete($request)
+    {
+        global $wpdb;
+        $deleted = $wpdb->delete($this->getTableName(UserConsent::TABLE_NAME), ['id' => $request->get_param('id')], ['id' => '%d']);
+        return $deleted > 0 ? new WP_REST_Response(null, 204) : new WP_Error('rest_rcb_consent_delete_failed', 'No consent with this ID found.');
     }
     /**
      * New instance.
