@@ -303,7 +303,7 @@ class Notices
             return '';
         }
         $result = $this->getStates()->get(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
-        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0];
+        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0, 'timeout' => 10];
         if (!\is_array($result) || \time() > $result[1] + 60 * 30) {
             $result = [];
             $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
@@ -320,7 +320,7 @@ class Notices
                     // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
                     'PHPSESSID',
                 ], \true)) {
-                    $args['cookies'][$key] = $value;
+                    $args['cookies'][$key] = \urlencode($value);
                 }
             }
             $url = \rest_url($consentEndpoint);
@@ -375,7 +375,7 @@ class Notices
                                     // translators:
                                     \__('Response from the server is malformed. This indicates, for example, that another plugin is manipulating the response. In the following, you find the server response:', RCB_TD),
                                     $error[1]
-                                ) . \sprintf('<br /><code>%s</code>', $error[1]);
+                                ) . \sprintf('<br /><code>%s</code>', \htmlentities($error[1]));
                             case SavingConsentViaRestApiEndpointChecker::ERROR_DIAGNOSTIC_NO_COOKIES:
                                 return \sprintf(
                                     // translators:

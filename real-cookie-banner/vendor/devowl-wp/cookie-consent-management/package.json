@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -46,8 +46,8 @@
         "@devowl-wp/npm-licenses": "^0.1.13",
         "@devowl-wp/phpcs-config": "^0.1.14",
         "@devowl-wp/phpunit-config": "^0.1.13",
-        "@devowl-wp/react-cookie-banner": "^0.12.1",
-        "@devowl-wp/react-cookie-banner-admin": "^0.13.6",
+        "@devowl-wp/react-cookie-banner": "^0.12.2",
+        "@devowl-wp/react-cookie-banner-admin": "^0.13.7",
         "@devowl-wp/ts-config": "^0.1.12",
         "ts-node": "~10.9.1",
         "tslib": "^2.5.0",

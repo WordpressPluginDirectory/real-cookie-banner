@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.4 (2024-04-19)
+
+
+### Bug Fixes
+
+* notice about REST API is showing a fatal error as forwarded cookies for the REST API test are not encoded (CU-86949561p)
+* notice about saving consents is shown when request takes longer than 2 seconds (timeout, CU-86949561p)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.10</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* do not show notice about Google Consent Mode and Tag Manager when identifier is gtm-1 (e.g. WPML/PolyLang, CU-8694art6m)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.12.2</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* old safari browser shows blurry background and no cookie banner (CU-8694at817)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.6.1</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Bug Fixes
+
+* old safari browser shows blurry background and no cookie banner (CU-8694at817)</details>
+
+
+
+
+
 ## 4.7.3 (2024-04-12)
 
 

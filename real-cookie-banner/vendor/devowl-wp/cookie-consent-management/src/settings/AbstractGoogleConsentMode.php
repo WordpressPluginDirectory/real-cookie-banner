@@ -62,7 +62,8 @@ abstract class AbstractGoogleConsentMode extends BaseSettings
                 $uniqueName = $service->getUniqueName();
                 $relevantServiceData = ['id' => $service->getId(), 'groupId' => $group->getId(), 'title' => $service->getName()];
                 if ($isEnabled) {
-                    $isTagManagerService = \in_array($uniqueName, ManagerMiddleware::TAG_MANAGER_IDENTIFIERS, \true);
+                    // Compatibility with WPML/PolyLang identifiers: https://regex101.com/r/nRY2gr/1
+                    $isTagManagerService = \preg_match('/^(gtm|mtm)-\\d+$/m', $uniqueName, $matches) > 0;
                     if (!$dismissedNoConsentTypes && \count($consentTypes) === 0 && $isUsingGtag && !$isTagManagerService) {
                         $result['missingConsentTypes'][] = $relevantServiceData;
                     }
@@ -73,7 +74,7 @@ abstract class AbstractGoogleConsentMode extends BaseSettings
                     if (!\in_array('requiresGoogleConsentModeGa', $dismissedRequiringGcmActive, \true) && Utils::endsWith($uniqueName, 'analytics-4') || Utils::endsWith($uniqueName, 'ga-4')) {
                         $result['requiresGoogleConsentModeGa'] = $relevantServiceData;
                     }
-                    if (!\in_array('requiresGoogleConsentModeAdsConversionTracking', $dismissedRequiringGcmActive, \true) && $uniqueName === 'google-ads-conversion-tracking') {
+                    if (!\in_array('requiresGoogleConsentModeAdsConversionTracking', $dismissedRequiringGcmActive, \true) && Utils::startsWith($uniqueName, 'google-ads-conversion-tracking')) {
                         $result['requiresGoogleConsentModeAdsConversionTracking'] = $relevantServiceData;
                     }
                 }
