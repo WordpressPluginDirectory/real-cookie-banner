@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.5 (2024-04-20)
+
+
+### Bug Fixes
+
+* fatal error in Notices.php and urlencode when using array cookies e.g. my-cookie[] (CU-86949561p)
+
+
+
+
+
+
+
 ## 4.7.4 (2024-04-19)
 
 

@@ -65,8 +65,8 @@ msgstr ""
 #: inc/settings/Blocker.php:132
 #: inc/view/ConfigPage.php:209
 #: inc/view/customize/banner/Texts.php:318
-#: inc/view/Notices.php:745
-#: inc/view/Notices.php:797
+#: inc/view/Notices.php:746
+#: inc/view/Notices.php:798
 msgid "Content Blocker"
 msgstr ""
 
@@ -422,7 +422,7 @@ msgstr ""
 #: inc/Assets.php:627
 #: inc/Assets.php:660
 #: inc/view/checklist/GetPro.php:55
-#: inc/view/Notices.php:868
+#: inc/view/Notices.php:869
 msgid "Learn more"
 msgstr ""
 
@@ -433,7 +433,7 @@ msgstr ""
 #. translators:
 #: inc/Assets.php:633
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:198
-#: inc/view/Notices.php:837
+#: inc/view/Notices.php:838
 msgid " and "
 msgstr ""
 
@@ -3429,198 +3429,198 @@ msgid "Add to Menu"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:536
+#: inc/view/Notices.php:537
 msgid "There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href=\"%s\">Tools > Site Health</a> whether errors regarding the REST API are listed there."
 msgstr ""
 
-#: inc/view/Notices.php:570
+#: inc/view/Notices.php:571
 msgid "<strong>Consent cannot be saved in the cookie banner:</strong> Website visitors (not logged into WordPress) currently cannot save consents in the cookie banner. This may result in the cookie banner being displayed again each time the website visitor visits a page."
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:581
+#: inc/view/Notices.php:582
 msgid "The consent would be saved via the WP REST API route %s. The following problems with your WordPress installation were detected during the automatic error analysis:"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:600
+#: inc/view/Notices.php:601
 msgid "HTTP error code <a href=\"https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/%1$d\" target=\"_blank\"><code>%1$d</code></a> has been returned by the server. This indicates that the <a href=\"%2$s\" target=\"_blank\">WP REST API may have been proactively blocked</a>."
 msgstr ""
 
-#: inc/view/Notices.php:605
+#: inc/view/Notices.php:606
 msgid "https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#how-can-i-enable-the-wordpress-rest-api-in-my-website"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:613
+#: inc/view/Notices.php:614
 msgid "Response from the server is malformed. This indicates, for example, that another plugin is manipulating the response. In the following, you find the server response:"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:622
+#: inc/view/Notices.php:623
 msgid "Cookie with the saved consent (name starts with <code>real_cookie_banner</code>) was not part of the server response. Perhaps you have configured your <a href=\"%s\" target=\"_blank\">webserver to drop all cookies before sending the response</a>."
 msgstr ""
 
-#: inc/view/Notices.php:626
+#: inc/view/Notices.php:627
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-4-server-discards-all-cookies"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:634
+#: inc/view/Notices.php:635
 msgid "Cookie <code>%1$s</code> with saved consent has been responded by server, but with the invalid cookie path <code>%2$s</code>. You may have an <a href=\"%3$s\" target=\"_blank\">error in your WordPress configuration file</a>."
 msgstr ""
 
-#: inc/view/Notices.php:640
+#: inc/view/Notices.php:641
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-2-incorrect-cookie-path"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:648
+#: inc/view/Notices.php:649
 msgid "Cookie <code>%1$s</code> with saved consent has been responded to by the server, but with a <code>HttpOnly</code> flag, which means that the Real Cookie Banner JavaScript does not have permission to read it. You probably have <a href=\"%2$s\" target=\"_blank\">too strict security settings configured in your web server</a>."
 msgstr ""
 
-#: inc/view/Notices.php:653
+#: inc/view/Notices.php:654
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-3-cookie-not-accessible-via-javascript"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:661
+#: inc/view/Notices.php:662
 msgid "Response of the server contains a <code>Location</code> header, which leads to a redirection of the save request instead of saving. You probably have an <a href=\"%2$s\" target=\"_blank\">incorrect trailing slash configuration in your web server</a>."
 msgstr ""
 
-#: inc/view/Notices.php:666
+#: inc/view/Notices.php:667
 msgid "https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#i-can-read-data-but-not-write"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:674
+#: inc/view/Notices.php:675
 msgid "Since the request returned a <code>403</code> error, it is possible that the IP of your server has been blocked for internal loopback requests. We have checked the <code>.htaccess</code> file and found that the following line could be the trigger for this, which you should check and remove: <code>%s</code>."
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:695
+#: inc/view/Notices.php:696
 msgid "We have <a href=\"%s\" target=\"_blank\">explained typical misconfigurations and solutions</a> for this issue in a detailed article. If you do not know how to solve this problem, please contact the technical contact person for your website!"
 msgstr ""
 
-#: inc/view/Notices.php:699
+#: inc/view/Notices.php:700
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/"
 msgstr ""
 
-#: inc/view/Notices.php:716
+#: inc/view/Notices.php:717
 msgid "Check consent storage process again"
 msgstr ""
 
-#: inc/view/Notices.php:736
+#: inc/view/Notices.php:737
 msgid "Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:750
-#: inc/view/Notices.php:801
+#: inc/view/Notices.php:751
+#: inc/view/Notices.php:802
 msgid "Service (Cookie)"
 msgstr ""
 
-#: inc/view/Notices.php:762
+#: inc/view/Notices.php:763
 msgid "Review changes"
 msgstr ""
 
-#: inc/view/Notices.php:773
-#: inc/view/Notices.php:850
-#: inc/view/Notices.php:902
-#: inc/view/Notices.php:936
+#: inc/view/Notices.php:774
+#: inc/view/Notices.php:851
+#: inc/view/Notices.php:903
+#: inc/view/Notices.php:937
 msgid "Dismiss this notice"
 msgstr ""
 
-#: inc/view/Notices.php:788
+#: inc/view/Notices.php:789
 msgid "Templates in Real Cookie Banner have been replaced by new templates. You should check whether you want to replace the new service and/or content blocker with the new one in order to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:840
+#: inc/view/Notices.php:841
 msgid "Replace"
 msgstr ""
 
-#: inc/view/Notices.php:864
+#: inc/view/Notices.php:865
 msgid "Activate Google Consent Mode"
 msgstr ""
 
-#: inc/view/Notices.php:867
+#: inc/view/Notices.php:868
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-google-consent-mode-setup/"
 msgstr ""
 
-#: inc/view/Notices.php:875
+#: inc/view/Notices.php:876
 msgid "You are obtaining consent for Google services and have activated Google Consent Mode at the same time. However, you have not yet specified in the named services which consent types should be requested in accordance with Google Consent Mode. Please add these in the following services:"
 msgstr ""
 
-#: inc/view/Notices.php:892
-#: inc/view/Notices.php:926
+#: inc/view/Notices.php:893
+#: inc/view/Notices.php:927
 msgid "Edit service"
 msgstr ""
 
-#: inc/view/Notices.php:909
+#: inc/view/Notices.php:910
 msgid "You have activated Google Consent Mode and agreed to recommendations for the use of Google services without consent. At the same time, you only allow the following services to be loaded after obtaining consent. Please check whether you want to use the following services on your website based on a legitimate interest (even before Google receiving consent into consent types accordance with Google Consent Mode and therefore e.g. not setting advertising cookies):"
 msgstr ""
 
-#: inc/view/Notices.php:943
+#: inc/view/Notices.php:944
 msgid "You obtain consent for <strong>Google Analytics 4</strong> using Real Cookie Banner. In order to continue to create audiences in Google Analytics 4, you must have configured Google Consent Mode in your cookie banner as of March 2024."
 msgstr ""
 
-#: inc/view/Notices.php:957
+#: inc/view/Notices.php:958
 msgid "I do not use \"Audiences\" in Google Analytics 4"
 msgstr ""
 
-#: inc/view/Notices.php:968
+#: inc/view/Notices.php:969
 msgid "You obtain consent for <strong>Google Ads Conversion Tracking and Remarketing</strong> using Real Cookie Banner. From March 2024, conversions will only be processed by Google Ads if consent is obtained using Google Consent Mode. This data is also required in order to be able to continue to run remarketing campaigns in Google Ads."
 msgstr ""
 
-#: inc/view/Notices.php:982
+#: inc/view/Notices.php:983
 msgid "Ignore"
 msgstr ""
 
-#: inc/view/Notices.php:1330
+#: inc/view/Notices.php:1331
 msgid "There are no privacy policies with further information linked for the following services in your cookie banner. We now consider these to be mandatory in order to comply with the information obligations under the GDPR. Please provide a privacy policy for each service!"
 msgstr ""
 
-#: inc/view/Notices.php:1342
+#: inc/view/Notices.php:1343
 msgid "Set privacy policy URL"
 msgstr ""
 
 #. translators:s
-#: inc/view/Notices.php:1377
+#: inc/view/Notices.php:1378
 msgid "<strong>%1$s</strong> is processing data to %2$s"
 msgstr ""
 
-#: inc/view/Notices.php:1391
+#: inc/view/Notices.php:1392
 msgid "Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission."
 msgstr ""
 
-#: inc/view/Notices.php:1434
+#: inc/view/Notices.php:1435
 msgid "<strong>[ACTION REQUIRED]</strong> As of January 16, 2024, Google AdSense will only display advertising on your website if you obtain consent in accordance with the TCF standard. You must act now to continue earning advertising revenue!"
 msgstr ""
 
-#: inc/view/Notices.php:1438
+#: inc/view/Notices.php:1439
 msgid "You are currently obtaining non-standard compliant consent for Google Adsense via Real Cookie Banner. Please delete the Google AdSense service and Google AdSense content blocker in the Real Cookie Banner settings and then configure the TCF integration."
 msgstr ""
 
-#: inc/view/Notices.php:1442
+#: inc/view/Notices.php:1443
 msgid "https://devowl.io/knowledge-base/google-adsense-tcf-consent-wordpress/"
 msgstr ""
 
-#: inc/view/Notices.php:1443
+#: inc/view/Notices.php:1444
 msgid "Read instructions for Google AdSense configuration with TCF consents"
 msgstr ""
 
-#: inc/view/Notices.php:1482
+#: inc/view/Notices.php:1483
 msgid "You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!"
 msgstr ""
 
-#: inc/view/Notices.php:1495
+#: inc/view/Notices.php:1496
 msgid "Scan website again"
 msgstr ""
 
-#: inc/view/Notices.php:1521
+#: inc/view/Notices.php:1522
 msgid "Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don't use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!"
 msgstr ""
 
-#: inc/view/Notices.php:1528
+#: inc/view/Notices.php:1529
 msgid "Configure TCF vendors"
 msgstr ""
 

@@ -320,7 +320,8 @@ class Notices
                     // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
                     'PHPSESSID',
                 ], \true)) {
-                    $args['cookies'][$key] = \urlencode($value);
+                    // Check for array, as a cookie with `[]` indicates an array, example: `test[]`
+                    $args['cookies'][$key] = \is_array($value) ? \array_map('urlencode', $value) : \urlencode($value);
                 }
             }
             $url = \rest_url($consentEndpoint);
