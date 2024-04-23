@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.6 (2024-04-23)
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.11</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* consent types were recommended for Google Tag Manager service in notice (CU-8694art6m)</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 0.3.9</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Maintenance
+
+* write NulledVersionUsage deferred (CU-8694939q9)</details>
+
+
+
+
+
 ## 4.7.5 (2024-04-20)
 
 
