@@ -11,6 +11,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxFinde
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\StyleInlineFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\TagAttributeFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\MatchPluginCallbacks;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\RerunOnMatchException;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\StyleInlineAttributeFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\ScriptInlineMatcher;
@@ -68,6 +69,12 @@ class HeadlessContentBlocker extends FastHtmlTag
     private $blockables = [];
     private $finderToMatcher;
     private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'embed', 'img'], 'attr' => ['href', 'data-src', 'src']]];
+    /**
+     * See `processMatch`.
+     *
+     * @var RerunOnMatchException[]
+     */
+    private $rerunExceptions = [];
     /**
      * Selector syntax map.
      *
@@ -381,6 +388,13 @@ class HeadlessContentBlocker extends FastHtmlTag
             $this->processMatch($styleInlineAttributeMatcher, $match);
         });
         $this->addFinder($styleInlineAttributeFinder);
+        // Block by inline script
+        $inlineScriptMatcher = new ScriptInlineMatcher($this);
+        $inlineScriptFinder = new ScriptInlineFinder();
+        $inlineScriptFinder->addCallback(function ($match) use($inlineScriptMatcher) {
+            $this->processMatch($inlineScriptMatcher, $match);
+        });
+        $this->addFinder($inlineScriptFinder);
         // Block by tag-attribute map
         $tagAttributeMatcher = new TagAttributeMatcher($this);
         foreach ($this->tagAttributeMap as $map) {
@@ -392,13 +406,6 @@ class HeadlessContentBlocker extends FastHtmlTag
                 $this->addFinder($tagAttributeFinder);
             }
         }
-        // Block by inline script
-        $inlineScriptMatcher = new ScriptInlineMatcher($this);
-        $inlineScriptFinder = new ScriptInlineFinder();
-        $inlineScriptFinder->addCallback(function ($match) use($inlineScriptMatcher) {
-            $this->processMatch($inlineScriptMatcher, $match);
-        });
-        $this->addFinder($inlineScriptFinder);
         // Block by inline style
         $inlineStyleMatcher = new StyleInlineMatcher($this);
         $inlineStyleFinder = new StyleInlineFinder();
@@ -440,8 +447,36 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     protected function processMatch($matcher, $match)
     {
+        $rerunExceptionDispatcher = [];
+        foreach ($this->rerunExceptions as $idx => $exception) {
+            if ($match->getInvisibleAttribute(RerunOnMatchException::ID_ATTRIBUTE_NAME) === $exception->getId()) {
+                $afterProcessing = $exception->getAfterProcessing();
+                $rerunExceptionDispatcher[] = function () use($afterProcessing, $match, $matcher) {
+                    try {
+                        if (\is_callable($afterProcessing)) {
+                            $afterProcessing($match, $matcher);
+                        }
+                    } catch (RerunOnMatchException $e) {
+                        $this->registerRerun();
+                        $this->rerunExceptions[] = $e;
+                    }
+                };
+                unset($this->rerunExceptions[$idx]);
+            }
+        }
+        $this->rerunExceptions = \array_values($this->rerunExceptions);
         $this->runBeforeMatchCallback($matcher, $match);
-        $result = $matcher->match($match);
+        $result = null;
+        try {
+            $result = $matcher->match($match);
+        } catch (RerunOnMatchException $e) {
+            $this->registerRerun();
+            $this->rerunExceptions[] = $e;
+            foreach ($rerunExceptionDispatcher as $c) {
+                $c();
+            }
+            return;
+        }
         if ($result->isBlocked()) {
             $this->runBlockedMatchCallback($result, $matcher, $match);
         } else {
@@ -458,6 +493,9 @@ class HeadlessContentBlocker extends FastHtmlTag
                     }
                 }
             }
+        }
+        foreach ($rerunExceptionDispatcher as $c) {
+            $c();
         }
     }
     /**
@@ -649,14 +687,24 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Create an expression => regular expression cache for all available URLs in available blockables.
+     *
+     * @param boolean $contains
+     * @param AbstractBlockable[] $useBlockables
      */
-    public function blockablesToHosts()
+    public function blockablesToHosts($contains = \true, $useBlockables = null)
     {
-        if ($this->blockablesToHostsCache !== null) {
-            return $this->blockablesToHostsCache;
+        $prepareRows = function ($regex) use($contains) {
+            if (!\is_string($regex)) {
+                return $regex;
+            }
+            return $contains ? '/' . \substr($regex, 2, \strlen($regex) - 4) . '/' : $regex;
+        };
+        if ($this->blockablesToHostsCache !== null && $useBlockables === null) {
+            return \array_map($prepareRows, $this->blockablesToHostsCache);
         }
         $result = [];
-        foreach ($this->getBlockables() as $blockable) {
+        $forEachBlockables = $useBlockables === null ? $this->getBlockables() : $useBlockables;
+        foreach ($forEachBlockables as $blockable) {
             // Iterate all wildcard URLs
             foreach ($blockable->getRegularExpressions() as $expression => $regex) {
                 if (!isset($result[$expression]) && !empty($expression)) {
@@ -678,8 +726,10 @@ class HeadlessContentBlocker extends FastHtmlTag
                 }
             }
         }
-        $this->blockablesToHostsCache = $result;
-        return $result;
+        if ($useBlockables === null) {
+            $this->blockablesToHostsCache = $result;
+        }
+        return \array_map($prepareRows, $result);
     }
     /**
      * Get blockable rules starting with a given string. This does only work for non-Selector-Syntax expressions.

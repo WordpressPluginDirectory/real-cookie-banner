@@ -206,6 +206,7 @@ class Core extends BaseCore implements IOverrideCore
         (new FixInvalidJsonInDb())->fixMetadataBySingleMetaKey(Cookie::META_NAME_TECHNICAL_DEFINITIONS);
         // Official Consent API
         \add_filter('Consent/Block/HTML', [$this->getBlocker(), 'replace']);
+        \add_action('http_api_debug', [$this->getNotices(), 'http_api_debug'], 10, 5);
         \add_action('init', [$templatesPluginIntegrations, 'init'], 0);
         \add_action('init', [ComingSoonPlugins::getInstance(), 'init'], 11);
         \add_action('init', [ThirdPartyNotices::getInstance(), 'init']);

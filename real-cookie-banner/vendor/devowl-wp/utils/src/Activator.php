@@ -216,13 +216,6 @@ trait Activator
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }
         // @codeCoverageIgnoreEnd
-        // Check if we've attempted to run this migration in the past 10 minutes. If so, it may still be running.
-        if ($installThisCallable === null) {
-            if ($this->isMigrationLocked()) {
-                return \false;
-            }
-            \update_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_migration', \time());
-        }
         // Avoid errors printed out.
         if ($errorlevel === \false) {
             $show_errors = $wpdb->show_errors(\false);
@@ -242,7 +235,6 @@ trait Activator
         if ($installThisCallable === null) {
             $this->persistPreviousVersion();
             \update_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version', $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION));
-            \update_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_migration', 0);
         }
         return \true;
     }
@@ -250,10 +242,17 @@ trait Activator
      * Check if the migration is locked. It uses a time span of 10 minutes (like Yoast SEO plugin).
      *
      * @see https://github.com/Yoast/wordpress-seo/blob/a5fd83173bf56bf7841d72bb6d3d33ecc4caa825/src/config/migration-status.php#L34-L46
+     * @param int $set
+     * @return If `$set` is a numeric, it returns a boolean indicating if the update of the migration was successful, otherwise it returns a boolean
+     *         if the migration is locked.
      */
-    public function isMigrationLocked()
+    public function isMigrationLocked($set = null)
     {
-        $latestMigration = \intval(\get_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_migration', 0));
+        $optionName = $this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_migration';
+        if (\is_numeric($set)) {
+            return \update_option($optionName, $set);
+        }
+        $latestMigration = \intval(\get_option($optionName, 0));
         if ($latestMigration > 0) {
             return $latestMigration > \strtotime('-10 minutes');
         } else {

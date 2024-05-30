@@ -81,7 +81,7 @@ class LinkRelBlocker extends AbstractPlugin
              * @var TagAttributeMatch
              */
             $match = $match;
-            $matcher->iterateBlockablesInString($result, $match->getLink(), \false, \false, $this->getHeadlessContentBlocker()->blockablesToHosts());
+            $matcher->iterateBlockablesInString($result, $match->getLink(), \false, \false, $this->getHeadlessContentBlocker()->blockablesToHosts(\false));
         }
         // @codeCoverageIgnoreEnd
         // Omit the rendering, if possible

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "0.5.5",
+    "version": "0.5.7",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",
@@ -37,22 +37,22 @@
         "vendor"
     ],
     "devDependencies": {
-        "@devowl-wp/api-real-cookie-banner": "^0.13.2",
-        "@devowl-wp/composer-licenses": "^0.1.15",
-        "@devowl-wp/continuous-integration": "^0.6.2",
-        "@devowl-wp/eslint-config": "^0.2.7",
-        "@devowl-wp/node-gitlab-ci": "^0.7.12",
-        "@devowl-wp/npm-licenses": "^0.1.13",
-        "@devowl-wp/phpcs-config": "^0.1.14",
-        "@devowl-wp/phpunit-config": "^0.1.13",
-        "@devowl-wp/ts-config": "^0.1.12",
+        "@devowl-wp/api-real-cookie-banner": "workspace:*",
+        "@devowl-wp/composer-licenses": "workspace:*",
+        "@devowl-wp/continuous-integration": "workspace:*",
+        "@devowl-wp/eslint-config": "workspace:*",
+        "@devowl-wp/node-gitlab-ci": "workspace:*",
+        "@devowl-wp/npm-licenses": "workspace:*",
+        "@devowl-wp/phpcs-config": "workspace:*",
+        "@devowl-wp/phpunit-config": "workspace:*",
+        "@devowl-wp/ts-config": "workspace:*",
         "ts-node": "~10.9.1",
         "tslib": "^2.5.0",
         "typescript": "~5.2.2",
         "webpack-cli": "~5.1.4"
     },
     "peerDependencies": {
-        "@devowl-wp/api-real-cookie-banner": "*"
+        "@devowl-wp/api-real-cookie-banner": "workspace:*"
     },
     "engines": {
         "node": ">=14.15.0"

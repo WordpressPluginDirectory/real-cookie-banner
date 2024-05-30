@@ -63,6 +63,10 @@ class Notices
     const DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE = 'dismissed-services-requiring-gcm';
     private $states;
     /**
+     * See `http_api_debug` method description.
+     */
+    private $nonBlockingRequestStarted = \false;
+    /**
      * C'tor.
      *
      * @param Core $core
@@ -134,6 +138,33 @@ class Notices
         })->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, \sprintf('/%s[a-z_-]+/', self::MODAL_HINT_PREFIX), ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_TCF_TOO_MUCH_VENDORS, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_GET_PRO_MAIN_BUTTON, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_USING_TEMPLATES_WHICH_GOT_DELETED, ['type' => 'boolean']);
         if (isset($_GET[self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING])) {
             $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
+        }
+    }
+    /**
+     * We have mechanism to check if the WordPress REST API is working as expected. But when WordPress spawns the WP cron request
+     * via `spawn_cron()` it starts a loopback request. That loopback request is non-blocking and when it takes longer than 20 seconds
+     * (e.g. checking for updates of plugins, themes, ...) it leads to the following error for all follow-up loopback requests:
+     *
+     * > cURL error 28: Operation timed out after x milliseconds with 0 bytes received
+     *
+     * For this reason, we track all non-blocking requests and when a non-blocking request got started, we postpone the follow-up REST API check.
+     *
+     * @see https://app.clickup.com/t/8694nu6cm
+     * @param array|WP_Error $response HTTP response or WP_Error object.
+     * @param string $context Context under which the hook is fired.
+     * @param string $class HTTP transport used.
+     * @param array $args HTTP request arguments.
+     * @param string $url The request URL.
+     */
+    public function http_api_debug($response, $context, $class, $args, $url)
+    {
+        if ($context === 'response' && isset($args['blocking']) && !$args['blocking']) {
+            $parsed_url = \parse_url($url);
+            $request_host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+            $site_host = \parse_url(\home_url(), \PHP_URL_HOST);
+            if ($request_host === $site_host) {
+                $this->nonBlockingRequestStarted = \true;
+            }
         }
     }
     /**
@@ -300,55 +331,60 @@ class Notices
     public function checkSavingConsentViaRestApiEndpointWorkingHtml()
     {
         if (!General::getInstance()->isBannerActive()) {
-            return '';
+            return null;
         }
         $result = $this->getStates()->get(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
-        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0, 'timeout' => 10];
-        if (!\is_array($result) || \time() > $result[1] + 60 * 30) {
+        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0, 'timeout' => 20];
+        if (!\is_array($result) || \time() > $result[1]) {
             $result = [];
-            $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
-            $html = '';
-            // Include Basic auth in loopback requests.
-            if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-                $args['headers']['Authorization'] = 'Basic ' . \base64_encode(\wp_unslash($_SERVER['PHP_AUTH_USER']) . ':' . \wp_unslash($_SERVER['PHP_AUTH_PW']));
-            }
-            // Include all cookies except WordPress login cookies
-            foreach ($_COOKIE as $key => $value) {
-                // Exclude authentication cookies: https://github.com/WordPress/WordPress/blob/06615abcf77d4e87df3906381f5d362e5eff5943/wp-includes/default-constants.php#L270-L289
-                if (!Utils::startsWith($key, 'wordpress_') && !\in_array($key, [
-                    // Disable existing session as this could lead to errors in loopback requests and lead to the following error:
-                    // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
-                    'PHPSESSID',
-                ], \true)) {
-                    // Check for array, as a cookie with `[]` indicates an array, example: `test[]`
-                    $args['cookies'][$key] = \is_array($value) ? \array_map('urlencode', $value) : \urlencode($value);
-                }
-            }
-            $url = \rest_url($consentEndpoint);
-            $result[$url] = [];
-            $checker = new SavingConsentViaRestApiEndpointChecker();
-            $checker->start();
-            // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
-            $args['sslverify'] = \apply_filters('https_local_ssl_verify', \false);
-            $response = \wp_remote_post($url, $args);
-            if (\is_wp_error($response)) {
-                $result[$url][] = $response->get_error_message();
-                $result[$url][] = \sprintf(
-                    // translators:
-                    \__('There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href="%s">Tools > Site Health</a> whether errors regarding the REST API are listed there.', RCB_TD),
-                    \admin_url('site-health.php')
-                );
+            $nextTryInSeconds = 60 * 30;
+            if ($this->nonBlockingRequestStarted) {
+                $nextTryInSeconds = 20;
             } else {
-                // @codeCoverageIgnoreStart
-                if (!\defined('PHPUNIT_FILE')) {
-                    require_once ABSPATH . 'wp-admin/includes/file.php';
+                $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
+                $html = '';
+                // Include Basic auth in loopback requests.
+                if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+                    $args['headers']['Authorization'] = 'Basic ' . \base64_encode(\wp_unslash($_SERVER['PHP_AUTH_USER']) . ':' . \wp_unslash($_SERVER['PHP_AUTH_PW']));
                 }
-                // @codeCoverageIgnoreEnd
-                $htaccess = \get_home_path() . '.htaccess';
-                $hostname = \gethostname();
-                $result[$url] = $checker->teardown($response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);
+                // Include all cookies except WordPress login cookies
+                foreach ($_COOKIE as $key => $value) {
+                    // Exclude authentication cookies: https://github.com/WordPress/WordPress/blob/06615abcf77d4e87df3906381f5d362e5eff5943/wp-includes/default-constants.php#L270-L289
+                    if (!Utils::startsWith($key, 'wordpress_') && !\in_array($key, [
+                        // Disable existing session as this could lead to errors in loopback requests and lead to the following error:
+                        // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
+                        'PHPSESSID',
+                    ], \true)) {
+                        // Check for array, as a cookie with `[]` indicates an array, example: `test[]`
+                        $args['cookies'][$key] = \is_array($value) ? \rawurlencode_deep($value) : \urlencode($value);
+                    }
+                }
+                $url = \rest_url($consentEndpoint);
+                $result[$url] = [];
+                $checker = new SavingConsentViaRestApiEndpointChecker();
+                $checker->start();
+                // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
+                $args['sslverify'] = \apply_filters('https_local_ssl_verify', \false);
+                $response = \wp_remote_post($url, $args);
+                if (\is_wp_error($response)) {
+                    $result[$url][] = $response->get_error_message();
+                    $result[$url][] = \sprintf(
+                        // translators:
+                        \__('There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href="%s">Tools > Site Health</a> whether errors regarding the REST API are listed there.', RCB_TD),
+                        \admin_url('site-health.php')
+                    );
+                } else {
+                    // @codeCoverageIgnoreStart
+                    if (!\defined('PHPUNIT_FILE')) {
+                        require_once ABSPATH . 'wp-admin/includes/file.php';
+                    }
+                    // @codeCoverageIgnoreEnd
+                    $htaccess = \get_home_path() . '.htaccess';
+                    $hostname = \gethostname();
+                    $result[$url] = $checker->teardown($response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);
+                }
             }
-            $result = [$result, \time()];
+            $result = [$result, \time() + $nextTryInSeconds];
             // Add timestamp so we can do this check every x hours
             $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, $result);
         }
@@ -659,7 +695,7 @@ class Notices
      */
     public function admin_notices_check_saving_consent_via_rest_api_endpoint_working()
     {
-        if (Core::getInstance()->getConfigPage()->isVisible()) {
+        if (Core::getInstance()->getConfigPage()->isVisible() || !\current_user_can(Core::MANAGE_MIN_CAPABILITY)) {
             return;
         }
         $html = $this->checkSavingConsentViaRestApiEndpointWorkingHtml();

@@ -300,6 +300,8 @@ class Blocker
             'loadmore_elementor_portfolio',
             // [Plugin Comp] https://knowledgebase.unitedthemes.com/docs/how-to-set-up-your-portfolio/
             'ut_get_portfolio_post_content',
+            // [Plugin Comp] https://core.pixfort.com/
+            'pix_get_popup_content',
         ]);
         return \wp_doing_ajax() && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
     }

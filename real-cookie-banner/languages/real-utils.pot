@@ -151,21 +151,27 @@ msgstr ""
 #. translators:
 #: WelcomePage.php:198
 msgctxt "legal-text"
-msgid "I want to receive WordPress news from devowl.io via email and agree to the <a %s>privacy policy</a>."
+msgid "I hereby consent to the processing of my data by devowl.io GmbH for the purpose of sending the newsletter. The consent can be revoked at any time with effect for the future by clicking on the \"Unsubscribe\" button or by e-mail."
 msgstr ""
 
-#: WelcomePage.php:203
+#. translators:
+#: WelcomePage.php:210
+msgctxt "legal-text"
+msgid "Information on the processing of your personal data can be found in our <a %s>privacy policy</a>."
+msgstr ""
+
+#: WelcomePage.php:215
 msgid "https://devowl.io/privacy-policy/"
 msgstr ""
 
-#: WelcomePage.php:210
+#: WelcomePage.php:220
 msgid "Subscribe"
 msgstr ""
 
-#: WelcomePage.php:284
+#: WelcomePage.php:294
 msgid "Additional plugins by devowl.io"
 msgstr ""
 
-#: WelcomePage.php:357
+#: WelcomePage.php:367
 msgid "Available in"
 msgstr ""

@@ -132,6 +132,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\Utils' => $vendorDir . '/devowl-wp/headless-content-blocker/src/Utils.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\StyleInlineAttributeFinder' => $vendorDir . '/devowl-wp/headless-content-blocker/src/finder/StyleInlineAttributeFinder.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\MatchPluginCallbacks' => $vendorDir . '/devowl-wp/headless-content-blocker/src/finder/match/MatchPluginCallbacks.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\RerunOnMatchException' => $vendorDir . '/devowl-wp/headless-content-blocker/src/finder/match/RerunOnMatchException.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\StyleInlineAttributeMatch' => $vendorDir . '/devowl-wp/headless-content-blocker/src/finder/match/StyleInlineAttributeMatch.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\matcher\\AbstractMatcher' => $vendorDir . '/devowl-wp/headless-content-blocker/src/matcher/AbstractMatcher.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\matcher\\CssBlocker' => $vendorDir . '/devowl-wp/headless-content-blocker/src/matcher/CssBlocker.php',

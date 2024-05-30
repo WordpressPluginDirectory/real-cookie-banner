@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.13.1",
+    "version": "1.13.4",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",
@@ -90,18 +90,18 @@
         "enzyme": "~3.11.0"
     },
     "devDependencies": {
-        "@devowl-wp/composer-licenses": "^0.1.15",
-        "@devowl-wp/continuous-integration": "^0.6.2",
-        "@devowl-wp/continuous-localization": "^0.8.5",
-        "@devowl-wp/eslint-config": "^0.2.7",
-        "@devowl-wp/monorepo-utils": "^0.2.2",
-        "@devowl-wp/node-gitlab-ci": "^0.7.12",
-        "@devowl-wp/npm-licenses": "^0.1.13",
-        "@devowl-wp/phpcs-config": "^0.1.14",
-        "@devowl-wp/phpunit-config": "^0.1.13",
-        "@devowl-wp/ts-config": "^0.1.12",
-        "@devowl-wp/utils": "^1.19.1",
-        "@devowl-wp/webpack-config": "^0.2.29",
+        "@devowl-wp/composer-licenses": "workspace:*",
+        "@devowl-wp/continuous-integration": "workspace:*",
+        "@devowl-wp/continuous-localization": "workspace:*",
+        "@devowl-wp/eslint-config": "workspace:*",
+        "@devowl-wp/monorepo-utils": "workspace:*",
+        "@devowl-wp/node-gitlab-ci": "workspace:*",
+        "@devowl-wp/npm-licenses": "workspace:*",
+        "@devowl-wp/phpcs-config": "workspace:*",
+        "@devowl-wp/phpunit-config": "workspace:*",
+        "@devowl-wp/ts-config": "workspace:*",
+        "@devowl-wp/utils": "workspace:*",
+        "@devowl-wp/webpack-config": "workspace:*",
         "@types/jest": "~29.5.5",
         "jest": "~29.7.0",
         "ts-node": "~10.9.1",
@@ -111,7 +111,7 @@
         "webpack-cli": "~5.1.4"
     },
     "peerDependencies": {
-        "@devowl-wp/utils": "~1.4.4"
+        "@devowl-wp/utils": "workspace:*"
     },
     "engines": {
         "node": ">=14.15.0"

@@ -16,7 +16,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\Ma
  *
  * Parameters:
  *
- * - `[selector="self"]` (string): Can be “self” or a valid CSS selector which will be executed on the unblocked element and used for the click delegation
+ * - `[selector="self"]` (string): Can be “self”, "beforeConfirm" or a valid CSS selector which will be executed on the unblocked element and used for the click delegation
  * - `[hide=false]` (boolean): If true, the clicked element will be hidden
  *
  * Real Cookie Banner already tries to automatically forward the click to the right place for unblocked elements.

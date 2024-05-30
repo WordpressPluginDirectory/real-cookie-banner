@@ -39,7 +39,9 @@ class Confirm extends AbstractPlugin
     {
         MatchPluginCallbacks::getFromMatch($match)->addBlockedMatchCallback(function ($result) use($match) {
             if ($result->isBlocked()) {
-                $match->setAttribute(Constants::HTML_ATTRIBUTE_DELEGATE_CLICK, \json_encode(['selector' => 'self']));
+                if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_DELEGATE_CLICK)) {
+                    $match->setAttribute(Constants::HTML_ATTRIBUTE_DELEGATE_CLICK, \json_encode(['selector' => 'self']));
+                }
                 $match->setAttribute(Constants::HTML_ATTRIBUTE_CONFIRM, \true);
             }
         });

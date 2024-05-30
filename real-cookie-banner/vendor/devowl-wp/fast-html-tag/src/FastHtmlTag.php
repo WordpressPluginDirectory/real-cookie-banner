@@ -17,6 +17,10 @@ class FastHtmlTag
      */
     private $callbacks = [];
     /**
+     * Allows to rerun the processor on the resulting HTML again.
+     */
+    private $rerun = \false;
+    /**
      * Callbacks for `SelectorSyntaxAttributeFunction`.
      *
      * @var callable[]
@@ -130,6 +134,10 @@ class FastHtmlTag
         foreach ($this->callbacks as $callback) {
             $html = $callback($html);
         }
+        if ($this->rerun) {
+            $this->rerun = \false;
+            $html = $this->modifyHtml($html);
+        }
         // Remove invisible attributes (https://regex101.com/r/QAy0R0/2)
         $html = \preg_replace(\sprintf('/\\s+%s[^\\s>\\/]+/m', AbstractMatch::HTML_ATTRIBUTE_INVISIBLE_PREFIX), '', $html);
         return $html;
@@ -142,5 +150,12 @@ class FastHtmlTag
     public function getSelectorSyntaxFunction($functionName)
     {
         return $this->selectorSyntaxFunctions[$functionName] ?? null;
+    }
+    /**
+     * Allows to rerun the processor on the resulting HTML again.
+     */
+    public function registerRerun()
+    {
+        $this->rerun = \true;
     }
 }

@@ -241,6 +241,7 @@ class ComposerStaticInitc2e4938eca8a1eea2087f310c8fde29b
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\Utils' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/Utils.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\StyleInlineAttributeFinder' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/finder/StyleInlineAttributeFinder.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\MatchPluginCallbacks' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/finder/match/MatchPluginCallbacks.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\RerunOnMatchException' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/finder/match/RerunOnMatchException.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\finder\\match\\StyleInlineAttributeMatch' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/finder/match/StyleInlineAttributeMatch.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\matcher\\AbstractMatcher' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/matcher/AbstractMatcher.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\matcher\\CssBlocker' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/matcher/CssBlocker.php',

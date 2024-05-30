@@ -29,7 +29,7 @@ class ScriptInlineJsonBlocker extends AbstractPlugin
      */
     public function checkResult($result, $matcher, $match)
     {
-        if ($result->isBlocked() && $matcher instanceof ScriptInlineMatcher) {
+        if ($matcher instanceof ScriptInlineMatcher) {
             /**
              * Var.
              *

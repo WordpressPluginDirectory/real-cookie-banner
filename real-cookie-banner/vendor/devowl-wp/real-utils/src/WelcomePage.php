@@ -128,11 +128,15 @@ class WelcomePage
                         <input type="checkbox" name="newsletter-privacy" />
                         ' . \sprintf(
             // translators:
-            \_x('I want to receive WordPress news from devowl.io via email and agree to the <a %s>privacy policy</a>.', 'legal-text', REAL_UTILS_TD),
-            'href="' . \esc_attr(\__('https://devowl.io/privacy-policy/', REAL_UTILS_TD)) . '" target="_blank"'
+            \_x('I hereby consent to the processing of my data by devowl.io GmbH for the purpose of sending the newsletter. The consent can be revoked at any time with effect for the future by clicking on the "Unsubscribe" button or by e-mail.', 'legal-text', REAL_UTILS_TD)
         ) . '</span>
                     </label>
                 </div>
+                <div style="margin-top:15px;">' . \sprintf(
+            // translators:
+            \_x('Information on the processing of your personal data can be found in our <a %s>privacy policy</a>.', 'legal-text', REAL_UTILS_TD),
+            'href="' . \esc_attr(\__('https://devowl.io/privacy-policy/', REAL_UTILS_TD)) . '" target="_blank"'
+        ) . '</div>
             </p>
             <a href="#" class="button button-primary button-hero">' . \__('Subscribe', REAL_UTILS_TD) . '</a>
             <div class="hidden error-msg"></div>

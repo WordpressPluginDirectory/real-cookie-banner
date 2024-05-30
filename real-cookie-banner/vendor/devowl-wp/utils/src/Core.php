@@ -85,15 +85,16 @@ trait Core
      */
     public function updateDbCheck()
     {
-        $installed = $this->getActivator()->getDatabaseVersion();
-        if ($installed !== $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION)) {
+        $activator = $this->getActivator();
+        $installed = $activator->getDatabaseVersion();
+        if ($installed !== $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION) && !$activator->isMigrationLocked() && $activator->isMigrationLocked(\time())) {
             $slug = $this->getPluginConstant(Constants::PLUGIN_CONST_SLUG);
             $textdomain = $this->getPluginConstant(Constants::PLUGIN_CONST_TEXT_DOMAIN);
             $this->debug('(Re)install the database tables', __FUNCTION__);
             // Clear localization cache for JSON MO files
             $this->getPluginClassInstance(Constants::PLUGIN_CLASS_LOCALIZATION)->clearMoCacheDir($slug, $textdomain);
-            $this->getActivator()->registerCapabilities();
-            if ($this->getActivator()->install()) {
+            $activator->registerCapabilities();
+            if ($activator->install()) {
                 /**
                  * A new version got installed for this plugin. Consider to use the [`versionCompareOlderThan()`](../php/classes/MatthiasWeb-Utils-Core.html#method_versionCompareOlderThan)
                  * method from the Core class.
@@ -110,6 +111,7 @@ trait Core
                  * @param {string} $slug
                  */
                 \do_action('DevOwl/Utils/NewVersionInstallation', $installed, $slug);
+                $activator->isMigrationLocked(0);
             }
         }
     }

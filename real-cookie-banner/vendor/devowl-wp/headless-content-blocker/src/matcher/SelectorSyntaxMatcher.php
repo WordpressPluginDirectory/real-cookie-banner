@@ -5,6 +5,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelper;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\Image;
 /**
@@ -68,6 +69,11 @@ class SelectorSyntaxMatcher extends AbstractMatcher
      */
     public function createResult($match)
     {
+        $forceResult = $match->getForceResult();
+        if ($forceResult instanceof BlockedResult) {
+            $match->setForceResult(null);
+            return $forceResult;
+        }
         $result = $this->createPlainResultFromMatch($match);
         if ($this->blockAutomatically) {
             if ($this->getHeadlessContentBlocker()->isAllowMultipleBlockerResults()) {

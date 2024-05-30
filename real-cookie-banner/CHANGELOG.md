@@ -3,6 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.9 (2024-05-29)
+
+
+### Bug Fixes
+
+* compatibility with Bricks Builder and PhotoSwipe lightboxes (CU-8694jz55m)
+* compatibility with Elementor Lightbox widget
+* compatibility with Perfmatters lazy loading iframes (CU-8694jz55m)
+* do not show REST API notice for non-administrators (CU-8694n17tx)
+* the WP cron system breaks the notice check and shows a notice with 'Operation timed out' error (CU-8694nu6cm)
+
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.10.4</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* matchesUrl() should also work with addSelectorSyntaxMap() (CU-8694jz55m)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.10</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* allow to delegateClick() the real element before opening the hero dialog (confirm(), CU-m15mty)
+* allow to use confirm() and delegateClick() together (CU-8694myd2d)
+* matchesUrl() should also work with addSelectorSyntaxMap() (CU-8694jz55m)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.10</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* allow to delegateClick() the real element before opening the hero dialog (confirm(), CU-m15mty)
+* do not render visual content blockers in nested confirm() blockers (CU-m15mty)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.12.6</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* accessibility elements use prohibited aria attributes aria-labelledby (CU-8694k3zua)
+* allow to delegateClick() the real element before opening the hero dialog (confirm(), CU-m15mty)</details>
+
+
+
+
+
+## 4.7.8 (2024-05-10)
+
+
+### Bug Fixes
+
+* compatibility with AI Assistant with ChatGPT by AYS (CU-8694f00cj)
+* compatibility with pixfort modal dialog and unblocked content
+* compatibility with SuperFly Menu in combination with Autoptimize (CU-8694ge2gj)
+* fatal error in admin dashboard about urlencode when using multidimensional cookies for REST API check (CU-86949561p)
+* increase timeout for testing the REST API consent save mechanism (CU-86949561p)
+
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.10.3</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* allow to rerun the HTML processor multiple times through registerRerun method (CU-8694ge2gj)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.16.9</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* apply inline script plugins also to scripts with base64-encoded data URL as src (CU-8694ge2gj)
+* compatibility with AI Assistant with ChatGPT by AYS (CU-8694f00cj)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.19</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* delete checkboxes for privacy policy and only print an information for this (CU-861mrzwar)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.3</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Bug Fixes
+
+* delete checkboxes for privacy policy and only print an information for this (CU-861mrzwar)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.3</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* do not show admin notice about REST API issues in update admin screen (CU-8694hc398)
+* too many requests to license.devowl.io announcements endpoint (CU-86939q6ce)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.6.2</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Bug Fixes
+
+* sticky legal link icon is not aligned correctly when bootstrap is in use (CU-8694dcmep)</details>
+
+
+
+
+
+## 4.7.7 (2024-04-25) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.13.3</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* added moe supported languages (CU-86936my3v)
+* disabled default lang edit, hide fields depending on translatable and extended merge strategy plus other fixes (CU-86936my3v)
+* enabled statistics with allowedLanguages for translators, changed media permissions (CU-86936my3v)
+* filter language select by role parameters (CU-86936my3v)
+* introduce lastEditedBy field for templates (CU-86936my3v)
+* introduce role parameters to users (CU-86936my3v)
+* introducing form field wrapper with role based functionalities and used it for template forms (CU-86936my3v)
+* introducing password login in rcb (CU-86936my3v)
+* purpose translation variable validation and last editors (CU-86936my3v)
+* rename route to user/password (CU-86936my3v)
+
+
+##### Refactoring
+
+* introduce user base interfaces (CU-86936my3v)
+* move password route (CU-86936my3v)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 0.5.21</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* introducing password login in rcb (CU-86936my3v)
+
+
+##### Refactoring
+
+* introduce user base interfaces (CU-86936my3v)</details>
+
+
+
+
+
 ## 4.7.6 (2024-04-23)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.

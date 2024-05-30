@@ -76,7 +76,9 @@ class Service
      */
     public function admin_notices()
     {
-        if (!isset($GLOBALS[self::NOTICE_CORRUPT_REST_API_ID])) {
+        $screen = \get_current_screen();
+        $isUpdateCorePage = $screen->id === 'update-core';
+        if (!isset($GLOBALS[self::NOTICE_CORRUPT_REST_API_ID]) && !$isUpdateCorePage) {
             $GLOBALS[self::NOTICE_CORRUPT_REST_API_ID] = \true;
             $securityPlugins = $this->getSecurityPlugins();
             echo \sprintf('<div id="notice-corrupt-rest-api" class="hidden notice notice-warning" style="display:none;"><p>%s</p><ul style="list-style:circle;margin-left:30px;"></ul><p>%s</p><p>%s</p><textarea readonly="readonly" style="width:100%%;margin-bottom:5px;" rows="4"></textarea></div>', \sprintf(

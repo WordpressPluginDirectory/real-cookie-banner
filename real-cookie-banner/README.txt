@@ -1,19 +1,19 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
 Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
-Stable tag: 4.7.6
+Stable tag: 4.7.9
 Requires at least: 5.8
 Requires PHP: 7.4.0
 Tested up to: 6.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-Obtain GDPR (DSGVO/RGPD) and ePrivacy Directive (TTDSG, LOPD-GDD, DTA) compliant consents in your cookie banner. More than just a cookie notice!
+Obtain GDPR (DSGVO/RGPD) and ePrivacy Directive (TDDDG/TTDSG, LOPD-GDD, DTA) compliant consents in your cookie banner. More than just a cookie notice!
 
 == Description ==
 **Cookie Banner and Consent Management for your WordPress website – easy to be legally compliant**
 
-Obtain GDPR (also known as DSGVO, RGPD, RODO, AVG) and ePrivacy Directive (implemented in national law as TTDSG, LOPD-GDD, DTA, TLA, LEK, E-com Act) compliant consents. **Find services, cookies etc. and fill all legal information in your cookie banner.** More than just a cookie notice! Cookie plugin designed specifically for WordPress websites to simplify setup.
+Obtain GDPR (also known as DSGVO, RGPD, RODO, AVG) and ePrivacy Directive (implemented in national law as TDDDG/TTDSG, LOPD-GDD, DTA, TLA, LEK, E-com Act) compliant consents. **Find services, cookies etc. and fill all legal information in your cookie banner.** More than just a cookie notice! Cookie plugin designed specifically for WordPress websites to simplify setup.
 
 Real Cookie Banner is a cookie and consent management plugin. **Obtain consent to load services and set cookies for your visitors in accordance with the GDPR and ePrivacy Directive.** In addition, content blockers help you to be compliant even if your theme, plugin or content loads styles, scripts or iframes that would transfer personal data. **Start now with our guided-configuration and avoid legal risks!**
 
@@ -115,10 +115,10 @@ The General Data Protection Regulation (GDPR), also referred to as GDPR, RGPD, R
 
 Although the GDPR significantly impacts how cookies are used on websites, it does not directly regulate the use of cookies. The regulation of cookies falls under the ePrivacy Directive, often referred to as the "Cookie Law", which requires user consent for the storage of and access to cookies on their devices. However, since cookies can store personal data such as user preferences or behavior tracking information, the GDPR's consent and transparency principles come into play. In essence, while the ePrivacy Directive governs the use of cookies, the GDPR sets the broader framework for the protection of personal data, which indirectly influences how cookies are handled when they process personal data.
 
-= What is the ePrivacy Directive (implemented in national law as TTDSG, LOPD-GDD, DTA, TLA, LEK, E-com Act)? =
+= What is the ePrivacy Directive (implemented in national law as TDDDG/TTDSG, LOPD-GDD, DTA, TLA, LEK, E-com Act)? =
 Answer
 
-The ePrivacy Directive, also known as the "Cookie Directive", is an EU directive focused on the protection of personal data in electronic communications. It requires companies and website operators within the EU to obtain users' consent before storing or accessing information on their devices, such as through cookies. It is the reason why most website in the EU have cookie plugins, also known as cookie consent dialogs or cookie banners. Member states have transposed the directive into their national laws, leading to various names for the legislation in different countries, like TTDSG in Germany, LOPD-GDD in Spain, DTA in Netherlands, TLA in Poland, LEK in Sweden, and the E-com Act in Norway.
+The ePrivacy Directive, also known as the "Cookie Directive", is an EU directive focused on the protection of personal data in electronic communications. It requires companies and website operators within the EU to obtain users' consent before storing or accessing information on their devices, such as through cookies. It is the reason why most website in the EU have cookie plugins, also known as cookie consent dialogs or cookie banners. Member states have transposed the directive into their national laws, leading to various names for the legislation in different countries, like TDDDG (former TTDSG) in Germany, LOPD-GDD in Spain, DTA in Netherlands, TLA in Poland, LEK in Sweden, and the E-com Act in Norway.
 
 == Screenshots ==
 
