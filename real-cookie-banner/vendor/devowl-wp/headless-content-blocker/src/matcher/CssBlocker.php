@@ -203,7 +203,7 @@ class CssBlocker
      */
     protected function generateDummyUrl($result, $dummyFileName, $originalUrl)
     {
-        $pseudoMatch = new TagAttributeMatch(null, null, null, [], null, null, null, null);
+        $pseudoMatch = new TagAttributeMatch(null, null, 'style', [], null, null, null, null);
         $this->matcher->applyConsentAttributes($result, $pseudoMatch);
         $pseudoMatch->setAttribute(Constants::URL_QUERY_ARG_ORIGINAL_URL_IN_STYLE, \sprintf('%s-', \base64_encode($originalUrl)));
         // add trailing `-` to avoid removal of `==`]

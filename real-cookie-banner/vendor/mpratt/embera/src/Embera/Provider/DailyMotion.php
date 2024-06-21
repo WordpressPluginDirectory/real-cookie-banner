@@ -64,7 +64,7 @@ class DailyMotion extends ProviderAdapter implements ProviderInterface
         $attr[] = 'height="{height}"';
         $attr[] = 'src="' . $embedUrl . '"';
         $attr[] = 'allowfullscreen';
-        $attr[] = 'allow="autoplay"';
+        $attr[] = 'allow="autoplay; fullscreen; picture-in-picture; web-share"';
         return ['type' => 'video', 'provider_name' => 'Dailymotion', 'provider_url' => 'http://www.dailymotion.com', 'title' => !empty($videoTitle) ? \str_replace(array('-', '_'), ' ', $videoTitle) : 'Unknown Title', 'html' => '<iframe ' . \implode(' ', $attr) . '></iframe>'];
     }
 }

@@ -33,7 +33,7 @@ function mmdb_autoload($class) : void
         // replace the namespace separator with a directory separator...
         $path = \str_replace('\\', '/', $path);
         // and finally, add the PHP file extension to the result.
-        $path = $path . '.php';
+        $path .= '.php';
         // $path should now contain the path to a PHP file defining $class
         if (\file_exists($path)) {
             include $path;

@@ -34,7 +34,8 @@ class RateLimitNotice
         // Only do this once per plugin
         if (!isset($GLOBALS[self::NOTICE_ID])) {
             $GLOBALS[self::NOTICE_ID] = \true;
-            \add_action('admin_notices', [$this, 'admin_notices']);
+            // Temporarily disabled due to https://app.clickup.com/t/8694uj43d?comment=90120048782289
+            //add_action('admin_notices', [$this, 'admin_notices']);
             \add_filter('http_response', [$this, 'http_response'], 10, 3);
         }
     }

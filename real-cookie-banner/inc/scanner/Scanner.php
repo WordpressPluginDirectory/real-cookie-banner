@@ -473,9 +473,12 @@ class Scanner
      * @param array $caps
      * @see https://regex101.com/r/3U3miS/1
      */
-    public function reduceCurrentUserPermissions()
+    public function probablyReduceCurrentUserPermissions()
     {
         global $current_user;
+        if (!$this->isActive()) {
+            return;
+        }
         \add_action('user_has_cap', function ($caps) {
             $caps['administrator'] = \false;
             $caps['manage_options'] = \false;

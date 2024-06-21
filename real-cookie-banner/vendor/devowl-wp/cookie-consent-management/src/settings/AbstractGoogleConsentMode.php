@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\Utils;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 /**
  * Abstract implementation of the settings for the Google Consent Mode compatibility.
@@ -41,6 +42,41 @@ abstract class AbstractGoogleConsentMode extends BaseSettings
      * @return boolean
      */
     public abstract function isListPurposes();
+    /**
+     * Get the consent modes as array.
+     */
+    public function getConsentModes()
+    {
+        $result = [];
+        if ($this->isEnabled()) {
+            $setCookiesViaManager = $this->getSettings()->getGeneral()->getSetCookiesViaManager();
+            $countryBypass = $this->getSettings()->getCountryBypass();
+            $denied = 'denied';
+            $granted = 'granted';
+            $uniqueNames = [];
+            if ($setCookiesViaManager === ManagerMiddleware::SET_COOKIES_AFTER_CONSENT_VIA_GOOGLE_TAG_MANAGER_WITH_GCM) {
+                foreach ($this->getSettings()->getGeneral()->getServiceGroups() as $group) {
+                    foreach ($group->getItems() as $service) {
+                        $uniqueName = $service->getUniqueName();
+                        if (!empty($uniqueName) && $uniqueName !== ManagerMiddleware::IDENTIFIER_GOOGLE_TAG_MANAGER) {
+                            $uniqueNames[] = $uniqueName;
+                        }
+                    }
+                }
+            }
+            $consentTypes = \array_merge(['ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage', 'functionality_storage', 'personalization_storage', 'security_storage'], $uniqueNames);
+            $defaults = \array_fill_keys($consentTypes, $denied);
+            // Implicit consent for users from third countries which automatically accept all cookies
+            if ($countryBypass->isActive() && $countryBypass->getType() === AbstractCountryBypass::TYPE_ALL) {
+                $result[] = \array_merge(\array_fill_keys($consentTypes, $granted), ['wait_for_update' => 1000, 'region' => \array_values(
+                    // TODO: extract from external package
+                    \array_diff(\array_keys(Iso3166OneAlpha2::getCodes()), $countryBypass->getCountries())
+                )]);
+            }
+            $result[] = \array_merge($defaults, ['wait_for_update' => 1000]);
+        }
+        return $result;
+    }
     /**
      * Calculate some recommendations depending on the available services and if GCM is active or not.
      *

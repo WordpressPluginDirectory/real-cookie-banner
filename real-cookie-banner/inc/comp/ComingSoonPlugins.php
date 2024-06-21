@@ -159,7 +159,7 @@ class ComingSoonPlugins
      */
     protected function getPreviewUrlForMaintenancePlugin()
     {
-        return \is_plugin_active('maintenance/maintenance.php') ? \home_url('?maintenance-preview') : null;
+        return \is_plugin_active('maintenance/maintenance.php') ? \home_url('?maintenance-preview=1') : null;
     }
     /**
      * Get preview URL for "CMP – Coming Soon & Maintenance Plugin by NiteoThemes" plugin.

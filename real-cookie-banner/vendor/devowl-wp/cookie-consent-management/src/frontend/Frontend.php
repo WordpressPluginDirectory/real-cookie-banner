@@ -141,7 +141,7 @@ class Frontend
                 }
             }
         }
-        $gcmOutput = $this->generateGoogleConsentModeCodeOnPageLoad($uniqueNames);
+        $gcmOutput = $this->generateGoogleConsentModeCodeOnPageLoad();
         if (!empty($gcmOutput)) {
             $output[] = \is_callable($outputModifier) ? $outputModifier($gcmOutput, null) : $gcmOutput;
         }
@@ -149,30 +149,15 @@ class Frontend
     }
     /**
      * Generate the code on page load for Google Consent Mode.
-     *
-     * @param string[] $uniqueNames Additional unique names which should be sent to Google beside e.g. `ad_storage`
      */
-    protected function generateGoogleConsentModeCodeOnPageLoad($uniqueNames = [])
+    protected function generateGoogleConsentModeCodeOnPageLoad()
     {
         $settings = $this->getCookieConsentManagement()->getSettings();
-        $setCookiesViaManager = $settings->getGeneral()->getSetCookiesViaManager();
-        $countryBypass = $settings->getCountryBypass();
         $gcm = $settings->getGoogleConsentMode();
         $output = '';
         if ($gcm->isEnabled()) {
-            $denied = 'denied';
-            $granted = 'granted';
-            $consentTypes = \array_merge(['ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage', 'functionality_storage', 'personalization_storage', 'security_storage'], $setCookiesViaManager === ManagerMiddleware::SET_COOKIES_AFTER_CONSENT_VIA_GOOGLE_TAG_MANAGER_WITH_GCM ? $uniqueNames : []);
-            $defaults = \array_fill_keys($consentTypes, $denied);
-            // Implicit consent for users from third countries which automatically accept all cookies
-            $regionGtag = '';
-            if ($countryBypass->isActive() && $countryBypass->getType() === AbstractCountryBypass::TYPE_ALL) {
-                $regionGtag = \sprintf("\ngtag('consent', 'default', %s );", \json_encode(\array_merge(\array_fill_keys($consentTypes, $granted), ['wait_for_update' => 1000, 'region' => \array_values(
-                    // TODO: extract from external package
-                    \array_diff(\array_keys(Iso3166OneAlpha2::getCodes()), $countryBypass->getCountries())
-                )])));
-            }
-            $output = \sprintf("<script>window.gtag && (()=>{gtag('set', 'url_passthrough', %s);\ngtag('set', 'ads_data_redaction', %s);%s\ngtag('consent', 'default', %s);})()</script>", $gcm->isCollectAdditionalDataViaUrlParameters() ? 'true' : 'false', $gcm->isRedactAdsDataWithoutConsent() ? 'true' : 'false', $regionGtag, \json_encode(\array_merge($defaults, ['wait_for_update' => 1000])));
+            $consentModes = $gcm->getConsentModes();
+            $output = \sprintf("<script>window.gtag && (()=>{gtag('set', 'url_passthrough', %s);\ngtag('set', 'ads_data_redaction', %s);\nfor (const d of %s) {\n\tgtag('consent', 'default', d);\n}})()</script>", $gcm->isCollectAdditionalDataViaUrlParameters() ? 'true' : 'false', $gcm->isRedactAdsDataWithoutConsent() ? 'true' : 'false', \json_encode($consentModes));
         }
         return $output;
     }

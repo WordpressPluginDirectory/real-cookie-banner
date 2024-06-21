@@ -26,7 +26,7 @@ class LottieFiles extends ProviderAdapter implements ProviderInterface
     /** inline {@inheritdoc} */
     protected $endpoint = 'https://embed.lottiefiles.com/oembed?format=json';
     /** inline {@inheritdoc} */
-    protected static $hosts = ['*.lottiefiles.com'];
+    protected static $hosts = ['*.lottiefiles.com', '*.lottie.host'];
     /** inline {@inheritdoc} */
     protected $allowedParams = ['maxwidth', 'maxheight'];
     /** inline {@inheritdoc} */
@@ -36,7 +36,7 @@ class LottieFiles extends ProviderAdapter implements ProviderInterface
     /** inline {@inheritdoc} */
     public function validateUrl(Url $url)
     {
-        return (bool) \preg_match('~lottiefiles\\.com/([0-9]+)\\-~i', (string) $url);
+        return (bool) \preg_match('~(lottiefiles\\.com|lottie\\.host)/([0-9]+)\\-~i', (string) $url);
     }
     /** inline {@inheritdoc} */
     public function normalizeUrl(Url $url)

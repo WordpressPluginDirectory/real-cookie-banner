@@ -15,7 +15,7 @@ namespace DevOwl\RealCookieBanner\Vendor\Embera\Provider;
 use DevOwl\RealCookieBanner\Vendor\Embera\Url;
 /**
  * Nanoo Provider
- * 
+ *
  *
  * @link https://nanoo.tv
  *
@@ -48,7 +48,7 @@ class Nanoo extends ProviderAdapter implements ProviderInterface
     public function getFakeResponse()
     {
         \preg_match('~/link/v/([^/]+)~i', (string) $this->url, $matches);
-        $embedUrl = 'https://www.nanoo.tv/code/media.w22?xf_nostart=1;xf_movie_id=' . $matches['1'];
+        $embedUrl = 'https://www.nanoo.tv/link/' . $matches['1'];
         $attr = [];
         $attr[] = 'width="{width}"';
         $attr[] = 'height="{height}"';
@@ -57,6 +57,7 @@ class Nanoo extends ProviderAdapter implements ProviderInterface
         $attr[] = 'allow="autoplay; fullscreen"';
         $attr[] = 'allowfullscreen';
         $attr[] = 'scrolling="no"';
+        $attr[] = 'sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"';
         return ['type' => 'video', 'provider_name' => 'Nanoo', 'provider_url' => 'https://*.nanoo.tv', 'title' => 'Unknown title', 'html' => '<iframe ' . \implode(' ', $attr) . '></iframe>'];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\comp;
 
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\Utils;
 use Jetpack;
 // @codeCoverageIgnoreStart
@@ -115,6 +116,10 @@ class TemplatesPluginIntegrations
                     return $isDeactivated;
                 }
                 return !\wp_rcb_consent_given('http', 'pys_session_limit', '*')['cookieOptIn'];
+            });
+            // WooCommerce Google Analytics: Disable Consent Mode management as this is our responsibility
+            \add_filter('woocommerce_ga_gtag_consent_modes', function ($modes) {
+                return GoogleConsentMode::getInstance()->isEnabled() ? [] : $modes;
             });
         }
     }

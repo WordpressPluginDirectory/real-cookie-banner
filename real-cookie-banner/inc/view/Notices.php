@@ -334,45 +334,20 @@ class Notices
             return null;
         }
         $result = $this->getStates()->get(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
-        $args = ['body' => ['dummy' => \true, 'buttonClicked' => 'main_all', 'decision' => [2 => [3]], 'gcmConsent' => ['ad_storage'], 'tcfString' => 'TCFSTRING=='], 'cookies' => [], 'headers' => [], 'redirection' => 0, 'timeout' => 20];
-        if (!\is_array($result) || \time() > $result[1]) {
-            $result = [];
-            $nextTryInSeconds = 60 * 30;
-            if ($this->nonBlockingRequestStarted) {
-                $nextTryInSeconds = 20;
-            } else {
-                $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
-                $html = '';
-                // Include Basic auth in loopback requests.
-                if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-                    $args['headers']['Authorization'] = 'Basic ' . \base64_encode(\wp_unslash($_SERVER['PHP_AUTH_USER']) . ':' . \wp_unslash($_SERVER['PHP_AUTH_PW']));
-                }
-                // Include all cookies except WordPress login cookies
-                foreach ($_COOKIE as $key => $value) {
-                    // Exclude authentication cookies: https://github.com/WordPress/WordPress/blob/06615abcf77d4e87df3906381f5d362e5eff5943/wp-includes/default-constants.php#L270-L289
-                    if (!Utils::startsWith($key, 'wordpress_') && !\in_array($key, [
-                        // Disable existing session as this could lead to errors in loopback requests and lead to the following error:
-                        // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
-                        'PHPSESSID',
-                    ], \true)) {
-                        // Check for array, as a cookie with `[]` indicates an array, example: `test[]`
-                        $args['cookies'][$key] = \is_array($value) ? \rawurlencode_deep($value) : \urlencode($value);
-                    }
-                }
-                $url = \rest_url($consentEndpoint);
-                $result[$url] = [];
-                $checker = new SavingConsentViaRestApiEndpointChecker();
-                $checker->start();
-                // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
-                $args['sslverify'] = \apply_filters('https_local_ssl_verify', \false);
-                $response = \wp_remote_post($url, $args);
+        $checker = new SavingConsentViaRestApiEndpointChecker();
+        if ($checker->shouldInvalidate($result)) {
+            // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
+            $checker->setRequestArgument('sslverify', \apply_filters('https_local_ssl_verify', \false));
+            $consentEndpoint = UtilsService::getNamespace($this) . '/consent';
+            $url = \rest_url($consentEndpoint);
+            if ($checker->start($url, $this->nonBlockingRequestStarted)) {
+                $response = \wp_remote_post($url, $checker->getRequestArguments());
                 if (\is_wp_error($response)) {
-                    $result[$url][] = $response->get_error_message();
-                    $result[$url][] = \sprintf(
+                    $checker->addError($url, [$response->get_error_message(), \sprintf(
                         // translators:
                         \__('There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href="%s">Tools > Site Health</a> whether errors regarding the REST API are listed there.', RCB_TD),
                         \admin_url('site-health.php')
-                    );
+                    )]);
                 } else {
                     // @codeCoverageIgnoreStart
                     if (!\defined('PHPUNIT_FILE')) {
@@ -381,21 +356,21 @@ class Notices
                     // @codeCoverageIgnoreEnd
                     $htaccess = \get_home_path() . '.htaccess';
                     $hostname = \gethostname();
-                    $result[$url] = $checker->teardown($response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);
+                    $checker->received($url, $response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);
                 }
             }
-            $result = [$result, \time() + $nextTryInSeconds];
-            // Add timestamp so we can do this check every x hours
+            $result = $checker->teardown();
             $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, $result);
         }
-        $result = $result[0];
-        if (\count(Utils::array_flatten($result)) > 0) {
+        $tests = $result['tests'];
+        if (\count(Utils::array_flatten($tests)) > 0) {
             $html = \sprintf('<p>%1$s</p>', \__('<strong>Consent cannot be saved in the cookie banner:</strong> Website visitors (not logged into WordPress) currently cannot save consents in the cookie banner. This may result in the cookie banner being displayed again each time the website visitor visits a page.', RCB_TD));
-            foreach ($result as $url => $errors) {
+            foreach ($tests as $url => $errors) {
+                $url = \base64_decode($url);
                 $html .= \sprintf('<p>%s</p><ul style="list-style: initial;padding-inline-start:27px;"><li>%2$s</li></ul>', \sprintf(
                     // translators:
                     \__('The consent would be saved via the WP REST API route %s. The following problems with your WordPress installation were detected during the automatic error analysis:', RCB_TD),
-                    \sprintf('<a style="word-break:break-all;" target="_blank" href="%s">%s</a>', \add_query_arg(\array_merge($args['body'], ['_method' => 'POST']), $url), $url)
+                    \sprintf('<a style="word-break:break-all;" target="_blank" href="%s">%s</a>', \add_query_arg(\array_merge($checker->getRequestArguments()['body'], ['_method' => 'POST']), $url), $url)
                 ), \join('</li><li>', \array_map(function ($error) {
                     if (\is_array($error)) {
                         $code = $error[0];

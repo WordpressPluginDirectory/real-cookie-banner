@@ -7,7 +7,8 @@ namespace DevOwl\RealCookieBanner\Vendor\MaxMind\Db\Reader;
 class Util
 {
     /**
-     * @param resource $stream
+     * @param resource    $stream
+     * @param int<0, max> $numberOfBytes
      */
     public static function read($stream, int $offset, int $numberOfBytes) : string
     {

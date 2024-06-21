@@ -32,7 +32,7 @@ class Youtube extends ProviderAdapter implements ProviderInterface
     /** inline {@inheritdoc} */
     public function validateUrl(Url $url)
     {
-        return (bool) (\preg_match('~v=(?:[a-z0-9_\\-]+)~i', (string) $url) || \preg_match('~/shorts/(?:[a-z0-9_\\-]+)~i', (string) $url) || \preg_match('~/playlist(.+)list=(?:[a-z0-9_\\-]+)~i', (string) $url));
+        return (bool) (\preg_match('~v=(?:[a-z0-9_\\-]+)~i', (string) $url) || \preg_match('~/shorts/(?:[a-z0-9_\\-]+)~i', (string) $url) || \preg_match('~/playlist(.+)list=(?:[a-z0-9_\\-]+)~i', (string) $url) || \preg_match('~/live/(?:[a-z0-9_\\-]+)~i', (string) $url));
     }
     /** inline {@inheritdoc} */
     public function normalizeUrl(Url $url)
@@ -59,8 +59,10 @@ class Youtube extends ProviderAdapter implements ProviderInterface
         $attr[] = 'height="{height}"';
         $attr[] = 'src="' . $embedUrl . '"';
         $attr[] = 'frameborder="0"';
-        $attr[] = 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"';
+        $attr[] = 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"';
+        $attr[] = 'referrerpolicy="strict-origin-when-cross-origin"';
         $attr[] = 'allowfullscreen';
+        $attr[] = 'title=""';
         return ['type' => 'video', 'provider_name' => 'Youtube', 'provider_url' => 'https://www.youtube.com', 'title' => 'Unknown title', 'html' => '<iframe ' . \implode(' ', $attr) . '></iframe>'];
     }
 }

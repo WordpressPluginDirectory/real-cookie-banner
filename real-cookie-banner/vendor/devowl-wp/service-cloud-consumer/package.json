@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "0.5.7",
+    "version": "0.5.8",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",
@@ -23,19 +23,6 @@
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage"
     },
-    "eslintConfig": {
-        "extends": [
-            "./node_modules/@devowl-wp/eslint-config/src/.eslintrc.cjs"
-        ]
-    },
-    "eslintIgnore": [
-        "dist",
-        "dev",
-        "docs",
-        "coverage",
-        "node_modules",
-        "vendor"
-    ],
     "devDependencies": {
         "@devowl-wp/api-real-cookie-banner": "workspace:*",
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -46,10 +33,10 @@
         "@devowl-wp/phpcs-config": "workspace:*",
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
-        "ts-node": "~10.9.1",
-        "tslib": "^2.5.0",
-        "typescript": "~5.2.2",
-        "webpack-cli": "~5.1.4"
+        "ts-node": "10.9.2",
+        "tslib": "2.6.3",
+        "typescript": "5.4.5",
+        "webpack-cli": "5.1.4"
     },
     "peerDependencies": {
         "@devowl-wp/api-real-cookie-banner": "workspace:*"

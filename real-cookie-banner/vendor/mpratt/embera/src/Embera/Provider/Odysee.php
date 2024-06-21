@@ -30,7 +30,7 @@ class Odysee extends ProviderAdapter implements ProviderInterface
     /** inline {@inheritdoc} */
     protected $httpsSupport = \true;
     /** inline {@inheritdoc} */
-    protected $responsiveSupport = \false;
+    protected $responsiveSupport = \true;
     /** inline {@inheritdoc} */
     public function validateUrl(Url $url)
     {

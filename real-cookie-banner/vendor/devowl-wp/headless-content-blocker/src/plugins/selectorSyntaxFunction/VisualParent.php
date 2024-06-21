@@ -54,7 +54,7 @@ class VisualParent extends AbstractPlugin
                     // Avoid flickering by automatically hiding the visual parents' next item
                     // We can safely use `<style` as this tag is allowed everywhere, head and body
                     if (!Utils::startsWith($visualParent, 'children:') && !\is_numeric($visualParent)) {
-                        $match->setBeforeTag($match->getBeforeTag() . \sprintf('<style>%s:has([%s="%s"][%s]){visibility:hidden;}</style>', $visualParent, Constants::HTML_ATTRIBUTE_VISUAL_PARENT, $visualParent, Constants::HTML_ATTRIBUTE_COOKIE_IDS));
+                        $match->setBeforeTag($match->getBeforeTag() . \sprintf('<style>%s:has([%s="%s"][%s]:not([%s])){visibility:hidden;}</style>', $visualParent, Constants::HTML_ATTRIBUTE_VISUAL_PARENT, $visualParent, Constants::HTML_ATTRIBUTE_COOKIE_IDS, Constants::HTML_ATTRIBUTE_CONFIRM));
                     }
                 }
             });

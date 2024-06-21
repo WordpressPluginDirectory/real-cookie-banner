@@ -210,6 +210,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('init', [$templatesPluginIntegrations, 'init'], 0);
         \add_action('init', [ComingSoonPlugins::getInstance(), 'init'], 11);
         \add_action('init', [ThirdPartyNotices::getInstance(), 'init']);
+        \add_action('init', [$this->getScanner(), 'probablyReduceCurrentUserPermissions'], 0);
         \add_action('init', [$this, 'registerPostTypes'], 0);
         // E.g. WooCommerce does not know at 10 priority about the custom post types
         \add_action('RCB/Templates/FalsePositivePlugin', [$templatesPluginIntegrations, 'templates_plugin_false_positives'], 10, 4);
@@ -465,7 +466,6 @@ class Core extends BaseCore implements IOverrideCore
         GoogleConsentMode::getInstance()->enableOptionsAutoload();
         CountryBypass::getInstance()->enableOptionsAutoload();
         if ($scanner->isActive()) {
-            $scanner->reduceCurrentUserPermissions();
             ComingSoonPlugins::getInstance()->bypass();
             \add_action('shutdown', [$scanner, 'teardown']);
             \add_filter('show_admin_bar', '__return_false');

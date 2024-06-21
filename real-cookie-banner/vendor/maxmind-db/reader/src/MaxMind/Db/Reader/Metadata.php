@@ -3,7 +3,6 @@
 declare (strict_types=1);
 namespace DevOwl\RealCookieBanner\Vendor\MaxMind\Db\Reader;
 
-use ArgumentCountError;
 /**
  * This class provides the metadata for the MaxMind DB file.
  * @internal
@@ -88,7 +87,7 @@ class Metadata
     public function __construct(array $metadata)
     {
         if (\func_num_args() !== 1) {
-            throw new ArgumentCountError(\sprintf('%s() expects exactly 1 parameter, %d given', __METHOD__, \func_num_args()));
+            throw new \ArgumentCountError(\sprintf('%s() expects exactly 1 parameter, %d given', __METHOD__, \func_num_args()));
         }
         $this->binaryFormatMajorVersion = $metadata['binary_format_major_version'];
         $this->binaryFormatMinorVersion = $metadata['binary_format_minor_version'];

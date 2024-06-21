@@ -42,7 +42,7 @@ class Vimeo extends ProviderAdapter implements ProviderInterface
         $url->convertToHttps();
         $url->removeQueryString();
         $url->removeLastSlash();
-        if (\preg_match('~(?:vimeo\\.com/|player\\.vimeo\\.com/video/)(\\d+)~i', (string) $url, $matches)) {
+        if (\preg_match('~(?:vimeo\\.com/|player\\.vimeo\\.com/video/)(\\d+)/?$~i', (string) $url, $matches)) {
             $url->overwrite('https://player.vimeo.com/video/' . $matches[1]);
         }
         return $url;
@@ -57,8 +57,7 @@ class Vimeo extends ProviderAdapter implements ProviderInterface
         $attr[] = 'width="{width}"';
         $attr[] = 'height="{height}"';
         $attr[] = 'frameborder="0"';
-        $attr[] = 'allow="autoplay; fullscreen; picture-in-picture"';
-        $attr[] = 'allowfullscreen';
+        $attr[] = 'allow="autoplay; fullscreen; picture-in-picture; clipboard-write"';
         return ['type' => 'video', 'provider_name' => 'Vimeo', 'provider_url' => 'https://vimeo.com', 'title' => 'Unknown title', 'html' => '<iframe ' . \implode(' ', $attr) . '></iframe>'];
     }
 }

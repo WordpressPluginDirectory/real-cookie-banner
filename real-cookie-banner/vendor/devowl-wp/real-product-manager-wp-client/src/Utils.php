@@ -127,6 +127,7 @@ class Utils
         $url = \preg_replace('/^www\\./', '', $url);
         // Remove default ports (https://regex101.com/r/eyxvPE/1)
         $url = \preg_replace('/:(80|443)$/', '', $url);
+        $url = \strtolower($url);
         /**
          * This filter allows you to connect multiple hosts / subdomains to one main host and reduce the number of needed license keys.
          *

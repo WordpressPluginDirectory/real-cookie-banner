@@ -22,9 +22,9 @@ use DevOwl\RealCookieBanner\Vendor\Embera\Url;
 class Gumlet extends ProviderAdapter implements ProviderInterface
 {
     /** inline {@inheritdoc} */
-    protected $endpoint = 'https://api.gumlet.com/v1/oembed?format=json';
+    protected $endpoint = 'https://api.gumlet.com/v1/oembed';
     /** inline {@inheritdoc} */
-    protected static $hosts = ['gumlet.com', '*.gumlet.io'];
+    protected static $hosts = ['gumlet.com', '*.gumlet.io', 'gumlet.tv'];
     /** inline {@inheritdoc} */
     protected $allowedParams = ['maxwidth', 'maxheight'];
     /** inline {@inheritdoc} */
@@ -34,7 +34,7 @@ class Gumlet extends ProviderAdapter implements ProviderInterface
     /** inline {@inheritdoc} */
     public function validateUrl(Url $url)
     {
-        return (bool) \preg_match('~gumlet\\.(com|io)/(watch|embed)/([^/]+)~i', (string) $url);
+        return (bool) \preg_match('~gumlet\\.(com|io|tv)/(watch|embed)/([^/]+)~i', (string) $url);
     }
     /** inline {@inheritdoc} */
     public function normalizeUrl(Url $url)

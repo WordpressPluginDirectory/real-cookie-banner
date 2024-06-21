@@ -27,7 +27,7 @@ use DevOwl\RealCookieBanner\Vendor\Embera\ProviderCollection\DefaultProviderColl
 class Embera
 {
     /** @var string Current Library Version */
-    const VERSION = '2.0.36';
+    const VERSION = '2.0.40';
     /**
      * Constants describing how the library is
      * going to handle fake responses.

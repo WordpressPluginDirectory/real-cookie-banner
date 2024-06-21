@@ -20,7 +20,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: index.php
-#: inc/view/Banner.php:297
+#: inc/view/Banner.php:286
 msgid "https://devowl.io/wordpress-real-cookie-banner/"
 msgstr ""
 
@@ -39,370 +39,370 @@ msgstr ""
 msgid "https://devowl.io"
 msgstr ""
 
-#: inc/AdInitiator.php:34
+#: inc/AdInitiator.php:33
 msgid "Start configuration"
 msgstr ""
 
-#: inc/AdInitiator.php:76
+#: inc/AdInitiator.php:71
 msgid "key-features/presets.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:77
+#: inc/AdInitiator.php:72
 msgid "Consent Management"
 msgstr ""
 
-#: inc/AdInitiator.php:78
+#: inc/AdInitiator.php:73
 msgid "You can use Real Cookie Banner to store all technical and legal information about services and cookies to obtain informed consent. You can use 100+ service templates and 60+ content blocker templates to quickly and securely provide all the information you need."
 msgstr ""
 
-#: inc/AdInitiator.php:84
+#: inc/AdInitiator.php:79
 msgid "key-features/content-blocker.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:85
-#: inc/import/ImportBlocker.php:141
-#: inc/import/ImportBlocker.php:205
+#: inc/AdInitiator.php:80
+#: inc/import/ImportBlocker.php:139
+#: inc/import/ImportBlocker.php:203
 #: inc/settings/Blocker.php:132
 #: inc/view/ConfigPage.php:209
-#: inc/view/customize/banner/Texts.php:318
-#: inc/view/Notices.php:786
-#: inc/view/Notices.php:838
+#: inc/view/customize/banner/Texts.php:314
+#: inc/view/Notices.php:729
+#: inc/view/Notices.php:781
 msgid "Content Blocker"
 msgstr ""
 
-#: inc/AdInitiator.php:86
+#: inc/AdInitiator.php:81
 msgid "Themes, plugins and co. usually load scripts, styles and content that transfer personal data and set cookies before you have the consent of your visitors. You usually cannot control this by yourself. Content blockers make sure that these features are only executed after you have obtained consent."
 msgstr ""
 
-#: inc/AdInitiator.php:92
+#: inc/AdInitiator.php:87
 msgid "key-features/customize-presets.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:93
+#: inc/AdInitiator.php:88
 msgid "Customize design"
 msgstr ""
 
-#: inc/AdInitiator.php:94
+#: inc/AdInitiator.php:89
 msgid "You can design the cookie banner according to your wishes. 20+ design templates and 200+ options give you the flexibility to customize the cookie banner perfectly to your needs. From colors and effects to texts, you can unleash your creativity! All changes are displayed in a live preview."
 msgstr ""
 
-#: inc/AdInitiator.php:100
+#: inc/AdInitiator.php:95
 msgid "key-features/guided-configuration.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:101
+#: inc/AdInitiator.php:96
 msgid "Guided configuration"
 msgstr ""
 
-#: inc/AdInitiator.php:102
+#: inc/AdInitiator.php:97
 msgid "After installation, the checklist will guide you through all steps to be able to set up Real Cookie Banner in a legally compliant manner. We also explain the legal basis of features and the legal consequences if you change settings. So, you can quickly and safely set up your cookie banner!"
 msgstr ""
 
-#: inc/AdInitiator.php:108
+#: inc/AdInitiator.php:103
 msgid "key-features/list-of-consents.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:109
+#: inc/AdInitiator.php:104
 msgid "Documentation of consents"
 msgstr ""
 
-#: inc/AdInitiator.php:110
+#: inc/AdInitiator.php:105
 msgid "According to the GDPR, you have to prove that a visitor has consented to cookies and processing of personal data if he or she doubts this. We document consent completely and make it possible to trace the origin of the consent afterwards. You are on the safe side even in the worst case!"
 msgstr ""
 
-#: inc/AdInitiator.php:116
+#: inc/AdInitiator.php:111
 msgid "key-features/native-menu.gif"
 msgstr ""
 
-#: inc/AdInitiator.php:117
+#: inc/AdInitiator.php:112
 msgid "Native in WordPress"
 msgstr ""
 
-#: inc/AdInitiator.php:118
+#: inc/AdInitiator.php:113
 msgid "Real Cookie Banner is a cookie plugin specially designed for WordPress. It is fully installed in your WordPress as a native plugin. All consents are processed and stored on your server. Nothing is downloaded from a cloud in your visitor's browser, which avoids further legal issues."
 msgstr ""
 
-#: inc/Assets.php:517
+#: inc/Assets.php:506
 msgctxt "legal-text"
 msgid "Appropriate safeguard"
 msgstr ""
 
-#: inc/Assets.php:518
+#: inc/Assets.php:507
 msgctxt "legal-text"
 msgid "Standard contractual clauses"
 msgstr ""
 
-#: inc/Assets.php:519
+#: inc/Assets.php:508
 msgctxt "legal-text"
 msgid "Adequacy decision"
 msgstr ""
 
-#: inc/Assets.php:520
+#: inc/Assets.php:509
 msgctxt "legal-text"
 msgid "Binding corporate rules"
 msgstr ""
 
-#: inc/Assets.php:521
+#: inc/Assets.php:510
 msgctxt "legal-text"
 msgid "Other"
 msgstr ""
 
-#: inc/Assets.php:522
+#: inc/Assets.php:511
 msgctxt "legal-text"
 msgid "Use on legal basis of"
 msgstr ""
 
-#: inc/Assets.php:525
+#: inc/Assets.php:514
 msgctxt "legal-text"
 msgid "Art. 49 (1) lit. a GDPR"
 msgstr ""
 
-#: inc/Assets.php:532
+#: inc/Assets.php:521
 msgctxt "legal-text"
 msgid "Art. 17 (1) lit. a DSG (Switzerland)"
 msgstr ""
 
-#: inc/Assets.php:539
+#: inc/Assets.php:528
 msgctxt "legal-text"
 msgid "Legitimate interest"
 msgstr ""
 
-#: inc/Assets.php:540
+#: inc/Assets.php:529
 msgctxt "legal-text"
 msgid "Compliance with a legal obligation"
 msgstr ""
 
-#: inc/Assets.php:541
+#: inc/Assets.php:530
 msgctxt "legal-text"
 msgid "Consent"
 msgstr ""
 
-#: inc/Assets.php:542
+#: inc/Assets.php:531
 msgctxt "legal-text"
 msgid "We have recognized that you are a crawler/bot. Only natural persons must consent to cookies and processing of personal data. Therefore, the link has no function for you."
 msgstr ""
 
-#: inc/Assets.php:547
+#: inc/Assets.php:536
 msgctxt "legal-text"
 msgid "Technical cookie definition"
 msgstr ""
 
-#: inc/Assets.php:548
+#: inc/Assets.php:537
 msgctxt "legal-text"
 msgid "Uses cookies"
 msgstr ""
 
-#: inc/Assets.php:549
+#: inc/Assets.php:538
 msgctxt "legal-text"
 msgid "Cookie refresh"
 msgstr ""
 
-#: inc/Assets.php:550
+#: inc/Assets.php:539
 msgctxt "legal-text"
 msgid "Uses cookie-like information (LocalStorage, SessionStorage, IndexDB, etc.)"
 msgstr ""
 
-#: inc/Assets.php:555
+#: inc/Assets.php:544
 msgctxt "legal-text"
 msgid "Host"
 msgstr ""
 
-#: inc/Assets.php:556
+#: inc/Assets.php:545
 msgctxt "legal-text"
 msgid "Duration"
 msgstr ""
 
-#: inc/Assets.php:557
+#: inc/Assets.php:546
 msgctxt "legal-text"
 msgid "No expiration"
 msgstr ""
 
-#: inc/Assets.php:558
+#: inc/Assets.php:547
 msgctxt "legal-text"
 msgid "Type"
 msgstr ""
 
-#: inc/Assets.php:559
+#: inc/Assets.php:548
 msgctxt "legal-text"
 msgid "Purpose"
 msgstr ""
 
-#: inc/Assets.php:560
+#: inc/Assets.php:549
 #: inc/overrides/pro/view/TcfBanner.php:90
 msgctxt "legal-text"
 msgid "Purposes"
 msgstr ""
 
-#: inc/Assets.php:561
+#: inc/Assets.php:550
 msgctxt "legal-text"
 msgid "History of your privacy settings"
 msgstr ""
 
-#: inc/Assets.php:566
+#: inc/Assets.php:555
 msgctxt "legal-text"
 msgid "Skip to consent choices"
 msgstr ""
 
-#: inc/Assets.php:567
+#: inc/Assets.php:556
 msgctxt "legal-text"
 msgid "Show consent from"
 msgstr ""
 
-#: inc/Assets.php:568
+#: inc/Assets.php:557
 msgctxt "legal-text"
 msgid "Reading the consent has failed. Please try again later!"
 msgstr ""
 
-#: inc/Assets.php:573
+#: inc/Assets.php:562
 msgctxt "legal-text"
 msgid "Not yet consented to"
 msgstr ""
 
-#: inc/Assets.php:574
+#: inc/Assets.php:563
 msgctxt "legal-text"
 msgid "Provider"
 msgstr ""
 
-#: inc/Assets.php:575
+#: inc/Assets.php:564
 msgctxt "legal-text"
 msgid "Phone"
 msgstr ""
 
-#: inc/Assets.php:576
+#: inc/Assets.php:565
 msgctxt "legal-text"
 msgid "Email"
 msgstr ""
 
-#: inc/Assets.php:577
+#: inc/Assets.php:566
 msgctxt "legal-text"
 msgid "Contact form"
 msgstr ""
 
-#: inc/Assets.php:578
+#: inc/Assets.php:567
 msgctxt "legal-text"
 msgid "Privacy Policy"
 msgstr ""
 
-#: inc/Assets.php:579
+#: inc/Assets.php:568
 #: inc/settings/BannerLink.php:382
 msgctxt "legal-text"
 msgid "Legal notice"
 msgstr ""
 
-#: inc/Assets.php:580
+#: inc/Assets.php:569
 msgctxt "legal-text"
 msgid "Non-standardized data processing"
 msgstr ""
 
-#: inc/Assets.php:581
+#: inc/Assets.php:570
 msgctxt "legal-text"
 msgid "Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called \"essential services\" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given."
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:587
+#: inc/Assets.php:576
 msgctxt "legal-text"
 msgid "Data processing in unsecure third countries"
 msgstr ""
 
-#: inc/Assets.php:593
+#: inc/Assets.php:582
 msgctxt "legal-text"
 msgid "US data processing"
 msgstr ""
 
-#: inc/Assets.php:596
+#: inc/Assets.php:585
 msgid "second(s)"
 msgstr ""
 
-#: inc/Assets.php:597
+#: inc/Assets.php:586
 msgid "minute(s)"
 msgstr ""
 
-#: inc/Assets.php:598
+#: inc/Assets.php:587
 msgid "hour(s)"
 msgstr ""
 
-#: inc/Assets.php:599
+#: inc/Assets.php:588
 msgid "day(s)"
 msgstr ""
 
-#: inc/Assets.php:600
+#: inc/Assets.php:589
 msgid "month(s)"
 msgstr ""
 
-#: inc/Assets.php:601
+#: inc/Assets.php:590
 msgid "year(s)"
 msgstr ""
 
-#: inc/Assets.php:603
+#: inc/Assets.php:592
 msgid "second"
 msgstr ""
 
-#: inc/Assets.php:604
+#: inc/Assets.php:593
 msgid "minute"
 msgstr ""
 
-#: inc/Assets.php:605
+#: inc/Assets.php:594
 msgid "hour"
 msgstr ""
 
-#: inc/Assets.php:606
+#: inc/Assets.php:595
 msgid "day"
 msgstr ""
 
-#: inc/Assets.php:607
+#: inc/Assets.php:596
 msgid "month"
 msgstr ""
 
-#: inc/Assets.php:608
+#: inc/Assets.php:597
 msgid "year"
 msgstr ""
 
-#: inc/Assets.php:611
+#: inc/Assets.php:600
 msgid "seconds"
 msgstr ""
 
-#: inc/Assets.php:612
+#: inc/Assets.php:601
 msgid "minutes"
 msgstr ""
 
-#: inc/Assets.php:613
+#: inc/Assets.php:602
 msgid "hours"
 msgstr ""
 
-#: inc/Assets.php:614
+#: inc/Assets.php:603
 msgid "days"
 msgstr ""
 
-#: inc/Assets.php:615
+#: inc/Assets.php:604
 msgid "months"
 msgstr ""
 
-#: inc/Assets.php:616
+#: inc/Assets.php:605
 msgid "years"
 msgstr ""
 
-#: inc/Assets.php:619
+#: inc/Assets.php:608
 msgid "Close"
 msgstr ""
 
-#: inc/Assets.php:620
+#: inc/Assets.php:609
 msgid "Close without saving"
 msgstr ""
 
-#: inc/Assets.php:621
+#: inc/Assets.php:610
 msgid "Yes"
 msgstr ""
 
-#: inc/Assets.php:622
+#: inc/Assets.php:611
 msgid "No"
 msgstr ""
 
-#: inc/Assets.php:623
+#: inc/Assets.php:612
 msgid "Unknown"
 msgstr ""
 
-#: inc/Assets.php:624
+#: inc/Assets.php:613
 #: inc/overrides/pro/Stats.php:61
 #: inc/view/customize/banner/BasicLayout.php:392
 #: inc/view/customize/banner/BasicLayout.php:412
@@ -411,29 +411,29 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: inc/Assets.php:625
+#: inc/Assets.php:614
 msgid "No license activated - not for production use!"
 msgstr ""
 
-#: inc/Assets.php:626
+#: inc/Assets.php:615
 msgid "Product license not for production use!"
 msgstr ""
 
-#: inc/Assets.php:627
-#: inc/Assets.php:660
+#: inc/Assets.php:616
+#: inc/Assets.php:649
 #: inc/view/checklist/GetPro.php:55
-#: inc/view/Notices.php:909
+#: inc/view/Notices.php:852
 msgid "Learn more"
 msgstr ""
 
-#: inc/Assets.php:628
+#: inc/Assets.php:617
 msgid "https://devowl.io/knowledge-base/license-installation-type/"
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:633
+#: inc/Assets.php:622
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:198
-#: inc/view/Notices.php:878
+#: inc/view/Notices.php:821
 msgid " and "
 msgstr ""
 
@@ -462,7 +462,7 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
-#: inc/comp/migration/AbstractDashboardTileMigration.php:161
+#: inc/comp/migration/AbstractDashboardTileMigration.php:156
 msgid "Migration is only available in PRO version!"
 msgstr ""
 
@@ -480,7 +480,7 @@ msgid "Before you apply the new texts, you can %1$screate an export%2$s to backu
 msgstr ""
 
 #: inc/comp/migration/DashboardTileMigrationMajor2.php:74
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:116
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:113
 msgid "Apply new texts"
 msgstr ""
 
@@ -695,279 +695,279 @@ msgstr ""
 msgid "pro-modal/mobile-optimization.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor3.php:405
+#: inc/comp/migration/DashboardTileMigrationMajor3.php:403
 msgid "Updates in v3.0: You should act to be safe!"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor3.php:413
+#: inc/comp/migration/DashboardTileMigrationMajor3.php:411
 msgid "With Real Cookie Banner 3.0 we have released a major update, in which we have implemented, among other things, current legal adjustments. Read more about the changes in our <a href=\"%s\" target=\"_blank\">blog post</a>."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor3.php:417
+#: inc/comp/migration/DashboardTileMigrationMajor3.php:415
 msgid "https://devowl.io/2022/real-cookie-banner-3-0/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor3.php:419
+#: inc/comp/migration/DashboardTileMigrationMajor3.php:417
 msgid "<strong>You should definitely take a look at the following points, because we have adjusted the behavior of the cookie banner.</strong> All changes can be optionally activated or ignored. We will not fundamentally change your cookie banner without your consent."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:89
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:86
 msgid "Configure data processing countries"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:97
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:94
 msgid "Legal adjustments of texts and translations in 12 languages"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:99
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:96
 msgid "We have further improved the texts and placements of these in Real Cookie Banner in an audit by a lawyer. This makes them even less legally vulnerable!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:103
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:100
 msgid "In addition, we have adapted Real Cookie Banner to legal details of more EU countries and now offer translations in 12 languages. Official translations of the plugin are now available in English, French, Spanish, Portuguese, Italian, German (informal and formal), Dutch (informal and formal), Polish, Czech, Danish, Swedish, Norwegian Bokmal. Translations of service templates and content blocker templates will follow."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:109
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:106
 msgid "We strongly advise you to adopt the new texts for all languages with official translations!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:117
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:114
 msgid "We will overwrite all texts in your cookie banner with new text suggestions. Please check afterwards if all adjustments are correct for your individual requirements and reconfigure your cookie banner yourself if necessary. Are you sure you want to apply the changes?"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:126
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:123
 msgid "Accessibility to comply with the European Accessibility Act"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:130
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:127
 msgid "As of June 2025, the <a href=\"%1$s\" target=\"_blank\">European Accessibility Act</a> requires accessibility for most websites. You can already offer an equal and obstacle-free website experience with Real Cookie Banner!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:134
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:131
 msgid "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:32019L0882"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:138
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:135
 msgid "Real Cookie Banner complies with <a href=\"%1$s\" target=\"_blank\">WCAG 2.2 Level AA standard</a>, covers legal requirements and makes you ready for the new law. For more details, <a href=\"%2$s\" target=\"_blank\">check out our knowledge base</a>."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:142
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:139
 msgid "https://www.w3.org/TR/WCAG22/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:143
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:140
 msgid "https://devowl.io/knowledge-base/accessibility-of-real-cookie-banner/"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:147
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:144
 msgid "All design templates have been revised by us with regard to accessibility. In addition, when <a href=\"%1$s\" target=\"_blank\">customizing the cookie banner design</a>, you will now find an accessibility score that evaluates how accessible your current design settings are. Customize your design now!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:162
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:159
 msgid "Show revised design presets"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:171
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:168
 msgid "upgrade-wizard/v4/accessibility-score.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:176
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:173
 msgid "Provide details of the website operator for self-hosted services"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:180
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:177
 msgid "In services, you can provide contact details of the provider/data processor (postal address, email, phone, etc.) to fulfill your information obligations under <a href=\"%1$s\" target=\"_blank\">Art. 13 GDPR</a> in conjunction with <a href=\"%2$s\" target=\"_blank\">Art. 5 GDPR</a>. For self-hosted services, you are the data processor and should also provide this data in the cookie banner."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:184
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:181
 msgid "https://gdpr-text.com/read/article-13/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:185
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:182
 msgid "https://gdpr-text.com/read/article-5/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:187
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:184
 msgid "Save your contact details once in the settings and they will be available for all current and future services!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:193
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:190
 #: inc/view/checklist/OperatorContact.php:31
 msgid "Set website operator details"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:197
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:194
 msgid "Provider details are set!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:198
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:195
 msgid "upgrade-wizard/v4/website-operator.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:205
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:202
 msgid "Define DSG (Switzerland) as legal basis"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:209
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:206
 msgid "Real Cookie Banner can be used not only to meet the requirements of the GDPR in the EU, but also to comply with the new Swiss data protection law (DSG or nDSG). <a href=\"%1$s\" target=\"_blank\">More information about the DSG and cookie banners</a> can be found in our knowledge base!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:213
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:210
 msgid "https://devowl.io/knowledge-base/cookie-banner-swiss-data-protection-fadp/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:215
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:212
 msgid "If you intentionally target website visitors from Switzerland, you should activate the DSG as the applicable legal basis to get useful tips in Real Cookie Banner."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:221
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:218
 msgid "Specify legal basis"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:229
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:226
 msgid "Explain data processing by Real Cookie Banner in privacy policy"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:231
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:228
 msgid "You should explain the data processing of Real Cookie Banner (as well as of any other service) in more detail in your privacy policy in order to fulfill your information obligations under GDPR."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:235
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:232
 msgid "If you do not yet explain the use of Real Cookie Banner in your privacy policy, simply use our suggestion!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:241
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:238
 msgid "Show text suggestion"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:245
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:242
 msgid "Real Cookie Banner in privacy policy mentioned!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:246
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:243
 msgid "upgrade-wizard/v4/privacy-policy-text-copy.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:250
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:247
 msgid "Updates for services and content blockers"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:251
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:248
 msgid "We have revised the information given in numerous service and content blocker templates. Services and content blockers you created may contain suggestions for changes that you may want to apply. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. When editing the service/content blocker, you will find a blue \"Different from template\" next to the respective fields with more information."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:257
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:254
 msgid "All the services and content blockers you created are up to date!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:262
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:336
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:259
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:331
 msgid "The following services should be reviewed:"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:272
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:269
 msgid "Help us make Real Cookie Banner even better!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:274
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:271
 msgid "Recently, we have started actively collecting telemetry data about how Real Cookie Banner is used - if you have consented to it. This helps us e.g. to better prioritize often needed service templates or to implement much used features even better."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:278
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:275
 msgid "<strong>You have not yet consented to collecting telemetry data.</strong> They do not contain any personal data about your website visitors. We would be very pleased if we could learn from your usage behavior as well!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:284
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:281
 msgid "Collect telemetry data"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:286
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:283
 msgid "Telemetry data enabled."
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:289
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:286
 msgid "I allow telemetry data about the use of this WordPress plugin to be collected in accordance with the <a href=\"%s\" target=\"_blank\">privacy policy</a>. This data does not include any personal information about users of the plugin. Collected data will be used to provide you with the best possible support and to improve the plugin."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:304
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:299
 msgid "Consent to data processing in insecure third countries (instead of US data processing only)"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:308
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:303
 msgid "Real Cookie Banner offered you so far to obtain special consent according to <a href=\"%1$s\" target=\"_blank\">Art. 49 (1) lit. a GDPR</a> for data processing in the USA. <a href=\"%2$s\" target=\"_blank\">The USA is again a secure third country under data protection law since July 2023</a>. However, data processing of many services takes place worldwide and thus in other insecure countries."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:312
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:307
 msgid "https://gdpr-text.com/read/article-49/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:313
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:308
 msgid "https://devowl.io/2023/us-data-processing-tadpf/"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:317
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:312
 msgid "You can now specify the countries of data processing in each service! We have already added this information in service templates. You can find a <a href=\"%1$s\" target=\"_blank\">list of secure third countries as defined by the EU in the settings</a>. This means that specific consents are now obtained for all unsecure third countries worldwide."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:325
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:320
 msgid "Obtain consent for data processing in unsecure third countries"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:329
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:324
 msgid "Feature is enabled."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:331
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:326
 msgid "upgrade-wizard/v4/service-special-treatments.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:343
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:338
 msgid "Specify additional links in the footer of the cookie banner"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:345
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:340
 msgid "You should link all legally relevant subpages of your website (e.g. privacy policy, legal notice/imprint, terms and conditions) in the cookie banner so that they are quickly accessible. On these pages, the cookie banner should also not be displayed, so as not to put a barrier in front of the pages."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:349
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:344
 msgid "So far, only privacy policy and legal notice could be linked. From now on you can link any other pages!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:355
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:350
 msgid "Add more links to the cookie banner footer"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:357
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:352
 msgid "upgrade-wizard/v4/banner-footer-links.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:384
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:376
 msgid "Telemetry data enabled. Thanks for your support!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:423
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:415
 msgid "Updates in v4.0: You need to make adjustments!"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:431
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:423
 msgid "Discover the new Real Cookie Banner 4.0! With this update, we've made legal adjustments to make your cookie banner legally even more rubust. Learn more about the changes in the <a href=\"%s\" target=\"_blank\">release notes</a> on our blog!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:435
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:427
 msgid "https://devowl.io/2023/real-cookie-banner-4-0/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:437
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:429
 msgid "<strong>You should definitely take a look at the following points and apply them to your cookie banner configuration!</strong> You decide which changes to activate or ignore - we don't make any fundamental changes without your consent."
 msgstr ""
 
@@ -1021,13 +1021,13 @@ msgstr ""
 
 #. translators:
 #: inc/comp/RevisionBackwardsCompatibility.php:75
-#: inc/view/customize/banner/Texts.php:574
+#: inc/view/customize/banner/Texts.php:554
 msgctxt "legal-text"
 msgid "{{name}} blocked due to privacy settings"
 msgstr ""
 
 #: inc/comp/RevisionBackwardsCompatibility.php:76
-#: inc/view/customize/banner/Texts.php:575
+#: inc/view/customize/banner/Texts.php:555
 msgctxt "legal-text"
 msgid "Show all services you still need to agree to"
 msgstr ""
@@ -1056,7 +1056,7 @@ msgstr ""
 msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
 msgstr ""
 
-#: inc/Core.php:413
+#: inc/Core.php:410
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1069,31 +1069,31 @@ msgstr ""
 msgid "No consents found. Please navigate back and check your input."
 msgstr ""
 
-#: inc/import/ImportBannerLinks.php:76
+#: inc/import/ImportBannerLinks.php:74
 msgid "Footer link"
 msgstr ""
 
-#: inc/import/ImportBannerLinks.php:96
+#: inc/import/ImportBannerLinks.php:94
 msgid "Footer links"
 msgstr ""
 
-#: inc/import/ImportCookies.php:146
-#: inc/import/ImportCookies.php:194
+#: inc/import/ImportCookies.php:144
+#: inc/import/ImportCookies.php:192
 #: inc/settings/Cookie.php:199
 msgid "Cookie"
 msgstr ""
 
-#: inc/import/ImportCustomizeBanner.php:85
+#: inc/import/ImportCustomizeBanner.php:82
 #: inc/view/customize/banner/HeaderDesign.php:120
 msgid "Logo"
 msgstr ""
 
-#: inc/import/ImportCustomizeBanner.php:85
+#: inc/import/ImportCustomizeBanner.php:82
 msgid "Logo (Retina)"
 msgstr ""
 
-#: inc/import/ImportGroups.php:90
-#: inc/import/ImportGroups.php:106
+#: inc/import/ImportGroups.php:88
+#: inc/import/ImportGroups.php:104
 msgid "Service Group"
 msgstr ""
 
@@ -1255,11 +1255,11 @@ msgstr ""
 msgid "enabling geo-restriction"
 msgstr ""
 
-#: inc/import/ImportTcfVendorConfigurations.php:76
+#: inc/import/ImportTcfVendorConfigurations.php:74
 msgid "TCF Vendor"
 msgstr ""
 
-#: inc/import/ImportTcfVendorConfigurations.php:97
+#: inc/import/ImportTcfVendorConfigurations.php:95
 msgid "TCF Vendor configuration"
 msgstr ""
 
@@ -1287,13 +1287,13 @@ msgstr ""
 msgid "The link to Real Cookie Banner is an affiliate link. If you buy the product, we may receive a commission, but the price of the product will not change for you."
 msgstr ""
 
-#: inc/overrides/pro/settings/CountryBypass.php:150
-#: inc/overrides/pro/settings/TCF.php:145
+#: inc/overrides/pro/settings/CountryBypass.php:147
+#: inc/overrides/pro/settings/TCF.php:140
 msgid "This functionality is currently not available."
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/settings/TCF.php:117
+#: inc/overrides/pro/settings/TCF.php:114
 msgid "Downloading the GVL has failed. Please try again later! (%1$s: %2$s)"
 msgstr ""
 
@@ -1339,11 +1339,11 @@ msgstr ""
 msgid "TCF is currently disabled. Please navigate to %1$sSettings > Transparency & Consent Framework (TCF)%2$s to activate it."
 msgstr ""
 
-#: inc/overrides/pro/view/customize/banner/TcfTexts.php:119
+#: inc/overrides/pro/view/customize/banner/TcfTexts.php:115
 msgid "Services with various purposes outside the TCF standard"
 msgstr ""
 
-#: inc/overrides/pro/view/customize/banner/TcfTexts.php:120
+#: inc/overrides/pro/view/customize/banner/TcfTexts.php:116
 msgid "Services that do not share consents via the TCF standard, but via other technologies. These are divided into several groups according to their purpose. Some of them are used based on a legitimate interest (e.g. threat prevention), others are used only with your consent. Details about the individual groups and purposes of the services can be found in the individual privacy settings."
 msgstr ""
 
@@ -1525,7 +1525,7 @@ msgid "You currently have TCF mode enabled. Therefore, you are not allowed to ch
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/view/TcfBanner.php:234
+#: inc/overrides/pro/view/TcfBanner.php:232
 msgid "Your current contrast ratio between background and font color (%1$s) does not reach the minimum of %2$s. Please adjust your colors!"
 msgstr ""
 
@@ -1533,42 +1533,42 @@ msgstr ""
 msgid "The Service Cloud is currently not reachable, we will try to download the templates again in a few minutes automatically..."
 msgstr ""
 
-#: inc/RpmInitiator.php:224
+#: inc/RpmInitiator.php:216
 msgid "I allow to place a link in the cookie banner, which informs about the use of this plugin."
 msgstr ""
 
-#: inc/scanner/Scanner.php:537
+#: inc/scanner/Scanner.php:520
 msgid "Real Cookie Banner: Scan of your pages"
 msgstr ""
 
-#: inc/scanner/Scanner.php:539
+#: inc/scanner/Scanner.php:522
 msgid "Real Cookie Banner: Automatic scan of complete website"
 msgstr ""
 
-#: inc/scanner/Scanner.php:556
+#: inc/scanner/Scanner.php:539
 msgid "https://devowl.io/support/"
 msgstr ""
 
-#: inc/scanner/Scanner.php:557
+#: inc/scanner/Scanner.php:540
 msgid "Contact support"
 msgstr ""
 
-#: inc/scanner/Scanner.php:561
+#: inc/scanner/Scanner.php:544
 msgid "Cancel scan"
 msgstr ""
 
-#: inc/scanner/Scanner.php:565
+#: inc/scanner/Scanner.php:548
 msgid "Skip failed pages"
 msgstr ""
 
 #. translators:
-#: inc/scanner/Scanner.php:587
+#: inc/scanner/Scanner.php:570
 msgid "%1$d pages failed to be scanned."
 msgid_plural "%1$d pages failed to be scanned."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/scanner/Scanner.php:596
+#: inc/scanner/Scanner.php:579
 msgid "Real Cookie Banner tried to automatically scan your entire website for services and external URLs."
 msgstr ""
 
@@ -1634,19 +1634,19 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:370
 #: inc/settings/CookieGroup.php:391
-#: inc/templates/TemplateConsumers.php:282
+#: inc/templates/TemplateConsumers.php:277
 msgid "Essential"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:371
 #: inc/settings/CookieGroup.php:392
-#: inc/templates/TemplateConsumers.php:285
+#: inc/templates/TemplateConsumers.php:280
 msgid "Functional"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:372
 #: inc/settings/CookieGroup.php:393
-#: inc/templates/TemplateConsumers.php:288
+#: inc/templates/TemplateConsumers.php:283
 msgid "Statistics"
 msgstr ""
 
@@ -1658,7 +1658,7 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:376
 #: inc/settings/CookieGroup.php:394
-#: inc/templates/TemplateConsumers.php:291
+#: inc/templates/TemplateConsumers.php:286
 msgid "Marketing"
 msgstr ""
 
@@ -1682,7 +1682,7 @@ msgctxt "legal-text"
 msgid "Marketing services are used by us and third parties to track the behaviour of individual visitors (across multiple pages), analyse the data collected and, for example, display personalized advertisements. These services enable us to track visitors across multiple websites."
 msgstr ""
 
-#: inc/settings/Revision.php:193
+#: inc/settings/Revision.php:190
 msgid "Without context"
 msgstr ""
 
@@ -1844,72 +1844,72 @@ msgstr ""
 msgid "Real Cookie Banner asks website visitors for consent to set cookies and process personal data. For this purpose, a UUID (pseudonymous identification of the user) is assigned to each website visitor, which is valid until the cookie expires to store the consent. Cookies are used to test whether cookies can be set, to store reference to documented consent, to store which services from which service groups the visitor has consented to, and, if consent is obtained under the Transparency & Consent Framework (TCF), to store consent in TCF partners, purposes, special purposes, features and special features. As part of the obligation to disclose according to GDPR, the collected consent is fully documented. This includes, in addition to the services and service groups to which the visitor has consented, and if consent is obtained according to the TCF standard, to which TCF partners, purposes and features the visitor has consented, all cookie banner settings at the time of consent as well as the technical circumstances (e.g. size of the displayed area at the time of consent) and the user interactions (e.g. clicking on buttons) that led to consent. Consent is collected once per language."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:251
+#: inc/templates/TemplateConsumers.php:246
 msgid "Load content"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:254
+#: inc/templates/TemplateConsumers.php:249
 msgid "Load map"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:257
+#: inc/templates/TemplateConsumers.php:252
 msgid "Load form"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:260
+#: inc/templates/TemplateConsumers.php:255
 #: inc/view/ConfigPage.php:191
 #: inc/view/customize/banner/FooterDesign.php:243
 msgid "Disabled"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:261
+#: inc/templates/TemplateConsumers.php:256
 msgid "Already created"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:262
+#: inc/templates/TemplateConsumers.php:257
 msgid "You have already created a Content Blocker with this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:266
+#: inc/templates/TemplateConsumers.php:261
 msgid "You have already created a Service (Cookie) with this template."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:271
+#: inc/templates/TemplateConsumers.php:266
 msgid "This service template is optimized to work with %s."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:273
+#: inc/templates/TemplateConsumers.php:268
 msgid "Please activate %s in settings to use this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:277
+#: inc/templates/TemplateConsumers.php:272
 msgid "A suitable content blocker for this service can be created automatically."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:296
+#: inc/templates/TemplateConsumers.php:291
 msgid "This template is currently disabled because the respective WordPress plugin is not installed or the desired function is not active. <a href=\"%s\" target=\"_blank\">Learn more</a>"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:300
+#: inc/templates/TemplateConsumers.php:295
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-disabled-cookie-templates/"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:303
+#: inc/templates/TemplateConsumers.php:298
 msgid "TCF required"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:304
+#: inc/templates/TemplateConsumers.php:299
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
-#: inc/UserConsent.php:197
+#: inc/UserConsent.php:195
 msgid "Invalid IP address. Please insert a valid IPv4 or IPv6 address."
 msgstr ""
 
-#: inc/view/Banner.php:104
+#: inc/view/Banner.php:99
 msgid "Show cookie banner again"
 msgstr ""
 
@@ -2527,7 +2527,7 @@ msgstr ""
 #: inc/view/customize/banner/BodyDesign.php:557
 #: inc/view/customize/banner/individual/Group.php:293
 #: inc/view/customize/banner/individual/Texts.php:60
-#: inc/view/customize/banner/Texts.php:128
+#: inc/view/customize/banner/Texts.php:124
 msgid "Description"
 msgstr ""
 
@@ -2756,13 +2756,13 @@ msgid "Text of \"Accept all\" changes when user changes selection"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:269
-#: inc/view/customize/banner/Texts.php:539
+#: inc/view/customize/banner/Texts.php:519
 msgctxt "legal-text"
 msgid "Accept all"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:271
-#: inc/view/customize/banner/Texts.php:540
+#: inc/view/customize/banner/Texts.php:520
 msgctxt "legal-text"
 msgid "Continue without consent"
 msgstr ""
@@ -2781,7 +2781,7 @@ msgstr ""
 
 #: inc/view/customize/banner/Design.php:70
 #: inc/view/customize/banner/individual/Texts.php:46
-#: inc/view/customize/banner/Texts.php:116
+#: inc/view/customize/banner/Texts.php:112
 msgid "General"
 msgstr ""
 
@@ -2959,8 +2959,8 @@ msgstr ""
 
 #: inc/view/customize/banner/individual/Group.php:254
 #: inc/view/customize/banner/individual/Texts.php:52
-#: inc/view/customize/banner/Texts.php:120
-#: inc/view/customize/banner/Texts.php:326
+#: inc/view/customize/banner/Texts.php:116
+#: inc/view/customize/banner/Texts.php:322
 msgid "Headline"
 msgstr ""
 
@@ -2986,12 +2986,12 @@ msgid "Define the inner distance of the button."
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:41
-#: inc/view/customize/banner/Texts.php:111
+#: inc/view/customize/banner/Texts.php:107
 msgid "Texts"
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:61
-#: inc/view/customize/banner/Texts.php:129
+#: inc/view/customize/banner/Texts.php:125
 msgid "Use <code>{{privacyPolicy}}privacy policy{{/privacyPolicy}}</code> as a placeholder for the privacy policy link."
 msgstr ""
 
@@ -3016,13 +3016,13 @@ msgid "If you need to place additional instructions in your country, such as an 
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:122
-#: inc/view/customize/banner/Texts.php:528
+#: inc/view/customize/banner/Texts.php:508
 msgctxt "legal-text"
 msgid "We use cookies and similar technologies on our website and process your personal data (e.g. IP address), for example, to personalize content and ads, to integrate media from third-party providers or to analyze traffic on our website. Data processing may also happen as a result of cookies being set. We share this data with third parties that we name in the privacy settings."
 msgstr ""
 
 #: inc/view/customize/banner/individual/Texts.php:127
-#: inc/view/customize/banner/Texts.php:533
+#: inc/view/customize/banner/Texts.php:513
 msgctxt "legal-text"
 msgid "The data processing may take place with your consent or on the basis of a legitimate interest, which you can object to in the privacy settings. You have the right not to consent and to change or revoke your consent at a later time. For more information on the use of your data, please visit our {{privacyPolicy}}privacy policy{{/privacyPolicy}}."
 msgstr ""
@@ -3080,7 +3080,7 @@ msgid "The vertical distance between elements can be decreased or increased rela
 msgstr ""
 
 #: inc/view/customize/banner/StickyLinks.php:95
-#: inc/view/customize/banner/Texts.php:366
+#: inc/view/customize/banner/Texts.php:362
 msgid "Sticky legal links widget"
 msgstr ""
 
@@ -3178,241 +3178,241 @@ msgstr ""
 msgid "Use <code>{{minAge}}</code> as a placeholder for the age limit for minors in your country. Each country in the EU has its own age limits, which we have included in Real Cookie Banner. You can adjust the age limit in the %1$sage notice settings%2$s."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:144
+#: inc/view/customize/banner/Texts.php:140
 msgid "\"Accept all\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:151
+#: inc/view/customize/banner/Texts.php:147
 msgid "\"Continue without consent\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:158
+#: inc/view/customize/banner/Texts.php:154
 msgid "\"Individual privacy preferences\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:165
+#: inc/view/customize/banner/Texts.php:161
 msgid "\"Powered by\" link text"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:174
+#: inc/view/customize/banner/Texts.php:170
 msgid "Consent for data processing in unsecure third countries"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:182
+#: inc/view/customize/banner/Texts.php:178
 msgid "Data processing notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:183
+#: inc/view/customize/banner/Texts.php:179
 msgid "Use <code>{{legalBasis}}</code> as a placeholder for the legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:202
+#: inc/view/customize/banner/Texts.php:198
 msgid "Age notice"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:208
+#: inc/view/customize/banner/Texts.php:204
 msgid "Age notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:225
+#: inc/view/customize/banner/Texts.php:221
 msgid "Age notice in content blocker"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:241
+#: inc/view/customize/banner/Texts.php:237
 msgid "List of services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:247
+#: inc/view/customize/banner/Texts.php:243
 msgid "Naming of all services requiring consent in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:249
+#: inc/view/customize/banner/Texts.php:245
 msgid "Use <code>{{services}}</code> and <code>{{serviceGroups}}</code> as a placeholder for a list of services and groups."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:269
+#: inc/view/customize/banner/Texts.php:265
 msgid "Naming of all services on the legal basis of the legitimate interest in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:274
+#: inc/view/customize/banner/Texts.php:270
 msgid "Use <code>{{services}}</code> as a placeholder for a list of services with legitimate interest as legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:294
+#: inc/view/customize/banner/Texts.php:290
 msgid "Consent Forwarding"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:299
+#: inc/view/customize/banner/Texts.php:295
 msgid "Consent forwarding to other websites"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:301
+#: inc/view/customize/banner/Texts.php:297
 msgid "Use <code>{{websites}}</code> as a placeholder for the external website URLs."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:319
+#: inc/view/customize/banner/Texts.php:315
 msgid "At the moment we do not provide a live preview for content blocker texts."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:327
+#: inc/view/customize/banner/Texts.php:323
 msgid "Use <code>{{name}}</code> as a placeholder for the content blocker name."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:338
+#: inc/view/customize/banner/Texts.php:334
 msgid "Link text, to show all required services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:346
+#: inc/view/customize/banner/Texts.php:342
 msgid "\"Load content\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:354
+#: inc/view/customize/banner/Texts.php:350
 msgid "Additional info below the \"Load content\" button"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:370
+#: inc/view/customize/banner/Texts.php:366
 msgid "Privacy settings history"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:378
+#: inc/view/customize/banner/Texts.php:374
 msgid "Revoke consents"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:386
+#: inc/view/customize/banner/Texts.php:382
 msgid "Revoke consents: Success message"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:394
+#: inc/view/customize/banner/Texts.php:390
 msgid "Change privacy settings"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:410
+#: inc/view/customize/banner/Texts.php:406
 msgid "The standard texts in the cookie banner are worded carefully. If you customize them, make sure they are not misleading or riveting. According to the <a href=\"%s\" target=\"_blank\">Data Protection Commissioner of Baden-Wuerttemberg, Germany (Section B, 1.3.7.; German)</a>, for example, a headline \"We love cookies\" is already misleading."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:414
+#: inc/view/customize/banner/Texts.php:410
 msgid "https://www.baden-wuerttemberg.datenschutz.de/faq-zu-cookies-und-tracking-2/#13_informiertheit)"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:429
+#: inc/view/customize/banner/Texts.php:425
 msgid "Consent for data processing in unsecure third countries is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:453
+#: inc/view/customize/banner/Texts.php:445
 msgid "Age notice is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:477
+#: inc/view/customize/banner/Texts.php:465
 msgid "Naming of all services in first view is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:501
+#: inc/view/customize/banner/Texts.php:485
 msgid "Consent Forwarding is currently disabled or no external hosts have been defined (a different domain than the current website domain). Please navigate to %1$sSettings > Consent Forwarding%2$s to configure it."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:525
+#: inc/view/customize/banner/Texts.php:505
 msgctxt "legal-text"
 msgid "Privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:541
+#: inc/view/customize/banner/Texts.php:521
 msgctxt "legal-text"
 msgid "Set privacy settings individually"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:542
+#: inc/view/customize/banner/Texts.php:522
 msgctxt "legal-text"
 msgid "Some services process personal data in unsecure third countries. By consenting to the use of these services, you also consent to the processing of your data in these unsecure third countries in accordance with {{legalBasis}}. This involves risks that your data will be processed by authorities for control and monitoring purposes, perhaps without the possibility of a legal recourse."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:547
+#: inc/view/customize/banner/Texts.php:527
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Then you cannot consent to optional services. Ask your parents or legal guardians to agree to these services with you."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:552
+#: inc/view/customize/banner/Texts.php:532
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Unfortunately, you are not permitted to consent to this service to view this content. Please ask your parents or guardians to agree to the service with you!"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:557
+#: inc/view/customize/banner/Texts.php:537
 msgctxt "legal-text"
 msgid "By accepting all services, you allow {{services}} to be loaded. These services are divided into groups {{serviceGroups}} according to their purpose (belonging marked with superscript numbers)."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:562
+#: inc/view/customize/banner/Texts.php:542
 msgctxt "legal-text"
 msgid "In addition, {{services}} are loaded based on a legitimate interest."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:567
+#: inc/view/customize/banner/Texts.php:547
 msgctxt "legal-text"
 msgid "Your consent is also applicable on {{websites}}."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:580
+#: inc/view/customize/banner/Texts.php:560
 msgctxt "legal-text"
 msgid "Accept services and load content"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:581
+#: inc/view/customize/banner/Texts.php:561
 msgctxt "legal-text"
 msgid "Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:586
+#: inc/view/customize/banner/Texts.php:566
 #: inc/view/navmenu/NavMenuLinks.php:111
 #: inc/view/navmenu/NavMenuLinks.php:112
 msgctxt "legal-text"
 msgid "Change privacy settings"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:587
+#: inc/view/customize/banner/Texts.php:567
 #: inc/view/navmenu/NavMenuLinks.php:115
 #: inc/view/navmenu/NavMenuLinks.php:116
 msgctxt "legal-text"
 msgid "Privacy settings history"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:588
+#: inc/view/customize/banner/Texts.php:568
 #: inc/view/navmenu/NavMenuLinks.php:119
 #: inc/view/navmenu/NavMenuLinks.php:120
 msgctxt "legal-text"
 msgid "Revoke consents"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:589
+#: inc/view/customize/banner/Texts.php:569
 #: inc/view/navmenu/NavMenuLinks.php:122
 msgctxt "legal-text"
 msgid "You have successfully revoked consent for services with its cookies and personal data processing. The page will be reloaded now!"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:622
+#: inc/view/customize/banner/Texts.php:602
 msgid "WordPress Cookie Plugin by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:623
+#: inc/view/customize/banner/Texts.php:603
 msgid "WordPress Cookie Notice by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:624
+#: inc/view/customize/banner/Texts.php:604
 msgid "Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:625
+#: inc/view/customize/banner/Texts.php:605
 msgid "GDPR Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:626
+#: inc/view/customize/banner/Texts.php:606
 msgid "Consent Management Platform by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:627
+#: inc/view/customize/banner/Texts.php:607
 msgid "Cookie Consent Banner by Real Cookie Banner"
 msgstr ""
 
@@ -3429,198 +3429,198 @@ msgid "Add to Menu"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:576
+#: inc/view/Notices.php:516
 msgid "There seems to be something generally wrong with the REST API of your WordPress instance. Please deactivate Real Cookie Banner and then check under <a href=\"%s\">Tools > Site Health</a> whether errors regarding the REST API are listed there."
 msgstr ""
 
-#: inc/view/Notices.php:611
+#: inc/view/Notices.php:553
 msgid "<strong>Consent cannot be saved in the cookie banner:</strong> Website visitors (not logged into WordPress) currently cannot save consents in the cookie banner. This may result in the cookie banner being displayed again each time the website visitor visits a page."
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:622
+#: inc/view/Notices.php:566
 msgid "The consent would be saved via the WP REST API route %s. The following problems with your WordPress installation were detected during the automatic error analysis:"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:641
+#: inc/view/Notices.php:588
 msgid "HTTP error code <a href=\"https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/%1$d\" target=\"_blank\"><code>%1$d</code></a> has been returned by the server. This indicates that the <a href=\"%2$s\" target=\"_blank\">WP REST API may have been proactively blocked</a>."
 msgstr ""
 
-#: inc/view/Notices.php:646
+#: inc/view/Notices.php:593
 msgid "https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#how-can-i-enable-the-wordpress-rest-api-in-my-website"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:654
+#: inc/view/Notices.php:601
 msgid "Response from the server is malformed. This indicates, for example, that another plugin is manipulating the response. In the following, you find the server response:"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:663
+#: inc/view/Notices.php:610
 msgid "Cookie with the saved consent (name starts with <code>real_cookie_banner</code>) was not part of the server response. Perhaps you have configured your <a href=\"%s\" target=\"_blank\">webserver to drop all cookies before sending the response</a>."
 msgstr ""
 
-#: inc/view/Notices.php:667
+#: inc/view/Notices.php:614
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-4-server-discards-all-cookies"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:675
+#: inc/view/Notices.php:622
 msgid "Cookie <code>%1$s</code> with saved consent has been responded by server, but with the invalid cookie path <code>%2$s</code>. You may have an <a href=\"%3$s\" target=\"_blank\">error in your WordPress configuration file</a>."
 msgstr ""
 
-#: inc/view/Notices.php:681
+#: inc/view/Notices.php:628
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-2-incorrect-cookie-path"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:689
+#: inc/view/Notices.php:636
 msgid "Cookie <code>%1$s</code> with saved consent has been responded to by the server, but with a <code>HttpOnly</code> flag, which means that the Real Cookie Banner JavaScript does not have permission to read it. You probably have <a href=\"%2$s\" target=\"_blank\">too strict security settings configured in your web server</a>."
 msgstr ""
 
-#: inc/view/Notices.php:694
+#: inc/view/Notices.php:641
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/#cause-3-cookie-not-accessible-via-javascript"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:702
+#: inc/view/Notices.php:649
 msgid "Response of the server contains a <code>Location</code> header, which leads to a redirection of the save request instead of saving. You probably have an <a href=\"%2$s\" target=\"_blank\">incorrect trailing slash configuration in your web server</a>."
 msgstr ""
 
-#: inc/view/Notices.php:707
+#: inc/view/Notices.php:654
 msgid "https://devowl.io/knowledge-base/wordpress-rest-api-does-not-respond/#i-can-read-data-but-not-write"
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:715
+#: inc/view/Notices.php:662
 msgid "Since the request returned a <code>403</code> error, it is possible that the IP of your server has been blocked for internal loopback requests. We have checked the <code>.htaccess</code> file and found that the following line could be the trigger for this, which you should check and remove: <code>%s</code>."
 msgstr ""
 
 #. translators:
-#: inc/view/Notices.php:736
+#: inc/view/Notices.php:683
 msgid "We have <a href=\"%s\" target=\"_blank\">explained typical misconfigurations and solutions</a> for this issue in a detailed article. If you do not know how to solve this problem, please contact the technical contact person for your website!"
 msgstr ""
 
-#: inc/view/Notices.php:740
+#: inc/view/Notices.php:687
 msgid "https://devowl.io/knowledge-base/cookie-banner-displayed-every-subpage/"
 msgstr ""
 
-#: inc/view/Notices.php:757
+#: inc/view/Notices.php:700
 msgid "Check consent storage process again"
 msgstr ""
 
-#: inc/view/Notices.php:777
+#: inc/view/Notices.php:720
 msgid "Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:791
-#: inc/view/Notices.php:842
+#: inc/view/Notices.php:734
+#: inc/view/Notices.php:785
 msgid "Service (Cookie)"
 msgstr ""
 
-#: inc/view/Notices.php:803
+#: inc/view/Notices.php:746
 msgid "Review changes"
 msgstr ""
 
-#: inc/view/Notices.php:814
-#: inc/view/Notices.php:891
-#: inc/view/Notices.php:943
-#: inc/view/Notices.php:977
+#: inc/view/Notices.php:757
+#: inc/view/Notices.php:834
+#: inc/view/Notices.php:886
+#: inc/view/Notices.php:920
 msgid "Dismiss this notice"
 msgstr ""
 
-#: inc/view/Notices.php:829
+#: inc/view/Notices.php:772
 msgid "Templates in Real Cookie Banner have been replaced by new templates. You should check whether you want to replace the new service and/or content blocker with the new one in order to remain legally compliant. The following services are affected:"
 msgstr ""
 
-#: inc/view/Notices.php:881
+#: inc/view/Notices.php:824
 msgid "Replace"
 msgstr ""
 
-#: inc/view/Notices.php:905
+#: inc/view/Notices.php:848
 msgid "Activate Google Consent Mode"
 msgstr ""
 
-#: inc/view/Notices.php:908
+#: inc/view/Notices.php:851
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-google-consent-mode-setup/"
 msgstr ""
 
-#: inc/view/Notices.php:916
+#: inc/view/Notices.php:859
 msgid "You are obtaining consent for Google services and have activated Google Consent Mode at the same time. However, you have not yet specified in the named services which consent types should be requested in accordance with Google Consent Mode. Please add these in the following services:"
 msgstr ""
 
-#: inc/view/Notices.php:933
-#: inc/view/Notices.php:967
+#: inc/view/Notices.php:876
+#: inc/view/Notices.php:910
 msgid "Edit service"
 msgstr ""
 
-#: inc/view/Notices.php:950
+#: inc/view/Notices.php:893
 msgid "You have activated Google Consent Mode and agreed to recommendations for the use of Google services without consent. At the same time, you only allow the following services to be loaded after obtaining consent. Please check whether you want to use the following services on your website based on a legitimate interest (even before Google receiving consent into consent types accordance with Google Consent Mode and therefore e.g. not setting advertising cookies):"
 msgstr ""
 
-#: inc/view/Notices.php:984
+#: inc/view/Notices.php:927
 msgid "You obtain consent for <strong>Google Analytics 4</strong> using Real Cookie Banner. In order to continue to create audiences in Google Analytics 4, you must have configured Google Consent Mode in your cookie banner as of March 2024."
 msgstr ""
 
-#: inc/view/Notices.php:998
+#: inc/view/Notices.php:941
 msgid "I do not use \"Audiences\" in Google Analytics 4"
 msgstr ""
 
-#: inc/view/Notices.php:1009
+#: inc/view/Notices.php:952
 msgid "You obtain consent for <strong>Google Ads Conversion Tracking and Remarketing</strong> using Real Cookie Banner. From March 2024, conversions will only be processed by Google Ads if consent is obtained using Google Consent Mode. This data is also required in order to be able to continue to run remarketing campaigns in Google Ads."
 msgstr ""
 
-#: inc/view/Notices.php:1023
+#: inc/view/Notices.php:966
 msgid "Ignore"
 msgstr ""
 
-#: inc/view/Notices.php:1373
+#: inc/view/Notices.php:1308
 msgid "There are no privacy policies with further information linked for the following services in your cookie banner. We now consider these to be mandatory in order to comply with the information obligations under the GDPR. Please provide a privacy policy for each service!"
 msgstr ""
 
-#: inc/view/Notices.php:1385
+#: inc/view/Notices.php:1320
 msgid "Set privacy policy URL"
 msgstr ""
 
 #. translators:s
-#: inc/view/Notices.php:1420
+#: inc/view/Notices.php:1355
 msgid "<strong>%1$s</strong> is processing data to %2$s"
 msgstr ""
 
-#: inc/view/Notices.php:1434
+#: inc/view/Notices.php:1369
 msgid "Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission."
 msgstr ""
 
-#: inc/view/Notices.php:1477
+#: inc/view/Notices.php:1412
 msgid "<strong>[ACTION REQUIRED]</strong> As of January 16, 2024, Google AdSense will only display advertising on your website if you obtain consent in accordance with the TCF standard. You must act now to continue earning advertising revenue!"
 msgstr ""
 
-#: inc/view/Notices.php:1481
+#: inc/view/Notices.php:1416
 msgid "You are currently obtaining non-standard compliant consent for Google Adsense via Real Cookie Banner. Please delete the Google AdSense service and Google AdSense content blocker in the Real Cookie Banner settings and then configure the TCF integration."
 msgstr ""
 
-#: inc/view/Notices.php:1485
+#: inc/view/Notices.php:1420
 msgid "https://devowl.io/knowledge-base/google-adsense-tcf-consent-wordpress/"
 msgstr ""
 
-#: inc/view/Notices.php:1486
+#: inc/view/Notices.php:1421
 msgid "Read instructions for Google AdSense configuration with TCF consents"
 msgstr ""
 
-#: inc/view/Notices.php:1525
+#: inc/view/Notices.php:1460
 msgid "You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!"
 msgstr ""
 
-#: inc/view/Notices.php:1538
+#: inc/view/Notices.php:1471
 msgid "Scan website again"
 msgstr ""
 
-#: inc/view/Notices.php:1564
+#: inc/view/Notices.php:1497
 msgid "Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don't use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!"
 msgstr ""
 
-#: inc/view/Notices.php:1571
+#: inc/view/Notices.php:1502
 msgid "Configure TCF vendors"
 msgstr ""
 

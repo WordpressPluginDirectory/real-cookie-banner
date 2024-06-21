@@ -25,6 +25,6 @@ class SlimProviderCollection extends ProviderCollectionAdapter
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->registerProvider(['DailyMotion', 'Deviantart', 'Facebook', 'Flickr', 'GettyImages', 'Giphy', 'Instagram', 'Imgur', 'Kickstarter', 'Livestream', 'Reddit', 'Scribd', 'Sketchfab', 'Slideshare', 'SoundCloud', 'SpeakerDeck', 'Spotify', 'Ted', 'Tumblr', 'Twitter', 'Vimeo', 'Wordpress', 'Youtube']);
+        $this->registerProvider(['DailyMotion', 'Deviantart', 'Facebook', 'Figma', 'Flickr', 'GettyImages', 'Giphy', 'Instagram', 'Imgur', 'Kickstarter', 'Livestream', 'Reddit', 'Scribd', 'Sketchfab', 'Slideshare', 'SoundCloud', 'SpeakerDeck', 'Spotify', 'Ted', 'Tumblr', 'Twitter', 'Vimeo', 'Wordpress', 'Youtube']);
     }
 }

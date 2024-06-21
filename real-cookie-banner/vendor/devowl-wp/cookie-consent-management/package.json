@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -24,19 +24,6 @@
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage"
     },
-    "eslintConfig": {
-        "extends": [
-            "./node_modules/@devowl-wp/eslint-config/src/.eslintrc.cjs"
-        ]
-    },
-    "eslintIgnore": [
-        "dist",
-        "dev",
-        "docs",
-        "coverage",
-        "node_modules",
-        "vendor"
-    ],
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
         "@devowl-wp/continuous-integration": "workspace:*",
@@ -49,15 +36,17 @@
         "@devowl-wp/react-cookie-banner": "workspace:*",
         "@devowl-wp/react-cookie-banner-admin": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
-        "ts-node": "~10.9.1",
-        "tslib": "^2.5.0",
-        "typescript": "~5.2.2",
-        "webpack-cli": "~5.1.4"
+        "ts-node": "10.9.2",
+        "tslib": "2.6.3",
+        "typescript": "5.4.5",
+        "webpack-cli": "5.1.4"
     },
     "peerDependencies": {
         "@devowl-wp/cookie-consent-web-client": "workspace:*",
+        "@devowl-wp/headless-content-unblocker": "workspace:*",
         "@devowl-wp/react-cookie-banner": "workspace:*",
-        "@devowl-wp/react-cookie-banner-admin": "workspace:*"
+        "@devowl-wp/react-cookie-banner-admin": "workspace:*",
+        "@types/node": "18.19.34"
     },
     "engines": {
         "node": ">=14.15.0"
