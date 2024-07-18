@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 
-#: AbstractCustomizePanel.php:142
+#: AbstractCustomizePanel.php:143
 msgid "Cookie Banner"
 msgstr ""
 
-#: AbstractCustomizePanel.php:143
+#: AbstractCustomizePanel.php:144
 msgid "Design your cookie banner."
 msgstr ""

@@ -102,7 +102,7 @@ class DashboardTileMigrationMajor3 extends \DevOwl\RealCookieBanner\comp\migrati
             \update_option(BasicLayout::SETTING_ANIMATION_IN, 'slideInUp');
             \update_option(BasicLayout::SETTING_ANIMATION_IN_DURATION, 500);
             $result['success'] = \true;
-            $result['redirect'] = \add_query_arg(['autofocus[section]' => Mobile::SECTION, 'return' => \wp_get_raw_referer()], \admin_url('customize.php'));
+            $result['redirect'] = \add_query_arg(['autofocus[section]' => Mobile::SECTION, 'returnEncoded' => UtilsUtils::getRawRefererEncodedForUrl()], \admin_url('customize.php'));
         }
         return $result;
     }

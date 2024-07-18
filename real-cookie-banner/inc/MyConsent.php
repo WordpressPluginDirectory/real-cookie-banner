@@ -156,23 +156,7 @@ class MyConsent
         if (!empty($user->getUuid())) {
             $rows = \DevOwl\RealCookieBanner\UserConsent::getInstance()->byCriteria(['revisionJson' => \true, 'context' => Revision::getInstance()->getContextVariablesString(), 'perPage' => 100, 'uuids' => \array_merge([$user->getUuid()], $user->getPreviousUuids())]);
             foreach ($rows as $row) {
-                $jsonRevision = $row->revision;
-                $jsonRevisionIndependent = $row->revision_independent;
-                $obj = ['id' => $row->id, 'uuid' => $row->uuid, 'isDoNotTrack' => $row->dnt, 'isUnblock' => $row->blocker > 0, 'isForwarded' => $row->forwarded > 0, 'created' => $row->created, 'context' => [
-                    'groups' => $jsonRevision['groups'],
-                    'consent' => $row->decision,
-                    'gcmConsent' => $row->gcm_consent,
-                    // TCF compatibility
-                    'tcf' => isset($jsonRevision['tcf']) ? [
-                        'tcf' => $jsonRevision['tcf'],
-                        // Keep `tcfMeta` for backwards-compatibility
-                        'tcfMetadata' => $jsonRevisionIndependent['tcfMetadata'] ?? $jsonRevisionIndependent['tcfMeta'],
-                        'tcfString' => $row->tcf_string,
-                    ] : null,
-                ]];
-                $lazyLoaded = \DevOwl\RealCookieBanner\Core::getInstance()->getCookieConsentManagement()->getFrontend()->prepareLazyData($obj['context']['tcf']);
-                $obj['context']['lazyLoadedDataForSecondView'] = $lazyLoaded;
-                $result[] = $obj;
+                $result[] = \DevOwl\RealCookieBanner\Core::getInstance()->getCookieConsentManagement()->getFrontend()->persistedTransactionToJsonForHistoryViewer(\DevOwl\RealCookieBanner\UserConsent::getInstance()->toPersistedTransactionInstance($row));
             }
         }
         return $result;

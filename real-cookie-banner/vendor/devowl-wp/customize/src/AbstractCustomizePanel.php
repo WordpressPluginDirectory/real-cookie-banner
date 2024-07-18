@@ -5,6 +5,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\Customize;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\CustomHTML;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\Headline;
 use Exception;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
 use WP_Customize_Control;
 use WP_Customize_Manager;
 use WP_Customize_Panel;
@@ -115,6 +116,12 @@ abstract class AbstractCustomizePanel
     {
         $this->manager = $wp_customize;
         $wp_customize->add_panel(new WP_Customize_Panel($wp_customize, $this->getPanel(), ['title' => \__('Cookie Banner', RCB_TD), 'description' => \__('Design your cookie banner.', RCB_TD)]));
+        // Workaround to make `return` URL work with base64-encoded URLs (see https://app.clickup.com/t/86954236z)
+        $returnEncoded = $_GET['returnEncoded'] ?? '';
+        $returnEncoded = Utils::parseEncodedRawRefererEncoded($returnEncoded);
+        if ($returnEncoded !== \false) {
+            $wp_customize->set_return_url($returnEncoded);
+        }
         $this->registerSections($this->getSections());
     }
     /**

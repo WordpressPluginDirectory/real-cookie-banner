@@ -466,91 +466,91 @@ msgstr ""
 msgid "Migration is only available in PRO version!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:57
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:58
 msgid "Updated texts (German, English)"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:59
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:60
 msgid "We have adjusted the texts in the cookie banner and service groups (not in cookie/content blocker templates). The adjustments improve the legal security of your cookie banner, as the general purpose of the consent is now more clearly described, and we have added legal teachings. If you want to use the TCF compatibility, the previous texts are no longer permitted. You can let previous texts be overwritten by the new texts. All texts can be customized in the WordPress Customizer or in Services (Cookies). After applying the texts, be sure to verify if the new texts apply to your website!"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:65
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:66
 msgid "Before you apply the new texts, you can %1$screate an export%2$s to backup the old texts."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:74
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:113
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:75
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:114
 msgid "Apply new texts"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:75
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:76
 msgid "Are you sure? All your current texts will be overwritten (this does not include service and content blocker texts!)."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:84
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:85
 msgid "Transparency & Consent Framework (TCF)"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:85
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:86
 msgid "You can now obtain consent according to the TCF standard from IAB Europe. You need this type of consent mostly when you work with big marketers, e.g. Google Adsense, so they can be sure that you have obtained consent from your visitors. If you turn on TCF compatibility, some features of Real Cookie Banner will change so that your cookie banner is compliant with the rules of the standard."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:90
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:105
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:91
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:106
 msgid "Already enabled"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:90
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:91
 msgid "Enable TCF compatibility"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:93
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:94
 msgid "pro-modal/tcf-compatibility.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:98
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:99
 msgid "Geo-restriction"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:99
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:100
 msgid "Cookie banners must be displayed only for users from certain countries. Real Cookie Banner can now detect which country your visitor comes from and depending on that decide whether to display a cookie banner. This way you don't annoy e.g. visitors from non EU countries."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:106
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:107
 msgid "Enable Geo-restriction"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:109
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:110
 msgid "pro-modal/geo-restriction.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:114
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:115
 msgid "Standard banner design"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:115
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:116
 msgid "We have added a new standard design for the cookie banner, which makes a more friendly and clean impression. If you are using the standard design so far, it's worth a look if the new one fits better to your website!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:120
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:121
 msgid "View new design"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:139
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:140
 msgid "NEW!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:175
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:176
 msgid "Updates in v2.0: Make your cookie banner more safe!"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:182
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:183
 msgid "We have released a major update with Real Cookie Banner 2.0. Find out what's new in our %1$sblog article%2$s. <strong>You should definitely take a look at the following points, as we have adjusted the behavior of the cookie banner.</strong> All changes can be optionally activated or ignored. We will not change your cookie banner fundamentally without your consent."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor2.php:188
+#: inc/comp/migration/DashboardTileMigrationMajor2.php:189
 msgid "https://devowl.io/2021/real-cookie-banner-2-0-cookie-consent/"
 msgstr ""
 
@@ -712,262 +712,262 @@ msgstr ""
 msgid "<strong>You should definitely take a look at the following points, because we have adjusted the behavior of the cookie banner.</strong> All changes can be optionally activated or ignored. We will not fundamentally change your cookie banner without your consent."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:86
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:87
 msgid "Configure data processing countries"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:94
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:95
 msgid "Legal adjustments of texts and translations in 12 languages"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:96
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:97
 msgid "We have further improved the texts and placements of these in Real Cookie Banner in an audit by a lawyer. This makes them even less legally vulnerable!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:100
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:101
 msgid "In addition, we have adapted Real Cookie Banner to legal details of more EU countries and now offer translations in 12 languages. Official translations of the plugin are now available in English, French, Spanish, Portuguese, Italian, German (informal and formal), Dutch (informal and formal), Polish, Czech, Danish, Swedish, Norwegian Bokmal. Translations of service templates and content blocker templates will follow."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:106
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:107
 msgid "We strongly advise you to adopt the new texts for all languages with official translations!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:114
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:115
 msgid "We will overwrite all texts in your cookie banner with new text suggestions. Please check afterwards if all adjustments are correct for your individual requirements and reconfigure your cookie banner yourself if necessary. Are you sure you want to apply the changes?"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:123
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:124
 msgid "Accessibility to comply with the European Accessibility Act"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:127
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:128
 msgid "As of June 2025, the <a href=\"%1$s\" target=\"_blank\">European Accessibility Act</a> requires accessibility for most websites. You can already offer an equal and obstacle-free website experience with Real Cookie Banner!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:131
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:132
 msgid "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=celex:32019L0882"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:135
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:136
 msgid "Real Cookie Banner complies with <a href=\"%1$s\" target=\"_blank\">WCAG 2.2 Level AA standard</a>, covers legal requirements and makes you ready for the new law. For more details, <a href=\"%2$s\" target=\"_blank\">check out our knowledge base</a>."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:139
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:140
 msgid "https://www.w3.org/TR/WCAG22/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:140
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:141
 msgid "https://devowl.io/knowledge-base/accessibility-of-real-cookie-banner/"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:144
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:145
 msgid "All design templates have been revised by us with regard to accessibility. In addition, when <a href=\"%1$s\" target=\"_blank\">customizing the cookie banner design</a>, you will now find an accessibility score that evaluates how accessible your current design settings are. Customize your design now!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:159
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:160
 msgid "Show revised design presets"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:168
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:169
 msgid "upgrade-wizard/v4/accessibility-score.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:173
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:174
 msgid "Provide details of the website operator for self-hosted services"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:177
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:178
 msgid "In services, you can provide contact details of the provider/data processor (postal address, email, phone, etc.) to fulfill your information obligations under <a href=\"%1$s\" target=\"_blank\">Art. 13 GDPR</a> in conjunction with <a href=\"%2$s\" target=\"_blank\">Art. 5 GDPR</a>. For self-hosted services, you are the data processor and should also provide this data in the cookie banner."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:181
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:182
 msgid "https://gdpr-text.com/read/article-13/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:182
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:183
 msgid "https://gdpr-text.com/read/article-5/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:184
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:185
 msgid "Save your contact details once in the settings and they will be available for all current and future services!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:190
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:191
 #: inc/view/checklist/OperatorContact.php:31
 msgid "Set website operator details"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:194
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:195
 msgid "Provider details are set!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:195
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:196
 msgid "upgrade-wizard/v4/website-operator.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:202
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:203
 msgid "Define DSG (Switzerland) as legal basis"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:206
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:207
 msgid "Real Cookie Banner can be used not only to meet the requirements of the GDPR in the EU, but also to comply with the new Swiss data protection law (DSG or nDSG). <a href=\"%1$s\" target=\"_blank\">More information about the DSG and cookie banners</a> can be found in our knowledge base!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:210
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:211
 msgid "https://devowl.io/knowledge-base/cookie-banner-swiss-data-protection-fadp/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:212
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:213
 msgid "If you intentionally target website visitors from Switzerland, you should activate the DSG as the applicable legal basis to get useful tips in Real Cookie Banner."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:218
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:219
 msgid "Specify legal basis"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:226
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:227
 msgid "Explain data processing by Real Cookie Banner in privacy policy"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:228
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:229
 msgid "You should explain the data processing of Real Cookie Banner (as well as of any other service) in more detail in your privacy policy in order to fulfill your information obligations under GDPR."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:232
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:233
 msgid "If you do not yet explain the use of Real Cookie Banner in your privacy policy, simply use our suggestion!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:238
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:239
 msgid "Show text suggestion"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:242
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:243
 msgid "Real Cookie Banner in privacy policy mentioned!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:243
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:244
 msgid "upgrade-wizard/v4/privacy-policy-text-copy.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:247
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:248
 msgid "Updates for services and content blockers"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:248
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:249
 msgid "We have revised the information given in numerous service and content blocker templates. Services and content blockers you created may contain suggestions for changes that you may want to apply. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. When editing the service/content blocker, you will find a blue \"Different from template\" next to the respective fields with more information."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:254
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:255
 msgid "All the services and content blockers you created are up to date!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:259
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:331
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:260
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:332
 msgid "The following services should be reviewed:"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:269
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:270
 msgid "Help us make Real Cookie Banner even better!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:271
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:272
 msgid "Recently, we have started actively collecting telemetry data about how Real Cookie Banner is used - if you have consented to it. This helps us e.g. to better prioritize often needed service templates or to implement much used features even better."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:275
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:276
 msgid "<strong>You have not yet consented to collecting telemetry data.</strong> They do not contain any personal data about your website visitors. We would be very pleased if we could learn from your usage behavior as well!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:281
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:282
 msgid "Collect telemetry data"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:283
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:284
 msgid "Telemetry data enabled."
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:286
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:287
 msgid "I allow telemetry data about the use of this WordPress plugin to be collected in accordance with the <a href=\"%s\" target=\"_blank\">privacy policy</a>. This data does not include any personal information about users of the plugin. Collected data will be used to provide you with the best possible support and to improve the plugin."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:299
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:300
 msgid "Consent to data processing in insecure third countries (instead of US data processing only)"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:303
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:304
 msgid "Real Cookie Banner offered you so far to obtain special consent according to <a href=\"%1$s\" target=\"_blank\">Art. 49 (1) lit. a GDPR</a> for data processing in the USA. <a href=\"%2$s\" target=\"_blank\">The USA is again a secure third country under data protection law since July 2023</a>. However, data processing of many services takes place worldwide and thus in other insecure countries."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:307
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:308
 msgid "https://gdpr-text.com/read/article-49/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:308
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:309
 msgid "https://devowl.io/2023/us-data-processing-tadpf/"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:312
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:313
 msgid "You can now specify the countries of data processing in each service! We have already added this information in service templates. You can find a <a href=\"%1$s\" target=\"_blank\">list of secure third countries as defined by the EU in the settings</a>. This means that specific consents are now obtained for all unsecure third countries worldwide."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:320
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:321
 msgid "Obtain consent for data processing in unsecure third countries"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:324
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:325
 msgid "Feature is enabled."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:326
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:327
 msgid "upgrade-wizard/v4/service-special-treatments.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:338
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:339
 msgid "Specify additional links in the footer of the cookie banner"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:340
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:341
 msgid "You should link all legally relevant subpages of your website (e.g. privacy policy, legal notice/imprint, terms and conditions) in the cookie banner so that they are quickly accessible. On these pages, the cookie banner should also not be displayed, so as not to put a barrier in front of the pages."
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:344
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:345
 msgid "So far, only privacy policy and legal notice could be linked. From now on you can link any other pages!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:350
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:351
 msgid "Add more links to the cookie banner footer"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:352
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:353
 msgid "upgrade-wizard/v4/banner-footer-links.png"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:376
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:377
 msgid "Telemetry data enabled. Thanks for your support!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:415
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:416
 msgid "Updates in v4.0: You need to make adjustments!"
 msgstr ""
 
 #. translators:
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:423
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:424
 msgid "Discover the new Real Cookie Banner 4.0! With this update, we've made legal adjustments to make your cookie banner legally even more rubust. Learn more about the changes in the <a href=\"%s\" target=\"_blank\">release notes</a> on our blog!"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:427
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:428
 msgid "https://devowl.io/2023/real-cookie-banner-4-0/"
 msgstr ""
 
-#: inc/comp/migration/DashboardTileMigrationMajor4.php:429
+#: inc/comp/migration/DashboardTileMigrationMajor4.php:430
 msgid "<strong>You should definitely take a look at the following points and apply them to your cookie banner configuration!</strong> You decide which changes to activate or ignore - we don't make any fundamental changes without your consent."
 msgstr ""
 
@@ -1279,7 +1279,7 @@ msgstr ""
 msgid "Multilingual %1$s: %2$s"
 msgstr ""
 
-#: inc/overrides/pro/rest/Forwarding.php:145
+#: inc/overrides/pro/rest/Forwarding.php:149
 msgid "Consent Forwarding is not active."
 msgstr ""
 
@@ -1905,7 +1905,7 @@ msgstr ""
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
-#: inc/UserConsent.php:195
+#: inc/UserConsent.php:198
 msgid "Invalid IP address. Please insert a valid IPv4 or IPv6 address."
 msgstr ""
 
@@ -1958,15 +1958,15 @@ msgstr ""
 msgid "Add service"
 msgstr ""
 
-#: inc/view/checklist/CustomizeBanner.php:28
+#: inc/view/checklist/CustomizeBanner.php:29
 msgid "Customize the design of the cookie banner"
 msgstr ""
 
-#: inc/view/checklist/CustomizeBanner.php:33
+#: inc/view/checklist/CustomizeBanner.php:34
 msgid "You can customize the design of the cookie banner. Match it perfectly to your website!"
 msgstr ""
 
-#: inc/view/checklist/CustomizeBanner.php:49
+#: inc/view/checklist/CustomizeBanner.php:50
 msgid "Start customizing"
 msgstr ""
 

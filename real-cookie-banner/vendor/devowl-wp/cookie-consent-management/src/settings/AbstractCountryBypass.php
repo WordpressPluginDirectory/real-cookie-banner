@@ -10,6 +10,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\Transa
  */
 abstract class AbstractCountryBypass extends BaseSettings
 {
+    const CUSTOM_BYPASS = 'geolocation';
     const TYPE_ALL = 'all';
     const TYPE_ESSENTIALS = 'essentials';
     /**
@@ -84,8 +85,8 @@ abstract class AbstractCountryBypass extends BaseSettings
                 // Skip custom bypass
                 return \false;
             }
-            $transaction->buttonClicked = 'none';
-            $transaction->customBypass = 'geolocation';
+            $transaction->buttonClicked = $this->getType() === self::TYPE_ALL ? 'implicit_all' : 'implicit_essential';
+            $transaction->customBypass = self::CUSTOM_BYPASS;
             // The GDPR does not apply here, so we do not need to set a TCF string
             $transaction->tcfString = null;
             // Country bypassing does not need a GCM consent as this is configured through the `region` attribute in `gtag`

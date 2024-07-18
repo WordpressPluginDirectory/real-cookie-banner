@@ -16,7 +16,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### mpratt/embera (Version 2.0.36 | 661452a)
+### mpratt/embera (Version 2.0.40 | 6fc913d)
 Oembed consumer library. Converts urls into their html embed code. Supports 150+ sites, such as Youtube, Twitter, vimeo, Instagram etc.
 Homepage: https://github.com/mpratt/Embera
 Licenses Used: MIT
@@ -42,7 +42,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### sabberworm/php-css-parser (Version dev-master | cbe5f33)
+### sabberworm/php-css-parser (Version v8.5.1 | 4a3d572)
 Parser for CSS Files written in PHP
 Homepage: https://www.sabberworm.com/blog/2010/6/10/php-css-parser
 Licenses Used: MIT

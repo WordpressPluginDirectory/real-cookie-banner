@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\view\checklist;
 
 use DevOwl\RealCookieBanner\view\BannerCustomize;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -37,7 +38,7 @@ class CustomizeBanner extends \DevOwl\RealCookieBanner\view\checklist\AbstractCh
     // Documented in AbstractChecklistItem
     public function getLink()
     {
-        return \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'return' => \wp_get_raw_referer()], \admin_url('customize.php'));
+        return \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'returnEncoded' => Utils::getRawRefererEncodedForUrl()], \admin_url('customize.php'));
     }
     // Documented in AbstractChecklistItem
     public function getLinkText()

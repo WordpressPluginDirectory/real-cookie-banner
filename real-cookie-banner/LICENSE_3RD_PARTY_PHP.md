@@ -30,7 +30,7 @@ Copyright (c) 2017-2019 Colin O'Dell <colinodell@gmail.com>. Based on https://gi
 > THE SOFTWARE.
 
 
-### cweagans/composer-patches (Version 1.x-dev | 37e1b29)
+### cweagans/composer-patches (Version 1.7.3 | e190d44)
 Provides a way to patch Composer packages.
 Homepage: Not configured.
 Licenses Used: BSD-3-Clause
@@ -45,7 +45,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### devowl-wp/cache-invalidate (Version dev-perf/inline-require | no sha)
+### devowl-wp/cache-invalidate (Version dev-develop | no sha)
 Provide a single entry point to trigger cache invalidation of known caching plugins
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -58,7 +58,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/cookie-consent-management (Version dev-perf/inline-require | no sha)
+### devowl-wp/cookie-consent-management (Version dev-develop | no sha)
 Provide cookie consent management with adapters to your environment
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -71,7 +71,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/customize (Version dev-perf/inline-require | no sha)
+### devowl-wp/customize (Version dev-develop | no sha)
 Abstract utility for live preview (customize)
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -84,7 +84,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/deliver-anonymous-asset (Version dev-perf/inline-require | no sha)
+### devowl-wp/deliver-anonymous-asset (Version dev-develop | no sha)
 Provide a functionality to deliver assets anonymous
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -97,7 +97,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/fast-html-tag (Version dev-perf/inline-require | no sha)
+### devowl-wp/fast-html-tag (Version dev-develop | no sha)
 Find tags within HTML content and modify it in speed of light
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -110,7 +110,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/freemium (Version dev-perf/inline-require | no sha)
+### devowl-wp/freemium (Version dev-develop | no sha)
 Make your plugin to a freemium plugin with predefined Envato support
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -123,7 +123,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/headless-content-blocker (Version dev-perf/inline-require | no sha)
+### devowl-wp/headless-content-blocker (Version dev-develop | no sha)
 Block HTML content by URLs and selector syntax
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -136,7 +136,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/multilingual (Version dev-perf/inline-require | no sha)
+### devowl-wp/multilingual (Version dev-develop | no sha)
 Provide helper functionality for multilingual plugins like WPML and PolyLang
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -149,7 +149,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-product-manager-wp-client (Version dev-perf/inline-require | no sha)
+### devowl-wp/real-product-manager-wp-client (Version dev-develop | no sha)
 A WordPress client for Real Product Manager
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -162,7 +162,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-queue (Version dev-perf/inline-require | no sha)
+### devowl-wp/real-queue (Version dev-develop | no sha)
 Provide a promise-based queue system working in frontend for client and server tasks
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -175,7 +175,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-utils (Version dev-perf/inline-require | no sha)
+### devowl-wp/real-utils (Version dev-develop | no sha)
 Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -188,7 +188,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/service-cloud-consumer (Version dev-perf/inline-require | no sha)
+### devowl-wp/service-cloud-consumer (Version dev-develop | no sha)
 Consume service and blocker templates from service cloud
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -201,7 +201,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/utils (Version dev-perf/inline-require | no sha)
+### devowl-wp/utils (Version dev-develop | no sha)
 Utility functionality for all your WordPress plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -214,7 +214,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### maxmind-db/reader (Version v1.11.0 | b1f3c06)
+### maxmind-db/reader (Version v1.11.1 | 1e66f73)
 MaxMind DB Reader API
 Homepage: https://github.com/maxmind/MaxMind-DB-Reader-php
 Licenses Used: Apache-2.0
@@ -422,7 +422,7 @@ Licenses Used: Apache-2.0
    limitations under the License.
 
 
-### mpratt/embera (Version 2.0.36 | 661452a)
+### mpratt/embera (Version 2.0.40 | 6fc913d)
 Oembed consumer library. Converts urls into their html embed code. Supports 150+ sites, such as Youtube, Twitter, vimeo, Instagram etc.
 Homepage: https://github.com/mpratt/Embera
 Licenses Used: MIT
@@ -448,7 +448,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-### sabberworm/php-css-parser (Version dev-master | cbe5f33)
+### sabberworm/php-css-parser (Version v8.5.1 | 4a3d572)
 Parser for CSS Files written in PHP
 Homepage: https://www.sabberworm.com/blog/2010/6/10/php-css-parser
 Licenses Used: MIT
@@ -475,7 +475,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### yahnis-elsts/plugin-update-checker (Version dev-master | 5f251be)
+### yahnis-elsts/plugin-update-checker (Version v5.4 | e8e53e6)
 A custom update checker for WordPress plugins and themes. Useful if you can't host your plugin in the official WP repository but still want it to support automatic updates.
 Homepage: https://github.com/YahnisElsts/plugin-update-checker/
 Licenses Used: MIT

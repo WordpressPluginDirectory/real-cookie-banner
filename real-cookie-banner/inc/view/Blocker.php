@@ -55,6 +55,7 @@ class Blocker
         '.wpcs_content_inner',
         // [Plugin Comp] OptimizePress
         '.op3-contenttoggleitem-content',
+        '.op3-popoverlay-content',
         // [Plugin Comp] Popup Maker
         '.pum-overlay',
         // [Plugin Comp] Elementor Pro Popups

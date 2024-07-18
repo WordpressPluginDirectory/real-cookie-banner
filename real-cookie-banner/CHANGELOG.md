@@ -3,6 +3,142 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.12 (2024-07-17)
+
+
+### Bug Fixes
+
+* no longer send referer via URL parameter as this lead to issues with Strato servers (dashboard no longer loads, CU-86954236z)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.17</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* no longer send referer via URL parameter as this lead to issues with Strato servers (dashboard no longer loads, CU-86954236z)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.7</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Bug Fixes
+
+* no longer send referer via URL parameter as this lead to issues with Strato servers (dashboard no longer loads, CU-86954236z)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.7</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* no longer send referer via URL parameter as this lead to issues with Strato servers (dashboard no longer loads, CU-86954236z)</details>
+
+
+
+
+
+## 4.7.11 (2024-07-16)
+
+
+### Bug Fixes
+
+* compatibility with Authentic theme using jarallax for parallax background videos (CU-86951xdwv)
+* compatibility with FacetWP pagination (CU-869502z3k)
+* compatibility with finding services of SEOPress analytics module (CU-86951f1yr)
+* compatibility with Thrive Visual Editor and Vimeo video events (CU-8695141bx)
+* content blocker not rendered in op-builder overlay / modal dialog (CU-86951rm14)
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy edit dialog (CU-86951yt9g)
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy settings history (CU-86951yt9g)
+* the page cannot be cached (bfcache) because it has a BroadcastChannel instance with registered listeners (CU-86951y06h)
+
+
+### Documentation
+
+* update README.md for WordPress 6.6 compatibility (CU-86951232r)
+
+
+### Maintenance
+
+* update TCF vendors list of Google AdSense (CU-8694q1nfu)
+
+
+### Performance Improvements
+
+* increase interval to check for new scanner items (CU-8694w7y3c)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.13.6</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* allow usesNonCookieAccess property in TCF vendor device disclosure (CU-8694xa392)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.16</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy edit dialog (CU-86951yt9g)
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy settings history (CU-86951yt9g)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.10</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy edit dialog (CU-86951yt9g)
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy settings history (CU-86951yt9g)
+* the page cannot be cached (bfcache) because it has a BroadcastChannel instance with registered listeners (CU-86951y06h)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.17.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* do not loop Vimeo embeds when unblocking through content blocker (CU-8695141bx)
+
+
+##### Features
+
+* allow to use selector syntax attribute functions through selector syntax map for already blocked elements (CU-8695141bx)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.12.8</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy edit dialog (CU-86951yt9g)
+* correctly show the accepted TCF and GCM states when using Geo-restriction in privacy settings history (CU-86951yt9g)
+* the page cannot be cached (bfcache) because it has a BroadcastChannel instance with registered listeners (CU-86951y06h)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.6.6</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Performance Improvements
+
+* increase interval to check for new scanner items (CU-8694w7y3c)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 0.5.24</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Maintenance
+
+* suppress logs from requests from nullers (CU-8694xa392)</details>
+
+
+
+
+
 ## 4.7.10 (2024-06-20)
 
 

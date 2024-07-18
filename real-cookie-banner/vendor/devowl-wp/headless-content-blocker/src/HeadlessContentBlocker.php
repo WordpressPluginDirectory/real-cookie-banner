@@ -146,9 +146,9 @@ class HeadlessContentBlocker extends FastHtmlTag
         $map['attr'] = \array_merge($map['attr'] ?? [], $attributes);
     }
     /**
-     * Respect additional selector-syntax as blockable candiates. Keep in mind that this selector-syntax does
-     * not automatically block the defined attribute. Instead, you need to create a custom plugin / callback
-     * for `checkResult`.
+     * Respect additional selector-syntax as blockable candiates. All mentioned attributes will be checked with the defined blockables.
+     * For example, `a[href][class*="my-class"]` will check if `href` got blocked through a blockable, and additionally if the class
+     * matches `my-class`.
      *
      * @param string[] $selectorSyntax
      */

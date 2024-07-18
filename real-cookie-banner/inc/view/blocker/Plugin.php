@@ -84,6 +84,10 @@ class Plugin extends AbstractPlugin
             'a[data-pswp-video-url:matchesUrl(withHost=true),delegateClick()]',
             // [Plugin Comp] Elementor Lightbox
             'a[href][data-elementor-open-lightbox:confirm(),keepAttributes(value=href)]',
+            // [Plugin Comp] Thrive Visual Editor
+            'iframe[data-reporting-enabled="1":keepAttributes(value=data-reporting-enabled),jQueryHijackEach()]',
+            // [Plugin Comp] Authentic theme using jarallax
+            'div[data-video][class*="parallax-video":keepAttributes(value=class),jQueryHijackEach()]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a

@@ -488,9 +488,13 @@ class Scanner
             return $caps;
         });
         if ($current_user instanceof WP_User && \count($current_user->roles) > 0) {
-            $current_user->roles = \array_filter($current_user->roles, function ($role) {
+            // When the user has only `administrator`, the `->roles` array will get empty
+            // So, we need to get the role with the least capabilities to ensure at least one role
+            // for the currently logged in user.
+            $current_user->roles[] = self::getRoleWithLeastCapabilities();
+            $current_user->roles = \array_values(\array_filter($current_user->roles, function ($role) {
                 return !\in_array($role, ['administrator'], \true);
-            });
+            }));
             // We never should write back roles back to database!
             // In general, never update a user meta as it is not needed while scanning a site.
             \add_filter('update_user_metadata', '__return_false', \PHP_INT_MAX);
@@ -503,6 +507,13 @@ class Scanner
         // [Plugin Comp] RankMath
         \add_filter('rank_math/analytics/gtag_exclude_loggedin_roles', function () {
             return [];
+        });
+        // [Plugin Comp] SEOPress
+        \add_filter('option_seopress_google_analytics_option_name', function ($option) {
+            if (\is_array($option) && isset($option['seopress_google_analytics_roles'])) {
+                $option['seopress_google_analytics_roles'] = [];
+            }
+            return $option;
         });
     }
     /**
@@ -542,5 +553,25 @@ class Scanner
         $result = \remove_query_arg(\DevOwl\RealCookieBanner\scanner\Scanner::QUERY_ARG_JOB_ID, $result);
         $result = \remove_query_arg(BlockerView::FORCE_TIME_COMMENT_QUERY_ARG, $result);
         return $result;
+    }
+    /**
+     * Get the role with the least capabilities.
+     *
+     * @return string|null
+     */
+    public static function getRoleWithLeastCapabilities()
+    {
+        global $wp_roles;
+        $roles = $wp_roles->roles;
+        $role_with_least_caps = null;
+        $least_capabilities_count = \PHP_INT_MAX;
+        foreach ($roles as $role_name => $role_info) {
+            $capabilities_count = \count($role_info['capabilities']);
+            if ($capabilities_count < $least_capabilities_count) {
+                $least_capabilities_count = $capabilities_count;
+                $role_with_least_caps = $role_name;
+            }
+        }
+        return $role_with_least_caps;
     }
 }

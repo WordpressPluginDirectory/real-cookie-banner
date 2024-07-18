@@ -17,9 +17,9 @@ class Consent
     /**
      * Regexp to validate and parse the cookie value with named capture groups.
      *
-     * @see https://regex101.com/r/6UXL8j/1
+     * @see https://regex101.com/r/6UXL8j/2
      */
-    const COOKIE_VALUE_REGEXP = '/^(?<createdAt>\\d+)?:?(?<uuids>(?:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}[,]?)+):(?<revisionHash>[a-f0-9]{32}):(?<decisionJson>.*)$/';
+    const COOKIE_VALUE_REGEXP = '/^(?<createdAt>\\d+)?:?(?<uuids>(?:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}[,]?)+):(?<revisionHash>[a-f0-9]{32}):(?<json>.*)$/';
     /**
      * See `CookieConsentManagement`.
      *
@@ -56,6 +56,12 @@ class Consent
      * @var string
      */
     private $revisionHash;
+    /**
+     * The clicked button.
+     *
+     * @var string
+     */
+    private $buttonClicked;
     /**
      * The decision for this consent.
      *
@@ -181,7 +187,11 @@ class Consent
         $allUuids = \array_merge([$uuid], $newPreviousUuids);
         $cookie = new SetCookie();
         $cookie->key = $this->getCookieConsentManagement()->getFrontend()->getCookieName();
-        $cookie->value = \sprintf('%d:%s:%s:%s', \time(), \join(',', $allUuids), $currentHash, \json_encode($decision));
+        $cookie->value = \sprintf('%d:%s:%s:%s', \time(), \join(',', $allUuids), $currentHash, \json_encode([
+            // Keep keys small as we do not have much space in cookie value (maximum of 4096 bytes in total of cookie size)
+            'd' => $decision,
+            'bc' => $transaction->buttonClicked,
+        ]));
         $cookie->expire = $this->getCookieExpire();
         $this->handleCountryBypass($transaction);
         $tcfCookie = $this->handleTcfString($transaction);
@@ -191,6 +201,7 @@ class Consent
         $this->created = \time();
         $this->revisionHash = $currentHash;
         $this->decision = $decision;
+        $this->buttonClicked = $transaction->buttonClicked;
         //$this->tcfString = null; // see handleTcfString
         //$this->gcmConsent = null; // see handleGcmConsent
         $consentId = $persistDatabase();
@@ -274,7 +285,20 @@ class Consent
         if ($multisite->isConsentForwarding() && !$transaction->markAsDoNotTrack) {
             $endpoints = $multisite->getConfiguredEndpoints();
             if (\count($endpoints) > 0) {
-                $data = ['uuid' => $this->getUuid(), 'consentId' => $persistId, 'blocker' => $transaction->blocker, 'buttonClicked' => $transaction->buttonClicked, 'viewPortWidth' => $transaction->viewPortWidth, 'viewPortHeight' => $transaction->viewPortHeight, 'cookies' => $multisite->mapDecisionToUniqueNames($this->getDecision()), 'tcfString' => $this->getTcfString(), 'gcmConsent' => $this->getGcmConsent(), '_wp_http_referer' => $transaction->referer];
+                $data = [
+                    'uuid' => $this->getUuid(),
+                    'consentId' => $persistId,
+                    'blocker' => $transaction->blocker,
+                    'buttonClicked' => $transaction->buttonClicked,
+                    'viewPortWidth' => $transaction->viewPortWidth,
+                    'viewPortHeight' => $transaction->viewPortHeight,
+                    'cookies' => $multisite->mapDecisionToUniqueNames($this->getDecision()),
+                    'tcfString' => $this->getTcfString(),
+                    'gcmConsent' => $this->getGcmConsent(),
+                    'referer' => $transaction->referer,
+                    // Make wp_get_raw_referer work in WordPress
+                    '_wp_http_referer' => $transaction->referer,
+                ];
                 // Remove `null` data
                 foreach ($data as $key => $value) {
                     if ($value === null) {
@@ -392,11 +416,23 @@ class Consent
         $uuids = \explode(',', $match['uuids']);
         $uuid = \array_shift($uuids);
         $revisionHash = $match['revisionHash'];
-        $cookieDecision = $this->sanitizeDecision(\json_decode($match['decisionJson'], ARRAY_A));
+        $jsonValue = \json_decode($match['json'], ARRAY_A);
+        // Since the introduction of saving the clicked button in the cookie value, the `json` contains beside
+        // the decision also the clicked button.
+        if (!isset($jsonValue['bc'])) {
+            // Migrate old format to new format
+            $jsonValue = [
+                'd' => $jsonValue,
+                // We never will know at this time, which button the user clicked a long time ago (only in database, but in terms of performance we do not want to execute a query here)
+                'bc' => 'none',
+            ];
+        }
+        $cookieDecision = $this->sanitizeDecision($jsonValue['d']);
+        $buttonClicked = $jsonValue['bc'];
         if ($cookieDecision === \false) {
             return \false;
         }
-        $result = ['uuid' => $uuid, 'previousUuids' => $uuids, 'created' => \is_numeric($match['createdAt']) ? \mysql2date('c', \gmdate('Y-m-d H:i:s', \intval($match['createdAt'])), \false) : null, 'revisionHash' => $revisionHash, 'decision' => $cookieDecision];
+        $result = ['uuid' => $uuid, 'previousUuids' => $uuids, 'created' => \is_numeric($match['createdAt']) ? \mysql2date('c', \gmdate('Y-m-d H:i:s', \intval($match['createdAt'])), \false) : null, 'revisionHash' => $revisionHash, 'decision' => $cookieDecision, 'buttonClicked' => $buttonClicked];
         return $result;
     }
     /**
@@ -420,6 +456,7 @@ class Consent
                     $this->created = $parsed['created'];
                     $this->revisionHash = $parsed['revisionHash'];
                     $this->decision = $parsed['decision'];
+                    $this->buttonClicked = $parsed['buttonClicked'];
                 }
                 break;
             case $tcfCookieName:
@@ -502,6 +539,15 @@ class Consent
      *
      * @codeCoverageIgnore
      */
+    public function getButtonClicked()
+    {
+        return $this->buttonClicked;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
     public function getTcfString()
     {
         return $this->tcfString;
@@ -528,6 +574,7 @@ class Consent
         $this->created = null;
         $this->revisionHash = null;
         $this->decision = null;
+        $this->buttonClicked = null;
         $this->tcfString = null;
         $this->gcmConsent = null;
         foreach ($this->currentCookies as $key => $value) {

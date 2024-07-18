@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\comp;
 
+use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\Utils;
 use Jetpack;
@@ -51,10 +52,12 @@ class TemplatesPluginIntegrations
     // Currently, geo-location is only used for custom address
     const OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID = 'wc_google_analytics_pro_account_id';
     const OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS = 'woocommerce_google_analytics_pro_settings';
+    const OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS = 'seopress_google_analytics_option_name';
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
     const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS];
+    const ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS];
     const INVALIDATE_WHEN_SITE_OPTION_CHANGES = [self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL];
     /**
      * Singleton instance.
@@ -80,10 +83,22 @@ class TemplatesPluginIntegrations
         $callback = function () {
             \wp_rcb_invalidate_templates_cache();
         };
+        $addedHomeUrl = \false;
+        $callbackAddHomeUrlToScanner = function () use(&$addedHomeUrl) {
+            if (!$addedHomeUrl) {
+                $addedHomeUrl = \true;
+                Core::getInstance()->getScanner()->addUrlsToQueue([\home_url()]);
+            }
+        };
         foreach (self::INVALIDATE_WHEN_OPTION_CHANGES as $optionName) {
             \add_action('update_option_' . $optionName, $callback);
             \add_action('add_option_' . $optionName, $callback);
             \add_action('delete_option_' . $optionName, $callback);
+        }
+        foreach (self::ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES as $optionName) {
+            \add_action('update_option_' . $optionName, $callbackAddHomeUrlToScanner);
+            \add_action('add_option_' . $optionName, $callbackAddHomeUrlToScanner);
+            \add_action('delete_option_' . $optionName, $callbackAddHomeUrlToScanner);
         }
         foreach (self::INVALIDATE_WHEN_SITE_OPTION_CHANGES as $optionName) {
             \add_action('update_site_option_' . $optionName, $callback);

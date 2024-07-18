@@ -65,6 +65,10 @@ class Revision
         if ($tcf->isActive()) {
             $revision['tcf'] = $this->tcfToJson();
         }
+        $gcm = $settings->getGoogleConsentMode();
+        if ($gcm->isEnabled()) {
+            $revision['gcm'] = $gcm->getConsentModes();
+        }
         $frontend = $this->getCookieConsentManagement()->getFrontend();
         $lazyLoadedData = $frontend->prepareLazyData($revision);
         $revision['lazyLoadedDataForSecondView'] = $lazyLoadedData;

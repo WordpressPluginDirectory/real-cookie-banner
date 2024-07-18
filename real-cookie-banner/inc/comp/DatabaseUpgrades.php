@@ -83,6 +83,7 @@ class DatabaseUpgrades
         $result[] = $this->migration_863gt04va();
         $result[] = $this->migration_apv5uu();
         $result[] = $this->migration_86940n0a0();
+        $result[] = $this->migration_86951yt9g();
         //error_log('---> ' . json_encode($result));
     }
     /**
@@ -570,6 +571,26 @@ class DatabaseUpgrades
         if (Core::versionCompareOlderThan($this->installed, '4.5.4', ['4.5.5', '4.6.0'])) {
             \update_option(BasicLayout::SETTING_MAX_HEIGHT_ENABLED, '');
             return \true;
+        }
+        return \false;
+    }
+    /**
+     * We have introduced a new `button_clicked` for implicit consents (e.g. Country Bypass): `implicit_all`
+     * and `implicit_essential`. With a SQL query we can update older consents to reflect the correct `button_clicked`
+     * for Country Bypass by reading the configuration from the revisions.
+     *
+     * @see https://app.clickup.com/t/86951yt9g
+     */
+    protected function migration_86951yt9g()
+    {
+        global $wpdb;
+        $table_name = Core::getInstance()->getTableName(UserConsent::TABLE_NAME);
+        $table_name_revision = Core::getInstance()->getTableName(Revision::TABLE_NAME);
+        if (Core::versionCompareOlderThan($this->installed, '4.7.11', ['4.7.12', '4.8.0'])) {
+            // phpcs:disable WordPress.DB
+            $sql = "UPDATE {$table_name} c\nINNER JOIN {$table_name_revision} r\nON c.revision = r.hash\nSET c.button_clicked = CASE\n        WHEN r.json_revision LIKE '%\"isCountryBypass\":true%' AND r.json_revision LIKE '%\"countryBypassType\":\"all\"%' THEN 'implicit_all'\n        WHEN r.json_revision LIKE '%\"isCountryBypass\":true%' AND r.json_revision NOT LIKE '%\"countryBypassType\":\"all\"%' THEN 'implicit_essential'\n        ELSE 'none'\n    END\nWHERE c.custom_bypass = 'geolocation'\nAND c.button_clicked NOT LIKE 'implicit%'";
+            $wpdb->query($sql);
+            // phpcs:enable WordPress.DB
         }
         return \false;
     }

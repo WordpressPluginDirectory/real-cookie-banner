@@ -2,9 +2,10 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\PersistedTransaction;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\CookieConsentManagement;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractCountryBypass;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
 /**
  * Functions for the frontend (e.g. generating "Code on page load" HTML output).
@@ -82,6 +83,36 @@ class Frontend
             $output['consentForwardingExternalHosts'] = $consentForwardingExternalHosts;
         }
         return $output;
+    }
+    /**
+     * Create a JSON object for the frontend so it can be shown as history. In general, we do not want to expose
+     * all data. And perhaps we need to modify some data before sending to the client. See also `BannerHistoryEntry`
+     * in `@devowl-wp/react-cookie-banner`.
+     *
+     * @param PersistedTransaction $transaction
+     */
+    public function persistedTransactionToJsonForHistoryViewer($transaction)
+    {
+        $obj = ['id' => $transaction->id, 'uuid' => $transaction->uuid, 'isDoNotTrack' => $transaction->markAsDoNotTrack, 'isUnblock' => $transaction->blocker > 0, 'isForwarded' => $transaction->forwarded > 0, 'created' => $transaction->created, 'context' => [
+            'buttonClicked' => $transaction->buttonClicked,
+            'groups' => $transaction->revision['groups'],
+            'consent' => $transaction->decision,
+            'gcmConsent' => $transaction->gcmConsent,
+            // TCF compatibility
+            'tcf' => isset($transaction->revision['tcf']) ? [
+                'tcf' => $transaction->revision['tcf'],
+                // Keep `tcfMeta` for backwards-compatibility
+                'tcfMetadata' => $transaction->revisionIndependent['tcfMetadata'] ?? $transaction->revisionIndependent['tcfMeta'],
+                'tcfString' => $transaction->tcfString,
+            ] : null,
+        ]];
+        $lazyLoaded = $this->prepareLazyData($obj['context']['tcf']);
+        $obj['context']['lazyLoadedDataForSecondView'] = $lazyLoaded;
+        // Backwards-compatibility for older records using Geo-restriction bypass
+        if ($transaction->revision['options']['isCountryBypass'] && $transaction->customBypass === AbstractCountryBypass::CUSTOM_BYPASS && !Utils::startsWith($transaction->buttonClicked, 'implicit_')) {
+            $obj['context']['buttonClicked'] = $transaction->revision['options']['countryBypassType'] === AbstractCountryBypass::TYPE_ALL ? 'implicit_all' : 'implicit_essential';
+        }
+        return $obj;
     }
     /**
      * The `toJson` method prepares the data for the complete data of the frontend. Use this function
