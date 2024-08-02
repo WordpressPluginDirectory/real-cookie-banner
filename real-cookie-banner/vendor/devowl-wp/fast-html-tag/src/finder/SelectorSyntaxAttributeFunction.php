@@ -9,9 +9,21 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
  */
 class SelectorSyntaxAttributeFunction
 {
+    /**
+     * Variables can be resolved in argument values with `{{ .myVar }}`.
+     *
+     * @see https://regex101.com/r/wKi38x/1
+     */
+    const VARIABLE_TEMPLATE_REGEXP = '/{{\\s*\\.(\\w+)\\s*}}/m';
     private $attribute;
     private $name;
     private $arguments;
+    /**
+     * A variable resolver for the arguments.
+     *
+     * @var SelectorSyntaxAttributeFunctionVariableResolver
+     */
+    private $variableResolver;
     /**
      * C'tor.
      *
@@ -40,6 +52,22 @@ class SelectorSyntaxAttributeFunction
         return \true;
     }
     /**
+     * Expose variables from the variable resolver on the argument values once when we want to access the argument.
+     */
+    protected function exposeVariablesToArgumentValues()
+    {
+        if ($this->variableResolver !== null) {
+            // Arguments can be also an array, e.g. `key[]=val1&key[]=val2`
+            \array_walk_recursive($this->arguments, function (&$val) {
+                if (\strpos($val, '{{') !== \false) {
+                    $val = \preg_replace_callback(self::VARIABLE_TEMPLATE_REGEXP, function ($m) {
+                        return $this->getVariableResolver()->getVariable($m[1]);
+                    }, $val);
+                }
+            });
+        }
+    }
+    /**
      * Get argument by name.
      *
      * @param string $argument
@@ -47,7 +75,7 @@ class SelectorSyntaxAttributeFunction
      */
     public function getArgument($argument, $default = null)
     {
-        return $this->arguments[$argument] ?? $default;
+        return $this->getArguments()[$argument] ?? $default;
     }
     /**
      * Getter.
@@ -83,6 +111,7 @@ class SelectorSyntaxAttributeFunction
      */
     public function getArguments()
     {
+        $this->exposeVariablesToArgumentValues();
         return $this->arguments;
     }
     /**
@@ -93,6 +122,25 @@ class SelectorSyntaxAttributeFunction
     public function getFinder()
     {
         return $this->getAttribute()->getFinder();
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getVariableResolver()
+    {
+        return $this->variableResolver;
+    }
+    /**
+     * Setter.
+     *
+     * @param SelectorSyntaxAttributeFunctionVariableResolver $variableResolver
+     * @codeCoverageIgnore
+     */
+    public function setVariableResolver($variableResolver)
+    {
+        $this->variableResolver = $variableResolver;
     }
     /**
      * Convert a string expression to multiple function instances.

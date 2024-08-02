@@ -122,287 +122,287 @@ msgstr ""
 msgid "Real Cookie Banner is a cookie plugin specially designed for WordPress. It is fully installed in your WordPress as a native plugin. All consents are processed and stored on your server. Nothing is downloaded from a cloud in your visitor's browser, which avoids further legal issues."
 msgstr ""
 
-#: inc/Assets.php:506
+#: inc/Assets.php:491
 msgctxt "legal-text"
 msgid "Appropriate safeguard"
 msgstr ""
 
-#: inc/Assets.php:507
+#: inc/Assets.php:492
 msgctxt "legal-text"
 msgid "Standard contractual clauses"
 msgstr ""
 
-#: inc/Assets.php:508
+#: inc/Assets.php:493
 msgctxt "legal-text"
 msgid "Adequacy decision"
 msgstr ""
 
-#: inc/Assets.php:509
+#: inc/Assets.php:494
 msgctxt "legal-text"
 msgid "Binding corporate rules"
 msgstr ""
 
-#: inc/Assets.php:510
+#: inc/Assets.php:495
 msgctxt "legal-text"
 msgid "Other"
 msgstr ""
 
-#: inc/Assets.php:511
+#: inc/Assets.php:496
 msgctxt "legal-text"
 msgid "Use on legal basis of"
 msgstr ""
 
-#: inc/Assets.php:514
+#: inc/Assets.php:499
 msgctxt "legal-text"
 msgid "Art. 49 (1) lit. a GDPR"
 msgstr ""
 
-#: inc/Assets.php:521
+#: inc/Assets.php:506
 msgctxt "legal-text"
 msgid "Art. 17 (1) lit. a DSG (Switzerland)"
 msgstr ""
 
-#: inc/Assets.php:528
+#: inc/Assets.php:513
 msgctxt "legal-text"
 msgid "Legitimate interest"
 msgstr ""
 
-#: inc/Assets.php:529
+#: inc/Assets.php:514
 msgctxt "legal-text"
 msgid "Compliance with a legal obligation"
 msgstr ""
 
-#: inc/Assets.php:530
+#: inc/Assets.php:515
 msgctxt "legal-text"
 msgid "Consent"
 msgstr ""
 
-#: inc/Assets.php:531
+#: inc/Assets.php:516
 msgctxt "legal-text"
 msgid "We have recognized that you are a crawler/bot. Only natural persons must consent to cookies and processing of personal data. Therefore, the link has no function for you."
 msgstr ""
 
-#: inc/Assets.php:536
+#: inc/Assets.php:521
 msgctxt "legal-text"
 msgid "Technical cookie definition"
 msgstr ""
 
-#: inc/Assets.php:537
+#: inc/Assets.php:522
 msgctxt "legal-text"
 msgid "Uses cookies"
 msgstr ""
 
-#: inc/Assets.php:538
+#: inc/Assets.php:523
 msgctxt "legal-text"
 msgid "Cookie refresh"
 msgstr ""
 
-#: inc/Assets.php:539
+#: inc/Assets.php:524
 msgctxt "legal-text"
 msgid "Uses cookie-like information (LocalStorage, SessionStorage, IndexDB, etc.)"
 msgstr ""
 
-#: inc/Assets.php:544
+#: inc/Assets.php:529
 msgctxt "legal-text"
 msgid "Host"
 msgstr ""
 
-#: inc/Assets.php:545
+#: inc/Assets.php:530
 msgctxt "legal-text"
 msgid "Duration"
 msgstr ""
 
-#: inc/Assets.php:546
+#: inc/Assets.php:531
 msgctxt "legal-text"
 msgid "No expiration"
 msgstr ""
 
-#: inc/Assets.php:547
+#: inc/Assets.php:532
 msgctxt "legal-text"
 msgid "Type"
 msgstr ""
 
-#: inc/Assets.php:548
+#: inc/Assets.php:533
 msgctxt "legal-text"
 msgid "Purpose"
 msgstr ""
 
-#: inc/Assets.php:549
+#: inc/Assets.php:534
 #: inc/overrides/pro/view/TcfBanner.php:90
 msgctxt "legal-text"
 msgid "Purposes"
 msgstr ""
 
-#: inc/Assets.php:550
+#: inc/Assets.php:535
 msgctxt "legal-text"
 msgid "History of your privacy settings"
 msgstr ""
 
-#: inc/Assets.php:555
+#: inc/Assets.php:540
 msgctxt "legal-text"
 msgid "Skip to consent choices"
 msgstr ""
 
-#: inc/Assets.php:556
+#: inc/Assets.php:541
 msgctxt "legal-text"
 msgid "Show consent from"
 msgstr ""
 
-#: inc/Assets.php:557
+#: inc/Assets.php:542
 msgctxt "legal-text"
 msgid "Reading the consent has failed. Please try again later!"
 msgstr ""
 
-#: inc/Assets.php:562
+#: inc/Assets.php:547
 msgctxt "legal-text"
 msgid "Not yet consented to"
 msgstr ""
 
-#: inc/Assets.php:563
+#: inc/Assets.php:548
 msgctxt "legal-text"
 msgid "Provider"
 msgstr ""
 
-#: inc/Assets.php:564
+#: inc/Assets.php:549
 msgctxt "legal-text"
 msgid "Phone"
 msgstr ""
 
-#: inc/Assets.php:565
+#: inc/Assets.php:550
 msgctxt "legal-text"
 msgid "Email"
 msgstr ""
 
-#: inc/Assets.php:566
+#: inc/Assets.php:551
 msgctxt "legal-text"
 msgid "Contact form"
 msgstr ""
 
-#: inc/Assets.php:567
+#: inc/Assets.php:552
 msgctxt "legal-text"
 msgid "Privacy Policy"
 msgstr ""
 
-#: inc/Assets.php:568
+#: inc/Assets.php:553
 #: inc/settings/BannerLink.php:382
 msgctxt "legal-text"
 msgid "Legal notice"
 msgstr ""
 
-#: inc/Assets.php:569
+#: inc/Assets.php:554
 msgctxt "legal-text"
 msgid "Non-standardized data processing"
 msgstr ""
 
-#: inc/Assets.php:570
+#: inc/Assets.php:555
 msgctxt "legal-text"
 msgid "Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called \"essential services\" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given."
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:576
+#: inc/Assets.php:561
 msgctxt "legal-text"
 msgid "Data processing in unsecure third countries"
 msgstr ""
 
-#: inc/Assets.php:582
+#: inc/Assets.php:567
 msgctxt "legal-text"
 msgid "US data processing"
 msgstr ""
 
-#: inc/Assets.php:585
+#: inc/Assets.php:570
 msgid "second(s)"
 msgstr ""
 
-#: inc/Assets.php:586
+#: inc/Assets.php:571
 msgid "minute(s)"
 msgstr ""
 
-#: inc/Assets.php:587
+#: inc/Assets.php:572
 msgid "hour(s)"
 msgstr ""
 
-#: inc/Assets.php:588
+#: inc/Assets.php:573
 msgid "day(s)"
 msgstr ""
 
-#: inc/Assets.php:589
+#: inc/Assets.php:574
 msgid "month(s)"
 msgstr ""
 
-#: inc/Assets.php:590
+#: inc/Assets.php:575
 msgid "year(s)"
 msgstr ""
 
-#: inc/Assets.php:592
+#: inc/Assets.php:577
 msgid "second"
 msgstr ""
 
-#: inc/Assets.php:593
+#: inc/Assets.php:578
 msgid "minute"
 msgstr ""
 
-#: inc/Assets.php:594
+#: inc/Assets.php:579
 msgid "hour"
 msgstr ""
 
-#: inc/Assets.php:595
+#: inc/Assets.php:580
 msgid "day"
 msgstr ""
 
-#: inc/Assets.php:596
+#: inc/Assets.php:581
 msgid "month"
 msgstr ""
 
-#: inc/Assets.php:597
+#: inc/Assets.php:582
 msgid "year"
 msgstr ""
 
-#: inc/Assets.php:600
+#: inc/Assets.php:585
 msgid "seconds"
 msgstr ""
 
-#: inc/Assets.php:601
+#: inc/Assets.php:586
 msgid "minutes"
 msgstr ""
 
-#: inc/Assets.php:602
+#: inc/Assets.php:587
 msgid "hours"
 msgstr ""
 
-#: inc/Assets.php:603
+#: inc/Assets.php:588
 msgid "days"
 msgstr ""
 
-#: inc/Assets.php:604
+#: inc/Assets.php:589
 msgid "months"
 msgstr ""
 
-#: inc/Assets.php:605
+#: inc/Assets.php:590
 msgid "years"
 msgstr ""
 
-#: inc/Assets.php:608
+#: inc/Assets.php:593
 msgid "Close"
 msgstr ""
 
-#: inc/Assets.php:609
+#: inc/Assets.php:594
 msgid "Close without saving"
 msgstr ""
 
-#: inc/Assets.php:610
+#: inc/Assets.php:595
 msgid "Yes"
 msgstr ""
 
-#: inc/Assets.php:611
+#: inc/Assets.php:596
 msgid "No"
 msgstr ""
 
-#: inc/Assets.php:612
+#: inc/Assets.php:597
 msgid "Unknown"
 msgstr ""
 
-#: inc/Assets.php:613
+#: inc/Assets.php:598
 #: inc/overrides/pro/Stats.php:61
 #: inc/view/customize/banner/BasicLayout.php:392
 #: inc/view/customize/banner/BasicLayout.php:412
@@ -411,27 +411,27 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: inc/Assets.php:614
+#: inc/Assets.php:599
 msgid "No license activated - not for production use!"
 msgstr ""
 
-#: inc/Assets.php:615
+#: inc/Assets.php:600
 msgid "Product license not for production use!"
 msgstr ""
 
-#: inc/Assets.php:616
-#: inc/Assets.php:649
+#: inc/Assets.php:601
+#: inc/Assets.php:634
 #: inc/view/checklist/GetPro.php:55
 #: inc/view/Notices.php:852
 msgid "Learn more"
 msgstr ""
 
-#: inc/Assets.php:617
+#: inc/Assets.php:602
 msgid "https://devowl.io/knowledge-base/license-installation-type/"
 msgstr ""
 
 #. translators:
-#: inc/Assets.php:622
+#: inc/Assets.php:607
 #: inc/comp/migration/DashboardTileMigrationMajor3.php:198
 #: inc/view/Notices.php:821
 msgid " and "

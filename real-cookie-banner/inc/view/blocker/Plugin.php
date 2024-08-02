@@ -30,6 +30,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\Reattac
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\ScriptInlineJsonBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\Confirm;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\DelegateClick;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\EvalJs;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\ForceVisual;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\JQueryHijackEach;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\KeepAttributes;
@@ -252,6 +253,7 @@ class Plugin extends AbstractPlugin
         $cb->addPlugin(Style::class);
         $cb->addPlugin(DelegateClick::class);
         $cb->addPlugin(TransformAttribute::class);
+        $cb->addPlugin(EvalJs::class);
         $cb->addPlugin(Confirm::class);
         /**
          * Plugin.

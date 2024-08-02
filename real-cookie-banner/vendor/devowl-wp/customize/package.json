@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.12.7",
+    "version": "1.12.8",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -42,8 +42,8 @@
     "dependencies": {
         "core-js": "3.37.1",
         "jquery": "3.7.1",
-        "react": "16.14.0",
-        "react-dom": "16.14.0"
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -60,8 +60,8 @@
         "@devowl-wp/webpack-config": "workspace:*",
         "@types/jest": "29.5.12",
         "@types/jquery": "3.5.30",
-        "@types/react": "16.14.60",
-        "@types/react-dom": "16.9.24",
+        "@types/react": "18.3.3",
+        "@types/react-dom": "18.3.0",
         "jest": "29.7.0",
         "ts-node": "10.9.2",
         "tslib": "2.6.3",

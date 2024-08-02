@@ -3,12 +3,13 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxAttributeFunctionVariableResolver;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxFinder;
 /**
  * Describe a blockable item by selector syntax and regular expressions (e.g. to be used in `href` and `src`).
  * @internal
  */
-abstract class AbstractBlockable
+abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVariableResolver
 {
     /**
      * See `SelectorSyntaxFinder`.
@@ -24,6 +25,12 @@ abstract class AbstractBlockable
      * @var string[]
      */
     private $originalExpressions = [];
+    /**
+     * Variables can be passed as rule in format `:$myVar=...` and can be reused in selector syntax function arguments.
+     *
+     * @var string[]
+     */
+    private $variables = [];
     /**
      * C'tor.
      *
@@ -44,11 +51,22 @@ abstract class AbstractBlockable
         if (!\is_array($blockers)) {
             return;
         }
-        // Filter out custom element expressions
+        // Filter out custom element expressions and variables
         foreach ($blockers as $idx => &$line) {
             $line = $this->headlessContentBlocker->runBlockableStringExpressionCallback($line, $this);
+            // https://regex101.com/r/TfcqVi/1
+            if (Utils::startsWith($line, ':$') && \preg_match('/^:\\$(\\w+)\\s*=(.*)$/m', $line, $matches)) {
+                $this->variables[$matches[1]] = $matches[2];
+                unset($blockers[$idx]);
+                continue;
+            }
             $selectorSyntaxFinder = SelectorSyntaxFinder::fromExpression($line);
             if ($selectorSyntaxFinder !== \false) {
+                foreach ($selectorSyntaxFinder->getAttributes() as $attr) {
+                    foreach ($attr->getFunctions() as $fn) {
+                        $fn->setVariableResolver($this);
+                    }
+                }
                 $selectorSyntaxFinder->setFastHtmlTag($this->headlessContentBlocker);
                 unset($blockers[$idx]);
                 $this->selectorSyntaxFinder[] = $selectorSyntaxFinder;
@@ -145,5 +163,15 @@ abstract class AbstractBlockable
     public function getOriginalExpressions()
     {
         return $this->originalExpressions;
+    }
+    // Documented in SelectorSyntaxAttributeFunctionVariableResolver
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+    // Documented in SelectorSyntaxAttributeFunctionVariableResolver
+    public function getVariable($variableName, $default = '')
+    {
+        return $this->variables[$variableName] ?? $default;
     }
 }

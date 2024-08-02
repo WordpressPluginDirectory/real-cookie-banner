@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542
+class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
 {
     public static $files = array (
         '7aed44d824e149ce152c0fb82af9379a' => __DIR__ . '/..' . '/colinodell/json5/src/global.php',
@@ -217,6 +217,7 @@ class ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\ScriptInlineFinder' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/ScriptInlineFinder.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\SelectorSyntaxAttribute' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/SelectorSyntaxAttribute.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\SelectorSyntaxAttributeFunction' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/SelectorSyntaxAttributeFunction.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\SelectorSyntaxAttributeFunctionVariableResolver' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/SelectorSyntaxAttributeFunctionVariableResolver.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\SelectorSyntaxFinder' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/SelectorSyntaxFinder.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\StyleInlineFinder' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/StyleInlineFinder.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\FastHtmlTag\\finder\\TagAttributeFinder' => __DIR__ . '/..' . '/devowl-wp/fast-html-tag/src/finder/TagAttributeFinder.php',
@@ -282,6 +283,7 @@ class ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\scanner\\ScannableBlockable' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/scanner/ScannableBlockable.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\Confirm' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/Confirm.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\DelegateClick' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/DelegateClick.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\EvalJs' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/EvalJs.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\ForceVisual' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/ForceVisual.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\JQueryHijackEach' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/JQueryHijackEach.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\KeepAttributes' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/KeepAttributes.php',
@@ -838,9 +840,9 @@ class ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9f8e3e416eaf1d4c804449c45b8f7542::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$classMap;
 
         }, null, ClassLoader::class);
     }

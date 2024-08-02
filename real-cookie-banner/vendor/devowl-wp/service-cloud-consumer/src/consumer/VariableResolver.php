@@ -96,6 +96,12 @@ class VariableResolver
      */
     private $data = [];
     /**
+     * Callables should only be resolved once.
+     *
+     * @var string[]
+     */
+    private $resolvedCallableKeys = [];
+    /**
      * C'tor.
      *
      * @param ServiceCloudConsumer $consumer
@@ -113,6 +119,10 @@ class VariableResolver
     public function add($key, $value)
     {
         $this->data[$key] = $value;
+        $idx = \array_search($key, $this->resolvedCallableKeys, \true);
+        if ($idx > -1) {
+            unset($this->resolvedCallableKeys[$idx]);
+        }
     }
     /**
      * Resolve a variable by key with a default value.
@@ -138,10 +148,11 @@ class VariableResolver
     {
         if (isset($this->data[$key])) {
             $value = $this->data[$key];
-            if (!\in_array($key, ['oneOf'], \true) && !\is_string($value) && \is_callable($value)) {
+            if (!\in_array($key, ['oneOf'], \true) && !\is_string($value) && \is_callable($value) && !\in_array($key, $this->resolvedCallableKeys, \true)) {
                 // Resolve by closure and cache value
                 $value = $value($this);
                 $this->data[$key] = $value;
+                $this->resolvedCallableKeys[] = $key;
             }
             return $value;
         }

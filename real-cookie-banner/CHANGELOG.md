@@ -3,6 +3,244 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.13 (2024-08-01)
+
+
+### Bug Fixes
+
+* compatibility with Matomo plugin, tracking filters and scanner (CU-86959fpcm)
+* implement a new event RCB/PreDecision/Promises to delay the cookie banner appearance programmatically (CU-86955u6k6)
+* register new selector syntax function eval() (CU-86954w4j6)
+
+
+### Code Refactoring
+
+* move react-aiot to @devowl-wp/react-folder-tree within monorepo (CU-awv3bv)
+* react-sortable-hoc to dnd-kit (CU-awv3bv)
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)
+
+
+### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0
+* minimum required version is WordPress 5.9 (CU-awv3bv)
+* upgrade @antv/g2 to v5 (CU-86955prp5)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.17.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.18</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.9.11</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* implement a new event RCB/PreDecision/Promises to delay the cookie banner appearance programmatically (CU-86955u6k6)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.8</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.78</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.11.0</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Features
+
+* allow to configure variables for selector syntax functions (CU-86954w4j6)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.87</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.18.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Features
+
+* allow to configure variables for selector syntax functions (CU-86954w4j6)
+* new selector syntax function eval() (CU-86954w4j6)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.13</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.8</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.12.9</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.14</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* react-sortable-hoc to dnd-kit (CU-awv3bv)
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 0.1.6</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.24</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.6.8</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.8</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.5.10</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* only resolve passed callables once (CU-86957jtzr)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.8</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Build System
+
+* generate cachebuster files in a real temporary file to avoid race conditions
+
+
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)
+
+
+##### Maintenance
+
+* **deps :** update dependency php-stubs/wordpress-stubs to v6.6.0</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.6.5</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 0.3.3</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Code Refactoring
+
+* upgrade to React v18 (createRoot, unmountComponentAtNode, CU-awv3bv)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.32</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Code Refactoring
+
+* move react-aiot to @devowl-wp/react-folder-tree within monorepo (CU-awv3bv)</details>
+
+
+
+
+
 ## 4.7.12 (2024-07-17)
 
 

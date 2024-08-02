@@ -485,6 +485,9 @@ class Scanner
             if (isset($caps['manage_woocommerce'])) {
                 $caps['manage_woocommerce'] = \false;
             }
+            if (isset($caps['stealth_matomo'])) {
+                $caps['stealth_matomo'] = \false;
+            }
             return $caps;
         });
         if ($current_user instanceof WP_User && \count($current_user->roles) > 0) {
@@ -512,6 +515,13 @@ class Scanner
         \add_filter('option_seopress_google_analytics_option_name', function ($option) {
             if (\is_array($option) && isset($option['seopress_google_analytics_roles'])) {
                 $option['seopress_google_analytics_roles'] = [];
+            }
+            return $option;
+        });
+        // [Plugin Comp] Matomo
+        \add_filter('option_matomo-global-option', function ($option) {
+            if (\is_array($option) && isset($option['caps_tracking'])) {
+                $option['caps_tracking'] = [];
             }
             return $option;
         });

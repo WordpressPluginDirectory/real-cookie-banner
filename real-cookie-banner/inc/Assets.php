@@ -102,11 +102,9 @@ class Assets
         $scriptDeps = [];
         // Mobx should not be loaded on any frontend page, but in customize preview (see `customize_banner.tsx`)
         if ($type === Constants::ASSETS_TYPE_CUSTOMIZE || $isConfigPage || \is_customize_preview()) {
-            $this->enqueueMobx();
-            \array_unshift($scriptDeps, Constants::ASSETS_HANDLE_REACT, Constants::ASSETS_HANDLE_REACT_DOM, Constants::ASSETS_HANDLE_MOBX, 'moment', 'wp-i18n', 'wp-editor', 'jquery');
-            // Enqueue external utils package
-            $handleUtils = $this->enqueueComposerScript('utils', $scriptDeps);
-            \array_unshift($scriptDeps, $handleUtils);
+            $scriptDeps = $this->enqueueUtils();
+            $scriptDeps[] = 'moment';
+            $scriptDeps[] = 'wp-editor';
         }
         // Enqueue customize helpers and add the handle to our dependencies
         $this->probablyEnqueueCustomizeHelpers($scriptDeps, $isConfigPage);
@@ -152,8 +150,6 @@ class Assets
         $handleRemixRunRouter = $this->enqueueLibraryScript('remix-run-router', [[$useNonMinifiedSources, '@remix-run/router/dist/router.umd.js'], '@remix-run/router/dist/router.umd.min.js']);
         $handleReactRouter = $this->enqueueLibraryScript('react-router', [[$useNonMinifiedSources, 'react-router/dist/umd/react-router.development.js'], 'react-router/dist/umd/react-router.production.min.js', [$handleRemixRunRouter]]);
         \array_unshift($scriptDeps, $this->enqueueLibraryScript('react-router-dom', [[$useNonMinifiedSources, 'react-router-dom/dist/umd/react-router-dom.development.js'], 'react-router-dom/dist/umd/react-router-dom.production.min.js'], [Constants::ASSETS_HANDLE_REACT_DOM, $handleReactRouter]));
-        // @antv/g2
-        \array_unshift($scriptDeps, $this->enqueueLibraryScript('g2', '@antv/g2/dist/g2.min.js'));
         // real-product-manager-wp-client (for licensing purposes)
         \array_unshift($scriptDeps, RpmWpClientCore::getInstance()->getAssets()->enqueue($this));
         $handle = $this->enqueueScript('admin', [[$this->isPro(), 'admin.pro.js'], 'admin.lite.js'], $scriptDeps);

@@ -1,8 +1,8 @@
 <?php
-// Cachebusters generated on 2024-07-17 13:57:03
+// Cachebusters generated on 2024-08-01 13:32:58
 return [
 	'@ant-design/icons' => '5.3.7',
-	'@antv/g2' => '4.2.11',
+	'@antv/g2' => '5.2.1',
 	'@iabtechlabtcf/cmpapi' => '1.5.12',
 	'@iabtechlabtcf/core' => '1.5.12',
 	'@iabtechlabtcf/stub' => '1.5.12',
@@ -11,15 +11,13 @@ return [
 	'antd' => '5.18.1',
 	'core-js' => '3.37.1',
 	'jquery' => '3.7.1',
-	'lodash' => '4.17.21',
 	'mobx' => '4.15.7',
 	'mobx-react' => '6.3.1',
 	'moment' => '2.30.1',
 	'preact' => '10.22.0',
 	'rc-picker' => '4.6.3',
-	'react' => '16.14.0',
-	'react-dom' => '16.14.0',
+	'react' => '18.3.1',
+	'react-dom' => '18.3.1',
 	'react-router' => '6.23.1',
-	'react-router-dom' => '6.23.1',
-	'react-sortable-hoc' => '2.0.0'
+	'react-router-dom' => '6.23.1'
 ];

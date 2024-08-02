@@ -1,8 +1,8 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
 Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
-Stable tag: 4.7.12
-Requires at least: 5.8
+Stable tag: 4.7.13
+Requires at least: 5.9
 Requires PHP: 7.4.0
 Tested up to: 6.6
 License: GPLv3 or later
@@ -143,4 +143,4 @@ You can see what’s new in the [**changelog on our website**](https://devowl.io
 
 ### 4.0 ###
 
-🎉 Translations in 12 languages and legal adaptations for more EU countries, accessibility (WCAG 2.2 level AA compliant), data processsing in unsafe countries and more new features. As of now v4.0 you need PHP 7.4 or newer and WordPress 5.8 newer.
+🎉 Translations in 12 languages and legal adaptations for more EU countries, accessibility (WCAG 2.2 level AA compliant), data processsing in unsafe countries and more new features. As of now v4.0 you need PHP 7.4 or newer and WordPress 5.9 newer.
