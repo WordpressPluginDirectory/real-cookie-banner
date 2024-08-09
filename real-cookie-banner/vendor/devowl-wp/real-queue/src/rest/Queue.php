@@ -48,7 +48,7 @@ class Queue
         }], 'errorCode' => ['type' => 'string'], 'errorMessage' => ['type' => 'string'], 'errorData' => ['type' => 'string']]]);
         \register_rest_route($namespace, '/jobs', ['methods' => 'GET', 'callback' => [$this, 'routeJobsGet'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['after' => ['type' => 'number'], 'ids' => ['type' => 'string', 'sanitize_callback' => function ($value) {
             return empty($value) ? [] : \array_map('intval', \explode(',', $value));
-        }]]]);
+        }], 'additionalData' => ['type' => 'string']]]);
         \register_rest_route($namespace, '/jobs', ['methods' => 'DELETE', 'callback' => [$this, 'routeJobsDelete'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['type' => ['type' => 'string']]]);
         \register_rest_route($namespace, '/jobs/retry', ['methods' => 'POST', 'callback' => [$this, 'routeJobsRetry'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['type' => ['type' => 'string']]]);
         \register_rest_route($namespace, '/jobs/skip', ['methods' => 'POST', 'callback' => [$this, 'routeJobsSkip'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['type' => ['type' => 'string']]]);
@@ -136,6 +136,7 @@ class Queue
      * @apiHeader {string} X-WP-Nonce
      * @apiParam {number} after Read only jobs after this job ID
      * @apiParam {string} ids Read only this Job IDs (comma-separated string)
+     * @apiParam {string} [additionalData]
      * @apiName GetJobs
      * @apiPermission edit_posts
      * @apiGroup Queue
@@ -147,7 +148,7 @@ class Queue
         $ids = $request->get_param('ids');
         $query = $this->core->getQuery();
         $data = $query->read(['omitClientData' => \true, 'lockUntil' => self::LOCK_UNTIL_SECONDS, 'ids' => $ids, 'after' => $after]);
-        return new WP_REST_Response(['jobs' => $data, 'remaining' => $query->readRemaining()]);
+        return new WP_REST_Response(['jobs' => $data, 'remaining' => $query->readRemaining(), 'status' => $this->buildStatus($request->get_params())]);
     }
     /**
      * See API docs.

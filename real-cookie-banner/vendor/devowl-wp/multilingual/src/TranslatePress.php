@@ -89,7 +89,15 @@ class TranslatePress extends AbstractOutputBufferPlugin
     public function switch($locale)
     {
         global $TRP_LANGUAGE;
-        $TRP_LANGUAGE = $locale;
+        // Check if the requested locale is active
+        if (\is_string($locale)) {
+            foreach ($this->getActiveLanguages() as $activeLocale) {
+                if (\strtolower($activeLocale) === \strtolower($locale)) {
+                    $TRP_LANGUAGE = $locale;
+                    return;
+                }
+            }
+        }
     }
     // Documented in AbstractLanguagePlugin
     public function getActiveLanguages()

@@ -1287,7 +1287,7 @@ msgstr ""
 msgid "The link to Real Cookie Banner is an affiliate link. If you buy the product, we may receive a commission, but the price of the product will not change for you."
 msgstr ""
 
-#: inc/overrides/pro/settings/CountryBypass.php:147
+#: inc/overrides/pro/settings/CountryBypass.php:146
 #: inc/overrides/pro/settings/TCF.php:140
 msgid "This functionality is currently not available."
 msgstr ""

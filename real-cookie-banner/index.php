@@ -8,7 +8,7 @@
  * Description:     Obtain GDPR (DSGVO) and ePrivacy (EU cookie law) compliant opt-in consent. Find cookies and fill all legal information in your cookie banner. More than just a cookie notice!
  * Author:          devowl.io
  * Author URI:      https://devowl.io
- * Version:                                                                               4.7.13
+ * Version:                                                                                4.7.14
  * Text Domain:     real-cookie-banner
  * Domain Path:     /languages
  */
@@ -28,8 +28,8 @@ define('RCB_PATH', dirname(RCB_FILE));
 define('RCB_ROOT_SLUG', 'devowl-wp');
 define('RCB_SLUG', basename(RCB_PATH));
 define('RCB_INC', RCB_PATH . '/inc/');
-define('RCB_MIN_PHP', '7.4.0'); // Minimum of PHP 5.3 required for autoloading and namespacing
-define('RCB_MIN_WP', '5.9.0'); // Minimum of WordPress 5.0 required
+define('RCB_MIN_PHP', '7.4.0');
+define('RCB_MIN_WP', '5.9.0');
 define('RCB_NS', 'DevOwl\\RealCookieBanner');
 define('RCB_DB_PREFIX', 'rcb'); // The table name prefix wp_{prefix}
 define('RCB_OPT_PREFIX', 'rcb'); // The option name prefix in wp_options

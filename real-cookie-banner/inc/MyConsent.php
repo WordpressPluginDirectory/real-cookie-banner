@@ -45,7 +45,7 @@ class MyConsent
     {
         global $wpdb;
         $table_name_blocker_thumbnails = $this->getTableName(Plugin::TABLE_NAME_BLOCKER_THUMBNAILS);
-        $blockerThumbnail = $transaction->blockerThumbnail;
+        $blockerThumbnail = $transaction->getBlockerThumbnail();
         if (\is_string($blockerThumbnail)) {
             $blockerThumbnailSplit = \explode('-', $blockerThumbnail, 2);
             if (\count($blockerThumbnailSplit) > 1) {
@@ -58,7 +58,7 @@ class MyConsent
             } else {
                 $blockerThumbnail = null;
             }
-            $transaction->blockerThumbnail = $blockerThumbnail;
+            $transaction->setBlockerThumbnail($blockerThumbnail);
         }
         $consent = $this->getCurrentUser();
         $previousDecision = $consent->getDecision() ?? \false;
@@ -70,7 +70,7 @@ class MyConsent
         $revisionIndependentHash = $revision->createIndependent(\true)['hash'];
         $ips = \DevOwl\RealCookieBanner\IpHandler::getInstance()->persistIp();
         $contextString = $revision->getPersistence()->getContextVariablesString();
-        $transaction->ipAddress = \DevOwl\RealCookieBanner\Utils::getIpAddress();
+        $transaction->setIpAddress(\DevOwl\RealCookieBanner\Utils::getIpAddress());
         $result = $consent->commit($transaction, function () use($transaction, $ips, $consent, $revisionHash, $revisionIndependentHash, $contextString, $previousDecision, $previousTcfString, $previousGcmConsent, $dummy) {
             if ($dummy) {
                 return 1;
@@ -79,7 +79,7 @@ class MyConsent
             $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
             $wpdb->query(
                 // phpcs:disable WordPress.DB.PreparedSQL
-                \str_ireplace("'NULL'", 'NULL', $wpdb->prepare("INSERT IGNORE INTO {$table_name}\n                            (plugin_version, design_version,\n                            ipv4, ipv6, ipv4_hash, ipv6_hash,\n                            uuid, revision, revision_independent,\n                            previous_decision, decision, decision_hash,\n                            blocker, blocker_thumbnail,\n                            dnt, custom_bypass,\n                            button_clicked, context, viewport_width, viewport_height,\n                            referer, pure_referer,\n                            url_imprint, url_privacy_policy,\n                            forwarded, forwarded_blocker,\n                            user_country,\n                            previous_tcf_string, tcf_string,\n                            previous_gcm_consent, gcm_consent,\n                            recorder, ui_view, created, created_client_time)\n                            VALUES\n                            (%s, %d,\n                            %d, %s, %s, %s,\n                            %s, %s, %s,\n                            %s, %s, %s,\n                            %s, %s,\n                            %d, %s,\n                            %s, %s, %d, %d,\n                            %s, %s,\n                            %s, %s,\n                            %s, %s,\n                            %s,\n                            %s, %s,\n                            %s, %s,\n                            %s, %s, %s, %s)", RCB_VERSION, Banner::DESIGN_VERSION, $ips['ipv4'] === null ? 'NULL' : $ips['ipv4'], $ips['ipv6'] === null ? 'NULL' : $ips['ipv6'], $ips['ipv4_hash'] === null ? 'NULL' : $ips['ipv4_hash'], $ips['ipv6_hash'] === null ? 'NULL' : $ips['ipv6_hash'], $consent->getUuid(), $revisionHash, $revisionIndependentHash, \json_encode($previousDecision === \false ? [] : $previousDecision), \json_encode($consent->getDecision()), \md5(\json_encode($consent->getDecision())), $transaction->blocker > 0 ? $transaction->blocker : 'NULL', $transaction->blockerThumbnail > 0 ? $transaction->blockerThumbnail : 'NULL', $transaction->markAsDoNotTrack, $transaction->customBypass === null ? 'NULL' : $transaction->customBypass, $transaction->buttonClicked, $contextString, $transaction->viewPortWidth, $transaction->viewPortHeight, $transaction->referer, \DevOwl\RealCookieBanner\Utils::removeNonPermalinkQueryFromUrl($transaction->referer), BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_LEGAL_NOTICE, 'url'), BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY, 'url'), $transaction->forwarded > 0 ? $transaction->forwarded : 'NULL', $transaction->forwardedBlocker, $transaction->userCountry ?? 'NULL', $previousTcfString, $consent->getTcfString() ?? 'NULL', $previousGcmConsent === \false ? 'NULL' : \json_encode($previousGcmConsent), $consent->getGcmConsent() === null ? 'NULL' : \json_encode($consent->getGcmConsent()), $transaction->recorderJsonString ?? 'NULL', $transaction->uiView === null || !\in_array($transaction->uiView, ['initial', 'change'], \true) ? 'NULL' : $transaction->uiView, \mysql2date('c', \current_time('mysql'), \false), \is_string($transaction->createdClientTime) ? \mysql2date('c', $transaction->createdClientTime, \false) : 'NULL'))
+                \str_ireplace("'NULL'", 'NULL', $wpdb->prepare("INSERT IGNORE INTO {$table_name}\n                            (plugin_version, design_version,\n                            ipv4, ipv6, ipv4_hash, ipv6_hash,\n                            uuid, revision, revision_independent,\n                            previous_decision, decision, decision_hash,\n                            blocker, blocker_thumbnail,\n                            dnt, custom_bypass,\n                            button_clicked, context, viewport_width, viewport_height,\n                            referer, pure_referer,\n                            url_imprint, url_privacy_policy,\n                            forwarded, forwarded_blocker,\n                            user_country,\n                            previous_tcf_string, tcf_string,\n                            previous_gcm_consent, gcm_consent,\n                            recorder, ui_view, created, created_client_time)\n                            VALUES\n                            (%s, %d,\n                            %d, %s, %s, %s,\n                            %s, %s, %s,\n                            %s, %s, %s,\n                            %s, %s,\n                            %d, %s,\n                            %s, %s, %d, %d,\n                            %s, %s,\n                            %s, %s,\n                            %s, %s,\n                            %s,\n                            %s, %s,\n                            %s, %s,\n                            %s, %s, %s, %s)", RCB_VERSION, Banner::DESIGN_VERSION, $ips['ipv4'] === null ? 'NULL' : $ips['ipv4'], $ips['ipv6'] === null ? 'NULL' : $ips['ipv6'], $ips['ipv4_hash'] === null ? 'NULL' : $ips['ipv4_hash'], $ips['ipv6_hash'] === null ? 'NULL' : $ips['ipv6_hash'], $consent->getUuid(), $revisionHash, $revisionIndependentHash, \json_encode($previousDecision === \false ? [] : $previousDecision), \json_encode($consent->getDecision()), \md5(\json_encode($consent->getDecision())), $transaction->getBlocker() > 0 ? $transaction->getBlocker() : 'NULL', $transaction->getBlockerThumbnail() > 0 ? $transaction->getBlockerThumbnail() : 'NULL', $transaction->isMarkAsDoNotTrack(), $transaction->getCustomBypass() === null ? 'NULL' : $transaction->getCustomBypass(), $transaction->getButtonClicked(), $contextString, $transaction->getViewPortWidth(), $transaction->getViewPortHeight(), $transaction->getReferer(), \DevOwl\RealCookieBanner\Utils::removeNonPermalinkQueryFromUrl($transaction->getReferer()), BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_LEGAL_NOTICE, 'url'), BannerLink::getInstance()->getLegalLink(SettingsBannerLink::PAGE_TYPE_PRIVACY_POLICY, 'url'), $transaction->getForwarded() > 0 ? $transaction->getForwarded() : 'NULL', $transaction->isForwardedBlocker(), $transaction->getUserCountry() ?? 'NULL', $previousTcfString, $consent->getTcfString() ?? 'NULL', $previousGcmConsent === \false ? 'NULL' : \json_encode($previousGcmConsent), $consent->getGcmConsent() === null ? 'NULL' : \json_encode($consent->getGcmConsent()), $transaction->getRecorderJsonString() ?? 'NULL', $transaction->getUiView() === null ? 'NULL' : $transaction->getUiView(), \mysql2date('c', \current_time('mysql'), \false), \is_string($transaction->getCreatedClientTime()) ? \mysql2date('c', $transaction->getCreatedClientTime(), \false) : 'NULL'))
             );
             return $wpdb->insert_id;
         });
@@ -109,15 +109,15 @@ class MyConsent
             }
         }
         // Persist stats (only when not forwarded)
-        if (!$dummy && $transaction->forwarded === 0) {
+        if (!$dummy && $transaction->getForwarded() === 0) {
             $stats = \DevOwl\RealCookieBanner\Stats::getInstance();
-            $stats->persistTerm($contextString, $transaction->decision, $previousDecision, $previousCreated);
-            $stats->persistButtonClicked($contextString, $transaction->buttonClicked);
-            if ($transaction->buttonClicked !== Blocker::BUTTON_CLICKED_IDENTIFIER) {
+            $stats->persistTerm($contextString, $transaction->getDecision(), $previousDecision, $previousCreated);
+            $stats->persistButtonClicked($contextString, $transaction->getButtonClicked());
+            if ($transaction->getButtonClicked() !== Blocker::BUTTON_CLICKED_IDENTIFIER) {
                 $stats->persistCustomBypass(
                     $contextString,
                     // Save DNT also as custom_bypass
-                    $transaction->customBypass === null ? $transaction->markAsDoNotTrack ? 'dnt' : null : $transaction->customBypass
+                    $transaction->getCustomBypass() === null ? $transaction->isMarkAsDoNotTrack() ? 'dnt' : null : $transaction->getCustomBypass()
                 );
             }
         }
@@ -133,7 +133,7 @@ class MyConsent
              * @param {array} $args Passed arguments to `MyConsent::persist` as map (since 2.0.0)
              * @param {Transaction} $transaction The full transaction representing the new consent (since 4.4.2), use this instead of `$args`
              */
-            \do_action('RCB/Consent/Created', $filterResult, [$transaction->decision, $transaction->markAsDoNotTrack, $transaction->buttonClicked, $transaction->viewPortWidth, $transaction->viewPortHeight, $transaction->referer, $transaction->blocker, $transaction->blockerThumbnail, $transaction->forwarded, $transaction->forwardedUuid, $transaction->forwardedBlocker, $transaction->tcfString, $transaction->gcmConsent, $transaction->customBypass, $transaction->recorderJsonString, $transaction->uiView], $transaction);
+            \do_action('RCB/Consent/Created', $filterResult, [$transaction->getDecision(), $transaction->isMarkAsDoNotTrack(), $transaction->getButtonClicked(), $transaction->getViewPortWidth(), $transaction->getViewPortHeight(), $transaction->getReferer(), $transaction->getBlocker(), $transaction->getBlockerThumbnail(), $transaction->getForwarded(), $transaction->getForwardedUuid(), $transaction->isForwardedBlocker(), $transaction->getTcfString(), $transaction->getGcmConsent(), $transaction->getCustomBypass(), $transaction->getRecorderJsonString(), $transaction->getUiView()], $transaction);
         }
         return $result['response'];
     }

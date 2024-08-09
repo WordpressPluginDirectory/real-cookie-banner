@@ -245,11 +245,8 @@ class Utils
         return \false;
     }
     /**
-     * Support samesite cookie flag in both php 7.2 (current production) and php >= 7.3 (when we get there)
-     * From: https://github.com/GoogleChromeLabs/samesite-examples/blob/master/php.md and https://stackoverflow.com/a/46971326/2308553
+     * Set a cookie with additional hooks.
      *
-     * @see https://stackoverflow.com/a/59654832/5506547
-     * @see https://developer.mozilla.org/de/docs/Web/HTTP/Headers/Set-Cookie/SameSite
      * @param string $name
      * @param string $value
      * @param int $expire
@@ -334,12 +331,7 @@ class Utils
         $secure = $filteredParameters['secure'];
         $httponly = $filteredParameters['httponly'];
         $useSameSite = $filteredParameters['samesite'];
-        $result = \false;
-        if (\PHP_VERSION_ID < 70300) {
-            $result = \setcookie($name, $value, $expire, "{$path}; samesite={$useSameSite}", $domain, $secure, $httponly);
-        } else {
-            $result = \setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'samesite' => $useSameSite, 'secure' => $secure, 'httponly' => $httponly]);
-        }
+        $result = \setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'samesite' => $useSameSite, 'secure' => $secure, 'httponly' => $httponly]);
         // Set cookie immediately for this session https://stackoverflow.com/a/3230167/5506547
         if ($result) {
             $_COOKIE[$name] = $value;

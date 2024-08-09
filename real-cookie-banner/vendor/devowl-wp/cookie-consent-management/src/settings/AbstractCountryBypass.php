@@ -76,29 +76,29 @@ abstract class AbstractCountryBypass extends BaseSettings
      */
     public function probablyCreateTransaction($consent, $transaction)
     {
-        $isLighthouse = \preg_match('/chrome-lighthouse/i', $transaction->userAgent);
+        $isLighthouse = \preg_match('/chrome-lighthouse/i', $transaction->getUserAgent());
         if ($this->isActive() && !$isLighthouse) {
             // Lookup for the current country and do not show banner if it is outside our defined countries
             $countries = $this->getCountries();
-            $countryCode = $this->lookupCountryCode($transaction->ipAddress);
+            $countryCode = $this->lookupCountryCode($transaction->getIpAddress());
             if (!\is_string($countryCode) || \in_array(\strtoupper($countryCode), $countries, \true)) {
                 // Skip custom bypass
                 return \false;
             }
-            $transaction->buttonClicked = $this->getType() === self::TYPE_ALL ? 'implicit_all' : 'implicit_essential';
-            $transaction->customBypass = self::CUSTOM_BYPASS;
+            $transaction->setButtonClicked($this->getType() === self::TYPE_ALL ? 'implicit_all' : 'implicit_essential');
+            $transaction->setCustomBypass(self::CUSTOM_BYPASS);
             // The GDPR does not apply here, so we do not need to set a TCF string
-            $transaction->tcfString = null;
+            $transaction->setTcfString(null);
             // Country bypassing does not need a GCM consent as this is configured through the `region` attribute in `gtag`
-            $transaction->gcmConsent = null;
+            $transaction->setGcmConsent(null);
             // Create decision for this bypass
             $type = $this->getType();
             if (empty($consent->getUuid())) {
                 // No previous consent, so create it from the given type
-                $transaction->decision = $consent->sanitizeDecision($type);
+                $transaction->setDecision($consent->sanitizeDecision($type));
             } else {
                 // There is a previous consent, modify it
-                $transaction->decision = $consent->optInOrOptOutExistingDecision($consent->getDecision(), $type, $type === 'all' ? 'optOut' : 'optIn');
+                $transaction->setDecision($consent->optInOrOptOutExistingDecision($consent->getDecision(), $type, $type === 'all' ? 'optOut' : 'optIn'));
             }
             return \true;
         }

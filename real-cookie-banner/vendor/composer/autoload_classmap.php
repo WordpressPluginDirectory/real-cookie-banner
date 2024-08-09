@@ -65,6 +65,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\PersistedTransaction' => $vendorDir . '/devowl-wp/cookie-consent-management/src/consent/PersistedTransaction.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\SetCookie' => $vendorDir . '/devowl-wp/cookie-consent-management/src/consent/SetCookie.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\Transaction' => $vendorDir . '/devowl-wp/cookie-consent-management/src/consent/Transaction.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\Validators' => $vendorDir . '/devowl-wp/cookie-consent-management/src/consent/Validators.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\AbstractRevisionPersistance' => $vendorDir . '/devowl-wp/cookie-consent-management/src/frontend/AbstractRevisionPersistance.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\Frontend' => $vendorDir . '/devowl-wp/cookie-consent-management/src/frontend/Frontend.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\Revision' => $vendorDir . '/devowl-wp/cookie-consent-management/src/frontend/Revision.php',

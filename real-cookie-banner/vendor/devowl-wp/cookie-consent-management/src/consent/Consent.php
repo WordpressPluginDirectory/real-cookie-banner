@@ -171,7 +171,7 @@ class Consent
      */
     public function commit($transaction, $persistDatabase)
     {
-        $decision = $this->sanitizeDecision($transaction->decision);
+        $decision = $this->sanitizeDecision($transaction->getDecision());
         if ($decision === \false) {
             return \false;
         }
@@ -181,7 +181,7 @@ class Consent
         // What is true, cookie hash or database? I can promise, the database shows the consent hash!
         $currentHash = $revision->getEnsuredCurrentHash();
         // TODO: extract wp_generate_uuid4 mysql2date to an Utils function so it can be used outside WordPress
-        $uuid = empty($transaction->forwardedUuid) ? \wp_generate_uuid4() : $transaction->forwardedUuid;
+        $uuid = empty($transaction->getForwardedUuid()) ? \wp_generate_uuid4() : $transaction->getForwardedUuid();
         // Set cookie and merge with previous UUIDs
         $newPreviousUuids = \array_merge($this->getUuid() ? [$this->getUuid()] : [], $this->getPreviousUuids() ?? []);
         $allUuids = \array_merge([$uuid], $newPreviousUuids);
@@ -190,7 +190,7 @@ class Consent
         $cookie->value = \sprintf('%d:%s:%s:%s', \time(), \join(',', $allUuids), $currentHash, \json_encode([
             // Keep keys small as we do not have much space in cookie value (maximum of 4096 bytes in total of cookie size)
             'd' => $decision,
-            'bc' => $transaction->buttonClicked,
+            'bc' => $transaction->getButtonClicked(),
         ]));
         $cookie->expire = $this->getCookieExpire();
         $this->handleCountryBypass($transaction);
@@ -201,7 +201,7 @@ class Consent
         $this->created = \time();
         $this->revisionHash = $currentHash;
         $this->decision = $decision;
-        $this->buttonClicked = $transaction->buttonClicked;
+        $this->buttonClicked = $transaction->getButtonClicked();
         //$this->tcfString = null; // see handleTcfString
         //$this->gcmConsent = null; // see handleGcmConsent
         $consentId = $persistDatabase();
@@ -214,7 +214,7 @@ class Consent
         if ($gcmCookie !== null) {
             $setCookie[] = $gcmCookie;
         }
-        return ['response' => ['uuid' => $this->getUuid(), 'revisionHash' => $this->getRevisionHash(), 'decision' => $this->getDecision(), 'consentId' => $consentId, 'forward' => $forward], 'setCookie' => $transaction->setCookies ? $setCookie : []];
+        return ['response' => ['uuid' => $this->getUuid(), 'revisionHash' => $this->getRevisionHash(), 'decision' => $this->getDecision(), 'consentId' => $consentId, 'forward' => $forward], 'setCookie' => $transaction->isSetCookies() ? $setCookie : []];
     }
     /**
      * When country bypass is active, automatically calculate the user country so it
@@ -226,10 +226,10 @@ class Consent
     {
         $settings = $this->getCookieConsentManagement()->getSettings();
         $countryBypass = $settings->getCountryBypass();
-        if ($countryBypass->isActive() && !empty($transaction->ipAddress)) {
-            $country = $countryBypass->lookupCountryCode($transaction->ipAddress);
+        if ($countryBypass->isActive() && !empty($transaction->getIpAddress())) {
+            $country = $countryBypass->lookupCountryCode($transaction->getIpAddress());
             if (!empty($country)) {
-                $transaction->userCountry = $country;
+                $transaction->setUserCountry($country);
             }
         }
     }
@@ -242,11 +242,11 @@ class Consent
     {
         $settings = $this->getCookieConsentManagement()->getSettings();
         $tcf = $settings->getTcf();
-        if ($tcf->isActive() && !empty($transaction->tcfString)) {
-            $this->tcfString = $transaction->tcfString;
+        if ($tcf->isActive() && !empty($transaction->getTcfString())) {
+            $this->tcfString = $transaction->getTcfString();
             $cookie = new SetCookie();
             $cookie->key = $this->getCookieConsentManagement()->getFrontend()->getCookieName(Frontend::COOKIE_NAME_SUFFIX_TCF);
-            $cookie->value = $transaction->tcfString;
+            $cookie->value = $transaction->getTcfString();
             $cookie->expire = $this->getCookieExpire();
             return $cookie;
         }
@@ -261,11 +261,11 @@ class Consent
     {
         $settings = $this->getCookieConsentManagement()->getSettings();
         $googleConsentMode = $settings->getGoogleConsentMode();
-        if ($googleConsentMode->isEnabled() && \is_array($transaction->gcmConsent)) {
-            $this->gcmConsent = $transaction->gcmConsent;
+        if ($googleConsentMode->isEnabled() && \is_array($transaction->getGcmConsent())) {
+            $this->gcmConsent = Validators::sanitizeGcmConsent($transaction->getGcmConsent());
             $cookie = new SetCookie();
             $cookie->key = $this->getCookieConsentManagement()->getFrontend()->getCookieName(Frontend::COOKIE_NAME_SUFFIX_GCM);
-            $cookie->value = \json_encode($transaction->gcmConsent);
+            $cookie->value = \json_encode($this->gcmConsent);
             $cookie->expire = $this->getCookieExpire();
             return $cookie;
         }
@@ -282,22 +282,22 @@ class Consent
     {
         $settings = $this->getCookieConsentManagement()->getSettings();
         $multisite = $settings->getMultisite();
-        if ($multisite->isConsentForwarding() && !$transaction->markAsDoNotTrack) {
+        if ($multisite->isConsentForwarding() && !$transaction->isMarkAsDoNotTrack()) {
             $endpoints = $multisite->getConfiguredEndpoints();
             if (\count($endpoints) > 0) {
                 $data = [
                     'uuid' => $this->getUuid(),
                     'consentId' => $persistId,
-                    'blocker' => $transaction->blocker,
-                    'buttonClicked' => $transaction->buttonClicked,
-                    'viewPortWidth' => $transaction->viewPortWidth,
-                    'viewPortHeight' => $transaction->viewPortHeight,
+                    'blocker' => $transaction->getBlocker() > 0,
+                    'buttonClicked' => $transaction->getButtonClicked(),
+                    'viewPortWidth' => $transaction->getViewPortWidth(),
+                    'viewPortHeight' => $transaction->getViewPortHeight(),
                     'cookies' => $multisite->mapDecisionToUniqueNames($this->getDecision()),
                     'tcfString' => $this->getTcfString(),
                     'gcmConsent' => $this->getGcmConsent(),
-                    'referer' => $transaction->referer,
+                    'referer' => $transaction->getReferer(),
                     // Make wp_get_raw_referer work in WordPress
-                    '_wp_http_referer' => $transaction->referer,
+                    '_wp_http_referer' => $transaction->getReferer(),
                 ];
                 // Remove `null` data
                 foreach ($data as $key => $value) {
@@ -428,7 +428,7 @@ class Consent
             ];
         }
         $cookieDecision = $this->sanitizeDecision($jsonValue['d']);
-        $buttonClicked = $jsonValue['bc'];
+        $buttonClicked = Validators::sanitizeButtonClicked($jsonValue['bc']);
         if ($cookieDecision === \false) {
             return \false;
         }
@@ -460,13 +460,11 @@ class Consent
                 }
                 break;
             case $tcfCookieName:
-                if (\is_string($cookieValue)) {
-                    $this->tcfString = $cookieValue;
-                }
+                $this->tcfString = Validators::sanitizeTcfString($cookieValue);
                 break;
             case $gcmCookieName:
                 if (\is_string($cookieValue)) {
-                    $this->gcmConsent = \json_decode(\stripslashes($cookieValue), ARRAY_A);
+                    $this->gcmConsent = Validators::sanitizeGcmConsent(\json_decode(\stripslashes($cookieValue), ARRAY_A));
                 }
                 break;
             default:

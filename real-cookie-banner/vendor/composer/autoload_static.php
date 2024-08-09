@@ -174,6 +174,7 @@ class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\PersistedTransaction' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/consent/PersistedTransaction.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\SetCookie' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/consent/SetCookie.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\Transaction' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/consent/Transaction.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\consent\\Validators' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/consent/Validators.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\AbstractRevisionPersistance' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/frontend/AbstractRevisionPersistance.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\Frontend' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/frontend/Frontend.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CookieConsentManagement\\frontend\\Revision' => __DIR__ . '/..' . '/devowl-wp/cookie-consent-management/src/frontend/Revision.php',

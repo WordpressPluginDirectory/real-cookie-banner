@@ -267,21 +267,20 @@ class Consent
             return new WP_Error('rest_rcb_forbidden');
         }
         $transaction = new Transaction();
-        $transaction->decision = $request->get_param('decision');
-        $transaction->markAsDoNotTrack = $markAsDoNotTrack;
-        $transaction->buttonClicked = $buttonClicked;
-        $transaction->viewPortWidth = $viewPortWidth;
-        $transaction->viewPortHeight = $viewPortHeight;
-        $transaction->referer = $referer;
-        $transaction->blocker = $blocker;
-        $transaction->blockerThumbnail = $blockerThumbnail;
-        $transaction->tcfString = $tcfString;
-        $transaction->gcmConsent = $request->get_param('gcmConsent');
-        $transaction->recorderJsonString = $recorderJsonString;
-        $transaction->uiView = $uiView;
-        $transaction->setCookies = $setCookies;
+        $transaction->setDecision($request->get_param('decision'));
+        $transaction->setMarkAsDoNotTrack($markAsDoNotTrack);
+        $transaction->setButtonClicked($buttonClicked);
+        $transaction->setViewPort($viewPortWidth, $viewPortHeight);
+        $transaction->setReferer($referer);
+        $transaction->setBlocker($blocker);
+        $transaction->setBlockerThumbnail($blockerThumbnail);
+        $transaction->setTcfString($tcfString);
+        $transaction->setGcmConsent($request->get_param('gcmConsent'));
+        $transaction->setRecorderJsonString($recorderJsonString);
+        $transaction->setUiView($uiView);
+        $transaction->setSetCookies($setCookies);
         if ($createdClientTime !== null && \strtotime($createdClientTime) > 0) {
-            $transaction->createdClientTime = $createdClientTime;
+            $transaction->setCreatedClientTime($createdClientTime);
         }
         $persist = MyConsent::getInstance()->persist($transaction, $dummy);
         if (\is_wp_error($persist)) {

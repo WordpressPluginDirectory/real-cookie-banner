@@ -271,12 +271,30 @@ trait Assets
         return $result;
     }
     /**
+     * When using WordPress < 6.6 we need to enqueue the react/jsx-runtime UMD bundle to make the
+     * `ReactJSXRuntime` external work.
+     *
+     * @see https://make.wordpress.org/core/2024/06/06/jsx-in-wordpress-6-6/
+     * @see https://core.trac.wordpress.org/ticket/61324
+     * @see https://github.com/WordPress/gutenberg/issues/62202#issuecomment-2156796649
+     * @see https://app.clickup.com/t/86959qqq1?comment=90120059024238
+     */
+    public function enqueueReactJsxRuntime()
+    {
+        if (\wp_script_is(Constants::ASSETS_HANDLE_REACT_JSX_RUNTIME, 'registered')) {
+            return;
+        }
+        $useNonMinifiedSources = $this->useNonMinifiedSources();
+        $this->enqueueLibraryScript(Constants::ASSETS_HANDLE_REACT_JSX_RUNTIME, [[$useNonMinifiedSources, 'react-jsx-runtime/react-jsx-runtime.js'], 'react-jsx-runtime/react-jsx-runtime.min.js'], [Constants::ASSETS_HANDLE_REACT]);
+    }
+    /**
      * Enqueue utils and return an array of dependencies.
      */
     public function enqueueUtils()
     {
         $this->enqueueMobx();
-        $scriptDeps = [Constants::ASSETS_HANDLE_REACT, Constants::ASSETS_HANDLE_REACT_DOM, Constants::ASSETS_HANDLE_MOBX, 'wp-i18n', 'jquery', 'wp-polyfill'];
+        $this->enqueueReactJsxRuntime();
+        $scriptDeps = [Constants::ASSETS_HANDLE_REACT, Constants::ASSETS_HANDLE_REACT_DOM, Constants::ASSETS_HANDLE_REACT_JSX_RUNTIME, Constants::ASSETS_HANDLE_MOBX, 'wp-i18n', 'jquery', 'wp-polyfill'];
         $handleUtils = $this->enqueueComposerScript('utils', $scriptDeps);
         \array_push($scriptDeps, $handleUtils);
         return $scriptDeps;

@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.7.14 (2024-08-08)
+
+
+### Bug Fixes
+
+* compatibility with WooCommerce Order Attribution (CU-8693z3a9b)
+* use ReactJSXRuntime for better WordPress 6.6 compatibility (CU-86959qqq1)
+
+
+### Code Refactoring
+
+* remove no longer needed functions (CU-86959qqq1)
+* use private fields for Transaction / PersistedTransaction class (CU-8695a0rv7)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.1.19</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Code Refactoring
+
+* use private fields for Transaction / PersistedTransaction class (CU-8695a0rv7)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.9</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* set TRP_LANGUAGE only when requested language exists (CU-8695a0rv7)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.13.15</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* use ReactJSXRuntime for better WordPress 6.6 compatibility (CU-86959qqq1)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.6.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Performance Improvements
+
+* use one WP REST API call to /jobs to fulfill also the /status request on startup (CU-861mva7bm)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.9</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* some components are not rendered in WordPress < 6.2 (CU-86959qqq1)
+* use ReactJSXRuntime for better WordPress 6.6 compatibility (CU-86959qqq1)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.33</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Bug Fixes
+
+* some components are not rendered in WordPress < 6.2 (CU-86959qqq1)
+* use ReactJSXRuntime for better WordPress 6.6 compatibility (CU-86959qqq1)</details>
+
+
+
+
+
 ## 4.7.13 (2024-08-01)
 
 

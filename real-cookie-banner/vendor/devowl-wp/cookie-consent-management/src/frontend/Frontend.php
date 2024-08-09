@@ -93,24 +93,24 @@ class Frontend
      */
     public function persistedTransactionToJsonForHistoryViewer($transaction)
     {
-        $obj = ['id' => $transaction->id, 'uuid' => $transaction->uuid, 'isDoNotTrack' => $transaction->markAsDoNotTrack, 'isUnblock' => $transaction->blocker > 0, 'isForwarded' => $transaction->forwarded > 0, 'created' => $transaction->created, 'context' => [
-            'buttonClicked' => $transaction->buttonClicked,
-            'groups' => $transaction->revision['groups'],
-            'consent' => $transaction->decision,
-            'gcmConsent' => $transaction->gcmConsent,
+        $obj = ['id' => $transaction->getId(), 'uuid' => $transaction->getUuid(), 'isDoNotTrack' => $transaction->isMarkAsDoNotTrack(), 'isUnblock' => $transaction->getBlocker() > 0, 'isForwarded' => $transaction->getForwarded() > 0, 'created' => $transaction->getCreated(), 'context' => [
+            'buttonClicked' => $transaction->getButtonClicked(),
+            'groups' => $transaction->getRevision()['groups'],
+            'consent' => $transaction->getDecision(),
+            'gcmConsent' => $transaction->getGcmConsent(),
             // TCF compatibility
-            'tcf' => isset($transaction->revision['tcf']) ? [
-                'tcf' => $transaction->revision['tcf'],
+            'tcf' => isset($transaction->getRevision()['tcf']) ? [
+                'tcf' => $transaction->getRevision()['tcf'],
                 // Keep `tcfMeta` for backwards-compatibility
-                'tcfMetadata' => $transaction->revisionIndependent['tcfMetadata'] ?? $transaction->revisionIndependent['tcfMeta'],
-                'tcfString' => $transaction->tcfString,
+                'tcfMetadata' => $transaction->getRevisionIndependent()['tcfMetadata'] ?? $transaction->getRevisionIndependent()['tcfMeta'],
+                'tcfString' => $transaction->getTcfString(),
             ] : null,
         ]];
         $lazyLoaded = $this->prepareLazyData($obj['context']['tcf']);
         $obj['context']['lazyLoadedDataForSecondView'] = $lazyLoaded;
         // Backwards-compatibility for older records using Geo-restriction bypass
-        if ($transaction->revision['options']['isCountryBypass'] && $transaction->customBypass === AbstractCountryBypass::CUSTOM_BYPASS && !Utils::startsWith($transaction->buttonClicked, 'implicit_')) {
-            $obj['context']['buttonClicked'] = $transaction->revision['options']['countryBypassType'] === AbstractCountryBypass::TYPE_ALL ? 'implicit_all' : 'implicit_essential';
+        if ($transaction->getRevision()['options']['isCountryBypass'] && $transaction->getCustomBypass() === AbstractCountryBypass::CUSTOM_BYPASS && !Utils::startsWith($transaction->getButtonClicked(), 'implicit_')) {
+            $obj['context']['buttonClicked'] = $transaction->getRevision()['options']['countryBypassType'] === AbstractCountryBypass::TYPE_ALL ? 'implicit_all' : 'implicit_essential';
         }
         return $obj;
     }
