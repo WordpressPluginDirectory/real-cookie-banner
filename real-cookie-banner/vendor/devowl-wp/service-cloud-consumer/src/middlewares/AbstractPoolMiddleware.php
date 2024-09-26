@@ -16,7 +16,7 @@ abstract class AbstractPoolMiddleware extends AbstractMiddleware
      * Example: Calculate `contentBlockerTemplates` for `ServiceTemplate`.
      *
      * @param AbstractTemplate $template
-     * @param AbstractTemplate[] $typeClassToAllTemplates Key = type class, value = array of templates
+     * @param AbstractTemplate[][] $typeClassToAllTemplates Key = type class, value = array of templates
      * @return void
      */
     public abstract function beforePersistTemplateWithinPool($template, &$typeClassToAllTemplates);
@@ -24,7 +24,7 @@ abstract class AbstractPoolMiddleware extends AbstractMiddleware
      * After persisting all template instances within a pool.
      *
      * @param ServiceCloudConsumer[] $consumer
-     * @param AbstractTemplate[] $typeClassToAllTemplates Key = type class, value = array of templates
+     * @param AbstractTemplate[][] $typeClassToAllTemplates Key = type class, value = array of templates
      * @return void
      */
     public abstract function afterPersistTemplatesWithinPool($consumer, &$typeClassToAllTemplates);

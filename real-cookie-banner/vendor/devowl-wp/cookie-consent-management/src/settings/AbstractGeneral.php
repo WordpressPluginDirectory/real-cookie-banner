@@ -62,12 +62,25 @@ abstract class AbstractGeneral extends BaseSettings
      */
     public abstract function getOperatorContactFormId();
     /**
+     * Get the cookie policy page ID.
+     *
+     * @return int
+     */
+    public abstract function getCookiePolicyId();
+    /**
      * Get the operator contact form page URL.
      *
      * @param mixed $default
      * @return mixed
      */
     public abstract function getOperatorContactFormUrl($default = \false);
+    /**
+     * Get the cookie policy page URL.
+     *
+     * @param mixed $default
+     * @return mixed
+     */
+    public abstract function getCookiePolicyUrl($default = \false);
     /**
      * Get an array of hidden page ids (not imprint and privacy policy, there are own options!).
      *
@@ -115,5 +128,20 @@ abstract class AbstractGeneral extends BaseSettings
             }
         }
         return null;
+    }
+    /**
+     * Get the list of service groups and their services which are not created by default (custom groups).
+     *
+     * @return ServiceGroup[]
+     */
+    public function getNonDefaultServiceGroups()
+    {
+        $result = [];
+        foreach ($this->getServiceGroups() as $group) {
+            if (!$group->isDefault()) {
+                $result[] = $group;
+            }
+        }
+        return $result;
     }
 }

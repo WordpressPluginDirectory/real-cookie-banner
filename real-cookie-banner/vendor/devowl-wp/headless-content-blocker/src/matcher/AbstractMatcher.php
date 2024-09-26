@@ -115,7 +115,7 @@ abstract class AbstractMatcher
                         if ($allowMultiple) {
                             $result->addBlocked($blockable);
                             $result->addBlockedExpression($expression);
-                            break 2;
+                            continue 2;
                         } else {
                             break 3;
                         }
@@ -304,7 +304,7 @@ abstract class AbstractMatcher
         }
         $useVisualParent = $this->getHeadlessContentBlocker()->runVisualParentCallback($useVisualParent, $this, $match);
         if ($useVisualParent !== \false) {
-            $match->setAttribute(Constants::HTML_ATTRIBUTE_VISUAL_PARENT, $useVisualParent);
+            $match->setAttribute(Constants::HTML_ATTRIBUTE_VISUAL_PARENT, $useVisualParent === \true ? 'true' : $useVisualParent);
         }
     }
     /**

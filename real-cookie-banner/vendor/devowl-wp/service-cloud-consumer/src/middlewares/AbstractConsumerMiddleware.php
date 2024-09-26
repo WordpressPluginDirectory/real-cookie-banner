@@ -22,9 +22,10 @@ abstract class AbstractConsumerMiddleware extends AbstractMiddleware
      * the database throws the `AbortDataSourceDownloadException` exception.
      *
      * @param Exception $exception `null` when persist worked as expected, otherwise an `Exception`
+     * @param AbstractTemplate[] $templates The persisted templates within this consumer
      * @return void
      */
-    public abstract function afterDownloadAndPersistFromDataSource($exception);
+    public abstract function afterDownloadAndPersistFromDataSource($exception, $templates);
     /**
      * The download from a data source failed with an exception.
      *

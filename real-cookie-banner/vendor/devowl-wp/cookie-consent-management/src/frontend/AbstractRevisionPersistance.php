@@ -19,7 +19,7 @@ abstract class AbstractRevisionPersistance
      * Persist an revision JSON string to database.
      *
      * @param array $result `revision` and `hash`
-     * @param boolean $forceNewConsent If `true` update the hash to the database to `getCurrentHash()` returns that hash
+     * @param boolean $forceNewConsent If `true` update the hash to the database so `getCurrentHash()` returns that hash and `getCurrentHashTime()` returns the time of hash update
      */
     public abstract function persist($result, $forceNewConsent);
     /**
@@ -53,6 +53,12 @@ abstract class AbstractRevisionPersistance
      * Get the current active revision hash. Can also return a falsy value when no hash is currently generated.
      */
     public abstract function getCurrentHash();
+    /**
+     * Get the time when the current active revision hash got updated. Can also return `0` value when no hash is currently generated.
+     *
+     * @return int
+     */
+    public abstract function getCurrentHashTime();
     /**
      * Get context relevant options as string so they can be used as cookie name or option name.
      *

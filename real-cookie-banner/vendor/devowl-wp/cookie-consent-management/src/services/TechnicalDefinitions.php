@@ -8,12 +8,16 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services
  */
 class TechnicalDefinitions
 {
+    const TYPE_HTTP = 'http';
+    const TYPE_INDEXED_DB = 'indexedDb';
+    const TYPE_LOCAL_STORAGE = 'local';
+    const TYPE_SESSION_STORAGE = 'session';
     /**
      * HTTP cookie, local storage, session storage, ...
      *
      * @var string
      */
-    private $type = 'http';
+    private $type = self::TYPE_HTTP;
     /**
      * The name.
      *
@@ -44,6 +48,12 @@ class TechnicalDefinitions
      * @var boolean
      */
     private $isSessionDuration = \false;
+    /**
+     * Purpose of the cookie.
+     *
+     * @var string
+     */
+    private $purpose = '';
     /**
      * Getter.
      *
@@ -97,6 +107,15 @@ class TechnicalDefinitions
     public function isSessionDuration()
     {
         return $this->isSessionDuration;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getPurpose()
+    {
+        return $this->purpose;
     }
     /**
      * Setter.
@@ -159,11 +178,21 @@ class TechnicalDefinitions
         $this->isSessionDuration = $isSessionDuration;
     }
     /**
+     * Setter.
+     *
+     * @param boolean $purpose
+     * @codeCoverageIgnore
+     */
+    public function setPurpose($purpose)
+    {
+        $this->purpose = $purpose;
+    }
+    /**
      * Create a JSON representation of this object.
      */
     public function toJson()
     {
-        return ['type' => $this->type, 'name' => $this->name, 'host' => $this->host, 'duration' => $this->duration, 'durationUnit' => $this->durationUnit, 'isSessionDuration' => $this->isSessionDuration];
+        return ['type' => $this->type, 'name' => $this->name, 'host' => $this->host, 'duration' => $this->duration, 'durationUnit' => $this->durationUnit, 'isSessionDuration' => $this->isSessionDuration, 'purpose' => $this->purpose];
     }
     /**
      * Generate a `ProviderContact` object from an array.
@@ -179,6 +208,7 @@ class TechnicalDefinitions
         $instance->setDuration($data['duration'] ?? 1);
         $instance->setDurationUnit($data['durationUnit'] ?? 'y');
         $instance->setIsSessionDuration($data['isSessionDuration'] ?? \false);
+        $instance->setPurpose($data['purpose'] ?? '');
         return $instance;
     }
 }

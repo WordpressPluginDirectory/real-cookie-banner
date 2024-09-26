@@ -2,7 +2,9 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\FastHtmlTag;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils as FastHtmlTagUtils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelper;
@@ -33,6 +35,12 @@ class ImagePreview extends AbstractPlugin
      * @var string[]
      */
     private $attributesToCheckForUrl = [];
+    /**
+     * See `addRevertAttribute`.
+     *
+     * @var string[]
+     */
+    private $revertAttributesToCachedUrl = [];
     /**
      * HtmlHeadThumbnailParser.
      *
@@ -249,7 +257,7 @@ class ImagePreview extends AbstractPlugin
                 $this->fetchMetadata($urlToThumbnail);
                 $this->cache->allowance($urlToThumbnail);
                 // Do the replacement
-                return \preg_replace_callback($regex, function ($m) use($urlToThumbnail) {
+                $html = \preg_replace_callback($regex, function ($m) use($urlToThumbnail) {
                     $embedUrl = FastHtmlTagUtils::parseHtmlAttributes($m[0]);
                     $embedUrl = $embedUrl[self::HTML_ATTRIBUTE_TO_FETCH_URL_FROM] ?? null;
                     if ($embedUrl === null) {
@@ -273,9 +281,46 @@ class ImagePreview extends AbstractPlugin
                     // Not found any thumbnail, We never need this attribute on our frontend again
                     return '';
                 }, $html);
+                if (\count($this->revertAttributesToCachedUrl) > 0) {
+                    $html = $this->revertTransformAttribute($html);
+                }
             }
             return $html;
         });
+    }
+    /**
+     * Revert the transformation of a URL attribute when we have found a thumbnail and it is cached.
+     *
+     * @param string $html
+     */
+    protected function revertTransformAttribute($html)
+    {
+        $fastHtmlTag = new FastHtmlTag();
+        $tags = \array_values(\array_unique(Utils::array_flatten(\array_column(\array_values($this->getHeadlessContentBlocker()->getTagAttributeMap()), 'tags'))));
+        foreach ($tags as $tag) {
+            $finder = SelectorSyntaxFinder::fromExpression(\sprintf('%s[%s]', $tag, Constants::HTML_ATTRIBUTE_THUMBNAIL));
+            $finder->addCallback([$this, 'revertTransformAttributeOnMatch']);
+            $fastHtmlTag->addFinder($finder);
+        }
+        return $fastHtmlTag->modifyHtml($html);
+    }
+    /**
+     * When a match with `consent-thumbnail is found, revert the transformation of the attribute.
+     *
+     * @param AbstractMatch $match
+     */
+    public function revertTransformAttributeOnMatch($match)
+    {
+        $json = FastHtmlTagUtils::isJson($match->getAttribute(Constants::HTML_ATTRIBUTE_THUMBNAIL));
+        if ($json !== \false && isset($json['url']) && $match->matches($this->revertAttributesToCachedUrl)) {
+            foreach ($this->attributesToCheckForUrl as $attr) {
+                if (Utils::startsWith($attr, Constants::HTML_ATTRIBUTE_CAPTURE_PREFIX) && $match->hasAttribute($attr)) {
+                    $originalAttr = AttributesHelper::revertTransformAttribute($attr);
+                    $match->setAttribute($originalAttr, $json['url']);
+                    $match->setAttribute($attr, null);
+                }
+            }
+        }
     }
     /**
      * Create the result for the HTML attribute which our unblocker can consume.
@@ -385,6 +430,17 @@ class ImagePreview extends AbstractPlugin
     public function setCache($cache)
     {
         $this->cache = $cache;
+    }
+    /**
+     * A list of selector syntax strings which should be reverted to the cached URL for all transformed attributes.
+     * E.g. `div[class*="et_pb_video_slider_item_"]` will revert e.g. `consent-original-data-image` back to `data-image`
+     * with the cached URL.
+     *
+     * @param string $selectorSyntax
+     */
+    public function addRevertAttribute($selectorSyntax)
+    {
+        $this->revertAttributesToCachedUrl[] = $selectorSyntax;
     }
     /**
      * Getter.

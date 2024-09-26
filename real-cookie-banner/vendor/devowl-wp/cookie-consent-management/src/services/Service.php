@@ -3,18 +3,13 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractConsent;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 /**
  * A service.
  * @internal
  */
 class Service
 {
-    const LEGAL_BASIS_CONSENT = 'consent';
-    const LEGAL_BASIS_LEGITIMATE_INTEREST = 'legitimate-interest';
-    const LEGAL_BASIS_LEGAL_REQUIREMENT = 'legal-requirement';
-    const LEGAL_BASIS = [self::LEGAL_BASIS_CONSENT, self::LEGAL_BASIS_LEGAL_REQUIREMENT, self::LEGAL_BASIS_LEGITIMATE_INTEREST];
-    const SPECIAL_TREATMENT_PROVIDER_IS_SELF_CERTIFIED_TRANS_ATLANTIC_DATA_PRIVACY_FRAMEWORK = 'provider-is-self-certified-trans-atlantic-data-privacy-framework';
-    const SPECIAL_TREATMENT_STANDARD_CONTRACTUAL_CLAUSES = 'standard-contractual-clauses';
     /**
      * The ID of the service when it got created in a stafeul way.
      *
@@ -68,7 +63,7 @@ class Service
      *
      * @var string
      */
-    private $legalBasis = self::LEGAL_BASIS_CONSENT;
+    private $legalBasis = ServiceTemplate::LEGAL_BASIS_CONSENT;
     /**
      * Iso 3166-1 alpha 2 countries in which the service is processing data.
      *
@@ -123,6 +118,12 @@ class Service
      * @var string[]
      */
     private $googleConsentModeConsentTypes = [];
+    /**
+     * The execute priority for all the opt-in / opt-out code.
+     *
+     * @var int
+     */
+    private $executePriority = ServiceTemplate::EXECUTE_PRIORITY_DEFAULT;
     /**
      * The HTML code on opt-in.
      *
@@ -337,6 +338,15 @@ class Service
     public function getGoogleConsentModeConsentTypes()
     {
         return $this->googleConsentModeConsentTypes;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getExecutePriority()
+    {
+        return $this->executePriority;
     }
     /**
      * Getter.
@@ -584,6 +594,16 @@ class Service
     /**
      * Setter.
      *
+     * @param int $executePriority
+     * @codeCoverageIgnore
+     */
+    public function setExecutePriority($executePriority)
+    {
+        $this->executePriority = $executePriority;
+    }
+    /**
+     * Setter.
+     *
      * @param string $codeOptIn
      * @codeCoverageIgnore
      */
@@ -658,7 +678,7 @@ class Service
     {
         return ['id' => $this->id, 'name' => $this->name, 'purpose' => $this->purpose, 'providerContact' => $this->providerContact->toJson(), 'isProviderCurrentWebsite' => $this->isProviderCurrentWebsite, 'provider' => $this->provider, 'uniqueName' => $this->uniqueName, 'isEmbeddingOnlyExternalResources' => $this->isEmbeddingOnlyExternalResources, 'legalBasis' => $this->legalBasis, 'dataProcessingInCountries' => $this->dataProcessingInCountries, 'dataProcessingInCountriesSpecialTreatments' => $this->dataProcessingInCountriesSpecialTreatments, 'technicalDefinitions' => \array_map(function ($technicalDefinition) {
             return $technicalDefinition->toJson();
-        }, $this->technicalDefinitions), 'codeDynamics' => $this->codeDynamics, 'providerPrivacyPolicyUrl' => $this->providerPrivacyPolicyUrl, 'providerLegalNoticeUrl' => $this->providerLegalNoticeUrl, 'tagManagerOptInEventName' => $this->tagManagerOptInEventName, 'tagManagerOptOutEventName' => $this->tagManagerOptOutEventName, 'googleConsentModeConsentTypes' => $this->googleConsentModeConsentTypes, 'codeOptIn' => $this->codeOptIn, 'executeCodeOptInWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptInWhenNoTagManagerConsentIsGiven, 'codeOptOut' => $this->codeOptOut, 'executeCodeOptOutWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptOutWhenNoTagManagerConsentIsGiven, 'deleteTechnicalDefinitionsAfterOptOut' => $this->deleteTechnicalDefinitionsAfterOptOut, 'codeOnPageLoad' => $this->codeOnPageLoad, 'presetId' => $this->presetId];
+        }, $this->technicalDefinitions), 'codeDynamics' => $this->codeDynamics, 'providerPrivacyPolicyUrl' => $this->providerPrivacyPolicyUrl, 'providerLegalNoticeUrl' => $this->providerLegalNoticeUrl, 'tagManagerOptInEventName' => $this->tagManagerOptInEventName, 'tagManagerOptOutEventName' => $this->tagManagerOptOutEventName, 'googleConsentModeConsentTypes' => $this->googleConsentModeConsentTypes, 'executePriority' => $this->executePriority, 'codeOptIn' => $this->codeOptIn, 'executeCodeOptInWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptInWhenNoTagManagerConsentIsGiven, 'codeOptOut' => $this->codeOptOut, 'executeCodeOptOutWhenNoTagManagerConsentIsGiven' => $this->executeCodeOptOutWhenNoTagManagerConsentIsGiven, 'deleteTechnicalDefinitionsAfterOptOut' => $this->deleteTechnicalDefinitionsAfterOptOut, 'codeOnPageLoad' => $this->codeOnPageLoad, 'presetId' => $this->presetId];
     }
     /**
      * Generate a `Service` object from an array.
@@ -677,7 +697,7 @@ class Service
         $instance->setProvider($data['provider'] ?? '');
         $instance->setUniqueName($data['uniqueName'] ?? '');
         $instance->setIsEmbeddingOnlyExternalResources($data['isEmbeddingOnlyExternalResources'] ?? \false);
-        $instance->setLegalBasis($data['legalBasis'] ?? self::LEGAL_BASIS_CONSENT);
+        $instance->setLegalBasis($data['legalBasis'] ?? ServiceTemplate::LEGAL_BASIS_CONSENT);
         $instance->setDataProcessingInCountries($data['dataProcessingInCountries'] ?? []);
         $instance->setDataProcessingInCountriesSpecialTreatments($data['dataProcessingInCountriesSpecialTreatments'] ?? []);
         $instance->setTechnicalDefinitions(\array_map(function ($data) {
@@ -689,6 +709,7 @@ class Service
         $instance->setTagManagerOptInEventName($data['tagManagerOptInEventName'] ?? '');
         $instance->setTagManagerOptOutEventName($data['tagManagerOptOutEventName'] ?? '');
         $instance->setGoogleConsentModeConsentTypes($data['googleConsentModeConsentTypes'] ?? []);
+        $instance->setExecutePriority($data['executePriority'] ?? ServiceTemplate::EXECUTE_PRIORITY_DEFAULT);
         $instance->setCodeOptIn($data['codeOptIn'] ?? '');
         $instance->setExecuteCodeOptInWhenNoTagManagerConsentIsGiven($data['executeCodeOptInWhenNoTagManagerConsentIsGiven'] ?? \false);
         $instance->setCodeOptOut($data['codeOptOut'] ?? '');
@@ -710,7 +731,7 @@ class Service
      */
     public static function calculateUnsafeCountries($countries, $specialTreatments = [])
     {
-        if (\in_array(self::SPECIAL_TREATMENT_STANDARD_CONTRACTUAL_CLAUSES, $specialTreatments, \true)) {
+        if (\count(\array_intersect([ServiceTemplate::SPECIAL_TREATMENT_CONTRACTUAL_ASSURANCES_WITH_SUB_PROCESSORS, ServiceTemplate::SPECIAL_TREATMENT_STANDARD_CONTRACTUAL_CLAUSES], $specialTreatments)) > 0) {
             return [];
         }
         $safeCountries = [];
@@ -720,7 +741,7 @@ class Service
         $unsafeCountries = [];
         // Check if one service country is not safe
         foreach ($countries as $country) {
-            if (!\in_array($country, $safeCountries, \true) || $country === 'US' && !\in_array(self::SPECIAL_TREATMENT_PROVIDER_IS_SELF_CERTIFIED_TRANS_ATLANTIC_DATA_PRIVACY_FRAMEWORK, $specialTreatments, \true)) {
+            if (!\in_array($country, $safeCountries, \true) || $country === 'US' && !\in_array(ServiceTemplate::SPECIAL_TREATMENT_PROVIDER_IS_SELF_CERTIFIED_TRANS_ATLANTIC_DATA_PRIVACY_FRAMEWORK, $specialTreatments, \true)) {
                 $unsafeCountries[] = $country;
             }
         }

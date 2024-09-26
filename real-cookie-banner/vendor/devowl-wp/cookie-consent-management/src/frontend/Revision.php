@@ -45,6 +45,18 @@ class Revision
         $persistence->setRevision($this);
     }
     /**
+     * Prepare a revision JSON for frontend.
+     *
+     * @param array $revision
+     */
+    public function prepareJsonForFrontend($revision)
+    {
+        if (isset($revision['cookiePolicy']) && \strlen($revision['cookiePolicy']) > -1) {
+            $revision['cookiePolicy'] = \gzuncompress(\base64_decode($revision['cookiePolicy']));
+        }
+        return $revision;
+    }
+    /**
      * Create a MD5 hash from all available options and settings, save also as "current revision" if necessery.
      * If the hash differs, a new consent is needed!
      *
@@ -59,8 +71,19 @@ class Revision
         if ($persist && $forceNewConsent) {
             $this->getCookieConsentManagement()->getSettings()->getConsent()->setCookieVersion(AbstractConsent::DEFAULT_COOKIE_VERSION);
         }
+        $cookiePolicy = '';
+        /**
+         * Why gzcompress? See https://www.php.net/manual/de/function.gzdeflate.php#91310
+         *
+         * > gzcompress produces longer data because it embeds information about the encoding onto the string. If you are compressing
+         * > data that will only ever be handled on one machine, then you don't need to worry about which of these functions you use. However,
+         * > if you are passing data compressed with these functions to a different machine you should use gzcompress.
+         */
+        if ($settings->getGeneral()->getCookiePolicyId() > 0 && \function_exists('gzcompress')) {
+            $cookiePolicy = \base64_encode(\gzcompress($this->getCookieConsentManagement()->getCookiePolicy()->renderHtml()));
+        }
         // Create hashable revision
-        $revision = \array_merge(['options' => $this->optionsToJson(self::TYPE_REQUIRE_NEW_CONSENT), 'groups' => $this->serviceGroupsToJson(), 'websiteOperator' => $this->websiteOperatorToJson(), 'nonVisualBlocker' => $this->nonVisualBlockersToJson()], $this->getPersistence()->getContextVariablesExplicit());
+        $revision = \array_merge(['options' => $this->optionsToJson(self::TYPE_REQUIRE_NEW_CONSENT), 'groups' => $this->serviceGroupsToJson(), 'websiteOperator' => $this->websiteOperatorToJson(), 'predefinedDataProcessingInSafeCountriesLists' => AbstractConsent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'nonVisualBlocker' => $this->nonVisualBlockersToJson(), 'cookiePolicy' => $cookiePolicy], $this->getPersistence()->getContextVariablesExplicit());
         $tcf = $settings->getTcf();
         if ($tcf->isActive()) {
             $revision['tcf'] = $this->tcfToJson();
@@ -137,6 +160,8 @@ class Revision
             $result['failedConsentDocumentationHandling'] = $consent->getFailedConsentDocumentationHandling();
             $result['isSaveIp'] = $consent->isSaveIpEnabled();
             $result['consentDuration'] = $consent->getConsentDuration();
+            $result['isBannerLessConsent'] = $consent->isBannerLessConsent();
+            $result['bannerLessConsentShowOnPageIds'] = $consent->getBannerLessConsentShowOnPageIds();
         }
         if ($type === self::TYPE_ALL || $type === self::TYPE_REQUIRE_NEW_CONSENT) {
             $result['operatorContactAddress'] = $general->getOperatorContactAddress();
@@ -144,13 +169,13 @@ class Revision
             $result['operatorContactPhone'] = $general->getOperatorContactPhone();
             $result['operatorContactEmail'] = $general->getOperatorContactEmail();
             $result['operatorContactFormId'] = $general->getOperatorContactFormId();
+            $result['cookiePolicyId'] = $general->getCookiePolicyId();
             $result['territorialLegalBasis'] = $general->getTerritorialLegalBasis();
             $result['setCookiesViaManager'] = $general->getSetCookiesViaManager();
             $result['isAcceptAllForBots'] = $consent->isAcceptAllForBots();
             $result['cookieDuration'] = $consent->getCookieDuration();
             $result['cookieVersion'] = $consent->getCookieVersion();
             $result['isDataProcessingInUnsafeCountries'] = $consent->isDataProcessingInUnsafeCountries();
-            $result['dataProcessingInUnsafeCountriesSafeCountries'] = $consent->getDataProcessingInUnsafeCountriesSafeCountries();
             $result['isAgeNotice'] = $consent->isAgeNoticeEnabled();
             $result['ageNoticeAgeLimit'] = $consent->getAgeNoticeAgeLimit();
             $result['isListServicesNotice'] = $consent->isListServicesNoticeEnabled();

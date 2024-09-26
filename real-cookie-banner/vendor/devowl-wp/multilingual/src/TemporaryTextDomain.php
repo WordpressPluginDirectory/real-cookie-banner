@@ -227,7 +227,7 @@ class TemporaryTextDomain
             $useLocale = '';
         } elseif (\is_string($compLanguageOrLocale)) {
             $useLocale = $compLanguageOrLocale;
-        } else {
+        } elseif ($compLanguageOrLocale->isActive()) {
             $useLocale = $compLanguageOrLocale->getWordPressCompatibleLanguageCode($compLanguageOrLocale->getCurrentLanguageFallback());
         }
         // Fallback to blog language

@@ -2,7 +2,6 @@
 
 namespace DevOwl\RealCookieBanner\lite\settings;
 
-use DevOwl\RealCookieBanner\settings\Consent as SettingsConsent;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -26,8 +25,13 @@ trait Consent
         return \false;
     }
     // Documented in AbstractConsent
-    public function getDataProcessingInUnsafeCountriesSafeCountriesRaw()
+    public function isBannerLessConsent()
     {
-        return \explode(',', SettingsConsent::DEFAULT_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES);
+        return \false;
+    }
+    // Documented in AbstractConsent
+    public function getBannerLessConsentShowOnPageIds()
+    {
+        return [];
     }
 }

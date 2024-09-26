@@ -2,21 +2,29 @@
 
 namespace DevOwl\RealCookieBanner\rest;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Sync;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\comp\migration\AbstractDashboardTileMigration;
 use DevOwl\RealCookieBanner\Core;
+use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
+use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
+use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\Checklist;
 use DevOwl\RealCookieBanner\view\ConfigPage;
 use DevOwl\RealCookieBanner\view\navmenu\NavMenuLinks;
 use DevOwl\RealCookieBanner\view\Notices;
+use DevOwl\RealCookieBanner\view\shortcode\CookiePolicyShortcode;
 use WP_Error;
+use WP_HTTP_Response;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 use WP_REST_Settings_Controller;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -52,6 +60,17 @@ class Config extends WP_REST_Settings_Controller
         \register_rest_route($namespace, '/migration/(?P<migrationId>[a-zA-Z0-9_-]+)/(?P<actionId>[a-zA-Z0-9_-]+)', ['methods' => 'POST', 'callback' => [$this, 'routeMigrationPost'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/migration/(?P<migrationId>[a-zA-Z0-9_-]+)', ['methods' => 'DELETE', 'callback' => [$this, 'routeMigrationDelete'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/nav-menu/add-links', ['methods' => 'POST', 'callback' => [$this, 'routeNavMenuAddLinksPost'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['id' => ['type' => 'string', 'required' => \true]]]);
+        \register_rest_route($namespace, '/create-cookie-policy', ['methods' => 'POST', 'callback' => [$this, 'routeCreateCookiePolicy'], 'permission_callback' => [$this, 'permission_callback']]);
+        // Make the search capable of embedded content and add the custom post statuses to the search results
+        if (isset($_GET['_rcbExtendSearchResult'])) {
+            $post_types = \get_post_types(['show_in_rest' => \true], 'objects');
+            foreach ($post_types as $post_type) {
+                \add_filter("rest_{$post_type->name}_item_schema", [$this, 'filter_rest_post_type_item_schema']);
+                \add_filter("rest_prepare_{$post_type->name}", [$this, 'filter_rest_prepare_post'], 10, 3);
+            }
+            \add_filter('rest_post_collection_params', [$this, 'filter_rest_post_collection_params'], 10, 2);
+            \add_filter('rest_post_search_query', [$this, 'filter_rest_post_search_query'], 10, 2);
+        }
     }
     /**
      * Check if user is allowed to call this service requests.
@@ -139,7 +158,7 @@ class Config extends WP_REST_Settings_Controller
     public function routeGetRevisionByHash($request)
     {
         $result = Revision::getInstance()->getByHash($request->get_param('hash'), \false, $request->get_param('backwardsCompatibility'));
-        return $result === null ? new WP_Error('rest_not_found', null, ['status' => 404]) : new WP_REST_Response($result);
+        return $result === null ? new WP_Error('rest_not_found', null, ['status' => 404]) : new WP_REST_Response(Core::getInstance()->getCookieConsentManagement()->getRevision()->prepareJsonForFrontend($result));
     }
     /**
      * See API docs.
@@ -158,7 +177,7 @@ class Config extends WP_REST_Settings_Controller
     public function routeGetRevisionIndependentByHash($request)
     {
         $result = Revision::getInstance()->getByHash($request->get_param('hash'), \true, $request->get_param('backwardsCompatibility'));
-        return $result === null ? new WP_Error('rest_not_found', null, ['status' => 404]) : new WP_REST_Response($result);
+        return $result === null ? new WP_Error('rest_not_found', null, ['status' => 404]) : new WP_REST_Response(Core::getInstance()->getCookieConsentManagement()->getRevision()->prepareJsonForFrontend($result));
     }
     /**
      * See API docs.
@@ -319,7 +338,7 @@ class Config extends WP_REST_Settings_Controller
      *
      * @param WP_REST_Request $request
      *
-     * @api {post} /real-cookie-banner/v1//nav-menu/add-links Add
+     * @api {post} /real-cookie-banner/v1/nav-menu/add-links Add links to an existing menu
      * @apiParam {string} id The ID for this navigation
      * @apiHeader {string} X-WP-Nonce
      * @apiName NavMenuAddLinks
@@ -334,6 +353,45 @@ class Config extends WP_REST_Settings_Controller
             return $result;
         }
         return new WP_REST_Response(['success' => $result]);
+    }
+    /**
+     * See API docs.
+     *
+     * @param WP_REST_Request $request
+     *
+     * @api {post} /real-cookie-banner/v1/create-cookie-policy Create a cookie policy page
+     * @apiHeader {string} X-WP-Nonce
+     * @apiName CreateCookiePolicy
+     * @apiGroup Config
+     * @apiPermission manage_options
+     * @apiVersion 1.0.0
+     */
+    public function routeCreateCookiePolicy($request)
+    {
+        $compLanguage = Core::getInstance()->getCompLanguage();
+        $fnCreatePost = function () {
+            return \wp_insert_post(['post_type' => 'page', 'post_content' => \sprintf('[%s]', CookiePolicyShortcode::TAG), 'post_title' => \_x('Cookie policy', 'legal-text', Hooks::TD_FORCED), 'post_status' => 'publish'], \true);
+        };
+        if ($compLanguage->isActive()) {
+            $sourceLanguage = $compLanguage->getDefaultLanguage();
+            $result = $compLanguage->switchToLanguage($sourceLanguage, function () use($fnCreatePost, $compLanguage) {
+                $td = Hooks::getInstance()->createTemporaryTextDomain();
+                $result = $fnCreatePost();
+                $td->teardown();
+                return $result;
+            });
+            if (!\is_wp_error($result)) {
+                $sync = new Sync(['page' => ['data' => ['menu_order'], 'taxonomies' => [], 'meta' => ['copy' => [], 'copy-once' => []]]], [], $compLanguage);
+                $sync->startCopyProcess()->copyPost($result, $sourceLanguage, \array_values(\array_diff($compLanguage->getActiveLanguages(), [$sourceLanguage])));
+            }
+        } else {
+            $result = $fnCreatePost();
+        }
+        if (\is_wp_error($result)) {
+            return $result;
+        }
+        \update_option(General::SETTING_COOKIE_POLICY_ID, $result);
+        return new WP_REST_Response(['id' => $result]);
     }
     /**
      * Retrieves all of the registered options for the Settings API, specific to Real Cookie Banner.
@@ -386,6 +444,110 @@ class Config extends WP_REST_Settings_Controller
             }
         }
         return $response;
+    }
+    /**
+     * Filter the post type item schema to add embed context to content properties.
+     *
+     * Additionally, add `type_singular` property to the schema.
+     *
+     * @param array $schema
+     * @return array
+     */
+    public function filter_rest_post_type_item_schema($schema)
+    {
+        if (isset($schema['properties']['content'])) {
+            if (!\in_array('embed', $schema['properties']['content']['context'], \true)) {
+                $schema['properties']['content']['context'][] = 'embed';
+            }
+            if (!\in_array('embed', $schema['properties']['status']['context'], \true)) {
+                $schema['properties']['status']['context'][] = 'embed';
+            }
+            if (isset($schema['properties']['content']['properties']['rendered'])) {
+                if (!\in_array('embed', $schema['properties']['content']['properties']['rendered']['context'], \true)) {
+                    $schema['properties']['content']['properties']['rendered']['context'][] = 'embed';
+                }
+            }
+            $schema['properties']['type_singular'] = ['description' => \__('The singular name of the post type.'), 'type' => 'string', 'context' => ['view', 'edit', 'embed'], 'readonly' => \true];
+            // Iterate through all taxonomies registered for this post type and allow embedding of them
+            $taxonomies = \get_object_taxonomies($schema['title'], 'objects');
+            foreach ($taxonomies as $taxonomy) {
+                $tax_name = $taxonomy->name;
+                if (isset($schema['properties'][$tax_name])) {
+                    if (!\in_array('embed', $schema['properties'][$tax_name]['context'], \true)) {
+                        $schema['properties'][$tax_name]['context'][] = 'embed';
+                    }
+                }
+            }
+        }
+        return $schema;
+    }
+    /**
+     * Filter the search query to include custom post statuses when user has permission.
+     *
+     * @param array $args The search query arguments.
+     * @param WP_REST_Request $request The REST request object.
+     * @return array Modified search query arguments.
+     */
+    public function filter_rest_post_search_query($args, $request)
+    {
+        if (\current_user_can(Core::MANAGE_MIN_CAPABILITY)) {
+            $status = $request->get_param('status');
+            if (!empty($status)) {
+                $args['post_status'] = $status;
+            }
+        }
+        return $args;
+    }
+    /**
+     * Add custom 'status' parameter to post collection parameters.
+     *
+     * @param array $query_params JSON Schema-formatted collection parameters.
+     * @param WP_Post_Type $post_type Post type object.
+     * @return array Modified collection parameters.
+     */
+    public function filter_rest_post_collection_params($query_params, $post_type)
+    {
+        $query_params['status'] = ['description' => \__('Limit result set to posts with one or more specific statuses.'), 'type' => 'array', 'items' => ['type' => 'string', 'enum' => \array_merge(['any'], \get_post_stati())], 'default' => ['publish']];
+        return $query_params;
+    }
+    /**
+     * Filter the post response to add typeSingular property.
+     *
+     * @param WP_REST_Response $response The response object.
+     * @param WP_Post $post The post object.
+     * @param WP_REST_Request $request The request object.
+     * @return WP_REST_Response Modified response object.
+     */
+    public function filter_rest_prepare_post($response, $post, $request)
+    {
+        $post_type_obj = \get_post_type_object($post->post_type);
+        $response->data['type_singular'] = $post_type_obj->labels->singular_name;
+        return $response;
+    }
+    /**
+     * Make our registered post types public for the search endpoint so it works for the
+     * "Connected services" field. This is a hacky way as WordPress itself does not allow to
+     * include private post types to the `wp/v2/search` REST API endpoint.
+     *
+     * @param array $queryVars
+     * @see https://github.com/WordPress/WordPress/blob/4f8f6e9fa25f598fc06829d0ea72caac4d3d60e4/wp-includes/rest-api/search/class-wp-rest-post-search-handler.php#L28-L39
+     */
+    public function modify_wp_post_types_temporarily($queryVars)
+    {
+        global $wp_post_types;
+        if (isset($_GET['_rcbExtendSearchResult']) && isset($queryVars['rest_route']) && $queryVars['rest_route'] === '/wp/v2/search' && isset($_GET['subtype']) && \current_user_can(Core::MANAGE_MIN_CAPABILITY)) {
+            foreach ([Cookie::CPT_NAME, Blocker::CPT_NAME] as $cpt) {
+                if (isset($wp_post_types[$cpt]) && $_GET['subtype'] === $cpt) {
+                    $wp_post_types[$cpt]->public = \true;
+                    $wp_post_types[$cpt]->publicly_queryable = \true;
+                }
+            }
+            if ($this->isPro() && isset($wp_post_types[TcfVendorConfiguration::CPT_NAME]) && $_GET['subtype'] === TcfVendorConfiguration::CPT_NAME) {
+                $wp_post_types[TcfVendorConfiguration::CPT_NAME]->public = \true;
+                $wp_post_types[TcfVendorConfiguration::CPT_NAME]->publicly_queryable = \true;
+            }
+        }
+        return $queryVars;
     }
     /**
      * New instance.

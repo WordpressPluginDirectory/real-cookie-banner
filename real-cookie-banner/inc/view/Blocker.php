@@ -15,6 +15,8 @@ use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\blockable\BlockerPostType;
 use DevOwl\RealCookieBanner\view\blocker\Plugin;
+use WP_Scripts;
+use WP_Dependencies;
 use WP_Query;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -29,23 +31,21 @@ class Blocker
     use UtilsProvider;
     const BUTTON_CLICKED_IDENTIFIER = 'unblock';
     /**
-     * If a given class of the `parentElement` is given, set the visual parent. This is needed for
-     * some page builder and theme compatibilities. This is only used on client-side (see `findVisualParent`).
+     * See `visualParentSelectors` parameter in `findVisualParent` for more information.
      */
-    const SET_VISUAL_PARENT_IF_CLASS_OF_PARENT = [
+    const VISUAL_PARENT_SELECTORS = [
         // [Plugin Comp] Divi Builder
-        'et_pb_video_box' => 1,
+        '.et_pb_video_box' => 1,
+        '.et_pb_video_slider:has(>.et_pb_slider_carousel %s)' => 'self',
         // [Theme Comp] Astra Theme (Gutenberg Block)
-        'ast-oembed-container' => 1,
+        '.ast-oembed-container' => 1,
         // [Plugin Comp] WP Bakery
-        'wpb_video_wrapper' => 1,
+        '.wpb_video_wrapper' => 1,
         // [Plugin Comp] GoodLayers page builder
-        'gdlr-core-pbf-background-video' => '.gdlr-core-pbf-background-wrap',
+        '.gdlr-core-pbf-background-wrap' => 1,
     ];
     /**
-     * Before trying to create a visual content blocker, check if the node is inside a given container and
-     * if it is, wait until this container is visible. For example, you are providing a sidebar with blocked
-     * content, you need to pass the selector for this sidebar.
+     * See `dependantVisibilityContainers` parameter in `createVisual` for more information.
      */
     const DEPENDANT_VISIBILITY_CONTAINERS = [
         '[role="tabpanel"]',
@@ -77,6 +77,13 @@ class Blocker
         // [Plugin Comp] Thrive Architect lightbox
         'div[id^="tve_thrive_lightbox_"]',
     ];
+    /**
+     * See `disableDeduplicateExceptions` parameter in `createVisual` for more information.
+     */
+    const DISABLE_DEDUPLICATE_EXCEPTIONS = [
+        // [Plugin Comp] Divi Builder
+        '.et_pb_video_slider',
+    ];
     const OB_START_PLUGINS_LOADED_PRIORITY = (\PHP_INT_MAX - 1) * -1;
     /**
      * Force to output the needed computing time at the end of the page for debug purposes.
@@ -93,6 +100,10 @@ class Blocker
      * @var HeadlessContentBlocker
      */
     private $headlessContentBlocker;
+    /**
+     * A list of handles which got blocked. They are lazily detected through e.g. `sgo_js_minify_exclude`.
+     */
+    private $blockedHandles = ['js' => [], 'css' => []];
     /**
      * C'tor.
      *
@@ -329,6 +340,55 @@ class Blocker
             $assets['css'][] = $handle;
         }
         return $assets;
+    }
+    /**
+     * Exclude blocked scripts from SiteGround Optimizer optimizations.
+     *
+     * @param string[] $excluded_handles
+     */
+    public function sgo_js_minify_exclude($excluded_handles)
+    {
+        $this->iterateBlockedHandles(\wp_scripts());
+        return \array_merge($excluded_handles, $this->blockedHandles['js']);
+    }
+    /**
+     * Exclude blocked styles from SiteGround Optimizer optimizations.
+     *
+     * @param string[] $excluded_handles
+     */
+    public function sgo_css_minify_exclude($excluded_handles)
+    {
+        $this->iterateBlockedHandles(\wp_styles());
+        return \array_merge($excluded_handles, $this->blockedHandles['css']);
+    }
+    /**
+     * Iterate over all dependencies and add them to the blocked handles list if they are not already in the list.
+     *
+     * @param WP_Dependencies $dependencies
+     */
+    protected function iterateBlockedHandles($dependencies)
+    {
+        $list =& $this->blockedHandles[$dependencies instanceof WP_Scripts ? 'js' : 'css'];
+        $tag = $dependencies instanceof WP_Scripts ? 'script' : 'style';
+        $html = '';
+        foreach ($dependencies->registered as $reg) {
+            $handle = $reg->handle;
+            if (!empty($handle) && !\in_array($handle, $list, \true)) {
+                $src = $reg->src ?? \false;
+                if (!empty($src)) {
+                    $html .= \sprintf('<%1$s data-iterate-handle="%2$s" src="%3$s"></%1$s>', $tag, $handle, $src);
+                }
+            }
+        }
+        $matchCb = function ($result, $matcher, $match) use(&$list) {
+            if ($result->isBlocked()) {
+                $list[] = $match->getAttribute('data-iterate-handle');
+            }
+        };
+        $this->getHeadlessContentBlocker()->addBlockedMatchCallback($matchCb);
+        $this->replace($html);
+        $this->getHeadlessContentBlocker()->removeBlockedMatchCallback($matchCb);
+        return $list;
     }
     /**
      * Modify any URL and add a query argument to skip the content blocker mechanism.

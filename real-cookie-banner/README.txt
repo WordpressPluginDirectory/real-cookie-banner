@@ -1,7 +1,7 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres, mrguenter
 Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
-Stable tag: 4.7.14
+Stable tag: 4.8.0
 Requires at least: 5.9
 Requires PHP: 7.4.0
 Tested up to: 6.6
@@ -51,7 +51,7 @@ More languages will be added soon! In the meantime, you can also customize and t
 
 === All Features of Real Cookie Banner ===
 
-Real Cookie Banner offers you a beginner-friendly consent management with content blocker. Consents are fully documented. The design is finely customizable and checked for compliance with the European Accessibility Act and WCAG 2.2 Level AA. Special features for professional users (only in PRO version) include geo-restriction, support for Google Tag Manager and Matomo Tag Manager, Google Consent Mode support, Transparency and Consent Framework (TCF) 2.2+ support and consent forwarding. In addition, Real Cookie Banner is a Google certified CMP for Google Adsense. It also offers support for WPML, Polylang, TranslatePress and Weglot, WordPress Multisite and a comprehensive documentation.
+Real Cookie Banner offers you a beginner-friendly consent management with content blocker. Consents are fully documented. The design is finely customizable and checked for compliance with the European Accessibility Act and WCAG 2.2 Level AA. Special features for professional users (only in PRO version) include geo-restriction, support for Google Tag Manager and Matomo Tag Manager, Google Consent Mode support, Transparency & Consent Framework (TCF) 2.2+ support and consent forwarding. In addition, Real Cookie Banner is a Google certified CMP for Google Adsense. It also offers support for WPML, Polylang, TranslatePress and Weglot, WordPress Multisite and a comprehensive documentation.
 
 [**You find a list of all features with comprehensive details on our website!**](https://devowl.io/wordpress-real-cookie-banner/#all-features)
 
@@ -106,7 +106,7 @@ However, the service scanner is not a cookie scanner. A cookie scanner could, if
 = What is the difference between Real Cookie Banner and Real Cookie Banner PRO? =
 The PRO Version offers you many additional features like 
 
-consent to data processing in insecure third countries, statistics about consents, advanced visual content blockers, cookie banner design presets, TCF support, geo-restriction
+consent to data processing in unsafe third countries, statistics about consents, advanced visual content blockers, cookie banner design presets, TCF support, geo-restriction
 Google Tag Manager and Matomo Tag Manager support, consent forwarding or many service templates and content blocker templates. [**Learn more about the PRO version.**](https://devowl.io/go/real-cookie-banner?source=wordpress-org-description)
 
 = What is the GDPR (also known as DSGVO, RGPD, RODO, AVG)? =

@@ -6,13 +6,14 @@ use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\General;
+use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\Multisite;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\view\customize\banner\FooterDesign;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\AbstractInitiator;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealProductManagerWpClient\license\TelemetryData;
-use WP_Error;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -98,13 +99,18 @@ class RpmInitiator extends AbstractInitiator
         $consentSettings = Consent::getInstance();
         $countryBypassSettings = CountryBypass::getInstance();
         $tcfSettings = TCF::getInstance();
+        $gcmSettings = GoogleConsentMode::getInstance();
         $multisiteSettings = Multisite::getInstance();
         $stats = \DevOwl\RealCookieBanner\Stats::getInstance();
         $revision = Revision::getInstance();
         $revisionCurrent = $revision->getCurrent();
         $revisionIndependent = $revision->getRevision()->createIndependent();
         $decision = $revisionIndependent['revision']['banner']['customizeValuesBanner']['decision'];
-        $telemetry->add('rcb_serviceGroup_count', \count($revisionCurrent['revision']['groups']))->add('rcb_service_count', $revisionCurrent['all_cookie_count'])->add('rcb_contentBlocker_count', $revisionCurrent['all_blocker_count'])->add('rcb_services', \DevOwl\RealCookieBanner\Utils::array_flatten(\array_map(function ($group) {
+        $blocker = $revisionIndependent['revision']['blocker'];
+        $groups = $revisionCurrent['revision']['groups'];
+        $counts = ['rcb_service_essential_count' => 0, 'rcb_service_non-essential_legal-basis_consent_count' => 0, 'rcb_service_non-essential_legal-basis_legitimate-interest_count' => 0, 'rcb_service_non-essential_legal-basis_consent_with-visual-content-blocker_count' => 0, 'rcb_service_non-essential_legal-basis_legitimate-interest_with-visual-content-blocker_count' => 0];
+        // Service and content blockers
+        $telemetry->add('rcb_serviceGroup_count', \count($groups))->add('rcb_service_count', $revisionCurrent['all_cookie_count'])->add('rcb_contentBlocker_count', $revisionCurrent['all_blocker_count'])->add('rcb_services', \DevOwl\RealCookieBanner\Utils::array_flatten(\array_map(function ($group) use(&$counts, $blocker) {
             $items = [];
             foreach ($group['items'] as $item) {
                 $newItem = ['name' => $item['name']];
@@ -112,17 +118,39 @@ class RpmInitiator extends AbstractInitiator
                     $newItem['identifier'] = $item['presetId'];
                 }
                 $items[] = $newItem;
+                if ($group['isEssential']) {
+                    $counts['rcb_service_essential_count']++;
+                } else {
+                    // Check if there is a visual content blocker connected to this service
+                    $visualContentBlocker = \array_filter($blocker, function ($blockerItem) use($item) {
+                        return \in_array($item['id'], $blockerItem['services'], \true);
+                    });
+                    if ($item['legalBasis'] === ServiceTemplate::LEGAL_BASIS_CONSENT) {
+                        $counts['rcb_service_non-essential_legal-basis_consent_count']++;
+                        if (!empty($visualContentBlocker)) {
+                            $counts['rcb_service_non-essential_legal-basis_consent_with-visual-content-blocker_count']++;
+                        }
+                    } elseif ($item['legalBasis'] === ServiceTemplate::LEGAL_BASIS_LEGITIMATE_INTEREST) {
+                        $counts['rcb_service_non-essential_legal-basis_legitimate-interest_count']++;
+                        if (!empty($visualContentBlocker)) {
+                            $counts['rcb_service_non-essential_legal-basis_legitimate-interest_with-visual-content-blocker_count']++;
+                        }
+                    }
+                }
             }
             return $items;
-        }, $revisionCurrent['revision']['groups'])))->add('rcb_contentBlockers', \array_map(function ($blocker) {
+        }, $groups)))->add('rcb_contentBlockers', \array_map(function ($blocker) {
             $item = ['name' => $blocker['name']];
             if (!empty($blocker['presetId'])) {
                 $item['identifier'] = $blocker['presetId'];
             }
             return $item;
-        }, $revisionIndependent['revision']['blocker']))->add('rcb_scanner_externalUrls', \array_values(\array_map(function ($item) {
-            return ['host' => $item['host'], 'tags' => $item['tags']];
+        }, $blocker))->add('rcb_scanner_externalUrls', \array_values(\array_map(function ($item) {
+            return ['host' => $item['host'], 'tags' => $item['tags'], 'count' => $item['foundOnSitesCount']];
         }, \DevOwl\RealCookieBanner\Core::getInstance()->getScanner()->getQuery()->getScannedExternalUrls())));
+        foreach ($counts as $key => $value) {
+            $telemetry->add($key, $value);
+        }
         // Stats
         $telemetry->add('rcb_consent_count', \DevOwl\RealCookieBanner\UserConsent::getInstance()->byCriteria([], \DevOwl\RealCookieBanner\UserConsent::BY_CRITERIA_RESULT_TYPE_COUNT));
         if ($this->isPro()) {
@@ -140,10 +168,8 @@ class RpmInitiator extends AbstractInitiator
             }
             $telemetry->add('rcb_statistic_consentByClickedButton', $clickedButtonResult);
             $telemetry->add('rcb_statistic_consentByBypass', $customBypassResult);
-            // Pro Settings
-            $telemetry->add('rcb_settings_dataProcessingInUnsafeCountries', $consentSettings->isDataProcessingInUnsafeCountries());
         }
-        $telemetry->add('rcb_customizer_consentOptions_acceptAll', $decision['acceptAll'])->add('rcb_customizer_consentOptions_acceptEssentials', $decision['acceptEssentials'])->add('rcb_customizer_consentOptions_acceptIndividual', $decision['acceptIndividual'])->add('rcb_settings_setCookiesViaManager', $generalSettings->getSetCookiesViaManager())->add('rcb_settings_acceptAllForBots', $consentSettings->isAcceptAllForBots())->add('rcb_settings_respectDoNotTrack', $consentSettings->isRespectDoNotTrack())->add('rcb_settings_ageNotice', $consentSettings->isAgeNoticeEnabled())->add('rcb_settings_listServicesNotice', $consentSettings->isListServicesNoticeEnabled())->add('rcb_settings_countryBypass', $countryBypassSettings->isActive())->add('rcb_settings_tcf', $tcfSettings->isActive())->add('rcb_settings_consentForwarding', $multisiteSettings->isConsentForwarding())->add('rcb_wpPlugins_active', $telemetry->getActivePlugins())->add('rcb_wpThemes_active', $telemetry->getActiveTheme());
+        $telemetry->add('rcb_customizer_consentOptions_acceptAll', $decision['acceptAll'])->add('rcb_customizer_consentOptions_acceptEssentials', $decision['acceptEssentials'])->add('rcb_customizer_consentOptions_acceptIndividual', $decision['acceptIndividual'])->add('rcb_settings_setCookiesViaManager', $generalSettings->getSetCookiesViaManager())->add('rcb_settings_acceptAllForBots', $consentSettings->isAcceptAllForBots())->add('rcb_settings_respectDoNotTrack', $consentSettings->isRespectDoNotTrack())->add('rcb_settings_ageNotice', $consentSettings->isAgeNoticeEnabled())->add('rcb_settings_listServicesNotice', $consentSettings->isListServicesNoticeEnabled())->add('rcb_settings_countryBypass', $countryBypassSettings->isActive())->add('rcb_settings_tcf', $tcfSettings->isActive())->add('rcb_settings_gcm', $gcmSettings->isEnabled())->add('rcb_settings_bannerLessConsent', $consentSettings->isBannerLessConsent())->add('rcb_settings_dataProcessingInUnsafeCountries', $consentSettings->isDataProcessingInUnsafeCountries())->add('rcb_settings_consentForwarding', $multisiteSettings->isConsentForwarding())->add('rcb_wpPlugins_active', $telemetry->getActivePlugins())->add('rcb_wpThemes_active', $telemetry->getActiveTheme());
     }
     // Documented in AbstractInitiator
     public function formAdditionalCheckboxes()

@@ -25,9 +25,10 @@ class CookieGroup
     const TAXONOMY_NAME = 'rcb-cookie-group';
     const META_NAME_ORDER = 'order';
     const META_NAME_IS_ESSENTIAL = 'isEssential';
-    const SYNC_META_COPY_AND_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL, \DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_ORDER];
+    const META_NAME_IS_DEFAULT = 'isDefault';
+    const SYNC_META_COPY_AND_COPY_ONCE = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL, \DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_DEFAULT, \DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_ORDER];
     const SYNC_OPTIONS = ['meta' => ['copy' => \DevOwl\RealCookieBanner\settings\CookieGroup::SYNC_META_COPY_AND_COPY_ONCE, 'copy-once' => \DevOwl\RealCookieBanner\settings\CookieGroup::SYNC_META_COPY_AND_COPY_ONCE]];
-    const META_KEYS = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL];
+    const META_KEYS = [\DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_ESSENTIAL, \DevOwl\RealCookieBanner\settings\CookieGroup::META_NAME_IS_DEFAULT];
     const HTML_ATTRIBUTE_SKIP_IF_ACTIVE = 'skip-if-active';
     const HTML_ATTRIBUTE_SKIP_WRITE = 'skip-write';
     /**
@@ -54,6 +55,7 @@ class CookieGroup
         \register_taxonomy(self::TAXONOMY_NAME, [\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME], $args);
         \register_meta('term', self::META_NAME_ORDER, ['object_subtype' => self::TAXONOMY_NAME, 'type' => 'number', 'single' => \true, 'show_in_rest' => \true]);
         \register_meta('term', self::META_NAME_IS_ESSENTIAL, ['object_subtype' => self::TAXONOMY_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
+        \register_meta('term', self::META_NAME_IS_DEFAULT, ['object_subtype' => self::TAXONOMY_NAME, 'type' => 'boolean', 'single' => \true, 'show_in_rest' => \true]);
     }
     /**
      * Ensures the "Essentials" term exists. Make sure to create the temporary text domain.
@@ -70,12 +72,16 @@ class CookieGroup
             }
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 0);
             \update_term_meta($result['term_id'], self::META_NAME_IS_ESSENTIAL, \true);
+            \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['functional'], self::TAXONOMY_NAME, ['description' => $defaultTexts['functional']]);
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 1);
+            \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['statistics'], self::TAXONOMY_NAME, ['description' => $defaultTexts['statistics']]);
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 2);
+            \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['marketing'], self::TAXONOMY_NAME, ['description' => $defaultTexts['marketing']]);
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 3);
+            \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             return !\is_wp_error($result);
         }
         return \false;
@@ -134,9 +140,10 @@ class CookieGroup
      * Get all available cookie groups ordered.
      *
      * @param boolean $force
+     * @param boolean $hidden
      * @return WP_Term[]|WP_Error
      */
-    public function getOrdered($force = \false)
+    public function getOrdered($force = \false, $hidden = \false)
     {
         $context = \DevOwl\RealCookieBanner\settings\Revision::getInstance()->getContextVariablesString();
         if ($force === \false && isset($this->cacheGetOrdered[$context])) {
@@ -147,7 +154,7 @@ class CookieGroup
         $includingHidden = \get_terms(Core::getInstance()->queryArguments(['taxonomy' => self::TAXONOMY_NAME, 'orderby' => 'meta_value_num', 'order' => 'ASC', 'hide_empty' => \false, 'meta_query' => [['key' => self::META_NAME_ORDER, 'type' => 'NUMERIC']]], 'cookieGroupsGetOrdered'));
         // Filter hidden
         foreach ($includingHidden as $term) {
-            if ($term->count > 0 || \get_term_meta($term->term_id, self::META_NAME_IS_ESSENTIAL, \true)) {
+            if ($term->count > 0 || \get_term_meta($term->term_id, self::META_NAME_IS_ESSENTIAL, \true) || $hidden) {
                 $terms[] = $term;
             }
         }
@@ -157,6 +164,7 @@ class CookieGroup
                 $metaValue = \get_term_meta($term->term_id, $meta_key, \true);
                 switch ($meta_key) {
                     case self::META_NAME_IS_ESSENTIAL:
+                    case self::META_NAME_IS_DEFAULT:
                         $metaValue = \boolval($metaValue);
                         break;
                     default:
@@ -176,7 +184,7 @@ class CookieGroup
         $output = [];
         $groups = \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->getOrdered();
         foreach ($groups as $group) {
-            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'isEssential' => $group->metas[self::META_NAME_IS_ESSENTIAL], 'items' => []];
+            $value = ['id' => $group->term_id, 'name' => $group->name, 'slug' => $group->slug, 'description' => $group->description, 'isEssential' => $group->metas[self::META_NAME_IS_ESSENTIAL], 'isDefault' => $group->metas[self::META_NAME_IS_DEFAULT] ?? \false, 'items' => []];
             // Populate cookies
             $cookies = \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getOrdered($group->term_id);
             foreach ($cookies as $cookie) {

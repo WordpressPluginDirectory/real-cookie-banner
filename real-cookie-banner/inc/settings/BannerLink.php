@@ -167,7 +167,7 @@ class BannerLink
                 }
             }
             if (!empty($url)) {
-                $output[] = ['id' => $bannerLink->ID, 'label' => $bannerLink->post_title, 'pageType' => $bannerLink->metas[self::META_NAME_PAGE_TYPE], 'url' => $url, 'hideCookieBanner' => $bannerLink->metas[self::META_NAME_HIDE_COOKIE_BANNER], 'isTargetBlank' => $bannerLink->metas[self::META_NAME_IS_TARGET_BLANK]];
+                $output[] = ['id' => $bannerLink->ID, 'label' => $bannerLink->post_title, 'pageType' => $bannerLink->metas[self::META_NAME_PAGE_TYPE], 'isExternalUrl' => $bannerLink->metas[self::META_NAME_IS_EXTERNAL_URL], 'pageId' => $pageId, 'url' => $url, 'hideCookieBanner' => $bannerLink->metas[self::META_NAME_HIDE_COOKIE_BANNER], 'isTargetBlank' => $bannerLink->metas[self::META_NAME_IS_TARGET_BLANK]];
             }
         }
         return Core::getInstance()->getCompLanguage()->translateArray($output, Localization::COMMON_SKIP_KEYS, null, ['legal-text']);

@@ -44,7 +44,7 @@ class CopyContent
      *
      * @param int $id
      * @param string $sourceLanguage
-     * @param string $destinationLanguage
+     * @param string|string[] $destinationLanguage
      */
     public function copyPost($id, $sourceLanguage, $destinationLanguage)
     {
@@ -56,7 +56,7 @@ class CopyContent
         if ($postConfiguration === null) {
             return \false;
         }
-        $this->copy($sourceLanguage, [$destinationLanguage], function () use($id, $postType, $postConfiguration) {
+        $this->copy($sourceLanguage, \is_array($destinationLanguage) ? $destinationLanguage : [$destinationLanguage], function () use($id, $postType, $postConfiguration) {
             $this->fromPostType($postType, $postConfiguration, [$id]);
         });
         return $this->getSync()->getLastCreatedId();

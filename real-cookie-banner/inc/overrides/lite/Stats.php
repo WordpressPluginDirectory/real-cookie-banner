@@ -11,17 +11,17 @@ use WP_Error;
 trait Stats
 {
     // Documented in IOverrideStats
-    public function fetchMainStats($from, $to, $context)
+    public function fetchMainStats($from, $to, $context = null)
     {
         return new WP_Error('rest_rcb_lite', \__('You are not allowed to do this in the free version of Real Cookie Banner. Please upgrade to Real Cookie Banner PRO!', RCB_TD));
     }
     // Documented in IOverrideStats
-    public function fetchButtonsClickedStats($from, $to, $context)
+    public function fetchButtonsClickedStats($from, $to, $context = null)
     {
         return new WP_Error('rest_rcb_lite', \__('You are not allowed to do this in the free version of Real Cookie Banner. Please upgrade to Real Cookie Banner PRO!', RCB_TD));
     }
     // Documented in IOverrideStats
-    public function fetchCustomBypassStats($from, $to, $context)
+    public function fetchCustomBypassStats($from, $to, $context = null)
     {
         return new WP_Error('rest_rcb_lite', \__('You are not allowed to do this in the free version of Real Cookie Banner. Please upgrade to Real Cookie Banner PRO!', RCB_TD));
     }

@@ -152,6 +152,7 @@ class StorageHelper
         $persistedIdentifierInSql = [];
         foreach ($chunks as $chunk) {
             $values = [];
+            $templateToVersionMap = [];
             foreach ($chunk as $template) {
                 $otherMeta = \is_callable($otherMetaKeysResolver) ? $otherMetaKeysResolver($template) : [];
                 $values[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('(%s, %s, %s, %d, %s,
@@ -159,6 +160,7 @@ class StorageHelper
                             %d, %d, %d, %d, %d, %d, %d,
                             %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode($template->getBeforeMiddleware()), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
                 $persistedIdentifierInSql[] = $wpdb->prepare('%s', $template->identifier);
+                $templateToVersionMap[$template->identifier] = $template->version;
             }
             // phpcs:disable WordPress.DB.PreparedSQL
             $result = $wpdb->query(\sprintf('INSERT INTO %s (
@@ -173,6 +175,7 @@ class StorageHelper
                         `headline` = VALUES(`headline`),
                         `sub_headline` = VALUES(`sub_headline`),
                         `logo_url` = VALUES(`logo_url`),
+                        `is_outdated` = VALUES(`is_outdated`),
                         `is_disabled` = VALUES(`is_disabled`),
                         `is_invalidate_needed` = VALUES(`is_invalidate_needed`),
                         `is_untranslated` = VALUES(`is_untranslated`),
@@ -188,6 +191,17 @@ class StorageHelper
             // phpcs:enable WordPress.DB.PreparedSQL
             // When $result is zero, the query did not fail but no new row where added, we need to respect `ON DUPLICATE KEY UPDATE`
             $inserted += $result === \false ? 0 : \count($values);
+            // Create a SQL statement which removes prerelease versions when we are no longer allowed to download them as this could lead to problems with `is_outdated`
+            $sql = [];
+            foreach ($templateToVersionMap as $identifier => $version) {
+                $sql[] = $wpdb->prepare('(identifier = %s AND version > %d)', $identifier, $version);
+            }
+            if (\count($sql) > 0) {
+                $sql = \sprintf("DELETE FROM {$table_name} WHERE %s AND (%s)", $wpdb->prepare('context = %s AND type = %s', $context, $type), \join(' OR ', $sql));
+                // phpcs:disable WordPress.DB.PreparedSQL
+                $wpdb->query($sql);
+                // phpcs:enable WordPress.DB.PreparedSQL
+            }
         }
         $this->updateOutdated();
         // Delete no-longer known templates

@@ -47,6 +47,10 @@ class Notices
     const NOTICE_SERVICES_WITH_SUCCESSOR_TEMPLATES = 'services-with-successor-templates';
     const NOTICE_SERVICES_WITH_GOOGLE_CONSENT_MODE_ADJUSTMENTS = 'services-with-gcm-adjustments';
     const NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING = 'check-saving-consent-via-rest-api-endpoint-working-result';
+    const NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE = 'scanner-explicit-external-url-coverage';
+    const SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_DISMISSED = \false;
+    const SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_SCANNED = 'scanned';
+    const SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_MANUAL_SCAN_REQUIRED = 'manual';
     const TCF_TOO_MUCH_VENDORS = 30;
     const CHECKLIST_PREFIX = 'checklist-';
     const MODAL_HINT_PREFIX = 'modal-hint-';
@@ -57,10 +61,14 @@ class Notices
     const DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES = 'rcb-dismiss-gcm-no-consent-types';
     const DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST = 'rcb-dismiss-gcm-no-legitimate-interest';
     const DISMISS_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE = 'rcb-dismiss-gcm-required';
+    const DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_QUERY_ARG = 'rcb-dismiss-scanner-explicit-external-url-coverage-notice';
+    const DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_START_SCAN_QUERY_ARG = 'rcb-dismiss-scanner-explicit-external-url-coverage-notice-start-scan';
     const DISMISSED_SUCCESSORS = 'dismissed-successors';
     const DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES = 'dismissed-services-using-gcm-and-no-consent-types';
     const DISMISSED_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST = 'dismissed-services-using-gcm-and-no-legitimate-interest';
     const DISMISSED_SERVICES_REQUIRING_GOOGLE_CONSENT_MODE_ACTIVE = 'dismissed-services-requiring-gcm';
+    const DISMISSED_BANNERLESS_CONSENT_LEGINT_SERVICES = 'dismissed-bannerless-consent-legint-services';
+    const DISMISSED_BANNERLESS_CONSENT_SERVICES_WITHOUT_VISUAL_CONTENT_BLOCKER = 'dismissed-bannerless-consent-services-without-visual-content-blocker';
     private $states;
     /**
      * See `http_api_debug` method description.
@@ -135,7 +143,15 @@ class Notices
             }
             \delete_option($optionName);
             return $result;
-        })->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, \sprintf('/%s[a-z_-]+/', self::MODAL_HINT_PREFIX), ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_TCF_TOO_MUCH_VENDORS, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_GET_PRO_MAIN_BUTTON, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_USING_TEMPLATES_WHICH_GOT_DELETED, ['type' => 'boolean']);
+        })->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, \sprintf('/%s[a-z_-]+/', self::MODAL_HINT_PREFIX), ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_TCF_TOO_MUCH_VENDORS, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_GET_PRO_MAIN_BUTTON, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::DISMISSED_BANNERLESS_CONSENT_SERVICES_WITHOUT_VISUAL_CONTENT_BLOCKER, ['type' => 'boolean', 'sanitize_callback' => function () {
+            $dismissedServices = $this->getStates()->get(self::DISMISSED_BANNERLESS_CONSENT_SERVICES_WITHOUT_VISUAL_CONTENT_BLOCKER, []);
+            $dismissedServices = \array_values(\array_unique(\array_merge($dismissedServices, \wp_list_pluck($this->servicesWithBannerlessConsentAdjustments()['legalBasisConsentWithoutVisualContentBlocker'], 'id'))));
+            return $dismissedServices;
+        }])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::DISMISSED_BANNERLESS_CONSENT_LEGINT_SERVICES, ['type' => 'boolean', 'sanitize_callback' => function () {
+            $dismissedServices = $this->getStates()->get(self::DISMISSED_BANNERLESS_CONSENT_LEGINT_SERVICES, []);
+            $dismissedServices = \array_values(\array_unique(\array_merge($dismissedServices, \wp_list_pluck($this->servicesWithBannerlessConsentAdjustments()['legalBasisLegitimateInterest'], 'id'))));
+            return $dismissedServices;
+        }])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_SERVICE_DATA_PROCESSING_IN_UNSAFE_COUNTRIES, ['type' => 'boolean'])->registerRestForKey(Core::MANAGE_MIN_CAPABILITY, self::NOTICE_USING_TEMPLATES_WHICH_GOT_DELETED, ['type' => 'boolean']);
         if (isset($_GET[self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING])) {
             $this->getStates()->set(self::NOTICE_CHECK_SAVING_CONSENT_VIA_REST_API_ENDPOINT_WORKING, \false);
         }
@@ -451,7 +467,7 @@ class Notices
     {
         $configPage = Core::getInstance()->getConfigPage();
         $configPageUrl = $configPage->getUrl();
-        $output = $context === 'notice' ? '<p>' . \__('Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services if necessary to be able to remain legally compliant. The following services are affected:', RCB_TD) . '</p><ul>' : '<ul>';
+        $output = $context === 'notice' ? '<p>' . \__('Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services and/or content blockers if necessary to be able to remain legally compliant. The following services are affected:', RCB_TD) . '</p><ul>' : '<ul>';
         foreach ($needsUpdate as $update) {
             switch ($update->post_type) {
                 case Blocker::CPT_NAME:
@@ -469,7 +485,7 @@ class Notices
             $output .= \sprintf('<li><strong>%s</strong> (%s) &bull; <a href="%s">%s</a></li>', \esc_html($update->post_title), $typeLabel, $editLink, \__('Review changes', RCB_TD));
         }
         $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
-        $output .= $context === 'notice' ? '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>' : '</ul>';
+        $output .= $context === 'notice' ? '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss notice', RCB_TD) . '</a></p>' : '</ul>';
         return $output;
     }
     /**
@@ -515,7 +531,7 @@ class Notices
             }
         }
         $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_SUCCESSOR_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
-        $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
+        $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss notice', RCB_TD) . '</a></p>';
         return $output;
     }
     /**
@@ -539,7 +555,7 @@ class Notices
                 $output .= \sprintf('<li><strong>%s</strong> &bull; <a href="%s">%s</a></li>', \esc_html($row['title']), $editLink, \__('Edit service', RCB_TD));
             }
             $dismissLink = \add_query_arg(self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_CONSENT_TYPES, '1', $configPageUrl);
-            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
+            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss notice', RCB_TD) . '</a></p>';
             $result['noConsentTypes'] = $output;
         }
         if (\count($adjustments['noLegitimateInterest']) > 0) {
@@ -549,7 +565,7 @@ class Notices
                 $output .= \sprintf('<li><strong>%s</strong> &bull; <a href="%s">%s</a></li>', \esc_html($row['title']), $editLink, \__('Edit service', RCB_TD));
             }
             $dismissLink = \add_query_arg(self::DISMISS_SERVICES_USING_GOOGLE_CONSENT_MODE_NO_LEGITIMATE_INTEREST, '1', $configPageUrl);
-            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss this notice', RCB_TD) . '</a></p>';
+            $output .= '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss notice', RCB_TD) . '</a></p>';
             $result['noLegitimateInterest'] = $output;
         }
         if (isset($adjustments['requiresGoogleConsentModeGa'])) {
@@ -634,6 +650,31 @@ class Notices
         return $result;
     }
     /**
+     * Read all services and calculate adjustments which needs to be done when bannerless consent is used.
+     * This includes services which are using bannerless consent for legitimate interest and services without
+     * visual content blockers.
+     *
+     * @return array
+     */
+    public function servicesWithBannerlessConsentAdjustments()
+    {
+        $dismissedLegInt = $this->getStates()->get(self::DISMISSED_BANNERLESS_CONSENT_LEGINT_SERVICES, []);
+        $dismissedConsentWithoutVisualContentBlocker = $this->getStates()->get(self::DISMISSED_BANNERLESS_CONSENT_SERVICES_WITHOUT_VISUAL_CONTENT_BLOCKER, []);
+        $checks = Consent::getInstance()->calculateBannerlessConsentChecks();
+        // Remove services which are dismissed
+        foreach ($checks['legalBasisLegitimateInterest'] as $key => $check) {
+            if (\in_array($check['id'], $dismissedLegInt, \true)) {
+                unset($checks['legalBasisLegitimateInterest'][$key]);
+            }
+        }
+        foreach ($checks['legalBasisConsentWithoutVisualContentBlocker'] as $key => $check) {
+            if (\in_array($check['id'], $dismissedConsentWithoutVisualContentBlocker, \true)) {
+                unset($checks['legalBasisConsentWithoutVisualContentBlocker'][$key]);
+            }
+        }
+        return $checks;
+    }
+    /**
      * Read all services and calculate adjustments which needs to be done when Google Consent Mode is active
      * or needs to be activated.
      *
@@ -657,10 +698,41 @@ class Notices
      */
     public function admin_notices_services_with_empty_privacy_policy()
     {
-        if (Core::getInstance()->getConfigPage()->isVisible()) {
+        if (!\current_user_can(Core::MANAGE_MIN_CAPABILITY) || Core::getInstance()->getConfigPage()->isVisible()) {
             return;
         }
         $html = $this->serviceWithEmptyPrivacyPolicyNoticeHtml();
+        if (\is_string($html)) {
+            echo \sprintf('<div class="notice notice-warning">%s</div>', $html);
+        }
+    }
+    /**
+     * Create an admin notice for scanner external URLs which are now covered by newly published service templates.
+     */
+    public function admin_notices_scanner_explicit_external_url_coverage()
+    {
+        global $wpdb;
+        if (isset($_GET[self::DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_QUERY_ARG])) {
+            $this->getStates()->set(self::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, \array_fill_keys(\array_keys($this->getStates()->get(self::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, [])), self::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_DISMISSED));
+            return;
+        }
+        if (isset($_GET[self::DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_START_SCAN_QUERY_ARG])) {
+            $dismissed = $this->dismissScannerExplicitExternalUrlCoverageNotice(self::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_MANUAL_SCAN_REQUIRED);
+            $table_name = $this->getTableName(Persist::TABLE_NAME);
+            // phpcs:disable WordPress.DB
+            $sourceUrls = $wpdb->get_col(\sprintf("SELECT DISTINCT source_url_hash, source_url FROM {$table_name} WHERE blocked_url_host IN (%s)", \join(',', \array_map(function ($host) use($wpdb) {
+                return $wpdb->prepare('%s', $host);
+            }, $dismissed))), 1, ARRAY_A);
+            // phpcs:enable WordPress.DB
+            if (\count($sourceUrls) > 0) {
+                Core::getInstance()->getScanner()->addUrlsToQueue($sourceUrls);
+            }
+            return;
+        }
+        if (!\current_user_can(Core::MANAGE_MIN_CAPABILITY) || Core::getInstance()->getConfigPage()->isVisible()) {
+            return;
+        }
+        $html = $this->scannerExplicitExternalUrlCoverageNoticeHtml();
         if (\is_string($html)) {
             echo \sprintf('<div class="notice notice-warning">%s</div>', $html);
         }
@@ -723,6 +795,100 @@ class Notices
         return null;
     }
     /**
+     * Create an admin notice for scanner external URLs which are now covered by newly published service templates.
+     */
+    public function scannerExplicitExternalUrlCoverageNoticeHtml()
+    {
+        global $wpdb;
+        $noticeState = $this->getStates()->get(self::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, []);
+        $active = \array_filter($noticeState, function ($state) {
+            return $state !== self::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_DISMISSED;
+        });
+        // Short circuit
+        if (\count($active) === 0) {
+            return null;
+        }
+        // Read the current scanner state
+        $table_name = $this->getTableName(Persist::TABLE_NAME);
+        // phpcs:disable WordPress.DB.PreparedSQL
+        $existing = $wpdb->get_results(\sprintf("SELECT blocked_url_host, IFNULL(GROUP_CONCAT(DISTINCT IF(preset <> '', preset, NULL) ORDER BY preset), '') AS templates\n                FROM {$table_name} WHERE blocked_url_host IN (%s) GROUP BY blocked_url_host", \join(',', \array_map(function ($host) use($wpdb) {
+            return $wpdb->prepare('%s', $host);
+        }, \array_keys($active)))), ARRAY_A);
+        // phpcs:enable WordPress.DB.PreparedSQL
+        $existing = \array_column($existing, 'templates', 'blocked_url_host');
+        $existing = \array_map(function ($templates) {
+            return empty($templates) ? [] : \explode(',', $templates);
+        }, $existing);
+        // Get the template instances and overwrite them with the string values
+        $identifiers = Utils::array_flatten(\array_values($existing));
+        $templates = \array_column(TemplateConsumers::getCurrentBlockerConsumer()->retrieveBy('identifier', $identifiers), null, 'identifier');
+        $existing = \array_map(function ($existingTemplates) use($templates) {
+            return \array_filter(\array_map(function ($template) use($templates) {
+                return $templates[$template] ?? null;
+            }, $existingTemplates));
+        }, $existing);
+        $noLongerExisting = \array_diff_key($active, $existing);
+        // Update the state when there are external URLs hosts which do no longer exist
+        if (\count($noLongerExisting) > 0) {
+            foreach ($noLongerExisting as $host => $templates) {
+                unset($active[$host]);
+                unset($noticeState[$host]);
+            }
+            $this->getStates()->set(self::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, $active);
+        }
+        // Check if for already scanned elements there is already a template found
+        foreach ($active as $host => $state) {
+            $existingTemplates = $existing[$host] ?? [];
+            if ($state === self::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_SCANNED && \count($existingTemplates) === 0) {
+                unset($active[$host]);
+            }
+        }
+        // Short circuit
+        if (\count($active) === 0) {
+            return null;
+        }
+        $resultScanned = Utils::array_flatten(\array_values(\array_filter(\array_map(function ($host) use($existing) {
+            $templates = \wp_list_pluck($existing[$host], 'headline');
+            return \count($templates) > 0 ? $templates : null;
+        }, \array_keys($existing)))));
+        $resultManualTrigger = Utils::array_flatten(\array_values(\array_filter(\array_map(function ($host) use($existing) {
+            $templates = \wp_list_pluck($existing[$host], 'headline');
+            return \count($templates) > 0 ? null : $host;
+        }, \array_keys($existing)))));
+        $resultScannedJoined = UtilsUtils::joinWithAndSeparator($resultScanned, \__(' and ', RCB_TD));
+        $resultManualTriggerJoined = UtilsUtils::joinWithAndSeparator($resultManualTrigger, \__(' and ', RCB_TD));
+        $configPageUrl = Core::getInstance()->getConfigPage()->getUrl();
+        $startScannerLink = \add_query_arg(self::DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_START_SCAN_QUERY_ARG, '1', $configPageUrl . '#/scanner');
+        $dismissLink = \add_query_arg(self::DISMISS_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
+        switch (\true) {
+            case \count($resultManualTrigger) > 0 && \count($resultScanned) > 0:
+                $text = \sprintf(
+                    // translators:
+                    \__('Real Cookie Banner offers new service templates for <strong>%1$s</strong> and for handling external URLs <strong>%2$s</strong>, which may be of interest to you.', RCB_TD),
+                    $resultScannedJoined,
+                    $resultManualTriggerJoined
+                );
+                break;
+            case \count($resultScanned) > 0:
+                $text = \sprintf(
+                    // translators:
+                    \__('Real Cookie Banner offers new service templates for <strong>%s</strong> that may be of interest to you.', RCB_TD),
+                    $resultScannedJoined
+                );
+                break;
+            case \count($resultManualTrigger) > 0:
+                $text = \sprintf(
+                    // translators:
+                    \__('Real Cookie Banner offers new service templates for handling external URLs <strong>%s</strong>, which may be of interest to you.', RCB_TD),
+                    $resultManualTriggerJoined
+                );
+                break;
+            default:
+                $text = '';
+        }
+        return \sprintf('<p>%s</p><p>%s</p>', \join(' ', [$text, \count($resultManualTrigger) > 0 ? \sprintf(\__('Start the scanner to check if the service template can be used for your case and will be suggested in the scanner!', RCB_TD)) : '']), \join('&nbsp;&bull;&nbsp;', \array_filter([\count($resultManualTrigger) > 0 ? \sprintf('<a href="%s">%s</a>', \esc_url($startScannerLink), \__('Start scanner', RCB_TD)) : '', \sprintf('<a href="%s">%s</a>', \esc_url($configPageUrl . '#/scanner'), \__('Open scanner', RCB_TD)), \sprintf('<a href="%s">%s</a>', \esc_url($dismissLink), \__('Dismiss notice', RCB_TD))])));
+    }
+    /**
      * Checks if the notice about services which are processing data in unsafe countries should be shown,
      * and returns the titles of the services which process data in unsafe countries
      */
@@ -744,7 +910,7 @@ class Notices
                 );
             }
             if (\count($servicesHtml) > 0) {
-                return \sprintf('<p>%s</p><ul><li>%s</li></ul>', \__('Some services carries out data processing in insecure third countries as defined by data protection regulations. You should obtain specific consent for this or only use services with data processing in secure countries as defined by the European Commission.', RCB_TD), \join('</li><li>', $servicesHtml));
+                return \sprintf('<p>%s</p><ul><li>%s</li></ul>', \__('Some services perform data processing in unsafe third countries within the meaning of data protection regulations.  In the service configurations, you have stated that no security mechanisms are in place for this data processing. You should obtain special consent for this or only use services with data processing in secure countries or with appropriate security mechanisms.', RCB_TD), \join('</li><li>', $servicesHtml));
             }
         }
         return null;
@@ -852,6 +1018,29 @@ class Notices
     public function getClickedModalHints()
     {
         return \array_keys($this->getStates()->getKeysStartingWith(self::MODAL_HINT_PREFIX));
+    }
+    /**
+     * Dismiss a scanner explicit external URL coverage notice by type.
+     *
+     * @param string $state
+     */
+    public function dismissScannerExplicitExternalUrlCoverageNotice($state)
+    {
+        // Remove explicit notices of external URLs which do not require a manual scan
+        $noticeState = $this->getStates()->get(\DevOwl\RealCookieBanner\view\Notices::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, []);
+        $doUpdate = \false;
+        $dismissed = [];
+        foreach ($noticeState as $host => $oldState) {
+            if ($oldState === $state) {
+                $noticeState[$host] = \DevOwl\RealCookieBanner\view\Notices::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_DISMISSED;
+                $dismissed[] = $host;
+                $doUpdate = \true;
+            }
+        }
+        if ($doUpdate) {
+            $this->getStates()->set(\DevOwl\RealCookieBanner\view\Notices::NOTICE_SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE, $noticeState);
+        }
+        return $dismissed;
     }
     /**
      * Reset states of notices which needs to get recalculated when a service / content blocker got updated / deleted.

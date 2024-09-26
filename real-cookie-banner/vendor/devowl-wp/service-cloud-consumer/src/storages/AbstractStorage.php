@@ -61,7 +61,8 @@ abstract class AbstractStorage
      */
     public abstract function persist($templates);
     /**
-     * Check if the storage should be invalidated (e.g. after 24 hours).
+     * Check if the storage should be invalidated (e.g. after 24 hours). We highly recommend to return the database as source of truth
+     * by e.g. returning the result of `UPDATE` to avoid race conditions.
      *
      * @return boolean
      */

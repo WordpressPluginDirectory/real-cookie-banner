@@ -95,6 +95,7 @@ class TemplateConsumers
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\RecommendedHooksMiddleware($blockerConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\PersistTranslationsMiddlewareImpl($blockerConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\TranslationsMiddlewareImpl($blockerConsumer));
+            $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\ServiceCloudConsumerExternalUrlNotifierMiddlewareImpl($blockerConsumer));
             // Data sources
             $serviceConsumer->addDataSource(new \DevOwl\RealCookieBanner\templates\ServiceLocalDataSource($serviceConsumer));
             $serviceConsumer->addDataSource(new \DevOwl\RealCookieBanner\templates\CloudDataSource($serviceConsumer));
@@ -251,6 +252,25 @@ class TemplateConsumers
             },
             'i18n.TcfMiddleware.disabled' => \__('TCF required', RCB_TD),
             'i18n.TcfMiddleware.disabledTooltip' => \__('This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service.', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introduction' => \__('%s is a network of globally distributed servers that cache content and deliver it to your website visitors faster based on their location, reducing website load times and improving performance. This technology is also known as a content delivery network (CDN). {{strong}}Servers may also be located in countries that are considered unsafe in terms of data protection law.{{/strong}}', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introductionNoScc' => \__('In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %1$s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses). Unfortunately, %1$s does not offer the option of concluding standard contractual clauses to our knowledge. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introductionNotEssential' => \__('%s unfortunately sets cookies that are not technically essential according to our knowledge, for which consent would be required. At the same time, the CDN cannot be blocked with a content blocker until the website visitors have given their consent, as otherwise parts of your website may malfunction. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introductionSccAndEmbedsOnlyExternalResources1' => \__('In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses).', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introductionSccAndEmbedsOnlyExternalResources2' => \__('{{strong}}Please make sure that you have concluded standard contract clauses with %1$s, which can be done on their website!{{/strong}} Since %1$s does not set cookies to our knowledge, we do not recommend creating a service in your cookie banner for it. However, you must mention the use of %1$s in your privacy policy.', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.introductionRemoveService' => \__('Please remove %s from your website!', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.moreInfoTooltipTitle' => \__('Why is %s integrated into my website at all?', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.moreInfoTooltipDescription' => \__('If you do not consciously integrate %1$s, it is most likely that a plugin or theme you are using uses this CDN to load external scripts, fonts or media such as images. The best way to find out who is integrating the CDN is to disable the individual plugins or themes and scan again. Once you have found out where the integration is coming from, contact the developer of the plugin or theme to see if it can be used without %1$s or replace this plugin/theme!', RCB_TD),
+            // translators:
+            'i18n.CdnMiddleware.sccConclusionInstructionsNoticeTitle' => \__('How do I conclude standard contractual clauses with %s?', RCB_TD),
+            'i18n.CdnMiddleware.buttonLabel' => \__('Acknowledge', RCB_TD),
         ];
         foreach ($variables as $key => $value) {
             $resolver->add($key, $value);

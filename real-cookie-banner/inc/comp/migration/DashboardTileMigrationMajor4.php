@@ -13,7 +13,6 @@ use DevOwl\RealCookieBanner\view\checklist\OperatorContact;
 use DevOwl\RealCookieBanner\view\checklist\PrivacyPolicyMentionUsage;
 use DevOwl\RealCookieBanner\view\customize\banner\individual\Texts as IndividualTexts;
 use DevOwl\RealCookieBanner\view\customize\banner\Texts;
-use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -70,8 +69,8 @@ class DashboardTileMigrationMajor4 extends \DevOwl\RealCookieBanner\comp\migrati
         ), \sprintf(
             // translators:
             \__('All design templates have been revised by us with regard to accessibility. In addition, when <a href="%1$s" target="_blank">customizing the cookie banner design</a>, you will now find an accessibility score that evaluates how accessible your current design settings are. Customize your design now!', RCB_TD),
-            \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'customAutofocus[rcb-a11y-score]' => 1, 'returnEncoded' => Utils::getRawRefererEncodedForUrl()], \admin_url('customize.php'))
-        )]), ['linkText' => \__('Show revised design presets', RCB_TD), 'callback' => \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'customAutofocus[rcb-presets]' => 1, 'returnEncoded' => Utils::getRawRefererEncodedForUrl()], \admin_url('customize.php')), 'previewImage' => $core->getBaseAssetsUrl(\__('upgrade-wizard/v4/accessibility-score.png', RCB_TD))])->addAction('website-operator', \__('Provide details of the website operator for self-hosted services', RCB_TD), \join('<br /><br/ >', [\sprintf(
+            \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'customAutofocus[rcb-a11y-score]' => 1, 'return' => \wp_get_raw_referer()], \admin_url('customize.php'))
+        )]), ['linkText' => \__('Show revised design presets', RCB_TD), 'callback' => \add_query_arg(['autofocus[panel]' => BannerCustomize::PANEL_MAIN, 'customAutofocus[rcb-presets]' => 1, 'return' => \wp_get_raw_referer()], \admin_url('customize.php')), 'previewImage' => $core->getBaseAssetsUrl(\__('upgrade-wizard/v4/accessibility-score.png', RCB_TD))])->addAction('website-operator', \__('Provide details of the website operator for self-hosted services', RCB_TD), \join('<br /><br/ >', [\sprintf(
             // translators:
             \__('In services, you can provide contact details of the provider/data processor (postal address, email, phone, etc.) to fulfill your information obligations under <a href="%1$s" target="_blank">Art. 13 GDPR</a> in conjunction with <a href="%2$s" target="_blank">Art. 5 GDPR</a>. For self-hosted services, you are the data processor and should also provide this data in the cookie banner.', RCB_TD),
             \__('https://gdpr-text.com/read/article-13/', RCB_TD),
@@ -94,7 +93,7 @@ class DashboardTileMigrationMajor4 extends \DevOwl\RealCookieBanner\comp\migrati
         }
         $this->addAction('data-processing-in-unsafe-countries', \__('Consent to data processing in insecure third countries (instead of US data processing only)', RCB_TD), \join('<br /><br/ >', [\sprintf(
             // translators:
-            \__('Real Cookie Banner offered you so far to obtain special consent according to <a href="%1$s" target="_blank">Art. 49 (1) lit. a GDPR</a> for data processing in the USA. <a href="%2$s" target="_blank">The USA is again a secure third country under data protection law since July 2023</a>. However, data processing of many services takes place worldwide and thus in other insecure countries.', RCB_TD),
+            \__('Real Cookie Banner offered you so far to obtain special consent according to <a href="%1$s" target="_blank">Art. 49 (1) (a) GDPR</a> for data processing in the USA. <a href="%2$s" target="_blank">The USA is again a secure third country under data protection law since July 2023</a>. However, data processing of many services takes place worldwide and thus in other insecure countries.', RCB_TD),
             \__('https://gdpr-text.com/read/article-49/', RCB_TD),
             \__('https://devowl.io/2023/us-data-processing-tadpf/', RCB_TD)
         ), \sprintf(
@@ -139,7 +138,7 @@ class DashboardTileMigrationMajor4 extends \DevOwl\RealCookieBanner\comp\migrati
             $this->applyNewGroupTexts(self::DELETE_LANGUAGES);
             $result['success'] = \true;
             $result['deleted_options_texts'] = $deletedOptionsTexts;
-            $result['redirect'] = \add_query_arg(['autofocus[section]' => Texts::SECTION, 'returnEncoded' => Utils::getRawRefererEncodedForUrl()], \admin_url('customize.php'));
+            $result['redirect'] = \add_query_arg(['autofocus[section]' => Texts::SECTION, 'return' => \wp_get_raw_referer()], \admin_url('customize.php'));
         }
         return $result;
     }

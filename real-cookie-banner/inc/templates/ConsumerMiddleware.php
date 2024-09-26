@@ -33,7 +33,7 @@ class ConsumerMiddleware extends AbstractConsumerMiddleware
         $this->setRetryIn(null);
     }
     // Documented in AbstractConsumerMiddleware
-    public function afterDownloadAndPersistFromDataSource($exception)
+    public function afterDownloadAndPersistFromDataSource($exception, $templates)
     {
         if ($this->td !== null) {
             $this->td->teardown();
@@ -66,7 +66,7 @@ class ConsumerMiddleware extends AbstractConsumerMiddleware
     public function afterUseTemplate($template)
     {
         // Do literally the same
-        $this->afterDownloadAndPersistFromDataSource(null);
+        $this->afterDownloadAndPersistFromDataSource(null, null);
     }
     /**
      * Set the retry-in variable in all available consumers within the consumer pools.

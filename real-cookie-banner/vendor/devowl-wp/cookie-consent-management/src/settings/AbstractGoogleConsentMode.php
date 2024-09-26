@@ -2,10 +2,10 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings;
 
-use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\services\ManagerMiddleware;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 /**
  * Abstract implementation of the settings for the Google Consent Mode compatibility.
  * @internal
@@ -103,7 +103,7 @@ abstract class AbstractGoogleConsentMode extends BaseSettings
                     if (!$dismissedNoConsentTypes && \count($consentTypes) === 0 && $isUsingGtag && !$isTagManagerService) {
                         $result['missingConsentTypes'][] = $relevantServiceData;
                     }
-                    if ($isUsingGtag && $isShowRecommandationsWithoutConsent && $service->getLegalBasis() === Service::LEGAL_BASIS_CONSENT && !\in_array($service->getId(), $dismissedNoLegitimateInterest, \true) && !$isTagManagerService) {
+                    if ($isUsingGtag && $isShowRecommandationsWithoutConsent && $service->getLegalBasis() === ServiceTemplate::LEGAL_BASIS_CONSENT && !\in_array($service->getId(), $dismissedNoLegitimateInterest, \true) && !$isTagManagerService) {
                         $result['noLegitimateInterest'][] = $relevantServiceData;
                     }
                 } else {

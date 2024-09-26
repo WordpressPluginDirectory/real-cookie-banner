@@ -5,7 +5,6 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\s
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxAttributeFunction;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\SelectorSyntaxMatcher;
 /**
  * This plugin registers the selector syntax `matchesUrl()`.
@@ -56,7 +55,7 @@ class MatchesUrl extends AbstractPlugin
         $headlessContentBlocker = $this->getHeadlessContentBlocker();
         $matcher = $headlessContentBlocker->getFinderToMatcher()[$fn->getAttribute()->getFinder()] ?? null;
         if ($matcher !== null && $matcher instanceof SelectorSyntaxMatcher) {
-            $blockedResult = new BlockedResult('', [], '');
+            $blockedResult = $matcher->createPlainResultFromMatch($match);
             $blockable = $matcher->getBlockable();
             // $blockable can be `null` when used with `addSelectorSyntaxMap`
             $useBlockables = $blockable === null ? null : [$blockable];

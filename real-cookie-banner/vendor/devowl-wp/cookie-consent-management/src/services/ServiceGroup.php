@@ -39,6 +39,12 @@ class ServiceGroup
      */
     private $isEssential = \false;
     /**
+     * Is this group a default group created by Real Cookie Banner and not manually?
+     *
+     * @var boolean
+     */
+    private $isDefault = \false;
+    /**
      * The services of the service group.
      *
      * @var Service[]
@@ -94,6 +100,15 @@ class ServiceGroup
      *
      * @codeCoverageIgnore
      */
+    public function isDefault()
+    {
+        return $this->isDefault;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
     public function getItems()
     {
         return $this->items;
@@ -141,12 +156,22 @@ class ServiceGroup
     /**
      * Setter.
      *
-     * @param string $isEssential
+     * @param boolean $isEssential
      * @codeCoverageIgnore
      */
     public function setIsEssential($isEssential)
     {
         $this->isEssential = $isEssential;
+    }
+    /**
+     * Setter.
+     *
+     * @param boolean $isDefault
+     * @codeCoverageIgnore
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
     }
     /**
      * Setter.
@@ -163,7 +188,7 @@ class ServiceGroup
      */
     public function toJson()
     {
-        return ['id' => $this->id, 'name' => $this->name, 'slug' => $this->slug, 'description' => $this->description, 'isEssential' => $this->isEssential, 'items' => \array_map(function ($item) {
+        return ['id' => $this->id, 'name' => $this->name, 'slug' => $this->slug, 'description' => $this->description, 'isEssential' => $this->isEssential, 'isDefault' => $this->isDefault, 'items' => \array_map(function ($item) {
             return $item->toJson();
         }, $this->items)];
     }
@@ -180,6 +205,7 @@ class ServiceGroup
         $instance->setSlug($data['slug'] ?? '');
         $instance->setDescription($data['description'] ?? '');
         $instance->setIsEssential($data['isEssential'] ?? \false);
+        $instance->setIsDefault($data['isDefault'] ?? \false);
         $instance->setItems(\array_map(function ($data) {
             return Service::fromJson($data);
         }, $data['items'] ?? []));

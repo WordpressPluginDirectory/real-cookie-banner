@@ -36,6 +36,18 @@ class BannerLink
      */
     private $pageType = self::PAGE_TYPE_OTHER;
     /**
+     * Is the URL external?
+     *
+     * @var boolean
+     */
+    private $isExternalUrl = \false;
+    /**
+     * Page ID when the link is internal.
+     *
+     * @var int
+     */
+    private $pageId = 0;
+    /**
      * URL.
      *
      * @var string
@@ -79,6 +91,24 @@ class BannerLink
     public function getPageType()
     {
         return $this->pageType;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function isExternalUrl()
+    {
+        return $this->isExternalUrl;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
     }
     /**
      * Getter.
@@ -140,6 +170,26 @@ class BannerLink
     /**
      * Setter.
      *
+     * @param boolean $isExternalUrl
+     * @codeCoverageIgnore
+     */
+    public function setIsExternalUrl($isExternalUrl)
+    {
+        $this->isExternalUrl = $isExternalUrl;
+    }
+    /**
+     * Setter.
+     *
+     * @param int $pageId
+     * @codeCoverageIgnore
+     */
+    public function setPageId($pageId)
+    {
+        $this->pageId = $pageId;
+    }
+    /**
+     * Setter.
+     *
      * @param string $url
      * @codeCoverageIgnore
      */
@@ -172,7 +222,7 @@ class BannerLink
      */
     public function toJson()
     {
-        return ['id' => $this->id, 'label' => $this->label, 'pageType' => $this->pageType, 'url' => $this->url, 'hideCookieBanner' => $this->hideCookieBanner, 'isTargetBlank' => $this->isTargetBlank];
+        return ['id' => $this->id, 'label' => $this->label, 'pageType' => $this->pageType, 'isExternalUrl' => $this->isExternalUrl, 'pageId' => $this->pageId, 'url' => $this->url, 'hideCookieBanner' => $this->hideCookieBanner, 'isTargetBlank' => $this->isTargetBlank];
     }
     /**
      * Generate a `Blocker` object from an array.
@@ -186,6 +236,8 @@ class BannerLink
         $instance->setId($data['id'] ?? 0);
         $instance->setLabel($data['label'] ?? '');
         $instance->setPageType($data['pageType'] ?? self::PAGE_TYPE_OTHER);
+        $instance->setIsExternalUrl($data['isExternalUrl'] ?? \false);
+        $instance->setPageId($data['pageId'] ?? 0);
         $instance->setUrl($data['url'] ?? '');
         $instance->setHideCookieBanner($data['hideCookieBanner'] ?? \false);
         $instance->setIsTargetBlank($data['isTargetBlank'] ?? \false);

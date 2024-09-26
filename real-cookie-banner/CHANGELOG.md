@@ -3,6 +3,350 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.8.0 (2024-09-26)
+
+
+### Bug Fixes
+
+* compatibility with Divi video slider and visual content blockers (CU-8695kgg74)
+* compatibility with Flatsome theme and lightboxes (CU-8695hkk9h)
+* compatibility with Gutenberg vimeo embeds with direct URLs instead of player.vimeo.com (CU-8695jrnud)
+* compatibility with magnificPopup and YouTube urls covered also by TCF (CU-8695hkk9h)
+* compatibility with SiteGround Optimizer and minificdation of files (CU-8695rputb)
+* compatiblity with Advanced Backgrouns
+* content blocker with connected GCM and TCF are not loaded correctly in login screen (CU-8695rjfzf)
+* show a notice when a new service template covers an external URL (CU-86955xtbe)
+* spelling of paragraphs in English (CU-869566d55)
+
+
+### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* banner-less consent (cookie banner without cookie banner, CU-fb1hvk)
+* introduce a new option to generate Cookie policy in Cookies > Settings (CU-22wkegu)
+* new field for services to change the technical handling execute priority (CU-8695emete)
+* show an explanation when using a CDN in the scanner (CU-118mngr)
+
+
+### Maintenance
+
+* prepare release (CU-8695kgrpr)
+* remove referer workaround for Strato servers (CU-86954236z)
+
+
+### Performance Improvements
+
+* do not download service and blocker templates twice (CU-86955xtbe)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.14.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* review points 1-10 without 7 (CU-118mngr)
+* review points 4 (CU-118mngr)
+
+
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* added cdn handling to service templates (CU-118mngr)
+* introduce execute priority for services (CU-118mngr)
+* new field for services to change the technical handling execute priority (CU-8695emete)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.2.0</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* geo-restriction does not accept new services automatically when previous consent was also implicit (CU-8695mj2kd)
+
+
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* banner-less consent (cookie banner without cookie banner, CU-fb1hvk)
+* introduce a new option to generate Cookie policy in Cookies > Settings (CU-22wkegu)
+* introduce DSG with Trans-Atlantic Data Privacy Framework compatibility (CU-866avtc01)
+* new field for services to change the technical handling execute priority (CU-8695emete)
+* show an explanation when using a CDN in the scanner (CU-118mngr)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.10.0</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* compatibility with magnificPopup and YouTube urls covered also by TCF (CU-8695hkk9h)
+* unload event listeners are deprecated and will be removed (CU-8695mhu71)
+
+
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* new field for services to change the technical handling execute priority (CU-8695emete)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.12</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Bug Fixes
+
+* allow to pass custom parameters for sections (CU-22wkegu)
+
+
+##### Maintenance
+
+* remove referer workaround for Strato servers (CU-86954236z)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.81</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Bug Fixes
+
+* wp-content exists but is not writable (CU-8695rkn9g)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.18.1</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibility with Gutenberg vimeo embeds with direct URLs instead of player.vimeo.com (CU-8695jrnud)
+* compatibility with SiteGround Optimizer and minificdation of files (CU-8695rputb)
+* show a notice when a new service template covers an external URL (CU-86955xtbe)
+* track rules which match the same inline script in scanner correctly (CU-86942x07f)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.15</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Divi video slider and visual content blockers (CU-8695kgg74)
+* do not stop execution when a hijacked jQuery function runs into an error (CU-8695hkk9h)
+
+
+##### Performance Improvements
+
+* force to render visual content blockers for :confirm() dialogs in idle step (CU-8695xjmf6)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.11</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* allow to copy content to multiple destination languages (CU-22wkegu)
+* uncaught Error: Call to undefined function pll_default_language (CU-8695ugetm)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 0.13.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* accessibility allow to use escape listener in change/history cookie banner dialog for X-replacement (CU-8695xk0gy)
+
+
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* introduce a new option to generate Cookie policy in Cookies > Settings (CU-22wkegu)
+* introduce DSG with Trans-Atlantic Data Privacy Framework compatibility (CU-866avtc01)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.14.0</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* spelling of paragraphs in English (CU-869566d55)
+
+
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* banner-less consent (cookie banner without cookie banner, CU-fb1hvk)
+* introduce a new option to generate Cookie policy in Cookies > Settings (CU-22wkegu)
+* introduce DSG with Trans-Atlantic Data Privacy Framework compatibility (CU-866avtc01)
+* new field for services to change the technical handling execute priority (CU-8695emete)
+* show an explanation when using a CDN in the scanner (CU-118mngr)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.27</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* do not invalidate license for azurewebsites.net (CU-8695h2x87)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.6.0</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Features
+
+* new field for services to change the technical handling execute priority (CU-8695emete)
+* show an explanation when using a CDN in the scanner (CU-118mngr)
+
+
+##### Performance Improvements
+
+* do not download service and blocker templates twice (CU-86955xtbe)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.11</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* remove referer workaround for Strato servers (CU-86954236z)</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 0.4.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Features
+
+* banner-less consent (cookie banner without cookie banner, CU-fb1hvk)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.5</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Bug Fixes
+
+* provide APP_NAME and APP_VERSION in backend environment (CU-8695emete)
+* restore production database dump app-versionized (CU-8695emete)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.8</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* retry 5 times when component is locked (CU-8695kguk7)</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 0.6.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Features
+
+* data processing countries group Akamai (CU-betuuk)</details>
+
+<details><summary>Development dependency update @devowl-wp/monorepo-utils 0.2.5</summary>
+
+
+**_Purpose of dependency:_** _Predefined monorepo utilities and tasks._
+##### Continuous Integration
+
+* make public changelog generation work again with latest Taskfile version (CU-8695kgrpr)
+
+
+##### Maintenance
+
+* update retypeapp (CU-8695kgrpr)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.7.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Features
+
+* add safety mechanisms for data transmission and option to hide less relevant details (CU-86957nqtx)
+* introduce a new option to generate Cookie policy in Cookies > Settings (CU-22wkegu)</details>
+
+
+
+
+
+## 4.7.16 (2024-08-28) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.13.7</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* fixed es-lint and typings (CU-861n9jg7k)
+* hide fields for translator role when empty in default lang (CU-861n9jg7k)
+* introduce translation flag statistics and entity display (CU-861n9jg7k)
+* introduce translation flags for translatable strings (CU-8693travj)
+* review 14, hide specific provider fields for translators (CU-861n9jg7k)
+* review 3+5, text renames, and display name calculation (CU-861n9jg7k)
+
+
+##### Code Refactoring
+
+* reordering vars (CU-861n9jg7k)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 0.1.7</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Code Refactoring
+
+* performance tuning and shouldUpdate tweaks (CU-861n9jg7k)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 0.5.25</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* apply new eslint rules (CU-861n9jg7k)
+* introduce translation flag statistics and entity display (CU-861n9jg7k)
+* introduce translation flags for translatable strings (CU-8693travj)
+
+
+##### Code Refactoring
+
+* reordering vars (CU-861n9jg7k)</details>
+
+
+
+
+
+## 4.7.15 (2024-08-13)
+
+
+### Bug Fixes
+
+* make preset selector work with conditional controls on server-side (CU-86955xtbe)
+* new telemetry data for scanner external URLs and how often they got found on the website (CU-86955xtbe)
+
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.10</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Bug Fixes
+
+* make preset selector work with conditional controls on server-side (CU-86955xtbe)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.6.6</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Styles
+
+* do not show a box shadow for banners in mobile view (CU-86955xtbe)</details>
+
+
+
+
+
 ## 4.7.14 (2024-08-08)
 
 

@@ -42,6 +42,7 @@ use DevOwl\RealCookieBanner\rest\Scanner as RestScanner;
 use DevOwl\RealCookieBanner\scanner\AutomaticScanStarter;
 use DevOwl\RealCookieBanner\scanner\Scanner;
 use DevOwl\RealCookieBanner\settings\BannerLink;
+use DevOwl\RealCookieBanner\settings\CookiePolicy;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\settings\Reset;
@@ -57,6 +58,7 @@ use DevOwl\RealCookieBanner\view\shortcode\HistoryUuidsShortcode;
 use DevOwl\RealCookieBanner\view\Scanner as ViewScanner;
 use DevOwl\RealCookieBanner\view\navmenu\NavMenuLinks;
 use DevOwl\RealCookieBanner\view\Notices;
+use DevOwl\RealCookieBanner\view\shortcode\CookiePolicyShortcode;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealUtils\Core as RealUtilsCore;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\FixInvalidJsonInDb;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
@@ -222,6 +224,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_service_using_template_which_got_deleted']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_tcf_too_much_vendors']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notices_services_with_empty_privacy_policy']);
+        \add_action('admin_notices', [$this->getNotices(), 'admin_notices_scanner_explicit_external_url_coverage']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notices_check_saving_consent_via_rest_api_endpoint_working']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_updated_templates']);
         \add_action('admin_notices', [$this->getNotices(), 'admin_notice_services_with_successor_templates']);
@@ -277,6 +280,8 @@ class Core extends BaseCore implements IOverrideCore
         // Autoptimize
         \add_filter('autoptimize_filter_css_exclude', [$this->getBlocker(), 'autoptimize_filter_css_exclude']);
         \add_filter('avf_exclude_assets', [$this->getBlocker(), 'avf_exclude_assets']);
+        \add_filter('sgo_js_minify_exclude', [$this->getBlocker(), 'sgo_js_minify_exclude']);
+        \add_filter('sgo_css_minify_exclude', [$this->getBlocker(), 'sgo_css_minify_exclude']);
         \add_filter('litespeed_buffer_before', [$this->getBlocker(), 'replace'], 1);
         // LiteSpeed Cache
         \add_filter('litespeed_ccss_url', [$this->getBlocker(), 'modifyUrlToSkipContentBlocker']);
@@ -300,6 +305,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_shortcode(LinkShortcode::TAG, [LinkShortcode::class, 'render']);
         \add_shortcode(HistoryUuidsShortcode::TAG, [HistoryUuidsShortcode::class, 'render']);
         \add_shortcode(HistoryUuidsShortcode::DEPRECATED_TAG, [HistoryUuidsShortcode::class, 'render']);
+        \add_shortcode(CookiePolicyShortcode::TAG, [CookiePolicyShortcode::class, 'render']);
         $this->adInitiator = new \DevOwl\RealCookieBanner\AdInitiator();
         $this->adInitiator->start();
         $this->rpmInitiator = new \DevOwl\RealCookieBanner\RpmInitiator();
@@ -411,8 +417,8 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('wp_update_nav_menu_item', [$navMenuLinks, 'wp_update_nav_menu_item'], 10, 3);
         \add_action('admin_head-nav-menus.php', [$navMenuLinks, 'admin_head']);
         \add_action('customize_controls_head', [$navMenuLinks, 'customize_controls_head']);
-        \add_action('delete_post', [General::getInstance(), 'delete_post']);
-        \add_action('wp_trash_post', [General::getInstance(), 'delete_post']);
+        \add_action('before_delete_post', [General::getInstance(), 'before_delete_post'], 0);
+        \add_action('wp_trash_post', [General::getInstance(), 'before_delete_post']);
         \add_action('delete_post', [BannerLink::getInstance(), 'delete_post']);
         \add_action('wp_trash_post', [BannerLink::getInstance(), 'delete_post']);
         \add_action('update_option_wp_page_for_privacy_policy', [BannerLink::getInstance(), 'update_option_wp_page_for_privacy_policy'], 10, 2);
@@ -423,6 +429,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileMigrationMajor4(), 'actions']);
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileTcfV2IllegalUsage(), 'actions']);
         \add_action('added_post_meta', [$this->getNotices(), 'added_post_meta_data_processing_in_unsafe_countries'], 10, 4);
+        \add_filter('request', [$configService, 'modify_wp_post_types_temporarily']);
         \add_filter('update_post_metadata', [$this->getNotices(), 'update_post_meta_data_processing_in_unsafe_countries'], 10, 4);
         \add_filter('nav_menu_link_attributes', [$navMenuLinks, 'nav_menu_link_attributes'], 10, 2);
         \add_filter('wp_setup_nav_menu_item', [$navMenuLinks, 'wp_setup_nav_menu_item']);
@@ -445,6 +452,8 @@ class Core extends BaseCore implements IOverrideCore
         }
         \add_filter('rest_prepare_' . CookieGroup::TAXONOMY_NAME, [$this->getCompLanguage(), 'rest_prepare_taxonomy'], 10, 3);
         \add_filter('RCB/Revision/Current', [$scannerQuery, 'revisionCurrent']);
+        \add_filter('display_post_states', [CookiePolicy::getInstance(), 'display_post_states'], 10, 2);
+        \add_filter('page_row_actions', [CookiePolicy::getInstance(), 'page_row_actions'], 10, 2);
         // Multilingual
         \add_filter('rest_' . Cookie::CPT_NAME . '_query', [Hooks::getInstance(), 'rest_query']);
         \add_filter('rest_' . Blocker::CPT_NAME . '_query', [Hooks::getInstance(), 'rest_query']);
@@ -471,9 +480,13 @@ class Core extends BaseCore implements IOverrideCore
             \add_filter('show_admin_bar', '__return_false');
             \add_filter('RCB/Blocker/ResolveBlockables', [$scanner, 'resolve_blockables'], 50, 2);
         }
-        // If country bypass is active, add the filter so the frontend fetches the WP REST API and modify revision
+        // If country bypass is active, add the filter so the frontend fetches the WP REST API and create consent
         if (CountryBypass::getInstance()->isActive()) {
             \add_filter('RCB/Consent/DynamicPreDecision', [CountryBypass::getInstance(), 'dynamicPredecision'], 10, 2);
+        }
+        // If bannerless consent is active, add the filter so the frontend fetches the WP REST API and create consent
+        if (Consent::getInstance()->isBannerLessConsent()) {
+            \add_filter('RCB/Consent/DynamicPreDecision', [Consent::getInstance(), 'dynamicPredecision'], 12, 2);
         }
         $this->overrideInitCustomize();
         $this->overrideInit();
@@ -664,7 +677,7 @@ class Core extends BaseCore implements IOverrideCore
     public function getCookieConsentManagement()
     {
         if ($this->cookieConsentManagement === null) {
-            $settings = new Settings(General::getInstance(), Consent::getInstance(), CountryBypass::getInstance(), TCF::getInstance(), Multisite::getInstance(), GoogleConsentMode::getInstance());
+            $settings = new Settings(General::getInstance(), Consent::getInstance(), CookiePolicy::getInstance(), CountryBypass::getInstance(), TCF::getInstance(), Multisite::getInstance(), GoogleConsentMode::getInstance());
             $this->cookieConsentManagement = new CookieConsentManagement($settings, Revision::getInstance());
         }
         return $this->cookieConsentManagement;

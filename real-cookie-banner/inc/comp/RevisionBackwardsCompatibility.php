@@ -53,6 +53,9 @@ class RevisionBackwardsCompatibility
         $this->migration_86940n0a0();
         $this->migration_1za40xb();
         $this->migration_1xpcvre();
+        $this->migration_8694wynf7();
+        $this->migration_fb1hvk();
+        $this->migration_8695emete();
         return $this->revision;
     }
     /**
@@ -240,7 +243,7 @@ class RevisionBackwardsCompatibility
      */
     protected function migration_863h7nj72()
     {
-        if (!$this->independent && !isset($this->revision['options']['SETTING_TERRITORIAL_LEGAL_BASIS'])) {
+        if (!$this->independent && !isset($this->revision['options']['SETTING_TERRITORIAL_LEGAL_BASIS']) && !isset($this->revision['options']['territorialLegalBasis'])) {
             $this->revision['options']['SETTING_TERRITORIAL_LEGAL_BASIS'] = 'gdpr-eprivacy';
         }
     }
@@ -386,6 +389,7 @@ class RevisionBackwardsCompatibility
                     case 'SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES':
                         $newKey = 'isDataProcessingInUnsafeCountries';
                         break;
+                    // @deprecated
                     case 'SETTING_DATA_PROCESSING_IN_UNSAFE_COUNTRIES_SAFE_COUNTRIES':
                         $newKey = 'dataProcessingInUnsafeCountriesSafeCountries';
                         $val = \explode(',', $val);
@@ -507,6 +511,48 @@ class RevisionBackwardsCompatibility
     {
         if ($this->independent && !isset($this->revision['options']['failedConsentDocumentationHandling'])) {
             $this->revision['options']['failedConsentDocumentationHandling'] = AbstractConsent::FAILED_CONSENT_DOCUMENTATION_HANDLING_ESSENTIALS_ONLY;
+        }
+    }
+    /**
+     * Add the option in "Service groups" in customizer for "Hide less relevant service details".
+     *
+     * @see https://app.clickup.com/t/8694wynf7
+     */
+    public function migration_8694wynf7()
+    {
+        if ($this->independent && !isset($this->revision['banner']['customizeValuesBanner']['group']['detailsHideLessRelevant'])) {
+            $this->revision['banner']['customizeValuesBanner']['group']['detailsHideLessRelevant'] = \false;
+        }
+    }
+    /**
+     * Add the option "Banner-less consent" and "Show cookie banner on specific pages" to the settings.
+     *
+     * @see https://app.clickup.com/t/fb1hvk
+     */
+    public function migration_fb1hvk()
+    {
+        if ($this->independent && !isset($this->revision['options']['isBannerLessConsent'])) {
+            $this->revision['options']['isBannerLessConsent'] = \false;
+            $this->revision['options']['bannerLessConsentShowOnPageIds'] = [];
+        }
+    }
+    /**
+     * Add the option "Execute priority" to the settings.
+     *
+     * @see https://app.clickup.com/t/8695emete
+     */
+    public function migration_8695emete()
+    {
+        if (!$this->independent && isset($this->revision['groups'])) {
+            foreach ($this->revision['groups'] as &$group) {
+                if (isset($group['items'])) {
+                    foreach ($group['items'] as &$service) {
+                        if (!isset($service['executePriority'])) {
+                            $service['executePriority'] = 10;
+                        }
+                    }
+                }
+            }
         }
     }
 }

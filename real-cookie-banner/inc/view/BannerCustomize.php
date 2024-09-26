@@ -8,6 +8,7 @@ use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\view\customize\banner\BasicLayout;
 use DevOwl\RealCookieBanner\view\customize\banner\BodyDesign;
+use DevOwl\RealCookieBanner\view\customize\banner\CookiePolicy;
 use DevOwl\RealCookieBanner\view\customize\banner\CustomCss;
 use DevOwl\RealCookieBanner\view\customize\banner\Decision;
 use DevOwl\RealCookieBanner\view\customize\banner\Design;
@@ -49,6 +50,7 @@ class BannerCustomize extends AbstractCustomizePanel
         $comp = Core::getInstance()->getCompLanguage();
         $adminDefaultTextsBanner = Texts::getDefaultButtonTexts();
         $adminDefaultTextsBannerIndividual = IndividualTexts::getDefaultButtonTexts();
+        $cookiePolicyDefaultTexts = CookiePolicy::getDefaultTexts();
         new LanguageDependingOption($comp, Texts::SETTING_HEADLINE, $adminDefaultTextsBanner['headline']);
         new LanguageDependingOption($comp, Texts::SETTING_DESCRIPTION, $adminDefaultTextsBanner['description']);
         new LanguageDependingOption($comp, Texts::SETTING_ACCEPT_ALL, $adminDefaultTextsBanner['acceptAll']);
@@ -74,6 +76,26 @@ class BannerCustomize extends AbstractCustomizePanel
         new LanguageDependingOption($comp, Texts::SETTING_STICKY_HISTORY, $adminDefaultTextsBanner['stickyHistory']);
         new LanguageDependingOption($comp, Texts::SETTING_STICKY_REVOKE, $adminDefaultTextsBanner['stickyRevoke']);
         new LanguageDependingOption($comp, Texts::SETTING_STICKY_REVOKE_SUCCESS_MESSAGE, $adminDefaultTextsBanner['stickyRevokeSuccessMessage']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_INSTRUCTION, $cookiePolicyDefaultTexts['instruction']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_TABLE_OF_CONTENTS, $cookiePolicyDefaultTexts['headlineToc']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_CONTROLLER_OF_WEBSITE, $cookiePolicyDefaultTexts['headlineControllerOfWebsite']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_DIFF_TO_PRIVACY_POLICY, $cookiePolicyDefaultTexts['headlineDiffToPrivacyPolicy']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_COOKIE_TECHNOLOGY, $cookiePolicyDefaultTexts['headlineCookieTechnology']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_LEGAL_BASIS, $cookiePolicyDefaultTexts['headlineLegalBasis']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_RIGHTS_OF_THE_VISITOR, $cookiePolicyDefaultTexts['headlineRightsOfTheVisitor']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_MANAGE_COOKIES, $cookiePolicyDefaultTexts['headlineManageCookies']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_TYPES_OF_COOKIES, $cookiePolicyDefaultTexts['headlineTypesOfCookies']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_COOKIE_ORIGIN, $cookiePolicyDefaultTexts['headlineCookieOrigin']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_HEADLINE_LIST_OF_SERVICES, $cookiePolicyDefaultTexts['headlineListOfServices']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_DIFF_TO_PRIVACY_POLICY, $cookiePolicyDefaultTexts['diffToPrivacyPolicy']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_COOKIE_TECHNOLOGY, $cookiePolicyDefaultTexts['cookieTechnology']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_LEGAL_BASIS_GDPR, $cookiePolicyDefaultTexts['legalBasisGdpr']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_LEGAL_BASIS_DSG, $cookiePolicyDefaultTexts['legalBasisDsg']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_RIGHTS_OF_THE_VISITOR, $cookiePolicyDefaultTexts['rightsOfTheVisitor']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_MANAGE_COOKIES, $cookiePolicyDefaultTexts['manageCookies']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_TYPES_OF_COOKIES, $cookiePolicyDefaultTexts['typesOfCookies']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_COOKIE_ORIGIN, $cookiePolicyDefaultTexts['cookieOrigin']);
+        new LanguageDependingOption($comp, CookiePolicy::SETTING_ADDITIONAL_CONTENT, $cookiePolicyDefaultTexts['additionalContent']);
     }
     // Documented in AbstractCustomizePanel
     public function localizeValues($skipControlClasses = [])
@@ -151,7 +173,7 @@ class BannerCustomize extends AbstractCustomizePanel
     // Documented in AbstractCustomizePanel
     public function resolveSections()
     {
-        return [BasicLayout::SECTION => (new BasicLayout())->args(), Decision::SECTION => (new Decision())->args(), Design::SECTION => (new Design())->args(), HeaderDesign::SECTION => (new HeaderDesign())->args(), BodyDesign::SECTION => (new BodyDesign())->args(), FooterDesign::SECTION => (new FooterDesign())->args(), Texts::SECTION => (new Texts())->args(), Layout::SECTION => (new Layout())->args(), Group::SECTION => (new Group())->args(), SaveButton::SECTION => (new SaveButton())->args(), IndividualTexts::SECTION => (new IndividualTexts())->args(), Mobile::SECTION => (new Mobile())->args(), StickyLinks::SECTION => (new StickyLinks())->args(), CustomCss::SECTION => (new CustomCss())->args()];
+        return [BasicLayout::SECTION => (new BasicLayout())->args(), Decision::SECTION => (new Decision())->args(), Design::SECTION => (new Design())->args(), HeaderDesign::SECTION => (new HeaderDesign())->args(), BodyDesign::SECTION => (new BodyDesign())->args(), FooterDesign::SECTION => (new FooterDesign())->args(), Texts::SECTION => (new Texts())->args(), Layout::SECTION => (new Layout())->args(), Group::SECTION => (new Group())->args(), SaveButton::SECTION => (new SaveButton())->args(), IndividualTexts::SECTION => (new IndividualTexts())->args(), Mobile::SECTION => (new Mobile())->args(), StickyLinks::SECTION => (new StickyLinks())->args(), CookiePolicy::SECTION => (new CookiePolicy())->args(), CustomCss::SECTION => (new CustomCss())->args()];
     }
     // Documented in AbstractCustomizePanel
     protected function sectionDefaults()

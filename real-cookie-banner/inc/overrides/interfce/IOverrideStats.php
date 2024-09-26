@@ -17,7 +17,7 @@ interface IOverrideStats
      * @param string $context
      * @return array|WP_Error
      */
-    public function fetchMainStats($from, $to, $context);
+    public function fetchMainStats($from, $to, $context = null);
     /**
      * Get the "Buttons clicked" stats (e. g. use in pie chart).
      *
@@ -26,7 +26,7 @@ interface IOverrideStats
      * @param string $context
      * @return array|WP_Error
      */
-    public function fetchButtonsClickedStats($from, $to, $context);
+    public function fetchButtonsClickedStats($from, $to, $context = null);
     /**
      * Get the "Do not track" stats (e. g. use in pie chart) and other custom bypass.
      * The result `none` is similar to "banner got shown to user".
@@ -36,5 +36,5 @@ interface IOverrideStats
      * @param string $context
      * @return array|WP_Error
      */
-    public function fetchCustomBypassStats($from, $to, $context);
+    public function fetchCustomBypassStats($from, $to, $context = null);
 }

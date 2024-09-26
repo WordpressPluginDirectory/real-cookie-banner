@@ -74,7 +74,10 @@ class Utils
         if (\strpos($folder, $contentDir) !== 0) {
             $folder = $contentDir;
         }
-        if (!\wp_is_writable($folder) && !\wp_mkdir_p($folder)) {
+        if (!\wp_mkdir_p($folder)) {
+            return \false;
+        }
+        if (!\wp_is_writable($folder)) {
             return \false;
         }
         return $folder;

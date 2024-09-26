@@ -3,7 +3,6 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls;
 
 use WP_Customize_Control;
-use WP_Customize_Manager;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -20,8 +19,10 @@ class TinyMCE extends WP_Customize_Control
      * Allow media buttons in a TinyMCE editor.
      */
     public $mediaButtons = \false;
-    public $toolbar1 = 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,spellchecker,fullscreen';
-    public $toolbar2 = 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help';
+    public $toolbar1 = 'bold,italic,bullist,numlist,link';
+    // 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,spellchecker,fullscreen'; -> too much for the customizer
+    public $toolbar2 = '';
+    // 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help';
     /**
      * Enqueue our scripts and styles
      */

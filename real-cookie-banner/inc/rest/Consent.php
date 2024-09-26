@@ -47,7 +47,7 @@ class Consent
         \register_rest_route($namespace, '/consent/all', ['methods' => 'DELETE', 'callback' => [$this, 'routeDeleteAll'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/consent/clear', ['methods' => 'DELETE', 'callback' => [$this, 'routeDeleteClear'], 'permission_callback' => '__return_true', 'args' => ['cookies' => ['type' => 'string', 'required' => \true]]]);
         \register_rest_route($namespace, '/consent', ['methods' => 'GET', 'callback' => [$this, 'routeGet'], 'permission_callback' => '__return_true']);
-        \register_rest_route($namespace, '/consent/dynamic-predecision', ['methods' => 'POST', 'callback' => [$this, 'routePostDynamicPredecision'], 'args' => ['viewPortWidth' => ['type' => 'number', 'default' => 0], 'viewPortHeight' => ['type' => 'number', 'default' => 0], 'referer' => ['type' => 'string']], 'permission_callback' => '__return_true']);
+        \register_rest_route($namespace, '/consent/dynamic-predecision', ['methods' => 'POST', 'callback' => [$this, 'routePostDynamicPredecision'], 'args' => ['viewPortWidth' => ['type' => 'number', 'default' => 0], 'viewPortHeight' => ['type' => 'number', 'default' => 0], 'referer' => ['type' => 'string'], 'tcfStringImplicitEssentials' => ['type' => 'string']], 'permission_callback' => '__return_true']);
         \register_rest_route($namespace, '/consent', ['methods' => 'POST', 'callback' => [$this, 'routePost'], 'permission_callback' => '__return_true', 'args' => [
             'dummy' => ['type' => 'boolean', 'default' => \false],
             'markAsDoNotTrack' => ['type' => 'boolean', 'default' => \false],
@@ -197,6 +197,7 @@ class Consent
      * @api {post} /real-cookie-banner/v1/consent/dynamic-predecision Calculate a dynamic predecision for the current page request
      * @apiParam {number} [viewPortWidth=0]
      * @apiParam {number} [viewPortHeight=0]
+     * @apiParam {string} [tcfStringImplicitEssentials]
      * @apiName CalculateDynamicPredecision
      * @apiGroup Consent
      * @apiVersion 1.0.0

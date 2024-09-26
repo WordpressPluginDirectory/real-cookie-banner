@@ -4,10 +4,10 @@ namespace DevOwl\RealCookieBanner;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CacheInvalidate\CacheInvalidator;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\Assets as CustomizeAssets;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset\DeliverAnonymousAsset;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Freemium\Assets as FreemiumAssets;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Iso3166OneAlpha2;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
@@ -58,7 +58,7 @@ class Assets
         $libraryFilePath = RCB_PATH . '/' . $this->getPublicFolder(\true) . '/%s';
         $handleName = RCB_SLUG . '-%s';
         $anonymousAssetsBuilder = \DevOwl\RealCookieBanner\Core::getInstance()->getAnonymousAssetBuilder();
-        $isTcf = TCF::getInstance()->isActive();
+        $isTcf = TCF::getInstance()->isActive() && TcfVendorConfiguration::getInstance()->getAllCount() > 0;
         $bannerName = $isTcf ? 'banner_tcf' : 'banner';
         $blockerName = $isTcf ? 'blocker_tcf' : 'blocker';
         $anonymousAssetsBuilder->build(\sprintf($handleName, 'vendor-' . RCB_SLUG . '-' . $bannerName), \sprintf($filePath, 'vendor-' . $bannerName), 'vendorBanner');
@@ -171,7 +171,7 @@ class Assets
         $enqueued = \true;
         $excludeAssets = \DevOwl\RealCookieBanner\Core::getInstance()->getExcludeAssets();
         $useNonMinifiedSources = $this->useNonMinifiedSources();
-        $isTcf = TCF::getInstance()->isActive();
+        $isTcf = TCF::getInstance()->isActive() && TcfVendorConfiguration::getInstance()->getAllCount() > 0;
         $anonymousAssetsBuilder = \DevOwl\RealCookieBanner\Core::getInstance()->getAnonymousAssetBuilder();
         $isAntiAdBlock = $this->isAntiAdBlockActive();
         // Enqueue IAB TCF stub
@@ -234,7 +234,7 @@ class Assets
     {
         $useNonMinifiedSources = $this->useNonMinifiedSources();
         $anonymousAssetsBuilder = \DevOwl\RealCookieBanner\Core::getInstance()->getAnonymousAssetBuilder();
-        $isTcf = TCF::getInstance()->isActive();
+        $isTcf = TCF::getInstance()->isActive() && TcfVendorConfiguration::getInstance()->getAllCount() > 0;
         $isAntiAdBlock = $this->isAntiAdBlockActive();
         $handleName = $isTcf ? 'blocker_tcf' : 'blocker';
         $handle = $this->enqueueScript($handleName, [[$isTcf, 'blocker_tcf.pro.js'], [$this->isPro(), 'blocker.pro.js'], 'blocker.lite.js'], $scriptDeps);
@@ -278,6 +278,18 @@ class Assets
         $frontendJson = $frontend->toJson();
         $lazyLoadedData = $frontend->prepareLazyData($frontendJson, \true);
         $anonymousAssetBuilder = $core->getAnonymousAssetBuilder();
+        $pageIds = [];
+        if (\is_singular()) {
+            $pageId = \get_the_ID();
+            $pageIds[] = $pageId;
+            $postType = \get_post_type($pageId);
+            if (\is_string($postType)) {
+                $pageIdOriginal = $core->getCompLanguage()->getOriginalPostId($pageId, $postType);
+                if ($pageIdOriginal !== $pageId) {
+                    $pageIds[] = $pageIdOriginal;
+                }
+            }
+        }
         if ($context === Constants::ASSETS_TYPE_ADMIN) {
             $colorScheme = \DevOwl\RealCookieBanner\Utils::get_admin_colors();
             if (\count($colorScheme) < 4) {
@@ -285,13 +297,15 @@ class Assets
                 // our graphs and charts we need at least 4
                 $colorScheme[] = $colorScheme[0];
             }
-            $result = ['installationDateIso' => \mysql2date('c', \get_option(\DevOwl\RealCookieBanner\Activator::OPTION_NAME_INSTALLATION_DATE, \time())), 'showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => $anonymousAssetBuilder->getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => UtilsUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'predefinedDataProcessingInSafeCountriesLists' => Consent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
+            $result = ['installationDateIso' => \mysql2date('c', \get_option(\DevOwl\RealCookieBanner\Activator::OPTION_NAME_INSTALLATION_DATE, \time())), 'showLicenseFormImmediate' => $showLicenseFormImmediate, 'showNoticeAnonymousScriptNotWritable' => $anonymousAssetBuilder->getContentDir() === \false, 'assetsUrl' => $core->getAdInitiator()->getAssetsUrl(), 'customizeValuesBanner' => $bannerCustomize->localizeValues()['customizeValuesBanner'], 'customizeBannerUrl' => $bannerCustomize->getUrl(), 'adminUrl' => \admin_url(), 'colorScheme' => $colorScheme, 'cachePlugins' => CacheInvalidator::getInstance()->getLabels(), 'modalHints' => $notices->getClickedModalHints(), 'isDemoEnv' => \DevOwl\RealCookieBanner\DemoEnvironment::getInstance()->isDemoEnv(), 'isConfigProNoticeVisible' => $notices->isConfigProNoticeVisible(), 'activePlugins' => UtilsUtils::getActivePluginsMap(), 'ageNoticeCountryAgeMap' => Consent::AGE_NOTICE_COUNTRY_AGE_MAP, 'predefinedCountryBypassLists' => CountryBypass::PREDEFINED_COUNTRY_LISTS, 'defaultCookieGroupTexts' => CookieGroup::getInstance()->getDefaultDescriptions(\true), 'useEncodedStringForScriptInputs' => \version_compare($wp_version, '5.4.0', '>='), 'resetUrl' => \add_query_arg(['_wpnonce' => \wp_create_nonce('rcb-reset-all'), 'rcb-reset-all' => 1], $core->getConfigPage()->getUrl()), 'capabilities' => ['activate_plugins' => \current_user_can('activate_plugins')]];
         } elseif (\is_customize_preview()) {
             $result = \array_merge($bannerCustomize->localizeIds(), $bannerCustomize->localizeValues(), $bannerCustomize->localizeDefaultValues(), ['poweredByTexts' => $core->getCompLanguage()->translateArray(Texts::getPoweredByLinkTexts()), 'isPoweredByLinkDisabledByException' => $bannerCustomize->isPoweredByLinkDisabledByException()]);
             $frontendJson['lazyLoadedDataForSecondView'] = $lazyLoadedData;
         } elseif ($banner->shouldLoadAssets($context)) {
             $result = $bannerCustomize->localizeValues();
             $bannerCustomize->expandLocalizeValues($result);
+            // We do not need this in frontend as the cookie policy is server-side rendered
+            unset($result['customizeValuesBanner']['cookiePolicy']);
         }
         if (\in_array($context, [Constants::ASSETS_TYPE_ADMIN, Constants::ASSETS_TYPE_CUSTOMIZE], \true)) {
             /**
@@ -306,19 +320,36 @@ class Assets
              */
             $result['hints'] = \apply_filters('RCB/Hints', ['deleteCookieGroup' => [], 'deleteCookie' => [], 'export' => [], 'dashboardTile' => [], 'proDialog' => null]);
         }
-        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['frontend' => $frontendJson, 'anonymousContentUrl' => $anonymousAssetBuilder->generateFolderSrc(), 'anonymousHash' => $anonymousAssetBuilder->getContentDir() && !$this->useNonMinifiedSources() && $this->isAntiAdBlockActive() ? $anonymousAssetBuilder->getHash() : null, 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'isPreventPreDecision' => $banner->isPreventPreDecision(), 'setVisualParentIfClassOfParent' => Blocker::SET_VISUAL_PARENT_IF_CLASS_OF_PARENT, 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
-            'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
-            'standardContractualClauses' => \_x('Standard contractual clauses', 'legal-text', RCB_TD),
-            'adequacyDecision' => \_x('Adequacy decision', 'legal-text', RCB_TD),
-            'bindingCorporateRules' => \_x('Binding corporate rules', 'legal-text', RCB_TD),
+        $isPreventPreDecision = $frontend->isPreventPreDecision($pageIds);
+        if (!$isPreventPreDecision) {
+            /**
+             * Determine, if the predecision handler should be executed in the frontend.
+             * If you return `true`, the banner never gets shown.
+             *
+             * @hook RCB/IsPreventPreDecision
+             * @param {boolean} $isPreventPreDecision
+             * @return {boolean}
+             * @since 2.12.1
+             */
+            $isPreventPreDecision = \apply_filters('RCB/IsPreventPreDecision', $isPreventPreDecision);
+        }
+        return \apply_filters('RCB/Localize', \array_merge($result, $this->localizeFreemiumScript(), ['frontend' => $frontendJson, 'anonymousContentUrl' => $anonymousAssetBuilder->generateFolderSrc(), 'anonymousHash' => $anonymousAssetBuilder->getContentDir() && !$this->useNonMinifiedSources() && $this->isAntiAdBlockActive() ? $anonymousAssetBuilder->getHash() : null, 'hasDynamicPreDecisions' => \has_filter('RCB/Consent/DynamicPreDecision'), 'isLicensed' => $isLicensed, 'isDevLicense' => $isDevLicense, 'multilingualSkipHTMLForTag' => $core->getCompLanguage()->getSkipHTMLForTag(), 'isCurrentlyInTranslationEditorPreview' => $core->getCompLanguage()->isCurrentlyInEditorPreview(), 'defaultLanguage' => $core->getCompLanguage()->getDefaultLanguage(), 'currentLanguage' => $core->getCompLanguage()->getCurrentLanguage(), 'activeLanguages' => $core->getCompLanguage()->getActiveLanguages(), 'context' => Revision::getInstance()->getContextVariablesString(), 'iso3166OneAlpha2' => Iso3166OneAlpha2::getSortedCodes(), 'visualParentSelectors' => Blocker::VISUAL_PARENT_SELECTORS, 'isPreventPreDecision' => $isPreventPreDecision, 'isInvalidateImplicitUserConsent' => $frontend->isInvalidateImplicitUserConsent($pageIds), 'dependantVisibilityContainers' => Blocker::DEPENDANT_VISIBILITY_CONTAINERS, 'disableDeduplicateExceptions' => Blocker::DISABLE_DEDUPLICATE_EXCEPTIONS, 'bannerDesignVersion' => Banner::DESIGN_VERSION, 'bannerI18n' => \array_merge($core->getCompLanguage()->translateArray([
+            'showMore' => \__('Show more', RCB_TD),
+            'hideMore' => \__('Hide', RCB_TD),
+            // translators:
+            'showLessRelevantDetails' => \_x('Show more details (%s)', 'legal-text', RCB_TD),
+            // translators:
+            'hideLessRelevantDetails' => \_x('Hide more details (%s)', 'legal-text', RCB_TD),
             'other' => \_x('Other', 'legal-text', RCB_TD),
             'legalBasis' => \_x('Use on legal basis of', 'legal-text', RCB_TD),
-            'territorialLegalBasisArticles' => [General::TERRITORIAL_LEGAL_BASIS_GDPR => ['dataProcessingInUnsafeCountries' => \_x('Art. 49 (1) lit. a GDPR', 'legal-text', RCB_TD)], General::TERRITORIAL_LEGAL_BASIS_DSG_SWITZERLAND => ['dataProcessingInUnsafeCountries' => \_x('Art. 17 (1) lit. a DSG (Switzerland)', 'legal-text', RCB_TD)]],
+            // See als `useTerritorialLegalBasisArticles.tsx`
+            'territorialLegalBasisArticles' => [General::TERRITORIAL_LEGAL_BASIS_GDPR => ['dataProcessingInUnsafeCountries' => \_x('Art. 49 (1) (a) GDPR', 'legal-text', RCB_TD)], General::TERRITORIAL_LEGAL_BASIS_DSG_SWITZERLAND => ['dataProcessingInUnsafeCountries' => \_x('Art. 17 (1) (a) DSG (Switzerland)', 'legal-text', RCB_TD)]],
             'legitimateInterest' => \_x('Legitimate interest', 'legal-text', RCB_TD),
             'legalRequirement' => \_x('Compliance with a legal obligation', 'legal-text', RCB_TD),
             'consent' => \_x('Consent', 'legal-text', RCB_TD),
             'crawlerLinkAlert' => \_x('We have recognized that you are a crawler/bot. Only natural persons must consent to cookies and processing of personal data. Therefore, the link has no function for you.', 'legal-text', RCB_TD),
-            'technicalCookieDefinition' => \_x('Technical cookie definition', 'legal-text', RCB_TD),
+            'technicalCookieDefinitions' => \_x('Technical cookie definitions', 'legal-text', RCB_TD),
+            'technicalCookieName' => \_x('Technical cookie name', 'legal-text', RCB_TD),
             'usesCookies' => \_x('Uses cookies', 'legal-text', RCB_TD),
             'cookieRefresh' => \_x('Cookie refresh', 'legal-text', RCB_TD),
             'usesNonCookieAccess' => \_x('Uses cookie-like information (LocalStorage, SessionStorage, IndexDB, etc.)', 'legal-text', RCB_TD),
@@ -333,29 +364,18 @@ class Assets
             'historyLabel' => \_x('Show consent from', 'legal-text', RCB_TD),
             'historyItemLoadError' => \_x('Reading the consent has failed. Please try again later!', 'legal-text', RCB_TD),
             'historySelectNone' => \_x('Not yet consented to', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER => \_x('Provider', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER_CONTACT_PHONE => \_x('Phone', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER_CONTACT_EMAIL => \_x('Email', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER_CONTACT_LINK => \_x('Contact form', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL => \_x('Privacy Policy', 'legal-text', RCB_TD),
-            Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL => \_x('Legal notice', 'legal-text', RCB_TD),
+            'provider' => \_x('Provider', 'legal-text', RCB_TD),
+            'providerContactPhone' => \_x('Phone', 'legal-text', RCB_TD),
+            'providerContactEmail' => \_x('Email', 'legal-text', RCB_TD),
+            'providerContactLink' => \_x('Contact form', 'legal-text', RCB_TD),
+            'providerPrivacyPolicyUrl' => \_x('Privacy Policy', 'legal-text', RCB_TD),
+            'providerLegalNoticeUrl' => \_x('Legal notice', 'legal-text', RCB_TD),
             'nonStandard' => \_x('Non-standardized data processing', 'legal-text', RCB_TD),
             'nonStandardDesc' => \_x('Some services set cookies and/or process personal data without complying with consent communication standards. These services are divided into several groups. So-called "essential services" are used based on legitimate interest and cannot be opted out (an objection may have to be made by email or letter in accordance with the privacy policy), while all other services are used only after consent has been given.', 'legal-text', RCB_TD),
             // translators:
-            'dataProcessingInUnsafeCountries' => \_x('Data processing in unsecure third countries', 'legal-text', RCB_TD),
-            // @deprecated backwards-compatibility for "List of consents"
-            'ePrivacyUSA' => \_x('US data processing', 'legal-text', RCB_TD),
-            'durationUnit' => [
-                // @deprecated
-                's' => \__('second(s)', RCB_TD),
-                'm' => \__('minute(s)', RCB_TD),
-                'h' => \__('hour(s)', RCB_TD),
-                'd' => \__('day(s)', RCB_TD),
-                'mo' => \__('month(s)', RCB_TD),
-                'y' => \__('year(s)', RCB_TD),
-                'n1' => ['s' => \__('second', RCB_TD), 'm' => \__('minute', RCB_TD), 'h' => \__('hour', RCB_TD), 'd' => \__('day', RCB_TD), 'mo' => \__('month', RCB_TD), 'y' => \__('year', RCB_TD)],
-                'nx' => ['s' => \__('seconds', RCB_TD), 'm' => \__('minutes', RCB_TD), 'h' => \__('hours', RCB_TD), 'd' => \__('days', RCB_TD), 'mo' => \__('months', RCB_TD), 'y' => \__('years', RCB_TD)],
-            ],
+            'dataProcessingInThirdCountries' => \_x('Data processing in third countries', 'legal-text', RCB_TD),
+            'safetyMechanisms' => ['label' => \_x('Safety mechanisms for data transmission', 'legal-text', RCB_TD), 'standardContractualClauses' => \_x('Standard contractual clauses', 'legal-text', RCB_TD), 'adequacyDecision' => \_x('Adequacy decision', 'legal-text', RCB_TD), 'eu' => \_x('EU', 'legal-text', RCB_TD), 'switzerland' => \_x('Switzerland', 'legal-text', RCB_TD), 'bindingCorporateRules' => \_x('Binding corporate rules', 'legal-text', RCB_TD), 'contractualGuaranteeSccSubprocessors' => \_x('Contractual guarantee for standard contractual clauses with sub-processors', 'legal-text', RCB_TD)],
+            'durationUnit' => ['n1' => ['s' => \__('second', RCB_TD), 'm' => \__('minute', RCB_TD), 'h' => \__('hour', RCB_TD), 'd' => \__('day', RCB_TD), 'mo' => \__('month', RCB_TD), 'y' => \__('year', RCB_TD)], 'nx' => ['s' => \__('seconds', RCB_TD), 'm' => \__('minutes', RCB_TD), 'h' => \__('hours', RCB_TD), 'd' => \__('days', RCB_TD), 'mo' => \__('months', RCB_TD), 'y' => \__('years', RCB_TD)]],
             'close' => \__('Close', RCB_TD),
             'closeWithoutSaving' => \__('Close without saving', RCB_TD),
             'yes' => \__('Yes', RCB_TD),
@@ -368,6 +388,10 @@ class Assets
             'devLicenseLink' => \__('https://devowl.io/knowledge-base/license-installation-type/', RCB_TD),
             // translators:
             'andSeparator' => \__(' and ', RCB_TD),
+            // @deprecated Replaced by `safetyMechanisms`
+            'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
+            // @deprecated Replaced by `dataProcessingInThirdCountries`
+            'dataProcessingInUnsafeCountries' => \_x('Data processing in unsafe third countries', 'legal-text', RCB_TD),
         ], [], null, ['legal-text'])), 'pageRequestUuid4' => $core->getPageRequestUuid4(), 'pageByIdUrl' => \add_query_arg('page_id', '', \home_url()), 'pluginUrl' => $core->getPluginData('PluginURI')]), $context);
     }
     /**

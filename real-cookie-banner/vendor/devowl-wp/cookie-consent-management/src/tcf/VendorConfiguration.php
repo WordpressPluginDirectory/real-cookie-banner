@@ -2,6 +2,8 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\tcf;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 /**
  * A TCF vendor configuration.
  * @internal
@@ -239,7 +241,17 @@ class VendorConfiguration
      */
     public function toJson()
     {
-        return ['id' => $this->id, 'vendorId' => $this->vendorId, 'restrictivePurposes' => $this->restrictivePurposes, 'dataProcessingInCountries' => $this->dataProcessingInCountries, 'dataProcessingInCountriesSpecialTreatments' => $this->dataProcessingInCountriesSpecialTreatments];
+        $treatments = $this->dataProcessingInCountriesSpecialTreatments;
+        // Automatically add the proper transfer mechanisms to our mapping of data processing special treatments
+        if (isset($this->vendor['additionalInformation']) && isset($this->vendor['additionalInformation']['transferMechanisms'])) {
+            if (\in_array('BCRs', $this->vendor['additionalInformation']['transferMechanisms'], \true)) {
+                $treatments[] = ServiceTemplate::SPECIAL_TREATMENT_BINDING_CORPORATE_RULES;
+            }
+            if (\in_array('SCCs', $this->vendor['additionalInformation']['transferMechanisms'], \true)) {
+                $treatments[] = ServiceTemplate::SPECIAL_TREATMENT_STANDARD_CONTRACTUAL_CLAUSES;
+            }
+        }
+        return ['id' => $this->id, 'vendorId' => $this->vendorId, 'restrictivePurposes' => $this->restrictivePurposes, 'dataProcessingInCountries' => $this->dataProcessingInCountries, 'dataProcessingInCountriesSpecialTreatments' => $treatments];
     }
     /**
      * Generate a `VendorConfiguration` object from an array.

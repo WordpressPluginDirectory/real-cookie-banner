@@ -5,7 +5,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\Customize;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\CustomHTML;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Customize\controls\Headline;
 use Exception;
-use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
+use stdClass;
 use WP_Customize_Control;
 use WP_Customize_Manager;
 use WP_Customize_Panel;
@@ -116,12 +116,6 @@ abstract class AbstractCustomizePanel
     {
         $this->manager = $wp_customize;
         $wp_customize->add_panel(new WP_Customize_Panel($wp_customize, $this->getPanel(), ['title' => \__('Cookie Banner', RCB_TD), 'description' => \__('Design your cookie banner.', RCB_TD)]));
-        // Workaround to make `return` URL work with base64-encoded URLs (see https://app.clickup.com/t/86954236z)
-        $returnEncoded = $_GET['returnEncoded'] ?? '';
-        $returnEncoded = Utils::parseEncodedRawRefererEncoded($returnEncoded);
-        if ($returnEncoded !== \false) {
-            $wp_customize->set_return_url($returnEncoded);
-        }
         $this->registerSections($this->getSections());
     }
     /**
@@ -163,7 +157,7 @@ abstract class AbstractCustomizePanel
         foreach ($sections as $sectionId => $section) {
             // Register section
             $section = \array_merge($sectionDefaults, $section, ['panel' => $this->getPanel()]);
-            $customize->add_section($sectionId, $section);
+            $customize->add_section(new CustomizeSection($customize, $sectionId, $section));
             // Create pseudo element on top of each section. Why? E.g. OceanWP hides sections completely
             // dynamically depending on the visibility of the first item of the section caused by conditional controls
             $pseudoEmptyElement = $sectionId . '-pseudo';
@@ -181,6 +175,9 @@ abstract class AbstractCustomizePanel
                 // Afterwards, register the control
                 $control = \array_merge($controlDefaults, $control, ['section' => $sectionId]);
                 $class = isset($control['class']) ? $control['class'] : WP_Customize_Control::class;
+                if (isset($control['enabled']) && !$control['enabled']) {
+                    continue;
+                }
                 $customize->add_control(new $class($customize, $controlId, $control));
             }
         }
@@ -346,7 +343,10 @@ abstract class AbstractCustomizePanel
                     if (!$resolve && !isset($setting['default'])) {
                         return null;
                     }
+                    $doSanitize = \true;
+                    $controlType = isset($control['type']) ? $control['type'] : \false;
                     $default = isset($setting['default']) ? $setting['default'] : \false;
+                    $transport = isset($setting['transport']) ? $setting['transport'] : 'refresh';
                     $sanitize_callback = isset($setting['sanitize_callback']) ? $setting['sanitize_callback'] : null;
                     // Obtain value
                     if ($resolve) {
@@ -356,6 +356,28 @@ abstract class AbstractCustomizePanel
                                 break;
                             case 'option':
                                 $value = \get_option($id, $default);
+                                // When using `transport = refresh` in customizer with checkboxes and setting the checkbox value to
+                                // `false` by unchecking the checkbox, it does not get reflected in the customizer.
+                                // This is caused by the implementation of how preview values are injected to the customizer. First, it
+                                // uses the `pre_option` filter of `get_option()`. But the `pre_option` is only respected when it is not `false`:
+                                // https://github.com/WordPress/wordpress-develop/blob/8fd6b4825f8b2a825ca3f19998043f7cedcee860/src/wp-includes/option.php#L134-L152
+                                // In case of a checkbox with unchecked value, it is defintely `false` and the `_preview_filter()` function does not
+                                // work as expected:
+                                // https://github.com/WordPress/WordPress/blob/b7b504dc0d42e2bdfdfc4294d7b5c3bfa09c7e78/wp-includes/class-wp-customize-setting.php#L436-L466
+                                // Solution: Instead of `get_option` we use `_preview_filter()` directly for checkboxes in customizer.
+                                if (\is_customize_preview() && $this->manager instanceof WP_Customize_Manager && $transport === 'refresh' && $controlType === 'checkbox') {
+                                    $settingInstance = $this->getManager()->get_setting($id);
+                                    if ($settingInstance->is_current_blog_previewed()) {
+                                        $undefined = new stdClass();
+                                        // Symbol hack.
+                                        $post_value = $settingInstance->post_value($undefined);
+                                        if ($undefined !== $post_value) {
+                                            $value = $post_value;
+                                            $doSanitize = \false;
+                                            // with post_value() it is already sanitized
+                                        }
+                                    }
+                                }
                                 break;
                             default:
                                 throw new Exception(\sprintf('The setting type %s is not implemented.', $type));
@@ -364,7 +386,9 @@ abstract class AbstractCustomizePanel
                         $value = $default;
                     }
                     // Sanitize value
-                    $value = \is_null($sanitize_callback) ? $value : \call_user_func_array($sanitize_callback, [$value]);
+                    if ($doSanitize) {
+                        $value = \is_null($sanitize_callback) ? $value : \call_user_func_array($sanitize_callback, [$value]);
+                    }
                     /**
                      * Allows to modify a customize value.
                      *

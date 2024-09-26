@@ -9,9 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\AbstractOutputBufferPlugin;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
-use DevOwl\RealCookieBanner\MyConsent;
-use DevOwl\RealCookieBanner\settings\BannerLink;
-use DevOwl\RealCookieBanner\settings\General as SettingsGeneral;
+use DevOwl\RealCookieBanner\settings\Consent;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\Utils as RealCookieBannerUtils;
 use DevOwl\RealCookieBanner\view\customize\banner\BasicLayout;
@@ -40,7 +38,7 @@ class Banner
      *
      * For the chronically changes have a look at the `@devowl-wp/react-cookie-banner` package.
      */
-    const DESIGN_VERSION = 9;
+    const DESIGN_VERSION = 10;
     const ACTION_CLEAR_CURRENT_COOKIE = 'rcb-clear-current-cookie';
     /**
      * Example:
@@ -77,7 +75,7 @@ class Banner
                 \wp_safe_redirect(\esc_url_raw(\add_query_arg(self::ACTION_CLEAR_CURRENT_COOKIE, \false)));
                 exit;
             }
-            $admin_bar->add_menu(['parent' => Core::getInstance()->getConfigPage()->ensureAdminBarTopLevelNode(), 'id' => self::ACTION_CLEAR_CURRENT_COOKIE, 'title' => \__('Show cookie banner again', RCB_TD), 'href' => \esc_url_raw(\add_query_arg(self::ACTION_CLEAR_CURRENT_COOKIE, \true))]);
+            $admin_bar->add_menu(['parent' => Core::getInstance()->getConfigPage()->ensureAdminBarTopLevelNode(), 'id' => self::ACTION_CLEAR_CURRENT_COOKIE, 'title' => Consent::getInstance()->isBannerLessConsent() ? \__('Reset cookie banner consent to default', RCB_TD) : \__('Show cookie banner again', RCB_TD), 'href' => \esc_url_raw(\add_query_arg(self::ACTION_CLEAR_CURRENT_COOKIE, \true))]);
         }
     }
     /**
@@ -102,35 +100,6 @@ class Banner
             return \false;
         }
         return RealCookieBannerUtils::isFrontend();
-    }
-    /**
-     * Determine if the current page should not handle a predecision.
-     * See also `useBannerPreDecisionGateway.tsx`.
-     */
-    public function isPreventPreDecision()
-    {
-        // Is the banner active on this site?
-        if (\is_page()) {
-            $hideIds = SettingsGeneral::getInstance()->getAdditionalPageHideIds();
-            $pageId = Core::getInstance()->getCompLanguage()->getOriginalPostId(\get_the_ID(), 'page');
-            if (\in_array($pageId, $hideIds, \true)) {
-                return \true;
-            }
-        }
-        // Is the banner hidden due a legal setting?
-        if ($this->isHiddenDueLegal()) {
-            return \true;
-        }
-        /**
-         * Determine, if the predecision handler should be executed in the frontend.
-         * If you return `true`, the banner never gets shown.
-         *
-         * @hook RCB/IsPreventPreDecision
-         * @param {boolean} $isPreventPreDecision
-         * @return {boolean}
-         * @since 2.12.1
-         */
-        return \apply_filters('RCB/IsPreventPreDecision', \false);
     }
     /**
      * The `codeOnPageLoad` can be directly rendered to the Output Buffer cause
@@ -211,28 +180,6 @@ class Banner
         $currentPoweredByText = \get_option(Texts::SETTING_POWERED_BY_TEXT, 0);
         $footerText = $compLanguage->translateArray([$poweredByTexts[$currentPoweredByText]])[0];
         return \sprintf('<a href="%s" target="_blank" id="%s-powered-by" %s>%s</a>', \__('https://devowl.io/wordpress-real-cookie-banner/', RCB_TD), Core::getInstance()->getPageRequestUuid4(), $compLanguage->getSkipHTMLForTag(), $footerText);
-    }
-    /**
-     * Checks if the overlay should be hidden due to legal setting. E. g. hide
-     * cookie banner on legal notice page.
-     */
-    public function isHiddenDueLegal()
-    {
-        if (\get_post_type() === 'page') {
-            $pageId = \get_the_ID();
-            $pageIdOriginal = Core::getInstance()->getCompLanguage()->getOriginalPostId($pageId, 'page');
-            if ($pageId === 0) {
-                return \false;
-            }
-            foreach (BannerLink::getInstance()->getOrdered() as $bannerLink) {
-                $isExternalUrl = $bannerLink->metas[BannerLink::META_NAME_IS_EXTERNAL_URL] ?? \false;
-                $linkPageId = $bannerLink->metas[BannerLink::META_NAME_PAGE_ID] ?? 0;
-                $hideCookieBanner = $bannerLink->metas[BannerLink::META_NAME_HIDE_COOKIE_BANNER] ?? \true;
-                if ($hideCookieBanner && !$isExternalUrl && \in_array($linkPageId, [$pageId, $pageIdOriginal], \true)) {
-                    return \true;
-                }
-            }
-        }
     }
     /**
      * Getter.

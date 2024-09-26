@@ -51,7 +51,7 @@ class Revision extends AbstractRevisionPersistance
             $wpdb->prepare("INSERT IGNORE INTO {$table_name} (json_revision, `hash`, created) VALUES (%s, %s, %s)", \json_encode($result['revision']), $result['hash'], \current_time('mysql'))
         );
         if ($forceNewConsent) {
-            \update_option($this->getCurrentHashOptionName(), $result['hash'], \true);
+            \update_option($this->getCurrentHashOptionName(), \sprintf('%s:%s', $result['hash'], \time()), \true);
             Core::getInstance()->getNotices()->getStates()->set(Notices::NOTICE_REVISON_REQUEST_NEW_CONSENT_PREFIX . $this->getContextVariablesString(), '');
             /**
              * A new consent is requested on the frontend. That means, the new revision
@@ -192,7 +192,7 @@ class Revision extends AbstractRevisionPersistance
          * @return {array}
          * @since 2.0.0
          */
-        return \apply_filters('RCB/Revision/Current', \array_merge($create, ['created_tag_managers' => $createdTagManagers, 'public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'check_saving_consent_via_rest_api_endpoint_working_html' => $notices->checkSavingConsentViaRestApiEndpointWorkingHtml(), 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'template_successors_notice_html' => \count($successors) > 0 ? $notices->servicesWithSuccessorTemplatesHtml($successors) : null, 'google_consent_mode_notices_html' => \array_values($notices->servicesWithGoogleConsentModeAdjustmentsHtml($gcmAdjustments)), 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
+        return \apply_filters('RCB/Revision/Current', \array_merge($create, ['created_tag_managers' => $createdTagManagers, 'public_to_users' => $publicToUsers, 'template_needs_update' => $needsUpdate, 'check_saving_consent_via_rest_api_endpoint_working_html' => $notices->checkSavingConsentViaRestApiEndpointWorkingHtml(), 'template_update_notice_html' => \count($needsUpdate) > 0 ? $notices->servicesWithUpdatedTemplatesHtml($needsUpdate) : null, 'template_successors_notice_html' => \count($successors) > 0 ? $notices->servicesWithSuccessorTemplatesHtml($successors) : null, 'google_consent_mode_notices_html' => \array_values($notices->servicesWithGoogleConsentModeAdjustmentsHtml($gcmAdjustments)), 'services_data_processing_in_unsafe_countries_notice_html' => $notices->servicesDataProcessingInUnsafeCountriesNoticeHtml(), 'services_with_empty_privacy_policy_notice_html' => $notices->serviceWithEmptyPrivacyPolicyNoticeHtml(), 'contexts' => UserConsent::getInstance()->getPersistedContexts(), 'calculated' => $calculated, 'public_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getPublicCount(), 'all_cookie_count' => \DevOwl\RealCookieBanner\settings\Cookie::getInstance()->getAllCount(), 'all_blocker_count' => \DevOwl\RealCookieBanner\settings\Blocker::getInstance()->getAllCount(), 'cookie_counts' => \wp_count_posts(\DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME), 'consents_deleted_at' => $consentsDeletedAt, 'bannerless_consent_checks' => $notices->servicesWithBannerlessConsentAdjustments()], $this->isPro() ? ['all_tcf_vendor_configuration_count' => TcfVendorConfiguration::getInstance()->getAllCount(), 'tcf_vendor_configuration_counts' => \wp_count_posts(TcfVendorConfiguration::CPT_NAME)] : []));
     }
     // Documented in AbstractRevisionPersistance
     public function getContextVariablesImplicit()
@@ -250,10 +250,19 @@ class Revision extends AbstractRevisionPersistance
     // Documented in AbstractRevisionPersistance
     public function getCurrentHash()
     {
-        return \get_option($this->getCurrentHashOptionName(), '');
+        return \explode(':', \get_option($this->getCurrentHashOptionName(), ''))[0];
+    }
+    // Documented in AbstractRevisionPersistance
+    public function getCurrentHashTime()
+    {
+        $split = \explode(':', \get_option($this->getCurrentHashOptionName(), ''));
+        // Can be empty (e.g. when no revision created yet or backwards-compatibility)
+        return \count($split) > 1 ? \intval($split[1]) : 0;
     }
     /**
      * Get the option for the current hash option name in `wp_options`.
+     *
+     * The option holds two values in format `{{hash}}:{{timeStamp}}`.
      */
     public function getCurrentHashOptionName()
     {

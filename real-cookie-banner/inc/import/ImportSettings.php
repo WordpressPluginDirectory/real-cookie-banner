@@ -87,12 +87,20 @@ trait ImportSettings
         $onlyPro = \false;
         switch ($optionName) {
             case General::SETTING_OPERATOR_CONTACT_FORM_ID:
+            case General::SETTING_COOKIE_POLICY_ID:
             case General::SETTING_HIDE_PAGE_IDS:
+            case Consent::SETTING_BANNER_LESS_SHOW_ON_PAGE_IDS:
                 if ($value > 0 || !empty($value)) {
                     $label = \__('Hide on additional pages', RCB_TD);
                     switch ($optionName) {
                         case General::SETTING_OPERATOR_CONTACT_FORM_ID:
                             $label = \__('Contact form', RCB_TD);
+                            break;
+                        case General::SETTING_COOKIE_POLICY_ID:
+                            $label = \__('Cookie policy', RCB_TD);
+                            break;
+                        case Consent::SETTING_BANNER_LESS_SHOW_ON_PAGE_IDS:
+                            $label = \__('Show cookie banner on specific pages', RCB_TD);
                             break;
                         default:
                             break;

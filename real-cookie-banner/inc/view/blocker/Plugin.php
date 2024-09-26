@@ -89,6 +89,8 @@ class Plugin extends AbstractPlugin
             'iframe[data-reporting-enabled="1":keepAttributes(value=data-reporting-enabled),jQueryHijackEach()]',
             // [Plugin Comp] Authentic theme using jarallax
             'div[data-video][class*="parallax-video":keepAttributes(value=class),jQueryHijackEach()]',
+            // [Plugin Comp] https://wordpress.org/plugins/advanced-backgrounds/
+            'div[data-awb-video:matchesUrl(withHost=true)][class*="nk-awb-wrap":eval(js=AWB.init())]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a
@@ -305,7 +307,7 @@ class Plugin extends AbstractPlugin
          * on to servers that can be expected by the visitor and it is in his interest for the
          * website to load as quickly as possible. Consequently, we assume that there is a
          * legitimate interest of the website visitor (not website operator, as he has no advantage)
-         * according to Art. 6 para. 1. lit. f DSGVO.
+         * according to Art. 6 (1) (f) DSGVO.
          */
         $linkRelBlockerPlugin->setDoNotTouch(['dns-prefetch']);
         $cb->addPlugin(Image::class);
@@ -320,6 +322,8 @@ class Plugin extends AbstractPlugin
                  */
                 $imagePreviewPlugin = $cb->addPlugin(ImagePreview::class);
                 $imagePreviewPlugin->setCache($imagePreviewCache);
+                // [Plugin Comp] Divi video slider
+                $imagePreviewPlugin->addRevertAttribute('div[class*="et_pb_video_slider_item_"]');
             }
         }
         /**
@@ -343,7 +347,7 @@ class Plugin extends AbstractPlugin
             foreach ($vendorConfigurations as $vendorConfiguration) {
                 $vendor = $vendorConfiguration->getVendor();
                 if (isset($vendor['deviceStorageDisclosure']) && isset($vendor['deviceStorageDisclosure']['domains'])) {
-                    $tcfForwardGdprStringInUrl->addVendorDisclosureDomains($vendorConfiguration->getId(), $vendor['deviceStorageDisclosure']['domains']);
+                    $tcfForwardGdprStringInUrl->addVendorDisclosureDomains($vendorConfiguration->getVendorId(), $vendor['deviceStorageDisclosure']['domains']);
                 }
             }
         }

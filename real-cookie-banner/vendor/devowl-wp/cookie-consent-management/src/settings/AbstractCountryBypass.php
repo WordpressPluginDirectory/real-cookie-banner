@@ -93,7 +93,13 @@ abstract class AbstractCountryBypass extends BaseSettings
             $transaction->setGcmConsent(null);
             // Create decision for this bypass
             $type = $this->getType();
-            if (empty($consent->getUuid())) {
+            $previousButtonClicked = $consent->getButtonClicked();
+            /**
+             * If the previous consent was also implicit (e.g. also through Geo-restriction), we continue with the
+             * implicitness and do not opt-out any service.
+             */
+            $continueWithImplicitConsent = $this->getType() === self::TYPE_ALL && $previousButtonClicked === 'implicit_all' || $this->getType() === self::TYPE_ESSENTIALS && $previousButtonClicked === 'implicit_essential';
+            if (empty($consent->getUuid()) || $continueWithImplicitConsent) {
                 // No previous consent, so create it from the given type
                 $transaction->setDecision($consent->sanitizeDecision($type));
             } else {

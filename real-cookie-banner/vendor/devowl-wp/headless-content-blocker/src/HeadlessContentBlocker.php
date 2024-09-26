@@ -80,7 +80,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      *
      * @var string[]
      */
-    private $selectorSyntaxMap = [];
+    private $selectorSyntaxMap = ['source[src:matchesUrl(withHost=true)]'];
     /**
      * C'tor.
      *
@@ -224,6 +224,17 @@ class HeadlessContentBlocker extends FastHtmlTag
     public function addBlockedMatchCallback($callback)
     {
         $this->blockedMatchCallbacks[] = $callback;
+    }
+    /**
+     * Remove a callback added through `addBlockedMatchCallback`.
+     *
+     * @param callable $callback
+     */
+    public function removeBlockedMatchCallback($callback)
+    {
+        $this->blockedMatchCallbacks = \array_filter($this->blockedMatchCallbacks, function ($c) use($callback) {
+            return $c !== $callback;
+        });
     }
     /**
      * Add a callable after a blocked match got not found, but a match. Parameters:

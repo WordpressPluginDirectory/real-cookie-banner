@@ -35,6 +35,7 @@ class General extends AbstractGeneral implements IOverrideGeneral
     const SETTING_OPERATOR_CONTACT_EMAIL = RCB_OPT_PREFIX . '-operator-contact-email';
     const SETTING_OPERATOR_CONTACT_FORM_ID = RCB_OPT_PREFIX . '-operator-contact-form-id';
     const SETTING_TERRITORIAL_LEGAL_BASIS = RCB_OPT_PREFIX . '-territorial-legal-basis';
+    const SETTING_COOKIE_POLICY_ID = RCB_OPT_PREFIX . '-cookie-policy-id';
     const SETTING_HIDE_PAGE_IDS = RCB_OPT_PREFIX . '-hide-page-ids';
     const SETTING_SET_COOKIES_VIA_MANAGER = RCB_OPT_PREFIX . '-set-cookies-via-manager';
     const DEFAULT_BANNER_ACTIVE = \false;
@@ -43,6 +44,7 @@ class General extends AbstractGeneral implements IOverrideGeneral
     const DEFAULT_OPERATOR_CONTACT_PHONE = '';
     const DEFAULT_OPERATOR_CONTACT_EMAIL = '';
     const DEFAULT_OPERATOR_CONTACT_FORM_ID = 0;
+    const DEFAULT_COOKIE_POLICY_ID = 0;
     const DEFAULT_HIDE_PAGE_IDS = '';
     const DEFAULT_SET_COOKIES_VIA_MANAGER = 'none';
     /**
@@ -71,6 +73,7 @@ class General extends AbstractGeneral implements IOverrideGeneral
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_EMAIL, $this->getDefaultOperatorContactEmail());
         UtilsUtils::enableOptionAutoload(self::SETTING_OPERATOR_CONTACT_FORM_ID, self::DEFAULT_OPERATOR_CONTACT_FORM_ID, 'intval');
         UtilsUtils::enableOptionAutoload(self::SETTING_TERRITORIAL_LEGAL_BASIS, \join(',', $this->getDefaultTerritorialLegalBasis()));
+        UtilsUtils::enableOptionAutoload(self::SETTING_COOKIE_POLICY_ID, self::DEFAULT_COOKIE_POLICY_ID, 'intval');
         $this->overrideEnableOptionsAutoload();
     }
     /**
@@ -85,6 +88,7 @@ class General extends AbstractGeneral implements IOverrideGeneral
         \register_setting(self::OPTION_GROUP, self::SETTING_OPERATOR_CONTACT_PHONE, ['type' => 'string', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_OPERATOR_CONTACT_EMAIL, ['type' => 'string', 'show_in_rest' => \true]);
         \register_setting(self::OPTION_GROUP, self::SETTING_OPERATOR_CONTACT_FORM_ID, ['type' => 'number', 'show_in_rest' => \true]);
+        \register_setting(self::OPTION_GROUP, self::SETTING_COOKIE_POLICY_ID, ['type' => 'number', 'show_in_rest' => \true]);
         // WP < 5.3 does not support array types yet, so we need to store serialized
         \register_setting(self::OPTION_GROUP, self::SETTING_TERRITORIAL_LEGAL_BASIS, ['type' => 'string', 'show_in_rest' => \true]);
         $this->overrideRegister();
@@ -174,6 +178,25 @@ class General extends AbstractGeneral implements IOverrideGeneral
         }
         return $default;
     }
+    // Documented in AbstractGeneral
+    public function getCookiePolicyId()
+    {
+        return \get_option(self::SETTING_COOKIE_POLICY_ID, 0);
+    }
+    // Documented in AbstractGeneral
+    public function getCookiePolicyUrl($default = \false)
+    {
+        $compLanguage = Core::getInstance()->getCompLanguage();
+        $id = $this->getCookiePolicyId();
+        if ($id > 0) {
+            $id = $compLanguage->getCurrentPostId($id, 'page');
+            $permalink = Utils::getPermalink($id);
+            if ($permalink !== \false) {
+                return $permalink;
+            }
+        }
+        return $default;
+    }
     /**
      * Get default privacy policy post ID.
      */
@@ -223,13 +246,28 @@ class General extends AbstractGeneral implements IOverrideGeneral
     /**
      * When a page gets deleted, check if the value is our configured contact form page and reset the value accordingly.
      *
+     * Why using `before_delete_post` instead of `delete_post`? We are deleting also translations in PolyLang/WPML and we need
+     * to do this before the deletion process is done.
+     *
      * @param number $postId
      */
-    public function delete_post($postId)
+    public function before_delete_post($postId)
     {
         $contactFormId = \get_option(self::SETTING_OPERATOR_CONTACT_FORM_ID);
+        $cookiePolicyId = \get_option(self::SETTING_COOKIE_POLICY_ID);
         if ($postId === $contactFormId) {
             \update_option(self::SETTING_OPERATOR_CONTACT_FORM_ID, self::DEFAULT_OPERATOR_CONTACT_FORM_ID);
+        }
+        if ($postId === $cookiePolicyId) {
+            \update_option(self::SETTING_COOKIE_POLICY_ID, self::DEFAULT_COOKIE_POLICY_ID);
+            // When the cookie policy page got deleted, also delete the translations
+            $compLanguage = Core::getInstance()->getCompLanguage();
+            $postIdTranslations = $compLanguage->getPostTranslationIds($postId, 'page');
+            foreach ($postIdTranslations as $translationId) {
+                if ($translationId !== $postId) {
+                    \wp_delete_post($translationId, \true);
+                }
+            }
         }
     }
     /**

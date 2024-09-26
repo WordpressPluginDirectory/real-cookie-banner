@@ -61,27 +61,6 @@ trait Core
         \register_activation_hook($pluginFile, [$this->getActivator(), 'activate']);
         \register_deactivation_hook($pluginFile, [$this->getActivator(), 'deactivate']);
         RateLimitNotice::instance($this)->hooks();
-        $this->persistEncodedHttpRefererInUrl();
-    }
-    /**
-     * For apache2 servers we need to send the URL without any `?` characters, so we simply remove the query arguments, as this is
-     * disallowed by a fix for a [CVE](https://www.cve.org/CVERecord?id=CVE-2024-38474). Additionally, we send another `_wp_http_referer_b64`
-     * with base64-encoded URL so we can get the full URL in WordPress.
-     *
-     * In general, this is bad practice to modify `$_REQUEST` directly, but we do not yet know another way of doing other.
-     *
-     * @see https://app.clickup.com/t/86954236z
-     */
-    protected function persistEncodedHttpRefererInUrl()
-    {
-        if (isset($_GET['_wp_http_referer_b64'])) {
-            $parsedUrl = Utils::parseEncodedRawRefererEncoded($_GET['_wp_http_referer_b64']);
-            if ($parsedUrl !== \false) {
-                // $_REQUEST['_wp_http_referer'] = $parsedUrl; -> automatically receives on update of `$_GET`
-                $_GET['_wp_http_referer'] = $parsedUrl;
-                unset($_GET['_wp_http_referer_b64']);
-            }
-        }
     }
     /**
      * The plugin is loaded. Start to register the localization (i18n) files.

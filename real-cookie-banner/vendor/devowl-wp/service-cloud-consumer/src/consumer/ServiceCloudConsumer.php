@@ -232,32 +232,43 @@ class ServiceCloudConsumer
      */
     protected function downloadAndPersistFromDataSource()
     {
-        $this->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) {
-            $middleware->beforeDownloadAndPersistFromDataSource();
-        });
+        /**
+         * Get unique consumers from multiple pools.
+         *
+         * @var ServiceCloudConsumer[]
+         */
+        $consumers = [];
+        foreach ($this->pools as $pool) {
+            foreach ($pool->getConsumers() as $c) {
+                if (!\in_array($c, $consumers, \true)) {
+                    $consumers[] = $c;
+                }
+            }
+        }
+        if (\count($consumers) === 0) {
+            $consumers[] = $this;
+        }
+        foreach ($consumers as $consumer) {
+            $consumer->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) {
+                $middleware->beforeDownloadAndPersistFromDataSource();
+            });
+        }
         $runFailedMiddleware = null;
+        $typeClassToAllTemplates = [];
         try {
             if (\count($this->pools) === 0) {
-                $this->storage->persist($this->downloadFromDataSource());
+                $templates = $this->downloadFromDataSource();
+                $typeClassToAllTemplates[$this->getTypeClass()] = $templates;
+                $this->storage->persist($templates);
             } else {
-                /**
-                 * Get unique consumers from multiple pools.
-                 *
-                 * @var ServiceCloudConsumer[]
-                 */
-                $consumers = [];
-                foreach ($this->pools as $pool) {
-                    foreach ($pool->getConsumers() as $c) {
-                        if (!\in_array($c, $consumers, \true)) {
-                            $consumers[] = $c;
-                        }
-                    }
-                }
-                $typeClassToAllTemplates = [];
                 // All datasources from all pools should try to download, and if one fails with
                 // `AbortDataSourceDownloadException`, no template should be persisted.
                 $abortDataSourceDownloadException = null;
                 foreach ($consumers as $consumer) {
+                    if ($this->invalidatedThroughStorageCurrentTransaction && $consumer !== $this) {
+                        // Simulate a `shouldInvalidate()` call for all consumers within the pool except of our own so datasources are not downloaded multiple times
+                        $consumer->getStorage()->shouldInvalidate();
+                    }
                     try {
                         $typeClassToAllTemplates[$consumer->getTypeClass()] = $consumer->downloadFromDataSource();
                     } catch (AbortDataSourceDownloadException $e) {
@@ -296,13 +307,15 @@ class ServiceCloudConsumer
             $runFailedMiddleware = $e;
             return \false;
         } finally {
-            $this->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) use($runFailedMiddleware) {
-                $middleware->afterDownloadAndPersistFromDataSource($runFailedMiddleware);
-            });
-            if ($runFailedMiddleware !== null) {
-                $this->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) use($runFailedMiddleware) {
-                    $middleware->failedDownloadAndPersistFromDataSource($runFailedMiddleware);
+            foreach ($consumers as $consumer) {
+                $consumer->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) use($runFailedMiddleware, &$typeClassToAllTemplates, $consumer) {
+                    $middleware->afterDownloadAndPersistFromDataSource($runFailedMiddleware, $typeClassToAllTemplates[$consumer->getTypeClass()] ?? []);
                 });
+                if ($runFailedMiddleware !== null) {
+                    $consumer->runMiddleware(AbstractConsumerMiddleware::class, function ($middleware) use($runFailedMiddleware) {
+                        $middleware->failedDownloadAndPersistFromDataSource($runFailedMiddleware);
+                    });
+                }
             }
         }
     }

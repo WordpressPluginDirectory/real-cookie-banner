@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\Consent;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\AbstractRevisionPersistance;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\CookiePolicy;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\Frontend;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\frontend\Revision;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\Settings;
@@ -26,6 +27,12 @@ class CookieConsentManagement
      */
     private $frontend;
     /**
+     * See `CookiePolicy`.
+     *
+     * @var CookiePolicy
+     */
+    private $cookiePolicy;
+    /**
      * See `Revision`.
      *
      * @var Revision
@@ -43,6 +50,7 @@ class CookieConsentManagement
         $this->settings = $settings;
         $this->settings->setCookieConsentManagement($this);
         $this->frontend = new Frontend($this);
+        $this->cookiePolicy = new CookiePolicy($this);
         $this->revison = new Revision($this, $revisionPersistence);
     }
     /**
@@ -69,6 +77,15 @@ class CookieConsentManagement
     public function getFrontend()
     {
         return $this->frontend;
+    }
+    /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function getCookiePolicy()
+    {
+        return $this->cookiePolicy;
     }
     /**
      * Getter.

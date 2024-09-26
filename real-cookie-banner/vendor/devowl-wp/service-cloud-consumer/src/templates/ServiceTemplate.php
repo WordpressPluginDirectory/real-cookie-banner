@@ -9,6 +9,23 @@ use stdClass;
  */
 class ServiceTemplate extends AbstractTemplate
 {
+    const LEGAL_BASIS_CONSENT = 'consent';
+    const LEGAL_BASIS_LEGITIMATE_INTEREST = 'legitimate-interest';
+    const LEGAL_BASIS_LEGAL_REQUIREMENT = 'legal-requirement';
+    const LEGAL_BASIS = [self::LEGAL_BASIS_CONSENT, self::LEGAL_BASIS_LEGAL_REQUIREMENT, self::LEGAL_BASIS_LEGITIMATE_INTEREST];
+    const SPECIAL_TREATMENT_CONTRACTUAL_ASSURANCES_WITH_SUB_PROCESSORS = 'contractual-assurances-with-sub-processors';
+    const SPECIAL_TREATMENT_PROVIDER_IS_SELF_CERTIFIED_TRANS_ATLANTIC_DATA_PRIVACY_FRAMEWORK = 'provider-is-self-certified-trans-atlantic-data-privacy-framework';
+    const SPECIAL_TREATMENT_STANDARD_CONTRACTUAL_CLAUSES = 'standard-contractual-clauses';
+    // Currently only used for TCF standard, cannot be customized in Real Cookie Banner
+    const SPECIAL_TREATMENT_BINDING_CORPORATE_RULES = 'binding-corporate-rules';
+    const EXECUTE_PRIORITY_DEFAULT = 10;
+    /**
+     * If yes the service is a CDN. This allows us to e.g. show the service in the scanner with a different UI (e.g.
+     * show the logo of the CDN and how to handle it).
+     *
+     * @var boolean
+     */
+    public $isCdn;
     /**
      * If yes there will be no external privacy policy, imprint and provider name. It needs to
      * be filled with a middleware or manually.
@@ -65,6 +82,12 @@ class ServiceTemplate extends AbstractTemplate
      * @var string[]
      */
     public $shouldUncheckContentBlockerCheckboxWhenOneOf = [];
+    /**
+     * Execute priority for all the opt-in / opt-out code.
+     *
+     * @var int
+     */
+    public $executePriority = self::EXECUTE_PRIORITY_DEFAULT;
     /**
      * Code on opt in.
      *
@@ -133,6 +156,12 @@ class ServiceTemplate extends AbstractTemplate
      */
     public $dataProcessingInCountriesSpecialTreatments = [];
     /**
+     * SCC conclusion instructions notice. This should be used together with `isCdn`.
+     *
+     * @var string
+     */
+    public $sccConclusionInstructionsNotice;
+    /**
      * Google Consent Mode consent types.
      *
      * @var string[]
@@ -195,6 +224,7 @@ class ServiceTemplate extends AbstractTemplate
     {
         parent::fromArray($arr);
         if (\is_array($arr)) {
+            $this->isCdn = \boolval($arr['isCdn'] ?? null);
             $this->isProviderCurrentWebsite = \boolval($arr['isProviderCurrentWebsite'] ?? null);
             $this->provider = \is_string($arr['provider'] ?? null) ? $arr['provider'] : '';
             $this->providerContact = \is_array($arr['providerContact'] ?? null) ? $arr['providerContact'] : new stdClass();
@@ -213,9 +243,11 @@ class ServiceTemplate extends AbstractTemplate
             $this->dynamicFields = \is_array($arr['dynamicFields'] ?? null) ? $arr['dynamicFields'] : [];
             $this->dataProcessingInCountries = \is_array($arr['dataProcessingInCountries'] ?? null) ? $arr['dataProcessingInCountries'] : [];
             $this->dataProcessingInCountriesSpecialTreatments = \is_array($arr['dataProcessingInCountriesSpecialTreatments'] ?? null) ? $arr['dataProcessingInCountriesSpecialTreatments'] : [];
+            $this->sccConclusionInstructionsNotice = \is_string($arr['sccConclusionInstructionsNotice'] ?? null) ? $arr['sccConclusionInstructionsNotice'] : '';
             $this->googleConsentModeConsentTypes = \is_array($arr['googleConsentModeConsentTypes'] ?? null) ? $arr['googleConsentModeConsentTypes'] : [];
             $this->shouldUncheckContentBlockerCheckbox = \boolval($arr['shouldUncheckContentBlockerCheckbox'] ?? null);
             $this->shouldUncheckContentBlockerCheckboxWhenOneOf = \is_array($arr['shouldUncheckContentBlockerCheckboxWhenOneOf'] ?? null) ? $arr['shouldUncheckContentBlockerCheckboxWhenOneOf'] : [];
+            $this->executePriority = \intval($arr['executePriority'] ?? self::EXECUTE_PRIORITY_DEFAULT);
             $this->codeOptIn = \is_string($arr['codeOptIn'] ?? null) ? $arr['codeOptIn'] : '';
             $this->codeOptOut = \is_string($arr['codeOptOut'] ?? null) ? $arr['codeOptOut'] : '';
             $this->codeOnPageLoad = \is_string($arr['codeOnPageLoad'] ?? null) ? $arr['codeOnPageLoad'] : '';

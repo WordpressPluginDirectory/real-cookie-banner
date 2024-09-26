@@ -2,7 +2,10 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\Consent;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\Transaction;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 /**
  * Abstract implementation of the settings for misc consent settings (e.g. duration of consent management cookie
  * which saves the decision of the user).
@@ -10,6 +13,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Servi
  */
 abstract class AbstractConsent extends BaseSettings
 {
+    const CUSTOM_BYPASS_BANNER_LESS_CONSENT = 'bannerless';
     /**
      * A list of predefined lists for e.g. `GDPR` considered as secury country for data processing in unsafe countries.
      */
@@ -17,7 +21,10 @@ abstract class AbstractConsent extends BaseSettings
         // EU: https://reciprocitylabs.com/resources/what-countries-are-covered-by-gdpr/
         // EEA: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:European_Economic_Area_(EEA)
         'GDPR' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LV', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'],
-        'ADEQUACY' => ['AD', 'AR', 'CA', 'FO', 'GG', 'IL', 'IM', 'JP', 'JE', 'NZ', 'KR', 'CH', 'GB', 'UY', 'US'],
+        'DSG' => ['CH'],
+        'GDPR+DSG' => [],
+        'ADEQUACY_EU' => ['AD', 'AR', 'CA', 'FO', 'GG', 'IL', 'IM', 'JP', 'JE', 'NZ', 'KR', 'CH', 'GB', 'UY', 'US'],
+        'ADEQUACY_CH' => ['DE', 'AD', 'AR', 'AT', 'BE', 'BG', 'CA', 'CY', 'HR', 'DK', 'ES', 'EE', 'FI', 'FR', 'GI', 'GR', 'GG', 'HU', 'IM', 'FO', 'IE', 'IS', 'IL', 'IT', 'JE', 'LV', 'LI', 'LT', 'LU', 'MT', 'MC', 'NO', 'NZ', 'NL', 'PL', 'PT', 'CZ', 'RO', 'GB', 'SK', 'SI', 'SE', 'UY', 'US'],
     ];
     const AGE_NOTICE_COUNTRY_AGE_MAP = ['INHERIT' => 0, 'GDPR' => 16, 'BE' => 13, 'DK' => 13, 'EE' => 13, 'FI' => 13, 'IS' => 13, 'LV' => 13, 'NO' => 13, 'PT' => 13, 'SE' => 13, 'MT' => 13, 'AT' => 14, 'BG' => 14, 'CY' => 14, 'IT' => 14, 'LT' => 14, 'ES' => 14, 'CZ' => 15, 'FR' => 15, 'GR' => 15, 'SI' => 15, 'DE' => 16, 'HR' => 16, 'HU' => 16, 'LI' => 16, 'LU' => 16, 'NL' => 16, 'PL' => 16, 'RO' => 16, 'SK' => 16, 'IE' => 16, 'CH' => 13];
     const FAILED_CONSENT_DOCUMENTATION_HANDLING_OPTIMISTIC = 'optimistic';
@@ -61,6 +68,18 @@ abstract class AbstractConsent extends BaseSettings
      */
     public abstract function isAgeNoticeEnabled();
     /**
+     * Check if banner less consent is enabled.
+     *
+     * @return boolean
+     */
+    public abstract function isBannerLessConsent();
+    /**
+     * Get the page IDs where the banner less consent should be shown.
+     *
+     * @return int[]
+     */
+    public abstract function getBannerLessConsentShowOnPageIds();
+    /**
      * Get the configured age limit for the age notice in raw format.
      *
      * @return string|int Can be an integer or `"INHERIT"` string
@@ -97,35 +116,11 @@ abstract class AbstractConsent extends BaseSettings
      */
     public abstract function isDataProcessingInUnsafeCountries();
     /**
-     * Get safe countries for the data-processing-in-unsafe-countries option.
-     *
-     * @return string[]
-     */
-    public abstract function getDataProcessingInUnsafeCountriesSafeCountriesRaw();
-    /**
      * Set the cookie version for the consent cookies.
      *
      * @param int $version
      */
     public abstract function setCookieVersion($version);
-    /**
-     * Get safe countries for the data-processing-in-unsafe-countries option with expanded predefined lists.
-     *
-     * @return string[]
-     */
-    public function getDataProcessingInUnsafeCountriesSafeCountries()
-    {
-        $result = [];
-        foreach ($this->getDataProcessingInUnsafeCountriesSafeCountriesRaw() as $code) {
-            if (\strlen($code) !== 2) {
-                $predefinedList = self::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS[$code] ?? [];
-                $result = \array_values(\array_merge($result, $predefinedList));
-            } else {
-                $result[] = $code;
-            }
-        }
-        return $result;
-    }
     /**
      * Get the configured age limit for the age notice.
      *
@@ -183,5 +178,70 @@ abstract class AbstractConsent extends BaseSettings
             }
         }
         return $candidates;
+    }
+    /**
+     * Calculate if the bannerless consent check should be enabled.
+     *
+     * @return array
+     */
+    public function calculateBannerlessConsentChecks()
+    {
+        $groups = $this->getSettings()->getGeneral()->getServiceGroups();
+        $contentBlocker = $this->getSettings()->getGeneral()->getBlocker();
+        $result = ['essential' => [], 'legalBasisLegitimateInterest' => [], 'legalBasisConsentWithoutVisualContentBlocker' => []];
+        foreach ($groups as $group) {
+            foreach ($group->getItems() as $service) {
+                $legalBasis = $service->getLegalBasis();
+                $isEssential = $group->isEssential();
+                // Check if the service is part of a visual content blocker
+                $visualContentBlocker = [];
+                foreach ($contentBlocker as $blocker) {
+                    if ($blocker->isVisual() && \in_array($service->getId(), $blocker->getServices(), \true)) {
+                        $visualContentBlocker[] = ['name' => $blocker->getName(), 'id' => $blocker->getId()];
+                    }
+                }
+                $row = ['name' => $service->getName(), 'id' => $service->getId(), 'groupId' => $group->getId()];
+                if ($isEssential) {
+                    $result['essential'][] = $row;
+                } elseif ($legalBasis === ServiceTemplate::LEGAL_BASIS_CONSENT && \count($visualContentBlocker) === 0) {
+                    $result['legalBasisConsentWithoutVisualContentBlocker'][] = $row;
+                } elseif ($legalBasis === ServiceTemplate::LEGAL_BASIS_LEGITIMATE_INTEREST) {
+                    $result['legalBasisLegitimateInterest'][] = $row;
+                }
+            }
+        }
+        return $result;
+    }
+    /**
+     * If bannerless consent is enabled, we can create a transaction which we can instantly use to `Consent#commit` so
+     * the user does not see any cookie banner.
+     *
+     * @param Consent $consent The current consent
+     * @param Transaction $transaction A prepared transaction which has `userAgent`, `ipAddress` filled
+     * @param int $currentPageId The current page ID which is used to get the page ID from the `bannerLessConsentShowOnPageIds` array
+     * @param string $defaultTcfString The default TCF string which is used if no TCF string is provided
+     */
+    public function probablyCreateBannerlessConsentTransaction($consent, $transaction, $currentPageId, $defaultTcfString)
+    {
+        if ($this->isBannerLessConsent()) {
+            $showOnPageIds = $this->getBannerLessConsentShowOnPageIds();
+            if (\in_array($currentPageId, $showOnPageIds, \true)) {
+                return \false;
+            }
+            $transaction->setCustomBypass(self::CUSTOM_BYPASS_BANNER_LESS_CONSENT);
+            $transaction->setButtonClicked('implicit_essential');
+            $transaction->setTcfString(null);
+            $transaction->setGcmConsent([]);
+            if (empty($transaction->getTcfString()) && $this->getSettings()->getTcf()->isActive() && !empty($defaultTcfString)) {
+                $transaction->setTcfString($defaultTcfString);
+            }
+            if (empty($consent->getUuid())) {
+                $transaction->setDecision($consent->sanitizeDecision('essentials'));
+            } else {
+                $transaction->setDecision($consent->optInOrOptOutExistingDecision($consent->getDecision(), 'essentials', 'optIn'));
+            }
+            return \true;
+        }
+        return \false;
     }
 }

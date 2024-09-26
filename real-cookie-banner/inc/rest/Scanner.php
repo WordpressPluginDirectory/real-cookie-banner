@@ -7,6 +7,7 @@ use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\scanner\AutomaticScanStarter;
 use DevOwl\RealCookieBanner\scanner\Query;
+use DevOwl\RealCookieBanner\view\Notices;
 use DevOwl\RealCookieBanner\view\Scanner as ViewScanner;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use WP_Error;
@@ -75,6 +76,8 @@ class Scanner
         // Disable automatic scanning
         \update_option(AutomaticScanStarter::OPTION_NAME, AutomaticScanStarter::STATUS_STARTED);
         $added = Core::getInstance()->getScanner()->addUrlsToQueue(\array_unique($urls), $request->get_param('purgeUnused'));
+        // Remove explicit notices of external URLs which require a manual scan
+        Core::getInstance()->getNotices()->dismissScannerExplicitExternalUrlCoverageNotice(Notices::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_MANUAL_SCAN_REQUIRED);
         return new WP_REST_Response(['added' => $added]);
     }
     /**
@@ -195,6 +198,8 @@ class Scanner
     {
         $data['templates'] = ['items' => AbstractTemplate::toArrays(Core::getInstance()->getScanner()->getQuery()->getScannedTemplates())];
         $data['externalUrls'] = $this->routeResultExternalUrls()->get_data();
+        // Remove explicit notices of external URLs which do not require a manual scan
+        Core::getInstance()->getNotices()->dismissScannerExplicitExternalUrlCoverageNotice(Notices::SCANNER_EXPLICIT_EXTERNAL_URL_COVERAGE_STATE_SCANNED);
         return $data;
     }
     /**
