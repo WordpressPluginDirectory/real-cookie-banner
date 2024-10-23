@@ -214,7 +214,9 @@ abstract class AbstractMatch
                 $result = $looseAttributes;
             }
         }
-        return \count($result) > 0 ? \md5($this->getTag() . '.' . \json_encode($result)) : null;
+        // Use JSON_UNESCAPED_SLASHES to avoid escaping slashes in the result and streamline with JS' JSON.stringify
+        // See https://stackoverflow.com/a/56647087/5506547
+        return \count($result) > 0 ? \md5($this->getTag() . '.' . \json_encode($result, \JSON_UNESCAPED_SLASHES)) : null;
     }
     /**
      * Allows to set an "invisible" attribute to the match. Due to the fact, that when a change got detected
@@ -326,7 +328,6 @@ abstract class AbstractMatch
      * do not end up in an endless loop.
      *
      * @param string $string
-     * @codeCoverageIgnore
      */
     public function setBeforeTag($string)
     {
@@ -342,7 +343,6 @@ abstract class AbstractMatch
      * e.g. for `<iframe>AFTER_TAG_CURSOR</iframe>`.
      *
      * @param string $string
-     * @codeCoverageIgnore
      */
     public function setAfterTag($string)
     {
@@ -390,8 +390,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getOriginalMatch()
     {
@@ -399,8 +397,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getTag()
     {
@@ -408,8 +404,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAttributes()
     {
@@ -417,8 +411,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function hasChanged()
     {
@@ -426,8 +418,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getBeforeTag()
     {
@@ -435,8 +425,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAfterTag()
     {
@@ -444,8 +432,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getDeletedAttributes()
     {
@@ -459,8 +445,6 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getRenamedAttributes()
     {

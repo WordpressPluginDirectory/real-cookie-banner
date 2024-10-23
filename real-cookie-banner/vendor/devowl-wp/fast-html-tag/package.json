@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/fast-html-tag",
-    "version": "0.11.1",
+    "version": "0.11.2",
     "private": true,
     "description": "Find tags within HTML content and modify it in speed of light",
     "homepage": "https://devowl.io",
@@ -10,7 +10,7 @@
         "**/*.{css,scss,less}",
         "./src/public/ts/*.tsx"
     ],
-    "main": "lib/index.tsx",
+    "main": "index.ts",
     "files": [
         "dist",
         "dev"
@@ -22,7 +22,13 @@
         "lint:phpcs": "dowl --silent task @devowl-wp/phpcs-config",
         "task": "task --taskfile ./tasks/Taskfile.yml",
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
-        "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage"
+        "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage",
+        "test:vitest": "dowl --silent task @devowl-wp/vitest-config",
+        "test:vitest:coverage": "dowl --silent task @devowl-wp/vitest-config:coverage"
+    },
+    "dependencies": {
+        "node-html-parser": "6.1.13",
+        "striptags": "3.2.0"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -33,9 +39,12 @@
         "@devowl-wp/phpcs-config": "workspace:*",
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
+        "@devowl-wp/vitest-config": "workspace:*",
+        "@vitest/coverage-v8": "2.0.5",
         "ts-node": "10.9.2",
         "tslib": "2.6.3",
         "typescript": "5.4.5",
+        "vitest": "2.0.5",
         "webpack-cli": "5.1.4"
     },
     "engines": {
@@ -65,5 +74,5 @@
             "ignore-packages-here@1.0.0"
         ]
     },
-    "phpunit-coverage-threshold": 80
+    "phpunit-coverage-threshold": 100
 }

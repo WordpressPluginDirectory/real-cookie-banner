@@ -1,20 +1,15 @@
 <?php
 
-namespace DevOwl\RealCookieBanner\view\blocker;
+namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\thirdParty;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils as FastHtmlTagUtils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\SelectorSyntaxMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview\ImagePreview;
-use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils;
-// @codeCoverageIgnoreStart
-\defined('ABSPATH') or die('No script kiddies please!');
-// Avoid direct file request
-// @codeCoverageIgnoreEnd
 /**
  * Block `#elementor-action' links containing base64-encoded data.
  *

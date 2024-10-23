@@ -7,6 +7,8 @@ use CurlMultiHandle;
 /**
  * Provide an interface and mechanism to cache extracted image previews in a folder/database
  * and generate a local URL.
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 abstract class ImagePreviewCache

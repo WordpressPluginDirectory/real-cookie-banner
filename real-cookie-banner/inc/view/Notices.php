@@ -365,11 +365,7 @@ class Notices
                         \admin_url('site-health.php')
                     )]);
                 } else {
-                    // @codeCoverageIgnoreStart
-                    if (!\defined('PHPUNIT_FILE')) {
-                        require_once ABSPATH . 'wp-admin/includes/file.php';
-                    }
-                    // @codeCoverageIgnoreEnd
+                    require_once ABSPATH . 'wp-admin/includes/file.php';
                     $htaccess = \get_home_path() . '.htaccess';
                     $hostname = \gethostname();
                     $checker->received($url, $response['body'], $response['headers']->getAll(), $response['response']['code'], ['htaccess' => \is_readable($htaccess) ? \file_get_contents($htaccess) : null, 'internalIps' => \is_string($hostname) ? \gethostbynamel($hostname) : \false]);

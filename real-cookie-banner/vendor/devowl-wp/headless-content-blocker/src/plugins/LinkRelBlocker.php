@@ -28,6 +28,10 @@ class LinkRelBlocker extends AbstractPlugin
          */
         'me',
         'alternate',
+        'profile',
+        'author',
+        'shortlink',
+        'canonical',
     ];
     /**
      * Do-not-touch `rel`s and never find them in scanner.
@@ -38,7 +42,7 @@ class LinkRelBlocker extends AbstractPlugin
     /**
      * Similar to `$doNotTouch` but not customizable.
      */
-    const DO_NOT_TOUCH = ['me', 'alternate'];
+    const DO_NOT_TOUCH = ['me', 'alternate', 'profile', 'author', 'shortlink', 'canonical'];
     /**
      * See `AbstractPlugin`.
      *
@@ -48,14 +52,15 @@ class LinkRelBlocker extends AbstractPlugin
      */
     public function checkResult($result, $matcher, $match)
     {
-        $isLink = $match->getTag() === 'link' && $match->hasAttribute('rel') && \count(\array_intersect(\explode(' ', $match->getAttribute('rel')), self::REL)) > 0;
+        $rel = $match->getAttribute('rel');
+        $isLink = $match->getTag() === 'link' && $match->hasAttribute('rel') && \count(\array_intersect(\explode(' ', $rel), self::REL)) > 0;
         // Split a `<link rel="dns-prefetch preconnect"` into multiple nodes and rerun the content blocker
-        if ($isLink && \strpos($match->getAttribute('rel'), ' ') !== \false) {
+        if ($isLink && \strpos($rel, ' ') !== \false) {
             $result->disableBlocking();
             $result->setData(BlockableScanner::BLOCKED_RESULT_DATA_KEY_IGNORE_IN_SCANNER, \true);
             $beforeTag = $match->getBeforeTag();
             $firstRel = '';
-            foreach (\explode(' ', $match->getAttribute('rel')) as $key => $relRow) {
+            foreach (\explode(' ', $rel) as $key => $relRow) {
                 $match->setAttribute('rel', $relRow);
                 if ($key === 0) {
                     $firstRel = $relRow;
@@ -68,22 +73,14 @@ class LinkRelBlocker extends AbstractPlugin
             return $result;
         }
         // Never touch e.g. `dns-prefetch` as they are GDPR compliant
-        if ($isLink && \in_array($match->getAttribute('rel'), \array_merge($this->doNotTouch, self::DO_NOT_TOUCH), \true)) {
+        if ($isLink && \in_array($rel, \array_merge($this->doNotTouch, self::DO_NOT_TOUCH), \true)) {
             $result->disableBlocking();
             $result->setData(BlockableScanner::BLOCKED_RESULT_DATA_KEY_IGNORE_IN_SCANNER, \true);
             return $result;
         }
-        // @codeCoverageIgnoreStart
-        if (!$result->isBlocked() && $matcher instanceof TagAttributeMatcher && $isLink) {
-            /**
-             * Var.
-             *
-             * @var TagAttributeMatch
-             */
-            $match = $match;
+        if (!$result->isBlocked() && $matcher instanceof TagAttributeMatcher && $match instanceof TagAttributeMatch && $isLink) {
             $matcher->iterateBlockablesInString($result, $match->getLink(), \false, \false, $this->getHeadlessContentBlocker()->blockablesToHosts(\false));
         }
-        // @codeCoverageIgnoreEnd
         // Omit the rendering, if possible
         if ($isLink && $result->isBlocked() && !$match->hasAttribute('onload') && !$match->hasAttribute(AttributesHelper::transformAttribute('onload'))) {
             $match->omit();

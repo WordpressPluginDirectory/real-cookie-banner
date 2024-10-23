@@ -15,8 +15,6 @@ class DummyBlockable extends AbstractBlockable
      * C'tor.
      *
      * @param HeadlessContentBlocker $headlessContentBlocker
-     * @param string[] $rules
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker)
     {
@@ -34,8 +32,10 @@ class DummyBlockable extends AbstractBlockable
         return [];
     }
     // Documented in AbstractBlockable
+    // @codeCoverageIgnoreStart
     public function getCriteria()
     {
         return self::CRITERIA;
     }
+    // @codeCoverageIgnoreEnd
 }

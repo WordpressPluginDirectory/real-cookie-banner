@@ -9,6 +9,11 @@ use DOMDocument;
  */
 class Utils
 {
+    /**
+     * Consider attribute as boolean value `true`.
+     *
+     * @deprecated No longer needed, only left for `prepareMatch`
+     */
     const PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE = 'PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE';
     /**
      * Check if a string starts with a given needle.
@@ -196,19 +201,17 @@ class Utils
         }
         $booleanAttributes = [];
         foreach ($attributesLegacyParsed as $key => $value) {
-            $useKey = $key;
-            if (\is_numeric($key)) {
-                unset($attributesLegacyParsed[$key]);
-                $attributesLegacyParsed[$value] = \true;
-                $booleanAttributes[] = $value;
-                $useKey = $value;
+            if (\gettype($value) === 'boolean') {
+                $booleanAttributes[] = $key;
             }
+            // @codeCoverageIgnoreStart
             if ($value === self::PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE) {
                 $attributesLegacyParsed[$key] = \true;
                 $booleanAttributes[] = $key;
             }
+            // @codeCoverageIgnoreEnd
             // Fix something like this: another-class"data-src="https://example.com/link.css" (no whitespaces after value and new attribute)
-            if (\strpos($useKey, '"') !== \false && \strpos($useKey, '=') !== \false) {
+            if (\strpos($key, '"') !== \false && \strpos($key, '=') !== \false) {
                 $hasEntities = \true;
             }
         }
@@ -256,11 +259,11 @@ class Utils
                 } elseif (!empty($m[5])) {
                     $atts[\strtolower($m[5])] = \stripcslashes($m[6]);
                 } elseif (isset($m[7]) && \strlen($m[7])) {
-                    $atts[] = \stripcslashes($m[7]);
+                    $atts[\stripcslashes($m[7])] = \true;
                 } elseif (isset($m[8]) && \strlen($m[8])) {
-                    $atts[] = \stripcslashes($m[8]);
+                    $atts[\stripcslashes($m[8])] = \true;
                 } elseif (isset($m[9])) {
-                    $atts[] = \stripcslashes($m[9]);
+                    $atts[\stripcslashes($m[9])] = \true;
                 }
             }
             // Reject any unclosed HTML elements.
@@ -283,12 +286,13 @@ class Utils
      */
     public static function htmlAttributes($attributes)
     {
-        return \join(' ', \array_map(function ($key) use($attributes) {
+        $attributes = \array_map(function ($key) use($attributes) {
             if (\is_bool($attributes[$key])) {
                 return $attributes[$key] ? $key : '';
             }
             return $key . '="' . \htmlspecialchars($attributes[$key], \ENT_QUOTES, 'UTF-8') . '"';
-        }, \array_keys($attributes)));
+        }, \array_keys($attributes));
+        return \join(' ', \array_filter($attributes));
     }
     /**
      * Add a query argument to an URL.

@@ -93,14 +93,14 @@ class Persist
         foreach ($this->jobs as $entry) {
             // Generate `VALUES` SQL
             // phpcs:disable WordPress.DB.PreparedSQL
-            $rows[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('%s, %s, %s, %d, %d, %d, %d, %d, %s, %s, %d, %d, %s', $entry->type, $entry->worker, $entry->group_uuid ?? 'NULL', $entry->group_position ?? 'NULL', $entry->group_total ?? 'NULL', $entry->process, $entry->process_total, $entry->duration_ms, \current_time('mysql'), isset($entry->data) ? \json_encode($entry->data) : 'NULL', $entry->retries, $entry->delay_ms, \json_encode($entry->callable)));
+            $rows[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('%s, %s, %s, %d, %d, %d, %d, %d, %s, %s, %d, %d, %s, %d, %s', $entry->type, $entry->worker, $entry->group_uuid ?? 'NULL', $entry->group_position ?? 'NULL', $entry->group_total ?? 'NULL', $entry->process, $entry->process_total, $entry->duration_ms, \current_time('mysql'), isset($entry->data) ? \json_encode($entry->data) : 'NULL', $entry->retries, $entry->delay_ms, \json_encode($entry->callable), $entry->priority, $entry->capability ?? 'NULL'));
             // phpcs:enable WordPress.DB.PreparedSQL
         }
         // Chunk to boost performance
         $chunks = \array_chunk($rows, 50);
         $table_name = $this->core->getTableName();
         foreach ($chunks as $sqlInsert) {
-            $sql = "INSERT INTO {$table_name}\n            (`type`, `worker`, `group_uuid`, `group_position`, `group_total`, `process`, `process_total`, `duration_ms`, `created`, `data`, `retries`, `delay_ms`, `callable`)\n            VALUES (" . \implode('),(', $sqlInsert) . ')';
+            $sql = "INSERT INTO {$table_name}\n                        (`type`, `worker`, `group_uuid`, `group_position`, `group_total`, `process`, `process_total`, `duration_ms`, `created`, `data`, `retries`, `delay_ms`, `callable`, `priority`, `capability`)\n                        VALUES (" . \implode('),(', $sqlInsert) . ')';
             // phpcs:disable WordPress.DB.PreparedSQL
             $wpdb->query($sql);
             // phpcs:enable WordPress.DB.PreparedSQL

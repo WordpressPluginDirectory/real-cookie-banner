@@ -44,15 +44,23 @@ trait ImportBlocker
                     $metas[Blocker::META_NAME_RULES] = \join("\n", $metas[Blocker::META_NAME_RULES]);
                 }
                 // Fix meta: tcfVendors
-                if ($this->isPro() && isset($metas[Blocker::META_NAME_TCF_VENDORS]) && \is_array($metas[Blocker::META_NAME_TCF_VENDORS])) {
-                    $countAllAssociations += \count($metas[Blocker::META_NAME_TCF_VENDORS]);
-                    $metas[Blocker::META_NAME_TCF_VENDORS] = $this->correctAssociationIdsForBlocker($metas[Blocker::META_NAME_TCF_VENDORS], 'mapTcfVendorConfigurations', TcfVendorConfiguration::CPT_NAME);
-                    $associatedCount += \count($metas[Blocker::META_NAME_TCF_VENDORS]);
-                    $metas[Blocker::META_NAME_TCF_VENDORS] = \join(',', $metas[Blocker::META_NAME_TCF_VENDORS]);
+                if (isset($metas[Blocker::META_NAME_TCF_VENDORS]) && \is_array($metas[Blocker::META_NAME_TCF_VENDORS])) {
+                    if ($this->isPro()) {
+                        $countAllAssociations += \count($metas[Blocker::META_NAME_TCF_VENDORS]);
+                        $metas[Blocker::META_NAME_TCF_VENDORS] = $this->correctAssociationIdsForBlocker($metas[Blocker::META_NAME_TCF_VENDORS], 'mapTcfVendorConfigurations', TcfVendorConfiguration::CPT_NAME);
+                        $associatedCount += \count($metas[Blocker::META_NAME_TCF_VENDORS]);
+                        $metas[Blocker::META_NAME_TCF_VENDORS] = \join(',', $metas[Blocker::META_NAME_TCF_VENDORS]);
+                    } else {
+                        $metas[Blocker::META_NAME_TCF_VENDORS] = '';
+                    }
                 }
                 // Fix meta: tcfPurposes
-                if ($this->isPro() && isset($metas[Blocker::META_NAME_TCF_PURPOSES]) && \is_array($metas[Blocker::META_NAME_TCF_PURPOSES])) {
-                    $metas[Blocker::META_NAME_TCF_PURPOSES] = \join(',', $metas[Blocker::META_NAME_TCF_PURPOSES]);
+                if (isset($metas[Blocker::META_NAME_TCF_PURPOSES]) && \is_array($metas[Blocker::META_NAME_TCF_PURPOSES])) {
+                    if ($this->isPro()) {
+                        $metas[Blocker::META_NAME_TCF_PURPOSES] = \join(',', $metas[Blocker::META_NAME_TCF_PURPOSES]);
+                    } else {
+                        $metas[Blocker::META_NAME_TCF_PURPOSES] = '';
+                    }
                 }
                 // Fix meta: cookies
                 if (isset($metas[Blocker::META_NAME_SERVICES]) && \is_array($metas[Blocker::META_NAME_SERVICES])) {

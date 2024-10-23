@@ -37,11 +37,7 @@ class ExportConsent
         global $wpdb;
         $userConsent = UserConsent::getInstance();
         $count = $userConsent->getCount();
-        // @codeCoverageIgnoreStart
-        if (!\defined('PHPUNIT_FILE')) {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-        }
-        // @codeCoverageIgnoreEnd
+        require_once ABSPATH . 'wp-admin/includes/file.php';
         // Pick up by UUID
         if (!empty($uuid)) {
             $sql = $userConsent->byCriteria(['revisionJson' => \true, 'uuid' => $uuid, 'perPage' => $count], UserConsent::BY_CRITERIA_RESULT_TYPE_SQL_QUERY);

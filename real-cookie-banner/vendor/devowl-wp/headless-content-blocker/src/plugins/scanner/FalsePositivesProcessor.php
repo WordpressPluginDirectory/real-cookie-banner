@@ -17,7 +17,6 @@ class FalsePositivesProcessor
      *
      * @param BlockableScanner $blockableScanner
      * @param ScanEntry[] $entries
-     * @codeCoverageIgnore
      */
     public function __construct($blockableScanner, $entries)
     {
@@ -56,7 +55,7 @@ class FalsePositivesProcessor
      */
     public function removeDuplicateScannedItems()
     {
-        $this->blockableScanner->setActive(\false);
+        $previousActive = $this->blockableScanner->setActive(\false);
         $contentBlocker = $this->blockableScanner->getHeadlessContentBlocker();
         foreach ($this->entries as $idx => $scanEntry) {
             if (!empty($scanEntry->template) && $scanEntry->markup !== null && \strpos($scanEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) !== \false) {
@@ -82,7 +81,7 @@ class FalsePositivesProcessor
             }
         }
         // Reset indexes
-        $this->blockableScanner->setActive(\false);
+        $this->blockableScanner->setActive($previousActive);
         $this->entries = \array_values($this->entries);
     }
     /**
@@ -150,13 +149,16 @@ class FalsePositivesProcessor
         $remove = [];
         $resetTemplates = [];
         foreach ($this->entries as $key => $scanEntry) {
-            if (!isset($scanEntry->template)) {
+            if (empty($scanEntry->template)) {
                 continue;
             }
             $blockable = $scanEntry->blockable ?? null;
+            // This is mostly covered by previous check
+            // @codeCoverageIgnoreStart
             if (\is_null($blockable)) {
                 continue;
             }
+            // @codeCoverageIgnoreEnd
             // Collect all found host expressions for this template
             $foundExpressions = [];
             foreach ($this->entries as $anotherEntry) {
@@ -165,9 +167,13 @@ class FalsePositivesProcessor
                         // Exclude found expressions when it does not match with query validation
                         $rules = $blockable->getRulesByExpression($foundExpression);
                         foreach ($rules as $rule) {
+                            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
+                            // Since the introduction of the `__default__` group this will never be the case but we keep for backwards-compatibility
+                            // @codeCoverageIgnoreStart
                             if (empty($rule->getAssignedToGroups())) {
                                 continue;
                             }
+                            // @codeCoverageIgnoreEnd
                             if (!empty($anotherEntry->blocked_url) && !$rule->urlMatchesQueryArgumentValidations($anotherEntry->blocked_url)) {
                                 continue;
                             }
@@ -206,16 +212,25 @@ class FalsePositivesProcessor
      */
     public function convertExternalUrlsCoveredByTemplate($entries = null)
     {
+        $previousActive = $this->blockableScanner->setActive(\false);
         // Remove all not-found templates as we want to only remove by found template
         $foundTemplateIds = \array_values(\array_unique(\array_column($this->entries, 'template')));
         $contentBlocker = $this->blockableScanner->getHeadlessContentBlocker();
         $previousBlockables = $contentBlocker->getBlockables();
-        $contentBlocker->setBlockables(\array_filter($previousBlockables, function ($blockable) use($foundTemplateIds) {
+        /**
+         * ScannableBlockable.
+         *
+         * @var ScannableBlockable[]
+         */
+        $scannableBlockables = \array_filter($previousBlockables, function ($blockable) use($foundTemplateIds) {
             if ($blockable instanceof ScannableBlockable) {
                 return \in_array($blockable->getIdentifier(), $foundTemplateIds, \true);
             }
+            // @codeCoverageIgnoreStart
             return \true;
-        }));
+            // @codeCoverageIgnoreEnd
+        });
+        $contentBlocker->setBlockables($scannableBlockables);
         foreach ($this->entries as $entry) {
             if ($entries !== null && !\in_array($entry, $entries, \true)) {
                 continue;
@@ -225,11 +240,18 @@ class FalsePositivesProcessor
                 $markup = $contentBlocker->modifyAny($markup->getContent());
                 if (\preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches)) {
                     $entry->template = $consentIdMatches[1];
+                    foreach ($scannableBlockables as $scannableBlockable) {
+                        if ($scannableBlockable->getIdentifier() === $entry->template) {
+                            $entry->blockable = $scannableBlockable;
+                            break;
+                        }
+                    }
                 }
             }
         }
         $contentBlocker->setBlockables($previousBlockables);
         // Reset indexes
+        $this->blockableScanner->setActive($previousActive);
         $this->entries = \array_values($this->entries);
     }
     /**
@@ -246,9 +268,12 @@ class FalsePositivesProcessor
         $convert = [];
         foreach ($this->entries as $key => $scanEntry) {
             $markup = $scanEntry->markup;
+            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
+            // @codeCoverageIgnoreStart
             if (!isset($scanEntry->template) || \in_array($scanEntry->template, $convert, \true) || !isset($markup)) {
                 continue;
             }
+            // @codeCoverageIgnoreEnd
             $markup = $markup->getContent();
             if ($scanEntry->tag === 'link' && (\strpos($markup, 'dns-prefetch') !== \false || \strpos($markup, 'preconnect') !== \false)) {
                 // Collect all found scan entries for this template
@@ -269,6 +294,7 @@ class FalsePositivesProcessor
                 $key = \array_search($convertScanEntry, $this->entries, \true);
                 $this->entries[] = $added[] = $entry = new ScanEntry();
                 $entry->blocked_url = $convertScanEntry->blocked_url;
+                $entry->source_url = $convertScanEntry->source_url;
                 $entry->tag = $convertScanEntry->tag;
                 $entry->attribute = $convertScanEntry->attribute;
                 $entry->markup = $convertScanEntry->markup;
@@ -327,8 +353,6 @@ class FalsePositivesProcessor
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getEntries()
     {

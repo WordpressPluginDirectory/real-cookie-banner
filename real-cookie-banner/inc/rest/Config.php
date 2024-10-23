@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\rest;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\AbstractSyncPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Sync;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
@@ -372,7 +373,7 @@ class Config extends WP_REST_Settings_Controller
         $fnCreatePost = function () {
             return \wp_insert_post(['post_type' => 'page', 'post_content' => \sprintf('[%s]', CookiePolicyShortcode::TAG), 'post_title' => \_x('Cookie policy', 'legal-text', Hooks::TD_FORCED), 'post_status' => 'publish'], \true);
         };
-        if ($compLanguage->isActive()) {
+        if ($compLanguage->isActive() && $compLanguage instanceof AbstractSyncPlugin) {
             $sourceLanguage = $compLanguage->getDefaultLanguage();
             $result = $compLanguage->switchToLanguage($sourceLanguage, function () use($fnCreatePost, $compLanguage) {
                 $td = Hooks::getInstance()->createTemporaryTextDomain();

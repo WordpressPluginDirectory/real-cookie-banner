@@ -19,7 +19,6 @@ class TagAttributeFinder extends AbstractRegexFinder
      * @param string[] $tags
      * @param string[] $attributes If you rely on the regular expression match of the link attribute it is highly recommend
      *                             to pass only one attribute and create multiple instances of `TagAttributeFinder`.
-     * @codeCoverageIgnore
      */
     public function __construct($tags, $attributes)
     {
@@ -41,9 +40,11 @@ class TagAttributeFinder extends AbstractRegexFinder
     {
         list($tag, $attributes) = self::extractAttributesFromMatch($m);
         list($linkAttribute, $link) = $this->getRegexpAttributesInMatch($attributes);
+        // @codeCoverageIgnoreStart
         if ($linkAttribute === null) {
             return \false;
         }
+        // @codeCoverageIgnoreEnd
         if ($this->isLinkEscaped($link) && Utils::isJson($link) === \false) {
             return \false;
         }
@@ -88,8 +89,6 @@ class TagAttributeFinder extends AbstractRegexFinder
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getRegexpAttributes()
     {
@@ -113,6 +112,7 @@ class TagAttributeFinder extends AbstractRegexFinder
      *
      * @param array $m
      * @deprecated Use `extractAttributesFromMatch` instead!
+     * @codeCoverageIgnore
      */
     public static function prepareMatch($m)
     {

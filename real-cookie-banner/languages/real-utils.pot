@@ -172,6 +172,6 @@ msgstr ""
 msgid "Additional plugins by devowl.io"
 msgstr ""
 
-#: WelcomePage.php:363
+#: WelcomePage.php:366
 msgid "Available in"
 msgstr ""

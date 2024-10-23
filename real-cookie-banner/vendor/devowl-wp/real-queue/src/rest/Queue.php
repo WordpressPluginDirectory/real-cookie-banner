@@ -21,7 +21,7 @@ class Queue
     use UtilsProvider;
     const MAX_BATCH_CLIENT_SIZE = 25;
     const MAX_EXECUTION_SECONDS_PER_REQUEST = 5;
-    const LOCK_UNTIL_SECONDS = self::MAX_EXECUTION_SECONDS_PER_REQUEST * self::MAX_BATCH_CLIENT_SIZE;
+    const LOCK_UNTIL_SECONDS = self::MAX_EXECUTION_SECONDS_PER_REQUEST * 3;
     private $core;
     /**
      * C'tor.
@@ -42,7 +42,7 @@ class Queue
         \register_rest_route($namespace, '/job/(?P<id>[0-9]+)', ['methods' => 'GET', 'callback' => [$this, 'routeJobGet'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['lock' => ['type' => 'boolean']]]);
         \register_rest_route($namespace, '/job/(?P<id>[0-9]+)', ['methods' => 'POST', 'callback' => [$this, 'routeJobExecute'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['try' => ['type' => 'string', 'sanitize_callback' => function ($value) {
             return empty($value) ? [] : \array_map('intval', \explode(',', $value));
-        }]]]);
+        }], 'additionalData' => ['type' => 'string']]]);
         \register_rest_route($namespace, '/job/(?P<id>[0-9]+)/result', ['methods' => 'POST', 'callback' => [$this, 'routeJobResult'], 'permission_callback' => [$this->core, 'currentUserAllowedToQuery'], 'args' => ['process' => ['type' => 'number', 'required' => \true, 'sanitize_callback' => function ($value) {
             return \intval($value);
         }], 'errorCode' => ['type' => 'string'], 'errorMessage' => ['type' => 'string'], 'errorData' => ['type' => 'string']]]);
@@ -86,6 +86,7 @@ class Queue
      * @api {post} /real-queue/v1/job/:job Execute this job (only server-worker jobs are executed!)
      * @apiHeader {string} X-WP-Nonce
      * @apiParam {string} [tryIds] Comma separated list of additional job ids which could be tried to be executed, too
+     * @apiParam {string} [additionalData]
      * @apiName ExecuteJob
      * @apiPermission edit_posts
      * @apiGroup Queue
@@ -97,7 +98,7 @@ class Queue
         $tryIds = $request->get_param('try');
         \array_unshift($tryIds, $jobId);
         $run = $this->core->getExecutor()->run($tryIds, self::MAX_EXECUTION_SECONDS_PER_REQUEST * 1000, \true);
-        return new WP_REST_Response($run);
+        return new WP_REST_Response(\array_merge($run, ['status' => $this->buildStatus($request->get_params())]));
     }
     /**
      * See API docs.
@@ -147,7 +148,7 @@ class Queue
         $after = $request->get_param('after');
         $ids = $request->get_param('ids');
         $query = $this->core->getQuery();
-        $data = $query->read(['omitClientData' => \true, 'lockUntil' => self::LOCK_UNTIL_SECONDS, 'ids' => $ids, 'after' => $after]);
+        $data = $query->read(['type' => \is_array($ids) && \count($ids) > 0 ? 'all' : 'pending', 'omitClientData' => \true, 'lockUntil' => self::LOCK_UNTIL_SECONDS, 'ids' => $ids, 'after' => $after]);
         return new WP_REST_Response(['jobs' => $data, 'remaining' => $query->readRemaining(), 'status' => $this->buildStatus($request->get_params())]);
     }
     /**

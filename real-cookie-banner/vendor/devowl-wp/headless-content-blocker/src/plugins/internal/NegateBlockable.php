@@ -16,7 +16,6 @@ class NegateBlockable extends AbstractBlockable
      *
      * @param HeadlessContentBlocker $headlessContentBlocker
      * @param string[] $rules
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker, $rules)
     {

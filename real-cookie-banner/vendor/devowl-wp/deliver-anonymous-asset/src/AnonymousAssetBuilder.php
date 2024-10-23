@@ -122,11 +122,7 @@ class AnonymousAssetBuilder
         }
         if (\wp_mkdir_p($folder)) {
             // Create the anonymous files
-            // @codeCoverageIgnoreStart
-            if (!\defined('PHPUNIT_FILE')) {
-                require_once ABSPATH . 'wp-admin/includes/file.php';
-            }
-            // @codeCoverageIgnoreEnd
+            require_once ABSPATH . 'wp-admin/includes/file.php';
             // As we create the folder in `wp-content`, we could have wrong permission for the created
             // anonymous folder due to `wp_mkdir_p()` as it inherits the `chmod` from the parent folder
             UtilsUtils::runDirectFilesystem(function ($fs) use($hashFolderPath, $folder) {

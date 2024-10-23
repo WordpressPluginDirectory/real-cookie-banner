@@ -82,10 +82,7 @@ class Hooks
             $activeLanguages = \array_combine($activeLanguages, $activeLanguagesTranslated);
         } else {
             $locale = \get_locale();
-            require_once ABSPATH . 'wp-admin/includes/translation-install.php';
-            $translations = \wp_get_available_translations();
-            $activeTranslation = $translations[$locale] ?? null;
-            $activeLanguages[$locale] = $locale === 'en_US' ? 'English (United States)' : ($activeTranslation === null ? $locale : $activeTranslation['native_name']);
+            $activeLanguages[$locale] = $compLanguage->getTranslatedName($locale);
         }
         foreach ($activeLanguages as $code => $name) {
             if (\in_array($code, self::MINIMAL_TRANSLATION_CODES, \true)) {

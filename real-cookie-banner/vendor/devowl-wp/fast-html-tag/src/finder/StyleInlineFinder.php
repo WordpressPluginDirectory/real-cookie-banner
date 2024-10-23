@@ -25,8 +25,6 @@ class StyleInlineFinder extends AbstractRegexFinder
     const STYLE_INLINE_REGEXP = '/<style([^>]*)>([^<]*(?:<(?![\\\\]*\\/style>)[^<]*)*)<([\\\\]*)\\/style>/mixs';
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {

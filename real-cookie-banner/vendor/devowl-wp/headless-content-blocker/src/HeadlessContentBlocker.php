@@ -67,6 +67,13 @@ class HeadlessContentBlocker extends FastHtmlTag
      * @var AbstractBlockable[]
      */
     private $blockables = [];
+    /**
+     * Pool of all found markups.
+     *
+     * @var Markup[]
+     */
+    private $markupPool = [];
+    private $markupChain = [];
     private $finderToMatcher;
     private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'embed', 'img'], 'attr' => ['href', 'data-src', 'src']]];
     /**
@@ -83,8 +90,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     private $selectorSyntaxMap = ['source[src:matchesUrl(withHost=true)]'];
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -99,9 +104,11 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     public function addPlugin($pluginName)
     {
+        // @codeCoverageIgnoreStart
         if (!\class_exists($pluginName) || !\is_subclass_of($pluginName, AbstractPlugin::class)) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
         /**
          * Plugin.
          *
@@ -229,6 +236,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      * Remove a callback added through `addBlockedMatchCallback`.
      *
      * @param callable $callback
+     * @codeCoverageIgnore
      */
     public function removeBlockedMatchCallback($callback)
     {
@@ -305,6 +313,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      * In the folder there need to exist the following two files: `dummy.css`, `dummy.png`.
      *
      * @param string $urlPath
+     * @codeCoverageIgnore
      */
     public function setInlineStyleDummyUrlPath($urlPath)
     {
@@ -336,6 +345,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      * A set of HTML tags => attribute names which should always prefix with `consent-original-`.
      *
      * @param string[][] $tagToAttributesMap
+     * @codeCoverageIgnore
      */
     public function addReplaceAlwaysAttributes($tagToAttributesMap)
     {
@@ -458,6 +468,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     protected function processMatch($matcher, $match)
     {
+        $originalMatch = $match->getOriginalMatch();
         $rerunExceptionDispatcher = [];
         foreach ($this->rerunExceptions as $idx => $exception) {
             if ($match->getInvisibleAttribute(RerunOnMatchException::ID_ATTRIBUTE_NAME) === $exception->getId()) {
@@ -483,9 +494,13 @@ class HeadlessContentBlocker extends FastHtmlTag
         } catch (RerunOnMatchException $e) {
             $this->registerRerun();
             $this->rerunExceptions[] = $e;
+            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
+            // @codeCoverageIgnoreStart
             foreach ($rerunExceptionDispatcher as $c) {
                 $c();
             }
+            // @codeCoverageIgnoreEnd
+            $this->persistMarkupChain($originalMatch, $match);
             return;
         }
         if ($result->isBlocked()) {
@@ -500,13 +515,40 @@ class HeadlessContentBlocker extends FastHtmlTag
                 if ($originalAttributeKey !== \false) {
                     $mimeType = $match->isAttributeDataUrl($originalAttributeKey);
                     if ($mimeType !== \false) {
+                        // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
+                        // @codeCoverageIgnoreStart
                         $match->setAttribute($key, $val, $mimeType);
+                        // @codeCoverageIgnoreEnd
                     }
                 }
             }
         }
         foreach ($rerunExceptionDispatcher as $c) {
             $c();
+        }
+        $this->persistMarkupChain($originalMatch, $match);
+    }
+    /**
+     * Persist the markup chain so we can reconstruct the original match in the scanner.
+     *
+     * @param string $originalMatch
+     * @param AbstractMatch $match
+     */
+    protected function persistMarkupChain($originalMatch, $match)
+    {
+        if (!empty($originalMatch) && $match->hasChanged()) {
+            // Temporarily disable before and after tag as this is not needed for the chain
+            $beforeTag = $match->getBeforeTag();
+            $afterTag = $match->getAfterTag();
+            $match->setBeforeTag('');
+            $match->setAfterTag('');
+            $to = \md5($match->render());
+            $from = \md5($originalMatch);
+            if ($to !== $from) {
+                $this->markupChain[$to] = $from;
+            }
+            $match->setBeforeTag($beforeTag);
+            $match->setAfterTag($afterTag);
         }
     }
     /**
@@ -690,9 +732,11 @@ class HeadlessContentBlocker extends FastHtmlTag
     protected function init()
     {
         $this->addCallback(function ($html) {
+            // @codeCoverageIgnoreStart
             if (!$this->isSetup) {
                 throw new Exception('Please setup() your headless content blocker before modifying your content!');
             }
+            // @codeCoverageIgnoreEnd
             return $html;
         });
     }
@@ -778,14 +822,15 @@ class HeadlessContentBlocker extends FastHtmlTag
                 return $blockable;
             }
         }
+        // @codeCoverageIgnoreStart
         return null;
+        // @codeCoverageIgnoreEnd
     }
     /**
      * If you pass `true`, the generated `BlockedResult` will contain multiple results and will not
      * break after the first found blockable to block.
      *
      * @param boolean $status
-     * @codeCoverageIgnore
      */
     public function setAllowMultipleBlockerResults($status)
     {
@@ -793,8 +838,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function isAllowMultipleBlockerResults()
     {
@@ -802,8 +845,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getTagAttributeMap()
     {
@@ -820,8 +861,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getBlockables()
     {
@@ -829,8 +868,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getKeepAlwaysAttributes()
     {
@@ -838,8 +875,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getKeepAlwaysAttributesIfClass()
     {
@@ -847,8 +882,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getSkipInlineScriptVariableAssignments()
     {
@@ -856,8 +889,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getInlineStyleDummyUrlPath()
     {
@@ -865,8 +896,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getReplaceAlwaysAttributes()
     {
@@ -874,8 +903,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getVisualParentIfClass()
     {
@@ -892,8 +919,6 @@ class HeadlessContentBlocker extends FastHtmlTag
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFinderToMatcher()
     {
@@ -908,5 +933,32 @@ class HeadlessContentBlocker extends FastHtmlTag
     public function getPluginsByClassName($className)
     {
         return $this->plugins[$className] ?? null;
+    }
+    /**
+     * Getter.
+     *
+     * This also allows you to clear the markup pool by using `= []` to the retrieved reference.
+     */
+    public function &getMarkupPool()
+    {
+        return $this->markupPool;
+    }
+    /**
+     * Find the original markup from a given markup without any transformations.
+     *
+     * @param Markup $markup
+     */
+    public function findOriginalMarkup($markup)
+    {
+        // @codeCoverageIgnoreStart
+        if ($markup === null) {
+            return null;
+        }
+        // @codeCoverageIgnoreEnd
+        $id = $markup->getId();
+        while (isset($this->markupChain[$id])) {
+            $id = $this->markupChain[$id];
+        }
+        return $this->markupPool[$id] ?? $markup;
     }
 }

@@ -19,7 +19,6 @@ class RuleGroup
      * @param string $id
      * @param boolean $mustAllRulesBeResolved
      * @param boolean $mustGroupBeResolved
-     * @codeCoverageIgnore
      */
     public function __construct($blockable, $id, $mustAllRulesBeResolved = \false, $mustGroupBeResolved = \false)
     {
@@ -48,8 +47,6 @@ class RuleGroup
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function isMustAllRulesBeResolved()
     {
@@ -57,8 +54,6 @@ class RuleGroup
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function isMustGroupBeResolved()
     {

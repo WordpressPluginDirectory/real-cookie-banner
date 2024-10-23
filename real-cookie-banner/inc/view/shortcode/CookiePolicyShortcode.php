@@ -27,8 +27,9 @@ class CookiePolicyShortcode
     public static function render($atts)
     {
         $atts = \shortcode_atts([], $atts, self::TAG);
+        $core = Core::getInstance();
         // Force to load banner assets
-        Core::getInstance()->getAssets()->enqueue_scripts_and_styles(Constants::ASSETS_TYPE_FRONTEND);
-        return Core::getInstance()->getCookieConsentManagement()->getCookiePolicy()->renderHtml();
+        $core->getAssets()->enqueue_scripts_and_styles(Constants::ASSETS_TYPE_FRONTEND);
+        return $core->getCookieConsentManagement()->getCookiePolicy()->renderHtml(!$core->getCompLanguage()->isCurrentlyInEditorPreview());
     }
 }

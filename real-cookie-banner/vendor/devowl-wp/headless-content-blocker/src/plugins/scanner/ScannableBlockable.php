@@ -58,7 +58,6 @@ class ScannableBlockable extends AbstractBlockable
      * @param Rule[]|array[] $rules A list of expressions which hold different scan options; you can also pass
      *                              an array which gets automatically converted to `Rule`.
      * @param RuleGroup[]|array[] $ruleGroups You can also pass an array which gets automatically converted to `RuleGroup`.
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker, $identifier, $extended = null, $rules = [], $ruleGroups = [])
     {
@@ -90,21 +89,27 @@ class ScannableBlockable extends AbstractBlockable
         foreach ($ruleGroups as $ruleGroup) {
             if (\is_array($ruleGroup)) {
                 $this->ruleGroups[$ruleGroup['id']] = new RuleGroup($this, $ruleGroup['id'], $ruleGroup['mustAllRulesBeResolved'] ?? \false, $ruleGroup['mustGroupBeResolved'] ?? \true);
+                // @codeCoverageIgnoreStart
             } elseif ($ruleGroup instanceof RuleGroup) {
                 $this->ruleGroups[$ruleGroup['id']] = $ruleGroup;
             }
+            // @codeCoverageIgnoreEnd
         }
         // Create host rule instances
         foreach ($rules as $rule) {
             if (\is_array($rule)) {
                 $newRule = new Rule($this, $rule['expression'], $rule['assignedToGroups'] ?? [], $rule['queryArgs'] ?? [], $rule['needsRequiredSiblingRule'] ?? \false);
+                // @codeCoverageIgnoreStart
             } elseif ($rule instanceof Rule) {
                 $newRule = $rule;
+                // @codeCoverageIgnoreEnd
             } elseif (\is_string($rule)) {
                 $newRule = new Rule($this, $rule);
+                // @codeCoverageIgnoreStart
             } else {
                 continue;
             }
+            // @codeCoverageIgnoreEnd
             // Create rule group if not yet existing
             $this->rules[] = $newRule;
             foreach ($newRule->getAssignedToGroups() as $assignedToGroup) {
@@ -202,8 +207,6 @@ class ScannableBlockable extends AbstractBlockable
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getIdentifier()
     {
@@ -211,8 +214,6 @@ class ScannableBlockable extends AbstractBlockable
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getExtended()
     {
@@ -241,7 +242,6 @@ class ScannableBlockable extends AbstractBlockable
      *
      * @param string $expression
      * @return Rule[]
-     * @codeCoverageIgnore
      */
     public function getRulesByExpression($expression)
     {

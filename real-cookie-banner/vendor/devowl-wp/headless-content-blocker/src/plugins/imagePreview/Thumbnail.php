@@ -5,6 +5,8 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\i
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 /**
  * A thumbnail is describing a found embed URL.
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 class Thumbnail
@@ -104,7 +106,6 @@ class Thumbnail
      * Setter.
      *
      * @param string $md5File
-     * @codeCoverageIgnore
      */
     public function setMd5File($md5File)
     {
@@ -115,7 +116,6 @@ class Thumbnail
      *
      * @param string $thumbnailUrl
      * @param string $provider
-     * @codeCoverageIgnore
      */
     public function setThumbnailUrl($thumbnailUrl, $provider = null)
     {
@@ -139,7 +139,6 @@ class Thumbnail
      * Setter.
      *
      * @param string $title
-     * @codeCoverageIgnore
      */
     public function setTitle($title)
     {
@@ -149,7 +148,6 @@ class Thumbnail
      * Setter.
      *
      * @param int $width
-     * @codeCoverageIgnore
      */
     public function setWidth($width)
     {
@@ -159,7 +157,6 @@ class Thumbnail
      * Setter.
      *
      * @param int $height
-     * @codeCoverageIgnore
      */
     public function setHeight($height)
     {
@@ -169,7 +166,6 @@ class Thumbnail
      * Setter.
      *
      * @param float $ratio
-     * @codeCoverageIgnore
      */
     public function setForceRatio($ratio)
     {
@@ -179,7 +175,6 @@ class Thumbnail
      * Setter.
      *
      * @param string $cacheUrl
-     * @codeCoverageIgnore
      */
     public function setCacheUrl($cacheUrl)
     {
@@ -189,7 +184,6 @@ class Thumbnail
      * Setter.
      *
      * @param string $error
-     * @codeCoverageIgnore
      */
     public function setError($error)
     {
@@ -199,7 +193,6 @@ class Thumbnail
      * Setter.
      *
      * @param int $allowance
-     * @codeCoverageIgnore
      */
     public function setAllowance($allowance)
     {
@@ -208,7 +201,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getEmbedUrl()
     {
@@ -217,7 +209,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getBlockable()
     {
@@ -226,7 +217,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getId()
     {
@@ -235,7 +225,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getMd5File()
     {
@@ -244,7 +233,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getThumbnailUrl()
     {
@@ -253,7 +241,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getAlternativeThumbnailUrl()
     {
@@ -262,7 +249,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getTitle()
     {
@@ -271,7 +257,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getWidth()
     {
@@ -280,7 +265,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getHeight()
     {
@@ -289,7 +273,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getForceRatio()
     {
@@ -298,7 +281,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getCacheUrl()
     {
@@ -307,7 +289,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getError()
     {
@@ -316,7 +297,6 @@ class Thumbnail
     /**
      * Getter.
      *
-     * @codeCoverageIgnore
      */
     public function getAllowance()
     {

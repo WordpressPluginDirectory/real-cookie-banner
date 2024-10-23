@@ -7,6 +7,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\TagAttributeFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\TagAttributeMatcher;
 /**
  * Read from a list of vendors and their device disclosure domains and transform URLs to TCF compatible URLs by adding
@@ -45,7 +46,7 @@ class TcfForwardGdprStringInUrl extends AbstractPlugin
         $link = $match->getLink();
         if (\strpos($link, 'gdpr=') === \false) {
             $pseudoMatcher = new TagAttributeMatcher($this->getHeadlessContentBlocker());
-            $blockedResult = new BlockedResult('', [], '');
+            $blockedResult = new BlockedResult('', [], Markup::persist('', $this->getHeadlessContentBlocker()));
             $pseudoMatcher->iterateBlockablesInString($blockedResult, $match->getLink(), \true, \false, null, $this->vendorDomains);
             if ($blockedResult->isBlocked()) {
                 /**
@@ -69,9 +70,11 @@ class TcfForwardGdprStringInUrl extends AbstractPlugin
      */
     public function addVendorDisclosureDomains($vendorId, $domains)
     {
+        // @codeCoverageIgnoreStart
         if (!\is_array($domains)) {
             return;
         }
+        // @codeCoverageIgnoreEnd
         $this->vendorDomains[] = new TcfVendorDomainsBlockable($this->getHeadlessContentBlocker(), $vendorId, $domains);
     }
 }

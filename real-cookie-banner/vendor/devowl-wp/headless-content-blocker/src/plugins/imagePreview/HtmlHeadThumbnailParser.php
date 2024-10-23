@@ -11,6 +11,8 @@ use SimpleXMLElement;
 use WpOrg\Requests\Response;
 /**
  * The head parser extracts links and meta from HTML responses.
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 class HtmlHeadThumbnailParser extends FastHtmlTag
@@ -28,8 +30,6 @@ class HtmlHeadThumbnailParser extends FastHtmlTag
     private $headParserResult = [];
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {

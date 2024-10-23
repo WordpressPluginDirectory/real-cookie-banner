@@ -29,12 +29,24 @@ class NegatePlugin extends AbstractPlugin
     {
         if ($result->isBlocked()) {
             $headlessContentBlocker = $this->getHeadlessContentBlocker();
+            // Get all selector syntax map strings starting with `!`
+            $negateSelectorSyntaxMap = \array_values(\array_filter($headlessContentBlocker->getSelectorSyntaxMap(), function ($item) {
+                return Utils::startsWith($item, '!');
+            }));
+            $negateSelectorSyntaxMap = \array_map(function ($item) {
+                return new NegateBlockable($this->getHeadlessContentBlocker(), [\substr($item, 1)]);
+            }, $negateSelectorSyntaxMap);
             foreach ($result->getBlocked() as $blocked) {
                 $negateRules = $headlessContentBlocker->getBlockableRulesStartingWith(self::PREFIX, \true, [$blocked]);
-                if (\count($negateRules) > 0) {
+                if (\count($negateRules) > 0 || \count($negateSelectorSyntaxMap) > 0) {
                     // Simulate a negate blockable and search for results in the processed original match
                     $contentBlocker = new HeadlessContentBlocker();
-                    $contentBlocker->setBlockables([new NegateBlockable($contentBlocker, $negateRules)]);
+                    if (\count($negateRules) > 0) {
+                        $contentBlocker->addBlockables([new NegateBlockable($contentBlocker, $negateRules)]);
+                    }
+                    if (\count($negateSelectorSyntaxMap) > 0) {
+                        $contentBlocker->addBlockables($negateSelectorSyntaxMap);
+                    }
                     $contentBlocker->setup();
                     $processed = $contentBlocker->modifyHtml($match->getOriginalMatch());
                     if (\strpos($processed, \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, NegateBlockable::CRITERIA)) !== \false) {

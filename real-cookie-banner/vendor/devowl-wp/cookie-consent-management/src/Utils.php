@@ -74,4 +74,43 @@ class Utils
         // Remove duplicate `(.*)` identifiers to avoid "catastrophical backtrace"
         return \preg_replace('/(\\((\\(\\?:\\.\\|\\\\n\\)\\*)\\))+/m', '((?:.|\\n)*)', $regex);
     }
+    /**
+     * Compress a string with `gzcompress` and encode it with `base64` so it can be saved in the database. Currently, we are not able
+     * to use compressed built-in MySQL functions, so we need to compress the data on our own at application level.
+     *
+     * Attention: Use this method only for data that is only retrieved at application level as the data cannot be decompressed on database level.
+     *
+     * Why gzcompress? See https://www.php.net/manual/de/function.gzdeflate.php#91310
+     *
+     * > gzcompress produces longer data because it embeds information about the encoding onto the string. If you are compressing
+     * > data that will only ever be handled on one machine, then you don't need to worry about which of these functions you use. However,
+     * > if you are passing data compressed with these functions to a different machine you should use gzcompress.
+     *
+     * @param string $string
+     * @param mixed $default
+     */
+    public static function gzCompressForDatabase($string, $default = null)
+    {
+        if (\function_exists('gzcompress')) {
+            return \base64_encode(\gzcompress($string));
+        }
+        return $default;
+    }
+    /**
+     * Decompress a string with `gzuncompress`. See also `gzCompressForDatabase`.
+     *
+     * @param string $string
+     * @param mixed $default
+     */
+    public static function gzUncompressForDatabase($string, $default = null)
+    {
+        // Is the string already uncompressed?
+        if (self::startsWith($string, '{')) {
+            return $string;
+        }
+        if (\function_exists('gzuncompress')) {
+            return \gzuncompress(\base64_decode($string));
+        }
+        return $default;
+    }
 }

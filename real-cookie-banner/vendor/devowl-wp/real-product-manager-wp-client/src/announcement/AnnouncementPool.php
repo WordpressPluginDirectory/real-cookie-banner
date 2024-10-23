@@ -144,11 +144,18 @@ class AnnouncementPool
         if (\in_array($id, $viewed, \true)) {
             return;
         }
-        foreach ($this->getPluginUpdate()->getUniqueLicenses() as $license) {
-            if (!empty($license->getActivation()->getCode())) {
+        // Suppress the `wp_die` of `getUniqueLicenses` as we do not have another way yet to get all
+        // the Client UUIDs without fetching all licenses across the complete multisite.
+        // See also: https://app.clickup.com/t/86962zphh?comment=90120076762454&threadedComment=90120076802786
+        $pluginUpdate = $this->getPluginUpdate();
+        $pluginUpdate->suppressGetLicensesWpDie = \true;
+        foreach ($pluginUpdate->getUniqueLicenses() as $license) {
+            $activationCode = $license->getActivation()->getCode();
+            if (!empty($activationCode)) {
                 $this->getClient()->postView($id, $license->getUuid());
             }
         }
+        $pluginUpdate->suppressGetLicensesWpDie = \false;
         // Save status in option
         $viewed[] = $id;
         $option = $this->getOption();

@@ -81,7 +81,7 @@ class Scanner
         $deleteSourceUrls = [self::getCurrentSourceUrl()];
         if ($job !== null) {
             // Original URL (e.g. redirects)
-            $deleteSourceUrls[] = $job->data['url'];
+            $deleteSourceUrls[] = $job->data->url;
         }
         $query->removeSourceUrls($deleteSourceUrls);
         /**

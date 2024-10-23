@@ -8,7 +8,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils as FastHtmlTagUtils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelper;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\TagAttributeMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Utils;
 /**
  * Convert links to autoplay links for known video and sound platforms.
@@ -33,13 +32,7 @@ class Autoplay extends AbstractPlugin
      */
     public function blockedMatch($result, $matcher, $match)
     {
-        if ($matcher instanceof TagAttributeMatcher) {
-            /**
-             * Var.
-             *
-             * @var TagAttributeMatch
-             */
-            $match = $match;
+        if ($match instanceof TagAttributeMatch) {
             $tag = $match->getTag();
             $linkAttribute = $match->getLinkAttribute();
             $transformedAttributeValue = AttributesHelper::transformAttribute($linkAttribute);

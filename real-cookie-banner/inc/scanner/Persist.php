@@ -48,7 +48,6 @@ class Persist
         $table_name = $this->getTableName(self::TABLE_NAME);
         $table_name_markup = $this->getTableName(self::TABLE_NAME_MARKUP);
         $post_id = \get_the_ID();
-        $source_url = \DevOwl\RealCookieBanner\scanner\Scanner::getCurrentSourceUrl();
         /**
          * Persist distinct markups.
          *
@@ -75,11 +74,9 @@ class Persist
          */
         $rows = [];
         foreach ($this->entries as $entry) {
-            $entry->source_url = $source_url;
-            $entry->calculateFields();
             // Generate `VALUES` SQL
             // phpcs:disable WordPress.DB.PreparedSQL
-            $rows[] = \str_ireplace(["'NULL'", '= NULL'], ['NULL', 'IS NULL'], $wpdb->prepare('%s, %s, %s, %s, %s, %s, %d, %s, %s, %s', $entry->template, $entry->blocked_url ?? 'NULL', $entry->blocked_url_host ?? 'NULL', $entry->blocked_url_hash, $entry->markup === null ? '' : $entry->markup->getId(), $entry->tag, $entry->post_id !== \false ? $post_id : 'NULL', $entry->source_url, $entry->source_url_hash, \current_time('mysql')));
+            $rows[] = \str_ireplace(["'NULL'", '= NULL'], ['NULL', 'IS NULL'], $wpdb->prepare('%s, %s, %s, %s, %s, %s, %d, %s, %s, %s', $entry->template, $entry->blocked_url ?? 'NULL', $entry->blocked_url_host ?? 'NULL', $entry->blocked_url_hash, $entry->markup === null ? '' : $entry->markup->getId(), $entry->tag, $post_id, $entry->source_url, $entry->source_url_hash, \current_time('mysql')));
             // phpcs:enable WordPress.DB.PreparedSQL
         }
         // Allow to update fields if already exists

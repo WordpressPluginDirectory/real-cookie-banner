@@ -41,7 +41,6 @@ class StyleInlineMatch extends AbstractMatch
      * Setter.
      *
      * @param string $style
-     * @codeCoverageIgnore
      */
     public function setStyle($style)
     {
@@ -50,8 +49,6 @@ class StyleInlineMatch extends AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getStyle()
     {

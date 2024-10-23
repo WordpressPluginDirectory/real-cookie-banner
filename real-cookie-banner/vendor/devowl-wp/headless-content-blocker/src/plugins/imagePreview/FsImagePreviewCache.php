@@ -6,6 +6,8 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Utils;
 use Exception;
 /**
  * Provide a file system cache. It is abstract as you should implement your own class for this with missing methods.
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 abstract class FsImagePreviewCache extends ImagePreviewCache
@@ -204,8 +206,6 @@ abstract class FsImagePreviewCache extends ImagePreviewCache
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getPrefixUrl()
     {

@@ -32,8 +32,6 @@ class RerunOnMatchException extends Exception
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getId()
     {
@@ -50,8 +48,6 @@ class RerunOnMatchException extends Exception
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAfterProcessing()
     {

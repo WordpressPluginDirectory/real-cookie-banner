@@ -193,24 +193,27 @@ class WelcomePage
      */
     public function prepare_items($res, $action, $args)
     {
-        $pluginDir = \constant('WP_PLUGIN_DIR') . '/';
-        foreach ($res->plugins as $key => $plugin) {
-            if (\strpos($plugin['description'], self::EXCLUDE_DESCRIPTION_CONTAINS)) {
-                unset($res->plugins[$key]);
-                continue;
+        if (\property_exists($res, 'plugins')) {
+            $pluginDir = \constant('WP_PLUGIN_DIR') . '/';
+            foreach ($res->plugins as $key => $plugin) {
+                if (\strpos($plugin['description'], self::EXCLUDE_DESCRIPTION_CONTAINS)) {
+                    unset($res->plugins[$key]);
+                    continue;
+                }
+                // Remove already installed plugins
+                $slug = $plugin['slug'];
+                $fix = isset(self::PLUGIN_SLUG_FIXER[$slug]) ? self::PLUGIN_SLUG_FIXER[$slug] : null;
+                $exists = \is_dir($pluginDir . $slug) || $fix !== null && \is_dir($pluginDir . $fix);
+                if ($exists) {
+                    unset($res->plugins[$key]);
+                }
             }
-            // Remove already installed plugins
-            $slug = $plugin['slug'];
-            $fix = isset(self::PLUGIN_SLUG_FIXER[$slug]) ? self::PLUGIN_SLUG_FIXER[$slug] : null;
-            $exists = \is_dir($pluginDir . $slug) || $fix !== null && \is_dir($pluginDir . $fix);
-            if ($exists) {
-                unset($res->plugins[$key]);
-            }
+            \uasort($res->plugins, function ($a, $b) {
+                return \strnatcmp(\strtolower($b['last_updated']), \strtolower($a['last_updated']));
+            });
+            return $res;
         }
-        \uasort($res->plugins, function ($a, $b) {
-            return \strnatcmp(\strtolower($b['last_updated']), \strtolower($a['last_updated']));
-        });
-        return $res;
+        return null;
     }
     /**
      * Get key features and transform them to key features HTML including rows' `div`.

@@ -29,7 +29,7 @@ trait PluginUpdateLicensePool
      * @var License[]
      */
     private $licenseCache = [];
-    private $suppressGetLicensesWpDie = \false;
+    public $suppressGetLicensesWpDie = \false;
     /**
      * License activation client.
      *
@@ -252,7 +252,7 @@ trait PluginUpdateLicensePool
                 $this->licenses = [];
                 $isDevEnv = \defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV');
                 if ($isDevEnv && \is_admin() && $pagenow === 'index.php' && !$this->suppressGetLicensesWpDie) {
-                    \wp_die(\sprintf('You are calling <code>%s</code> at page load which leads to performance issues on multisite. Backtrace:<br><br><pre>%s</pre>', __METHOD__, \json_encode(\debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 10), \JSON_PRETTY_PRINT)));
+                    \wp_die(\sprintf('You are calling <code>%s</code> at page load which leads to performance issues on multisite. This text is only visible to development environments and never to end users of the plugin! Backtrace:<br><br><pre>%s</pre>', __METHOD__, \json_encode(\debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 10), \JSON_PRETTY_PRINT)));
                 }
             }
             foreach ($blogIds as $blogId) {

@@ -45,23 +45,15 @@ class LinkBlocker extends AbstractPlugin
      */
     public function checkResult($result, $matcher, $match)
     {
-        if ($result->isBlocked() && $matcher instanceof TagAttributeMatcher && \in_array($match->getTag(), self::REPLACE_TAGS, \true)) {
-            /**
-             * Var.
-             *
-             * @var TagAttributeMatch
-             */
-            $match = $match;
-            if (\in_array($match->getLinkAttribute(), self::REPLACE_ATTRIBUTES, \true)) {
-                $classes = \explode(' ', \strtolower($match->getAttribute('class', '')));
-                $blockOnlyIfClass = $this->blockIfClass;
-                foreach ($classes as $class) {
-                    if (\in_array($class, $blockOnlyIfClass, \true)) {
-                        return $result;
-                    }
+        if ($result->isBlocked() && $matcher instanceof TagAttributeMatcher && $match instanceof TagAttributeMatch && \in_array($match->getTag(), self::REPLACE_TAGS, \true) && \in_array($match->getLinkAttribute(), self::REPLACE_ATTRIBUTES, \true)) {
+            $classes = \explode(' ', \strtolower($match->getAttribute('class', '')));
+            $blockOnlyIfClass = $this->blockIfClass;
+            foreach ($classes as $class) {
+                if (\in_array($class, $blockOnlyIfClass, \true)) {
+                    return $result;
                 }
-                $result->disableBlocking();
             }
+            $result->disableBlocking();
         }
         return $result;
     }

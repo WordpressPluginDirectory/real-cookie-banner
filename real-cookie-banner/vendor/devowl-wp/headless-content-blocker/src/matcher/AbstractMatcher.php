@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\MatchPluginCallbacks;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 /**
  * A matcher describes a class which gets a match from the `FastHtmlTag` and will
  * modify the tag as needed.
@@ -21,7 +22,6 @@ abstract class AbstractMatcher
      * C'tor.
      *
      * @param HeadlessContentBlocker $headlessContentBlocker
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker)
     {
@@ -49,7 +49,7 @@ abstract class AbstractMatcher
      */
     public function createPlainResultFromMatch($match)
     {
-        return new BlockedResult($match->getTag(), $match->getAttributes(), $match->getOriginalMatch());
+        return new BlockedResult($match->getTag(), $match->getAttributes(), Markup::persist($match->getOriginalMatch(), $this->getHeadlessContentBlocker()));
     }
     /**
      * Disable blocked result if it has the skipped-attribute.
@@ -93,7 +93,9 @@ abstract class AbstractMatcher
                     if (\preg_match_all('/([^\\*]{1,})/m', $expression, $expressionStrposMatch, \PREG_SET_ORDER, 0) && \count($expressionStrposMatch) > 0) {
                         $expressionStrposCache[$expression] = \array_column($expressionStrposMatch, 1);
                     } else {
+                        // @codeCoverageIgnoreStart
                         $expressionStrposCache[$expression] = \false;
+                        // @codeCoverageIgnoreEnd
                     }
                 }
                 foreach ($string as $chunkString) {
@@ -145,6 +147,7 @@ abstract class AbstractMatcher
             if ($chunkIdx > 0) {
                 $siblingChunkString = $string[$chunkIdx - 1] ?? '';
                 $siblingChunkString = \strlen($siblingChunkString) >= $copySiblingChunkStringLength ? \substr($siblingChunkString, $copySiblingChunkStringLength * -1) : $siblingChunkString;
+                // @codeCoverageIgnoreEnd
                 $chunkString = $siblingChunkString . $chunkString;
             }
             // Next sibling
@@ -226,7 +229,9 @@ abstract class AbstractMatcher
             }
             return \true;
         }
+        // @codeCoverageIgnoreStart
         return \false;
+        // @codeCoverageIgnoreEnd
     }
     /**
      * Prepare the new transformed link attribute.
@@ -319,8 +324,6 @@ abstract class AbstractMatcher
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getHeadlessContentBlocker()
     {

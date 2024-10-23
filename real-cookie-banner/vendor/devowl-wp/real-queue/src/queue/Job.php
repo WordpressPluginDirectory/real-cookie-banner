@@ -22,6 +22,7 @@ class Job
      */
     const RECURRING_EXCEPTION_ITEMS = 4;
     const RECURRING_EXCEPTION_CODE = 'queue_paused_previous_failed';
+    const DEFAULT_PRIORITY = 10;
     /**
      * ID.
      *
@@ -122,8 +123,7 @@ class Job
      */
     public $delay_ms = 1000;
     /**
-     * Timestamp at which this job can be picked again. This is not yet implemented but
-     * this mechanism should be used for the `client` worker.
+     * Timestamp at which this job can be picked again.
      *
      * @var int
      */
@@ -148,6 +148,7 @@ class Job
      * - You need to `$job->updateProcess()` to mark the job as in progress or done!
      * - Your callable can throw an Exception or return a `WP_Error` instance
      * - Your callable should be save to be also executed by users with minimal capabilities
+     * - You are allowed to modify the job data and when the job is run successfully, the changes are persisted
      *
      * @var callable
      */
@@ -158,6 +159,19 @@ class Job
      * @var null|WP_Error
      */
     public $exception;
+    /**
+     * Capability needed for this job to run.
+     *
+     * @var string|null
+     * @see https://wordpress.org/documentation/article/roles-and-capabilities/
+     */
+    public $capability;
+    /**
+     * Priority of this job. A lower priority means the job gets executed earlier.
+     *
+     * @var int
+     */
+    public $priority = self::DEFAULT_PRIORITY;
     private $core;
     /**
      * Indicates, when run this job a recurring got detected and jobs got paused automatically.
@@ -165,6 +179,13 @@ class Job
      * @var boolean
      */
     private $updatedJobsToAvoidRecurringException = \false;
+    /**
+     * Indicates, when this job got run and wants to wait for the next execution (e.g. through REST API request) instead
+     * of blocking the current PHP thread again. This only works for `server` worker and when the job ran successfully.
+     *
+     * @var boolean
+     */
+    private $breakRun = \false;
     /**
      * C'tor.
      *
@@ -207,12 +228,14 @@ class Job
      * Update `process` and mark the job as in progress or done.
      *
      * @param int|true $process
+     * @param int $process_total
      */
-    public function updateProcess($process)
+    public function updateProcess($process, $process_total = null)
     {
         global $wpdb;
         $this->process = $process === \true ? $this->process_total : $process;
-        $wpdb->update($this->getTableName(), ['process' => $this->process], ['id' => $this->id], '%d', '%d');
+        $this->process_total = $process_total ?? $this->process_total;
+        $wpdb->update($this->getTableName(), ['process' => $this->process, 'process_total' => $this->process_total], ['id' => $this->id], '%d', '%d');
     }
     /**
      * Update `runs` so `retries` works as expected.
@@ -266,6 +289,7 @@ class Job
      */
     public function execute()
     {
+        global $wpdb;
         if (!\is_callable($this->callable)) {
             return new WP_Error('real_queue_job_execute_not_callable', \__('The passed callable persisted to the job cannot be called (`is_callable`)', REAL_QUEUE_TD));
         }
@@ -288,6 +312,7 @@ class Job
         $start = \microtime(\true);
         // Do not update run if the process got incremented (at least, something got done?)
         $previousProcess = $this->process;
+        $previousDataMd5 = \md5(\json_encode($this->data ?? (object) []));
         // Already running?
         if ($this->locked) {
             return new WP_Error('real_queue_job_locked', \__('This job is already running in another thread on your server.', REAL_QUEUE_TD));
@@ -300,6 +325,11 @@ class Job
             \restore_error_handler();
             if (\is_wp_error($result)) {
                 return $result;
+            }
+            // Update data if it has changed
+            $currentDataMd5 = \md5(\json_encode($this->data ?? (object) []));
+            if ($currentDataMd5 !== $previousDataMd5) {
+                $wpdb->update($this->getTableName(), ['data' => \json_encode($this->data)], ['id' => $this->id], '%s', '%d');
             }
         } catch (Exception $e) {
             \restore_error_handler();
@@ -342,6 +372,20 @@ class Job
             // phpcs:enable WordPress.DB.PreparedSQL
             $this->updatedJobsToAvoidRecurringException = \true;
         }
+    }
+    /**
+     * Break the current run and wait for the next execution (e.g. through REST API request).
+     */
+    public function breakRun()
+    {
+        $this->breakRun = \true;
+    }
+    /**
+     * Check if the current run got broken.
+     */
+    public function isBreakRun()
+    {
+        return $this->breakRun;
     }
     /**
      * Omit client data e.g. `data` of server-worker and `callable`.

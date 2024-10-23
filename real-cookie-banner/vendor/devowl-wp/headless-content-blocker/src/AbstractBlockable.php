@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxAttributeFunctionVariableResolver;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxFinder;
 /**
@@ -48,9 +49,11 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
      */
     public function appendFromStringArray($blockers)
     {
+        // @codeCoverageIgnoreStart
         if (!\is_array($blockers)) {
             return;
         }
+        // @codeCoverageIgnoreEnd
         // Filter out custom element expressions and variables
         foreach ($blockers as $idx => &$line) {
             $line = $this->headlessContentBlocker->runBlockableStringExpressionCallback($line, $this);
@@ -90,8 +93,24 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
     public function findSelectorSyntaxFinderForMatch($match)
     {
         foreach ($this->getSelectorSyntaxFinder() as $selectorSyntaxFinder) {
-            if ($selectorSyntaxFinder->getTag() === $match->getTag()) {
-                if ($selectorSyntaxFinder->matchesAttributes($selectorSyntaxFinder->getAttributes(), $match)) {
+            /**
+             * The match to use
+             *
+             * @var SelectorSyntaxMatch
+             */
+            $useMatch = null;
+            if ($match instanceof SelectorSyntaxMatch) {
+                // @codeCoverageIgnoreStart
+                $useMatch = $match;
+                // @codeCoverageIgnoreEnd
+            } elseif (\count($match->getAttributes()) > 0) {
+                $useMatch = new SelectorSyntaxMatch($selectorSyntaxFinder, $match->getOriginalMatch(), $match->getTag(), $match->getAttributes(), \array_keys($match->getAttributes())[0]);
+            } else {
+                // It can never `matchesAttributes` as we do not have any attribute
+                return null;
+            }
+            if ($selectorSyntaxFinder->getTag() === $useMatch->getTag()) {
+                if ($selectorSyntaxFinder->matchesAttributes($useMatch->getAttributes(), $useMatch)) {
                     return $selectorSyntaxFinder;
                 }
             }
@@ -102,7 +121,7 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
      * Get the blocker ID. This is added as a custom HTML attribute to the blocked
      * element so your frontend can e.g. add a visual content blocker.
      *
-     * @return int|null
+     * @return int|string|null
      */
     public abstract function getBlockerId();
     /**
@@ -165,10 +184,12 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
         return $this->originalExpressions;
     }
     // Documented in SelectorSyntaxAttributeFunctionVariableResolver
+    // @codeCoverageIgnoreStart
     public function getVariables()
     {
         return $this->variables;
     }
+    // @codeCoverageIgnoreEnd
     // Documented in SelectorSyntaxAttributeFunctionVariableResolver
     public function getVariable($variableName, $default = '')
     {

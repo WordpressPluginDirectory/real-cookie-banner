@@ -23,12 +23,6 @@ class ScanEntry
      */
     public $expressions = [];
     /**
-     * ID.
-     *
-     * @var int
-     */
-    public $id;
-    /**
      * Template identifier for the content blocker.
      *
      * @var string
@@ -74,12 +68,6 @@ class ScanEntry
      */
     public $attribute;
     /**
-     * The `post_id` of `wp_posts` this entry refers to.
-     *
-     * @var int
-     */
-    public $post_id;
-    /**
      * The source URL this entry was found.
      *
      * @var string
@@ -91,12 +79,6 @@ class ScanEntry
      * @var string
      */
     public $source_url_hash;
-    /**
-     * Created time (ISO).
-     *
-     * @var string
-     */
-    public $created;
     /**
      * If `true` no other false-positive mechanisms can modify this scan entry.
      */
@@ -112,8 +94,37 @@ class ScanEntry
             $this->blocked_url_host = \parse_url($this->blocked_url, \PHP_URL_HOST);
             $this->blocked_url_host = \preg_replace('/^www\\./', '', $this->blocked_url_host);
         }
+        // In tests this is not set
+        // @codeCoverageIgnoreStart
         if (!empty($this->source_url)) {
             $this->source_url_hash = \md5($this->source_url);
         }
+        // @codeCoverageIgnoreEnd
+    }
+    /**
+     * Get the ID of this scan entry. In the scanner mechanism multiple scan entries
+     * can be found for the same markup. This ID is unique for this scan entry so it can be used
+     * together with the static method `deduplicate`.
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        $this->calculateFields();
+        return \md5(\json_encode(['blockable' => $this->blockable === null ? \false : $this->blockable->getIdentifier(), 'expressions' => $this->expressions, 'template' => $this->template, 'blocked_url_hash' => $this->blocked_url_hash, 'markup' => $this->markup === null ? \false : $this->markup->getId(), 'tag' => $this->tag, 'attribute' => $this->attribute, 'source_url_hash' => $this->source_url_hash]));
+    }
+    /**
+     * Dedupe scan entries by their ID.
+     *
+     * @param ScanEntry[] $scanEntries
+     * @return ScanEntry[]
+     */
+    public static function deduplicate($scanEntries)
+    {
+        $unique = [];
+        foreach ($scanEntries as $scanEntry) {
+            $unique[$scanEntry->getId()] = $scanEntry;
+        }
+        return \array_values($unique);
     }
 }

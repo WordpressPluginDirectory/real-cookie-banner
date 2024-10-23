@@ -40,12 +40,14 @@ class StyleInlineMatcher extends AbstractMatcher
             $match->setStyle($document->render());
             $match->setAfterTag(\sprintf('<%1$s %2$s></%1$s>', 'script', Utils::htmlAttributes(\array_merge([Constants::HTML_ATTRIBUTE_INLINE_STYLE => $blockedStyle, Constants::HTML_ATTRIBUTE_TYPE_NAME => Constants::HTML_ATTRIBUTE_TYPE_VALUE], $match->getAttributes()))));
             $match->setAttributes([]);
+            // @codeCoverageIgnoreStart
         } else {
             $match->setAttribute(Constants::HTML_ATTRIBUTE_INLINE_STYLE, $document->render());
             $match->setAttribute(Constants::HTML_ATTRIBUTE_TYPE_NAME, Constants::HTML_ATTRIBUTE_TYPE_VALUE);
             $match->setTag('script');
             $match->setStyle('');
         }
+        // @codeCoverageIgnoreEnd
         $result->setData('blockedUrls', $blockedUrls);
         return $result;
     }

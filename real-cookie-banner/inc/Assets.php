@@ -50,6 +50,24 @@ class Assets
      */
     public $handleBlocker = null;
     /**
+     * The current post ID captured by the body_class filter.
+     *
+     * @var int[]
+     */
+    protected $currentPostId = [];
+    /**
+     * Get the current post ID through the wp filter. At this time, the
+     * wp filter is the only way to reliably detect the current post ID. Plugins like
+     * Visual Composer run into issues in `wp_enqueue_scripts` returning the wrong ID (in Visual Composer,
+     * the ID of Theme Builder > Headers is returned).
+     */
+    public function wp()
+    {
+        if (\is_singular()) {
+            $this->currentPostId = [\get_the_ID()];
+        }
+    }
+    /**
      * See `DeliverAnonymousAsset`.
      */
     public function createHashedAssets()
@@ -278,7 +296,7 @@ class Assets
         $frontendJson = $frontend->toJson();
         $lazyLoadedData = $frontend->prepareLazyData($frontendJson, \true);
         $anonymousAssetBuilder = $core->getAnonymousAssetBuilder();
-        $pageIds = [];
+        $pageIds = $this->currentPostId;
         if (\is_singular()) {
             $pageId = \get_the_ID();
             $pageIds[] = $pageId;
@@ -426,5 +444,22 @@ class Assets
     {
         $handle = $this->enqueueScript('queue', [[$this->isPro(), 'queue.pro.js'], 'queue.lite.js'], [$handle]);
         \wp_localize_script($handle, 'realCookieBannerQueue', ['originalHomeUrl' => \DevOwl\RealCookieBanner\Utils::getOriginalHomeUrl()]);
+    }
+    /**
+     * Enqueue assets for Fluent Community. With this hook, we are in the `<head` section.
+     *
+     * @see https://fluentcommunity.co/
+     */
+    public function fluent_community_portal_head()
+    {
+        global $wp_scripts;
+        $this->enqueue_scripts_and_styles(Constants::ASSETS_TYPE_FRONTEND);
+        // The plugin does not automatically print the head, instead it uses `do_items` explicitly
+        $wp_scripts->do_items($this->handleBanner);
+        \add_action('fluent_community/portal_html', [\DevOwl\RealCookieBanner\Core::getInstance()->getBanner(), 'wp_body_open']);
+        \add_action('fluent_community/portal_footer', function () use($wp_scripts) {
+            // With this action, we are in the footer (end of `</body>`)
+            $wp_scripts->do_items($this->handleBlocker);
+        });
     }
 }

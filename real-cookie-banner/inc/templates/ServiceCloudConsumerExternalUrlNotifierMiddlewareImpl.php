@@ -32,7 +32,7 @@ class ServiceCloudConsumerExternalUrlNotifierMiddlewareImpl extends ServiceCloud
          * @var BlockableScanner
          */
         $scanner = $headlessContentBlocker->getPluginsByClassName(BlockableScanner::class)[0];
-        $scanner->excludeHostByUrl(\home_url());
+        $scanner->setSourceUrl(\home_url());
     }
     // Documentation in `ServiceCloudConsumerExternalUrlNotifierMiddleware`.
     public function fetchExternalUrls()

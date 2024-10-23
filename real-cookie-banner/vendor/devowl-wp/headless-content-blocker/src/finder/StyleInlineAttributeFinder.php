@@ -12,8 +12,6 @@ class StyleInlineAttributeFinder extends TagAttributeFinder
 {
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {

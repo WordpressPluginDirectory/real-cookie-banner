@@ -168,7 +168,7 @@ class Announcement
      */
     public function getGraphicUrl()
     {
-        return \esc_url($this->graphicUrl);
+        return !empty($this->graphicUrl) ? \esc_url($this->graphicUrl) : null;
     }
     /**
      * Self-explanatory.
@@ -177,7 +177,7 @@ class Announcement
      */
     public function getGraphicUrlRetina()
     {
-        return \esc_url($this->graphicUrlRetina);
+        return !empty($this->graphicUrlRetina) ? \esc_url($this->graphicUrlRetina) : null;
     }
     /**
      * Self-explanatory.
@@ -186,7 +186,7 @@ class Announcement
      */
     public function getGraphicFileLink()
     {
-        return \esc_url($this->graphicFileLink);
+        return !empty($this->graphicFileLink) ? \esc_url($this->graphicFileLink) : null;
     }
     /**
      * Self-explanatory.

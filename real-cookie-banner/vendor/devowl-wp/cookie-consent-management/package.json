@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "0.2.0",
+    "version": "0.2.3",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -20,9 +20,7 @@
         "disclaimer:composer": "dowl --silent task @devowl-wp/composer-licenses:disclaimer",
         "lint:eslint": "dowl --silent task @devowl-wp/eslint-config",
         "lint:phpcs": "dowl --silent task @devowl-wp/phpcs-config",
-        "task": "task --taskfile ./tasks/Taskfile.yml",
-        "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
-        "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage"
+        "task": "task --taskfile ./tasks/Taskfile.yml"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -32,7 +30,6 @@
         "@devowl-wp/node-gitlab-ci": "workspace:*",
         "@devowl-wp/npm-licenses": "workspace:*",
         "@devowl-wp/phpcs-config": "workspace:*",
-        "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/react-cookie-banner": "workspace:*",
         "@devowl-wp/react-cookie-banner-admin": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
@@ -74,6 +71,5 @@
         "packages": [
             "ignore-packages-here@1.0.0"
         ]
-    },
-    "phpunit-coverage-threshold": 10
+    }
 }

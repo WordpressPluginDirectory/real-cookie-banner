@@ -64,6 +64,9 @@ class Executor
                     // The job is not completely done (process), let's do it again
                     --$i;
                 }
+                if ($job->isBreakRun()) {
+                    break;
+                }
             }
             if ($job->hasUpdatedJobsToAvoidRecurringException()) {
                 $pauseToAvoidRecurringException = \true;

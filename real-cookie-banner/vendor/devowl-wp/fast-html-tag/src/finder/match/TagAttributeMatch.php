@@ -31,8 +31,6 @@ class TagAttributeMatch extends AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getLinkAttribute()
     {
@@ -40,8 +38,6 @@ class TagAttributeMatch extends AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getLink()
     {

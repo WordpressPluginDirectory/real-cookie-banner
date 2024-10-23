@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 /**
  * An function definition for `SelectorSyntaxAttribute` with function name and parsed arguments.
@@ -12,9 +13,9 @@ class SelectorSyntaxAttributeFunction
     /**
      * Variables can be resolved in argument values with `{{ .myVar }}`.
      *
-     * @see https://regex101.com/r/wKi38x/1
+     * @see https://regex101.com/r/wKi38x/3
      */
-    const VARIABLE_TEMPLATE_REGEXP = '/{{\\s*\\.(\\w+)\\s*}}/m';
+    const VARIABLE_TEMPLATE_REGEXP = '/{{\\s*\\.([-_\\w]+)\\s*}}/m';
     private $attribute;
     private $name;
     private $arguments;
@@ -30,7 +31,6 @@ class SelectorSyntaxAttributeFunction
      * @param SelectorSyntaxAttribute $attribute
      * @param string $name
      * @param string[] $arguments
-     * @codeCoverageIgnore
      */
     public function __construct($attribute, $name, $arguments)
     {
@@ -79,8 +79,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAttribute()
     {
@@ -88,8 +86,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAttributeName()
     {
@@ -97,8 +93,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getName()
     {
@@ -106,8 +100,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getArguments()
     {
@@ -116,8 +108,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFinder()
     {
@@ -125,8 +115,6 @@ class SelectorSyntaxAttributeFunction
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getVariableResolver()
     {
@@ -136,7 +124,6 @@ class SelectorSyntaxAttributeFunction
      * Setter.
      *
      * @param SelectorSyntaxAttributeFunctionVariableResolver $variableResolver
-     * @codeCoverageIgnore
      */
     public function setVariableResolver($variableResolver)
     {

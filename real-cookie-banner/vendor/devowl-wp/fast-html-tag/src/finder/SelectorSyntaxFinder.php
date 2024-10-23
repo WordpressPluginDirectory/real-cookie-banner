@@ -38,7 +38,6 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      * @param string $expression
      * @param string $tag
      * @param SelectorSyntaxAttribute[] $attributes
-     * @codeCoverageIgnore
      */
     private function __construct($expression, $tag, $attributes)
     {
@@ -56,9 +55,11 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     {
         list($tag, $attributes) = self::extractAttributesFromMatch($m);
         list($linkAttribute, $link) = $this->getRegexpAttributesInMatch($attributes);
+        // @codeCoverageIgnoreStart
         if ($linkAttribute === null) {
             return \false;
         }
+        // @codeCoverageIgnoreEnd
         // Append our original link attribute to the attributes
         $attributes[$linkAttribute] = $link;
         $match = new SelectorSyntaxMatch($this, $m[0], $tag, $attributes, $linkAttribute);
@@ -71,7 +72,7 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      * Checks if the current attribute and value matches all our defined attributes.
      *
      * @param array $values
-     * @param SelectorSyntaxMatch $match If passed selector syntax functions are also executed
+     * @param SelectorSyntaxMatch $match
      */
     public function matchesAttributes($values, $match)
     {
@@ -88,8 +89,6 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getExpression()
     {
@@ -97,8 +96,6 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getTag()
     {
@@ -106,8 +103,6 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAttributes()
     {

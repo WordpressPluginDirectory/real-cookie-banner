@@ -34,8 +34,6 @@ class FastHtmlTag
     private $finder = [];
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -100,10 +98,13 @@ class FastHtmlTag
                 });
             }
             return \json_encode($json);
-        } else {
+        } elseif (\is_string($mixed)) {
             // Usual string
             return $this->modifyHtml($mixed);
         }
+        // @codeCoverageIgnoreStart
+        return $mixed;
+        // @codeCoverageIgnoreEnd
     }
     /**
      * Allow to parse and modify a given HTML string.

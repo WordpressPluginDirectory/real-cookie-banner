@@ -6,6 +6,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\CookieConsentM
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\AbstractConsent;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\tcf\StackCalculator;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\Utils;
 /**
  * A revision is a document of all settings at the time of consent.
  *
@@ -52,7 +53,7 @@ class Revision
     public function prepareJsonForFrontend($revision)
     {
         if (isset($revision['cookiePolicy']) && \strlen($revision['cookiePolicy']) > -1) {
-            $revision['cookiePolicy'] = \gzuncompress(\base64_decode($revision['cookiePolicy']));
+            $revision['cookiePolicy'] = Utils::gzUncompressForDatabase($revision['cookiePolicy'], '');
         }
         return $revision;
     }
@@ -72,15 +73,8 @@ class Revision
             $this->getCookieConsentManagement()->getSettings()->getConsent()->setCookieVersion(AbstractConsent::DEFAULT_COOKIE_VERSION);
         }
         $cookiePolicy = '';
-        /**
-         * Why gzcompress? See https://www.php.net/manual/de/function.gzdeflate.php#91310
-         *
-         * > gzcompress produces longer data because it embeds information about the encoding onto the string. If you are compressing
-         * > data that will only ever be handled on one machine, then you don't need to worry about which of these functions you use. However,
-         * > if you are passing data compressed with these functions to a different machine you should use gzcompress.
-         */
-        if ($settings->getGeneral()->getCookiePolicyId() > 0 && \function_exists('gzcompress')) {
-            $cookiePolicy = \base64_encode(\gzcompress($this->getCookieConsentManagement()->getCookiePolicy()->renderHtml()));
+        if ($settings->getGeneral()->getCookiePolicyId() > 0) {
+            $cookiePolicy = Utils::gzCompressForDatabase($this->getCookieConsentManagement()->getCookiePolicy()->renderHtml(), '');
         }
         // Create hashable revision
         $revision = \array_merge(['options' => $this->optionsToJson(self::TYPE_REQUIRE_NEW_CONSENT), 'groups' => $this->serviceGroupsToJson(), 'websiteOperator' => $this->websiteOperatorToJson(), 'predefinedDataProcessingInSafeCountriesLists' => AbstractConsent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'nonVisualBlocker' => $this->nonVisualBlockersToJson(), 'cookiePolicy' => $cookiePolicy], $this->getPersistence()->getContextVariablesExplicit());

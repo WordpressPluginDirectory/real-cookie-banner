@@ -3,12 +3,12 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\ScriptInlineMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\StyleInlineMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\TagAttributeMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\StyleInlineAttributeMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
@@ -25,7 +25,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\ScriptI
  */
 class BlockableScanner extends AbstractPlugin
 {
-    const IGNORE_LINK_REL = ['profile', 'author', 'shortlink', 'canonical'];
     const BLOCKED_RESULT_DATA_KEY_IGNORE_IN_SCANNER = 'Plugin.BlockableScanner.ignore-in-scanner';
     /**
      * Scan results.
@@ -40,6 +39,12 @@ class BlockableScanner extends AbstractPlugin
      * @param string[]
      */
     private $excludeHosts = [];
+    /**
+     * The source URL of the current HTML.
+     *
+     * @var string
+     */
+    private $sourceUrl = null;
     /**
      * See `AbstractPlugin`. Needed to obtain external URLs.
      *
@@ -70,7 +75,7 @@ class BlockableScanner extends AbstractPlugin
              * @var TagAttributeMatch
              */
             $match = $match;
-            $this->processBlockedByTagAttributeMatch($result, $match->getLinkAttribute(), $match->getLink());
+            $this->processBlockedByTagAttributeMatch($result, $match);
         } elseif ($matcher instanceof ScriptInlineMatcher) {
             $this->processBlockedByScriptInlineMatch($result);
         } elseif ($matcher instanceof StyleInlineMatcher || $matcher instanceof StyleInlineAttributeMatcher) {
@@ -102,18 +107,14 @@ class BlockableScanner extends AbstractPlugin
      * Memorize when a content got blocked through a non-created template.
      *
      * @param BlockedResult $isBlocked
-     * @param string $linkAttribute
-     * @param string $link
+     * @param TagAttributeMatch $match
      */
-    protected function processBlockedByTagAttributeMatch($isBlocked, $linkAttribute, $link)
+    protected function processBlockedByTagAttributeMatch($isBlocked, $match)
     {
-        // Check for some edge cases we want to exclude
-        $attributes = $isBlocked->getAttributes();
         $tag = $isBlocked->getTag();
         $markup = $isBlocked->getMarkup();
-        if ($tag === 'link' && isset($attributes['rel']) && \in_array($attributes['rel'], self::IGNORE_LINK_REL, \true)) {
-            return $isBlocked;
-        }
+        $link = $match->getLink();
+        $linkAttribute = $match->getLinkAttribute();
         if (!$this->probablyMemorizeIsBlocked($isBlocked, $link, $tag, $linkAttribute) && !$this->isStyleAttributeFalsePositive($linkAttribute, $link)) {
             $this->probablyMemorizeExternalUrl($isBlocked, $link, $tag, $linkAttribute, $markup);
         }
@@ -138,12 +139,12 @@ class BlockableScanner extends AbstractPlugin
      * Memorize when a custom element by CSS Selector got blocked through a non-created template.
      *
      * @param BlockedResult $isBlocked
-     * @param SelectorSyntaxMatch $m
+     * @param SelectorSyntaxMatch $match
      */
-    protected function processBlockedBySelectorSyntax($isBlocked, $m)
+    protected function processBlockedBySelectorSyntax($isBlocked, $match)
     {
-        $possibleUrl = $m->getLink();
-        $this->probablyMemorizeIsBlocked($isBlocked, $this->isNotAnExcludedUrl($possibleUrl) ? $possibleUrl : null, $m->getTag(), $m->getLinkAttribute());
+        $possibleUrl = $match->getLink();
+        $this->probablyMemorizeIsBlocked($isBlocked, $this->isNotAnExcludedUrl($possibleUrl) ? $possibleUrl : null, $match->getTag(), $match->getLinkAttribute());
         return $isBlocked;
     }
     /**
@@ -160,6 +161,7 @@ class BlockableScanner extends AbstractPlugin
         if (!$isBlocked->isBlocked() && !\in_array($tag, ['a'], \true) && $this->isNotAnExcludedUrl($url)) {
             $this->results[] = $entry = new ScanEntry();
             $entry->blocked_url = \strpos($url, '//') === 0 ? 'https:' . $url : $url;
+            $entry->source_url = $this->sourceUrl;
             $entry->tag = $tag;
             $entry->attribute = $attribute;
             $entry->markup = $markup;
@@ -183,6 +185,7 @@ class BlockableScanner extends AbstractPlugin
                 $entry->blockable = $blockable;
                 $entry->template = $blockable->getIdentifier();
                 $entry->blocked_url = $url !== null && \strpos($url, '//') === 0 ? 'https:' . $url : $url;
+                $entry->source_url = $this->sourceUrl;
                 $entry->tag = $tag;
                 $entry->attribute = $attribute;
                 $entry->expressions = $isBlocked->getBlockedExpressions();
@@ -205,6 +208,16 @@ class BlockableScanner extends AbstractPlugin
         $this->excludeHosts[] = $currentHost;
         $this->excludeHosts[] = \sprintf('www.%s', $currentHost);
         $this->excludeHosts[] = \preg_replace('/^www\\./', '', $currentHost);
+    }
+    /**
+     * Setter.
+     *
+     * @param string $url
+     */
+    public function setSourceUrl($url)
+    {
+        $this->sourceUrl = $url;
+        $this->excludeHostByUrl($url);
     }
     /**
      * See `FalsePositivesProcessor`.
@@ -235,22 +248,43 @@ class BlockableScanner extends AbstractPlugin
         return $linkAttribute === 'style' && \preg_match('/^\\s*[A-Za-z-_]+:\\s*\\d+\\s*[;]*\\s*$/m', $link);
     }
     /**
+     * See `AbstractPlugin`.
+     *
+     * @param string[] $names
+     * @param ScriptInlineMatcher $matcher
+     * @param ScriptInlineMatch $match
+     * @return string[]
+     */
+    public function skipInlineScriptVariableAssignment($names, $matcher, $match)
+    {
+        if ($this->active) {
+            // While scanning, we want to report all external URLs also in localized variables
+            // as we want to catch them and reported via support. Afterwards, add via `addSkipInlineScriptVariableAssignments`.
+            $names[] = ScriptInlineMatcher::DO_NOT_COMPUTE;
+        }
+        return $names;
+    }
+    /**
      * Reset the scanner and return the found results.
      */
     public function flushResults()
     {
         $result = $this->results;
         $this->results = [];
-        return $result;
+        foreach ($result as $entry) {
+            $entry->markup = $this->getHeadlessContentBlocker()->findOriginalMarkup($entry->markup);
+        }
+        return ScanEntry::deduplicate($result);
     }
     /**
      * Setter.
      *
      * @param boolean $active
-     * @codeCoverageIgnore
      */
     public function setActive($active)
     {
+        $previousActive = $this->active;
         $this->active = $active;
+        return $previousActive;
     }
 }

@@ -56,7 +56,6 @@ abstract class AbstractFinder
      * Setter.
      *
      * @param FastHtmlTag $fastHtmlTag
-     * @codeCoverageIgnore
      */
     public function setFastHtmlTag($fastHtmlTag)
     {
@@ -73,8 +72,6 @@ abstract class AbstractFinder
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFastHtmlTag()
     {

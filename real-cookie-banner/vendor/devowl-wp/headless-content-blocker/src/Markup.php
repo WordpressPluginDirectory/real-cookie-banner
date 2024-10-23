@@ -4,17 +4,12 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker;
 
 /**
  * Statically hold all found markups (e.g. inline styles) in a single object instance to be memory-low
- * instead of saving the markup string in each blocked result.
+ * instead of saving the markup string in each blocked result. At this way, we can generate unique IDs (md5)
+ * for each markup.
  * @internal
  */
 class Markup
 {
-    /**
-     * Pool.
-     *
-     * @var Markup[]
-     */
-    private static $pool = [];
     private $id;
     private $content;
     /**
@@ -22,7 +17,6 @@ class Markup
      *
      * @param string $id
      * @param string $content
-     * @codeCoverageIgnore
      */
     private function __construct($id, $content)
     {
@@ -31,8 +25,6 @@ class Markup
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getId()
     {
@@ -40,8 +32,6 @@ class Markup
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getContent()
     {
@@ -49,6 +39,8 @@ class Markup
     }
     /**
      * `toString`. Allow grouping with e.g. `array_unique`.
+     *
+     * @codeCoverageIgnore
      */
     public function __toString()
     {
@@ -58,27 +50,20 @@ class Markup
      * Persist a markup in pool or return the existing one.
      *
      * @param string $markup
+     * @param HeadlessContentBlocker $blocker
      */
-    public static function persist($markup)
+    public static function persist($markup, $blocker)
     {
         if (empty($markup)) {
             return null;
         }
         $id = \md5($markup);
-        $found = self::get($id);
+        $pool =& $blocker->getMarkupPool();
+        $found = $pool[$id] ?? null;
         if (!$found) {
             $found = new Markup($id, $markup);
-            self::$pool[$id] = $found;
+            $pool[$id] = $found;
         }
         return $found;
-    }
-    /**
-     * Get the markup instance for a given ID (the MD5 hash of the markup).
-     *
-     * @param string $id
-     */
-    public static function get($id)
-    {
-        return self::$pool[$id] ?? null;
     }
 }

@@ -68,7 +68,6 @@ class Rule
      * @param string|string[] $assignedToGroups
      * @param array[] $queryArgs
      * @param boolean $needsRequiredSiblingRule
-     * @codeCoverageIgnore
      */
     public function __construct($blockable, $expression, $assignedToGroups = [], $queryArgs = [], $needsRequiredSiblingRule = \false)
     {
@@ -113,7 +112,9 @@ class Rule
             }
             return \true;
         }
+        // @codeCoverageIgnoreStart
         return \false;
+        // @codeCoverageIgnoreEnd
     }
     /**
      * In some cases, a URL could contain `&#038;` instead of `&`. This function returns the
@@ -131,11 +132,14 @@ class Rule
         $query = [];
         if (!empty($queryString)) {
             $unsafeContainsString = \sprintf('?%s#038;', $queryString);
+            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
+            // @codeCoverageIgnoreStart
             if (\strpos($url, $unsafeContainsString) !== \false && $iteration < 2) {
                 return $this->parseUrlQueryEncodedSafe(\wp_specialchars_decode($url), $iteration + 1);
             } else {
                 \parse_str($queryString, $query);
             }
+            // @codeCoverageIgnoreEnd
         }
         return $query;
     }
@@ -150,8 +154,6 @@ class Rule
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getExpression()
     {
@@ -161,7 +163,6 @@ class Rule
      * Getter.
      *
      * @return null|string[]
-     * @codeCoverageIgnore
      */
     public function getAssignedToGroups()
     {
@@ -178,8 +179,6 @@ class Rule
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function isNeedsRequiredSiblingRule()
     {

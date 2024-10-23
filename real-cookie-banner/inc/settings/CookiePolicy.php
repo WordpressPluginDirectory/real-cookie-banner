@@ -49,72 +49,72 @@ class CookiePolicy extends AbstractCookiePolicy
     // Documented in AbstractCookiePolicy
     public function getInstructionText()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_INSTRUCTION);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_INSTRUCTION));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineTableOfContents()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_TABLE_OF_CONTENTS);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_TABLE_OF_CONTENTS));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineControllerOfWebsite()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_CONTROLLER_OF_WEBSITE);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_CONTROLLER_OF_WEBSITE));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineDiffToPrivacyPolicy()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_DIFF_TO_PRIVACY_POLICY);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_DIFF_TO_PRIVACY_POLICY));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineCookieTechnology()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_COOKIE_TECHNOLOGY);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_COOKIE_TECHNOLOGY));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineLegalBasis()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_LEGAL_BASIS);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_LEGAL_BASIS));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineRightsOfTheVisitor()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_RIGHTS_OF_THE_VISITOR);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_RIGHTS_OF_THE_VISITOR));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineManageCookies()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_MANAGE_COOKIES);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_MANAGE_COOKIES));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineTypesOfCookies()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_TYPES_OF_COOKIES);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_TYPES_OF_COOKIES));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineCookieOrigin()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_COOKIE_ORIGIN);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_COOKIE_ORIGIN));
     }
     // Documented in AbstractCookiePolicy
     public function getHeadlineListOfServices()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_LIST_OF_SERVICES);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_HEADLINE_LIST_OF_SERVICES));
     }
     // Documented in AbstractCookiePolicy
     public function getContentDiffToPrivacyPolicy()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_DIFF_TO_PRIVACY_POLICY);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_DIFF_TO_PRIVACY_POLICY));
     }
     // Documented in AbstractCookiePolicy
     public function getContentCookieTechnology()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_COOKIE_TECHNOLOGY);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_COOKIE_TECHNOLOGY));
     }
     // Documented in AbstractCookiePolicy
     public function getContentLegalBasisGdpr()
     {
-        $text = $this->getCustomizeSetting(BannerCookiePolicy::SETTING_LEGAL_BASIS_GDPR);
+        $text = $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_LEGAL_BASIS_GDPR));
         $euLegalBasis = \_x('Art. 5 (3) ePrivacy Directive and Recital 66 ePrivacy Directive', 'gdpr-legal-basis', RCB_TD);
         $locale = \get_locale();
         $localeTwoLetter = \substr($locale, 0, 2);
@@ -179,22 +179,22 @@ class CookiePolicy extends AbstractCookiePolicy
     // Documented in AbstractCookiePolicy
     public function getContentLegalBasisDsg()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_LEGAL_BASIS_DSG);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_LEGAL_BASIS_DSG));
     }
     // Documented in AbstractCookiePolicy
     public function getContentRightsOfVisitor()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_RIGHTS_OF_THE_VISITOR);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_RIGHTS_OF_THE_VISITOR));
     }
     // Documented in AbstractCookiePolicy
     public function getContentManageCookies()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_MANAGE_COOKIES);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_MANAGE_COOKIES));
     }
     // Documented in AbstractCookiePolicy
     public function getContentTypesOfCookies()
     {
-        $typesOfCookiesText = $this->getCustomizeSetting(BannerCookiePolicy::SETTING_TYPES_OF_COOKIES);
+        $typesOfCookiesText = $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_TYPES_OF_COOKIES));
         $nonDefaultGroups = $this->getSettings()->getGeneral()->getNonDefaultServiceGroups();
         if (\count($nonDefaultGroups) > 0 && $this->isShowCustomGroups()) {
             $typesOfCookiesText .= \sprintf('<p>%s</p>', \sprintf(
@@ -220,22 +220,32 @@ class CookiePolicy extends AbstractCookiePolicy
     // Documented in AbstractCookiePolicy
     public function getContentCookiesOrigin()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_COOKIE_ORIGIN);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_COOKIE_ORIGIN));
     }
     // Documented in AbstractCookiePolicy
     public function getAdditionalContent()
     {
-        return $this->getCustomizeSetting(BannerCookiePolicy::SETTING_ADDITIONAL_CONTENT);
+        return $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_ADDITIONAL_CONTENT));
     }
     // Documented in AbstractCookiePolicy
     public function getControllerOfWebsiteLabels()
     {
         return ['provider' => \_x('Provider', 'legal-text', RCB_TD), 'phone' => \_x('Phone', 'legal-text', RCB_TD), 'email' => \_x('Email', 'legal-text', RCB_TD), 'contactForm' => \_x('Contact form', 'legal-text', RCB_TD)];
     }
+    /**
+     * Translate a string from the customizer texts.
+     *
+     * @param string $string
+     * @return string
+     */
+    public function translateString($string)
+    {
+        return Core::getInstance()->getCompLanguage()->translateArray(['content' => $string])['content'];
+    }
     // Documented in AbstractCookiePolicy
     public function getListOfServicesTableColumnLabels()
     {
-        return ['category' => \_x('Category', 'legal-text', RCB_TD), 'tcfVendors' => \_x('TCF vendors', 'legal-text', RCB_TD), 'technicalCookieDefinition' => \_x('Technical cookie name', 'legal-text', RCB_TD), 'technicalCookieHost' => \_x('Technical cookie host', 'legal-text', RCB_TD), 'service' => \_x('Service', 'legal-text', RCB_TD), 'purpose' => \_x('Purpose', 'legal-text', RCB_TD), 'undefined' => \_x('Undefined', 'legal-text', RCB_TD), 'duration' => \_x('Duration', 'legal-text', RCB_TD), 'durationUnit' => ['n1' => ['s' => \__('second', RCB_TD), 'm' => \__('minute', RCB_TD), 'h' => \__('hour', RCB_TD), 'd' => \__('day', RCB_TD), 'mo' => \__('month', RCB_TD), 'y' => \__('year', RCB_TD)], 'nx' => ['s' => \__('seconds', RCB_TD), 'm' => \__('minutes', RCB_TD), 'h' => \__('hours', RCB_TD), 'd' => \__('days', RCB_TD), 'mo' => \__('months', RCB_TD), 'y' => \__('years', RCB_TD)]], 'type' => \_x('Type', 'legal-text', RCB_TD)];
+        return ['category' => \_x('Category', 'legal-text', RCB_TD), 'tcfVendors' => \_x('TCF vendors', 'legal-text', RCB_TD), 'technicalCookieDefinition' => \_x('Technical cookie name', 'legal-text', RCB_TD), 'technicalCookieHost' => \_x('Technical cookie host', 'legal-text', RCB_TD), 'service' => \_x('Service', 'legal-text', RCB_TD), 'purpose' => \_x('Purpose', 'legal-text', RCB_TD), 'undefined' => '-', 'duration' => \_x('Duration', 'legal-text', RCB_TD), 'durationUnit' => ['n1' => ['s' => \__('second', RCB_TD), 'm' => \__('minute', RCB_TD), 'h' => \__('hour', RCB_TD), 'd' => \__('day', RCB_TD), 'mo' => \__('month', RCB_TD), 'y' => \__('year', RCB_TD)], 'nx' => ['s' => \__('seconds', RCB_TD), 'm' => \__('minutes', RCB_TD), 'h' => \__('hours', RCB_TD), 'd' => \__('days', RCB_TD), 'mo' => \__('months', RCB_TD), 'y' => \__('years', RCB_TD)]], 'type' => \_x('Type', 'legal-text', RCB_TD)];
     }
     // Documented in AbstractCookiePolicy
     public function getGridJsLanguageTexts()

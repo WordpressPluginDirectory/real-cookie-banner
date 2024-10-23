@@ -23,13 +23,11 @@ class ScriptInlineFinder extends AbstractRegexFinder
      *      $match[2] => Full inline script
      *      $match[3] => When not empty, it is a commented-out script (false-positive) which needs to be skipped
      *
-     * @see https://regex101.com/r/7lYPHA/4
+     * @see https://regex101.com/r/7lYPHA/6
      */
     const SCRIPT_INLINE_REGEXP = '/<script([^>]*)>([^<]*(?:<(?!\\/script(?:\\s*--)?>)[^<]*)*)<\\/script(\\s*--)?>/smix';
     /**
      * C'tor.
-     *
-     * @codeCoverageIgnore
      */
     public function __construct()
     {

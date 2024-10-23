@@ -19,14 +19,13 @@ class BlockedResult
      *
      * @param string $tag
      * @param array $attributes
-     * @param string $markup
-     * @codeCoverageIgnore
+     * @param Markup $markup
      */
     public function __construct($tag, $attributes, $markup)
     {
         $this->tag = $tag;
         $this->attributes = $attributes;
-        $this->markup = Markup::persist($markup);
+        $this->markup = $markup;
     }
     /**
      * Disable blocking.
@@ -101,8 +100,6 @@ class BlockedResult
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getBlocked()
     {
@@ -110,8 +107,6 @@ class BlockedResult
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFirstBlocked()
     {
@@ -119,8 +114,6 @@ class BlockedResult
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getBlockedExpressions()
     {
@@ -128,8 +121,6 @@ class BlockedResult
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getTag()
     {
@@ -146,8 +137,6 @@ class BlockedResult
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getMarkup()
     {

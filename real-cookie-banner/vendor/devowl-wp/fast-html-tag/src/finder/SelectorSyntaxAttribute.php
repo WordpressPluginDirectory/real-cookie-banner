@@ -36,7 +36,6 @@ class SelectorSyntaxAttribute
      * @param string $comparator
      * @param string $value
      * @param string $functions
-     * @codeCoverageIgnore
      */
     public function __construct($finder, $attribute, $comparator, $value, $functions)
     {
@@ -89,8 +88,6 @@ class SelectorSyntaxAttribute
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getAttribute()
     {
@@ -98,8 +95,6 @@ class SelectorSyntaxAttribute
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getComparator()
     {
@@ -107,8 +102,6 @@ class SelectorSyntaxAttribute
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getValue()
     {
@@ -116,8 +109,6 @@ class SelectorSyntaxAttribute
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFinder()
     {
@@ -125,8 +116,6 @@ class SelectorSyntaxAttribute
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getFunctions()
     {
@@ -136,7 +125,6 @@ class SelectorSyntaxAttribute
      * Setter.
      *
      * @param SelectorSyntaxFinder $finder
-     * @codeCoverageIgnore
      */
     public function setFinder($finder)
     {

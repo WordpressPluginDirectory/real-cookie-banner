@@ -15,6 +15,11 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\interna
  */
 class SelectorSyntaxMatcher extends AbstractMatcher
 {
+    /**
+     * Allows to force-use this result for the blocking mechanism. This allows to block elements already
+     * through the `addSelectorSyntaxMap()` functionality.
+     */
+    const DATA_FORCE_RESULT = 'SelectorSyntaxMatcher.forceResult';
     private $blockable;
     private $blockAutomatically;
     /**
@@ -23,7 +28,6 @@ class SelectorSyntaxMatcher extends AbstractMatcher
      * @param HeadlessContentBlocker $headlessContentBlocker
      * @param AbstractBlockable $blockable
      * @param boolean $blockAutomatically By default a selector-syntax matcher automatically blocks the found matches
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker, $blockable, $blockAutomatically = \true)
     {
@@ -70,9 +74,9 @@ class SelectorSyntaxMatcher extends AbstractMatcher
      */
     public function createResult($match)
     {
-        $forceResult = $match->getForceResult();
+        $forceResult = $match->getData(self::DATA_FORCE_RESULT);
         if ($forceResult instanceof BlockedResult) {
-            $match->setForceResult(null);
+            $match->setData(self::DATA_FORCE_RESULT, null);
             return $forceResult;
         }
         $result = $this->createPlainResultFromMatch($match);
@@ -126,8 +130,6 @@ class SelectorSyntaxMatcher extends AbstractMatcher
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getBlockable()
     {

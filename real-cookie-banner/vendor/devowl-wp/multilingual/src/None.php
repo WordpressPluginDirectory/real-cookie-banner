@@ -30,7 +30,10 @@ class None extends AbstractLanguagePlugin
     // Documented in AbstractLanguagePlugin
     public function getTranslatedName($locale)
     {
-        return $locale;
+        require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+        $translations = \wp_get_available_translations();
+        $activeTranslation = $translations[$locale] ?? null;
+        return $locale === 'en_US' ? 'English (United States)' : ($activeTranslation === null ? $locale : $activeTranslation['native_name']);
     }
     // Documented in AbstractLanguagePlugin
     public function getCountryFlag($locale)

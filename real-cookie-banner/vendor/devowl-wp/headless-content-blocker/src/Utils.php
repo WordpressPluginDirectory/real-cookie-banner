@@ -14,6 +14,7 @@ class Utils
      *
      * @param array $array
      * @param boolean $recursive
+     * @codeCoverageIgnore
      */
     public static function array_flatten($array, $recursive = \false)
     {

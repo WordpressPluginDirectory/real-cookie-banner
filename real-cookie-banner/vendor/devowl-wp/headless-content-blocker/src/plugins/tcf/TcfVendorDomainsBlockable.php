@@ -21,7 +21,6 @@ class TcfVendorDomainsBlockable extends AbstractBlockable
      * @param HeadlessContentBlocker $headlessContentBlocker
      * @param int $vendorId
      * @param array $domains
-     * @codeCoverageIgnore
      */
     public function __construct($headlessContentBlocker, $vendorId, $domains)
     {
@@ -33,6 +32,7 @@ class TcfVendorDomainsBlockable extends AbstractBlockable
             }
         }
     }
+    // @codeCoverageIgnoreStart
     // Documented in AbstractBlockable
     public function getBlockerId()
     {
@@ -48,6 +48,7 @@ class TcfVendorDomainsBlockable extends AbstractBlockable
     {
         return 'none';
     }
+    // @codeCoverageIgnoreEnd
     /**
      * Getter.
      */

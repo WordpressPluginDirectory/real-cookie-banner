@@ -61,8 +61,6 @@ class MatchPluginCallbacks
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getKeepAlwaysAttributes()
     {

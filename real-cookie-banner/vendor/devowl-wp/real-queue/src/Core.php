@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\rest\Queue;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\queue\Executor;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\queue\Job;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\queue\Persist;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\RealQueue\queue\Query;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Activator;
@@ -60,7 +61,7 @@ class Core
     {
         $charset_collate = $activator->getCharsetCollate();
         $table_name = $this->getTableName();
-        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            type varchar(50) NOT NULL,\n            worker varchar (10) NOT NULL,\n            group_uuid char(36),\n            group_position int(11),\n            group_total int(11),\n            process int(11) NOT NULL,\n            process_total int(11) NOT NULL,\n            duration_ms int(11),\n            data text NOT NULL,\n            runs int NOT NULL DEFAULT 0,\n            retries int NOT NULL,\n            delay_ms int NOT NULL,\n            created datetime NOT NULL,\n            lock_until timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n            locked tinyint(1) DEFAULT 0,\n            callable tinytext,\n            exception text,\n            PRIMARY KEY  (id)\n        ) {$charset_collate};";
+        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            type varchar(50) NOT NULL,\n            worker varchar (10) NOT NULL,\n            group_uuid char(36),\n            group_position int(11),\n            group_total int(11),\n            process int(11) NOT NULL,\n            process_total int(11) NOT NULL,\n            duration_ms int(11),\n            data text NOT NULL,\n            runs int NOT NULL DEFAULT 0,\n            retries int NOT NULL,\n            delay_ms int NOT NULL,\n            created datetime NOT NULL,\n            lock_until timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n            locked tinyint(1) DEFAULT 0,\n            callable tinytext,\n            exception text,\n            capability varchar(50),\n            priority tinyint UNSIGNED NOT NULL DEFAULT " . Job::DEFAULT_PRIORITY . ",\n            PRIMARY KEY  (id),\n            KEY priority (priority),\n            KEY filters (process, process_total, runs, retries, lock_until, type, capability)\n        ) {$charset_collate};";
         \dbDelta($sql);
     }
     /**

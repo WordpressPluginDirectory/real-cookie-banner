@@ -86,7 +86,6 @@ class ScriptInlineMatch extends AbstractMatch
      * Setter.
      *
      * @param string $script
-     * @codeCoverageIgnore
      */
     public function setScript($script)
     {
@@ -95,8 +94,6 @@ class ScriptInlineMatch extends AbstractMatch
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getScript()
     {

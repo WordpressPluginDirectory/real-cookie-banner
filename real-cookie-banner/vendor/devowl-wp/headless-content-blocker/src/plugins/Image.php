@@ -60,6 +60,5 @@ class Image extends AbstractPlugin
             $match->setAttribute($newSrcAttribute, $match->getAttribute(self::HTML_ATTRIBUTE_SRCSET));
             $match->setAttribute(self::HTML_ATTRIBUTE_SRCSET, null);
         }
-        return $result;
     }
 }

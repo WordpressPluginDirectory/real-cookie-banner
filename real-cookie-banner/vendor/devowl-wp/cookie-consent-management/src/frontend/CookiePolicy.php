@@ -30,8 +30,10 @@ class CookiePolicy
     }
     /**
      * Render the cookie policy as HTML output.
+     *
+     * @param boolean $replaceVariables
      */
-    public function renderHtml()
+    public function renderHtml($replaceVariables = \true)
     {
         $cookiePolicySettings = $this->getSettings();
         $toc = [];
@@ -51,7 +53,9 @@ class CookiePolicy
             $hashTime = $this->getCookieConsentManagement()->getRevision()->getPersistence()->getCurrentHashTime();
             // TODO: abstract date_i18n() and wpautop() function
             $hashTime = $hashTime > 0 ? \date_i18n(\get_option('date_format'), $hashTime) : 'n/a';
-            $additionalContent = \str_replace('{{dateOfUpdate}}', $hashTime, $additionalContent);
+            if ($replaceVariables) {
+                $additionalContent = \str_replace('{{dateOfUpdate}}', $hashTime, $additionalContent);
+            }
             // Add h2 headlines to the table of contents from the additional content
             $additionalContent = \preg_replace_callback('/<h2>(.*)<\\/h2>/m', function ($m) use(&$toc) {
                 // TODO: use other function than sanitize_title
@@ -67,22 +71,24 @@ class CookiePolicy
         \array_unshift($output, \sprintf('<p>%s</p>', $cookiePolicySettings->getInstructionText()));
         $html = \join('', $output);
         // Replace variables
-        $html = \preg_replace_callback('/{{(\\w+)}}(.*){{\\/\\1}}/m', function ($m) {
-            switch ($m[1]) {
-                case 'privacyPolicy':
-                    $url = null;
-                    foreach ($this->getCookieConsentManagement()->getSettings()->getGeneral()->getBannerLinks() as $bannerLink) {
-                        if ($bannerLink->getPageType() === BannerLink::PAGE_TYPE_PRIVACY_POLICY) {
-                            $url = $bannerLink->getUrl();
-                            break;
+        if ($replaceVariables) {
+            $html = \preg_replace_callback('/{{(\\w+)}}(.*){{\\/\\1}}/m', function ($m) {
+                switch ($m[1]) {
+                    case 'privacyPolicy':
+                        $url = null;
+                        foreach ($this->getCookieConsentManagement()->getSettings()->getGeneral()->getBannerLinks() as $bannerLink) {
+                            if ($bannerLink->getPageType() === BannerLink::PAGE_TYPE_PRIVACY_POLICY) {
+                                $url = $bannerLink->getUrl();
+                                break;
+                            }
                         }
-                    }
-                    return $url === null ? $m[2] : \sprintf('<a href="%s" target="_blank">%s</a>', \esc_url($url), $m[2]);
-                default:
-                    break;
-            }
-            return $m[0];
-        }, $html);
+                        return $url === null ? $m[2] : \sprintf('<a href="%s" target="_blank">%s</a>', \esc_url($url), $m[2]);
+                    default:
+                        break;
+                }
+                return $m[0];
+            }, $html);
+        }
         return $html;
     }
     /**

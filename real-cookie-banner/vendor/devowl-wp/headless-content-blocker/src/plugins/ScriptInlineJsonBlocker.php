@@ -29,13 +29,7 @@ class ScriptInlineJsonBlocker extends AbstractPlugin
      */
     public function checkResult($result, $matcher, $match)
     {
-        if ($matcher instanceof ScriptInlineMatcher) {
-            /**
-             * Var.
-             *
-             * @var ScriptInlineMatch
-             */
-            $match = $match;
+        if ($match instanceof ScriptInlineMatch) {
             foreach ($this->schemas as $schema) {
                 $modifiedScript = $this->replaceScriptJsonContent($match, $schema[0], $schema[1], $modified, $schema[2]);
                 if ($modified !== \false) {
@@ -78,7 +72,7 @@ class ScriptInlineJsonBlocker extends AbstractPlugin
     {
         $result = \false;
         if (\strpos($match->getScript(), $strpos) === \false) {
-            return $result;
+            return \false;
         }
         $modifiedScript = Utils::preg_jit_safe($pattern, function ($pattern) use($match, &$result, $appendToScript) {
             return \preg_replace_callback($pattern, function ($m) use(&$result) {
@@ -97,7 +91,5 @@ class ScriptInlineJsonBlocker extends AbstractPlugin
             }, $match->getScript() . $appendToScript);
         });
         return \substr($modifiedScript, 0, \strlen($modifiedScript) - \strlen($appendToScript));
-        // @codeCoverageIgnoreStart
     }
-    // @codeCoverageIgnoreEnd
 }

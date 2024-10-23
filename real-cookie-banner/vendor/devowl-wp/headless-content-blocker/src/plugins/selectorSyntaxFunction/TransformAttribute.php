@@ -56,9 +56,6 @@ class TransformAttribute extends AbstractPlugin
                         } catch (Exception $e) {
                             // Silence is golden.
                         }
-                        if (!\is_string($newValue)) {
-                            $newValue = $attributeValue;
-                        }
                     }
                     if (!empty($rename)) {
                         $match->setAttribute($rename, $newValue);

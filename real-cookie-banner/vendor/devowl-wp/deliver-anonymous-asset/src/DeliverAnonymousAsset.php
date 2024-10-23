@@ -62,11 +62,7 @@ class DeliverAnonymousAsset
                         unlink($filename);
                     }
                 }*/
-        // @codeCoverageIgnoreStart
-        if (!\defined('PHPUNIT_FILE')) {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-        }
-        // @codeCoverageIgnoreEnd
+        require_once ABSPATH . 'wp-admin/includes/file.php';
         foreach (\list_files($contentDir, 1) as $file) {
             if (\strlen(\basename($file)) === 35 && \is_readable($file) && \time() - \filemtime($file) > 28 * 24 * 60 * 60) {
                 $fileContent = \file_get_contents($file);

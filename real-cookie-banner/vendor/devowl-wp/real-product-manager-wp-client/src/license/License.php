@@ -41,9 +41,9 @@ class License
      * Skip the license deactivation for some exceptions. For example, AWS Lightsail does
      * not automatically redirect the `ec2-192-18[...]` domain to the WordPress domain URL.
      *
-     * @see https://regex101.com/r/OxkZVE/3
+     * @see https://regex101.com/r/OxkZVE/4
      */
-    const VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP = '/^(?:\\w+-\\d+-\\d+-\\d+-\\d+\\.[^\\.]+\\.(?:[\\w-]+[-.])?amazonaws\\.com|.*temp\\.domains|\\w+-\\w+\\.[^\\.]+\\.azurewebsites\\.net)$/m';
+    const VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP = '/^(?:\\w+-\\d+-\\d+-\\d+-\\d+\\.[^\\.]+\\.(?:[\\w-]+[-.])?amazonaws\\.com|.*temp\\.domains|\\w+-\\w+\\.[^\\.]+\\.azurewebsites\\.net|[\\w-]+\\.[\\w-]+\\.elb\\.amazonaws\\.com)$/m';
     private $initialized = \false;
     /**
      * Plugin slug.

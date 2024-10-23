@@ -69,7 +69,7 @@ class CdnMiddleware extends AbstractTemplateMiddleware
                     $accordion[$sccConclusionInstructionsNoticeTitle] = \preg_replace('/^<p>|<\\/p>$/', '', $template->sccConclusionInstructionsNotice);
                 }
                 $accordion[$moreInfoTooltipTitle] = $moreInfoTooltipDescription;
-                $this->applyAcknowledgementMode($template, [$paragraph1, ...$paragraphs, !$hasScc || !$isEssential ? $paragraphRemoveService : null], $accordion, $variableResolver->resolveDefault('i18n.CdnMiddleware.buttonLabel', 'Acknowledge'), 'ignore');
+                $this->applyAcknowledgementMode($template, [$paragraph1, ...$paragraphs, !$hasScc || !$isEssential ? $paragraphRemoveService : null], $accordion, $variableResolver->resolveDefault('i18n.CdnMiddleware.buttonLabel', 'Acknowledged'), 'ignore');
             }
         }
     }

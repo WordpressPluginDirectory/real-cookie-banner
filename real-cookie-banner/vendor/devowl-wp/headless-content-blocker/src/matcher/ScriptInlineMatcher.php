@@ -10,6 +10,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
  */
 class ScriptInlineMatcher extends AbstractMatcher
 {
+    const DO_NOT_COMPUTE = 'DO_NOT_COMPUTE';
     /**
      * See `AbstractMatcher`.
      *
@@ -78,12 +79,13 @@ class ScriptInlineMatcher extends AbstractMatcher
         $cb = $this->getHeadlessContentBlocker();
         $names = $cb->getSkipInlineScriptVariableAssignments();
         $names = $cb->runSkipInlineScriptVariableAssignmentsCallback($names, $this, $match);
-        return $match->isScriptOnlyVariableAssignment($names, !\in_array('DO_NOT_COMPUTE', $names, \true));
+        return $match->isScriptOnlyVariableAssignment($names, !\in_array(self::DO_NOT_COMPUTE, $names, \true));
     }
     /**
      * Add a non-minifyable string to the passed JavaScript so it can be skipped by this identifier.
      *
      * @param string $js
+     * @codeCoverageIgnore
      */
     public static function makeInlineScriptSkippable($js)
     {

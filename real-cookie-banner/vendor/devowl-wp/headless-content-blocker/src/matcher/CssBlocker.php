@@ -8,15 +8,12 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\StyleInlineAttributeMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Parser;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Property\Import;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\RuleSet\AtRuleSet;
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\CSSFunction;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\CSSString;
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\LineName;
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\RuleValueList;
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\Size;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\URL;
 /**
  * Takes a match and checks for blocked URLs. If there got something blocked, you can
@@ -93,27 +90,13 @@ class CssBlocker
         foreach ($document->getAllRuleSets() as $ruleSet) {
             if ($ruleSet instanceof AtRuleSet && \in_array($ruleSet->atRuleName(), self::EXTRACT_COMPLETE_AT_RULE_INSTEAD_OF_SINGLE_PROPERTY, \true)) {
                 foreach ($ruleSet->getRules() as $rule) {
-                    $val = $rule->getValue();
-                    if ($val !== null) {
-                        /**
-                         * All rule values for this rule.
-                         *
-                         * @var array<RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
-                         */
-                        $ruleValues = [];
-                        if ($val instanceof RuleValueList) {
-                            $ruleValues = $val->getListComponents();
-                        } elseif ($val instanceof CSSString) {
-                            $ruleValues[] = $val;
-                        }
-                        foreach ($ruleValues as $ruleValue) {
-                            $ruleResult = $this->generateLocationChangeSetForSingleValue($document, $ruleValue, \false, $removed, $setUrlChanges);
-                            if ($ruleResult) {
-                                $removedRuleSets[] = $ruleSet;
-                                // Special case: Extract the complete rule set
-                                if ($this->extract) {
-                                    $document->remove($ruleSet);
-                                }
+                    foreach (CssHelper::flatRuleValues($rule) as $ruleValue) {
+                        $ruleResult = $this->generateLocationChangeSetForSingleValue($document, $ruleValue, \false, $removed, $setUrlChanges);
+                        if ($ruleResult) {
+                            $removedRuleSets[] = $ruleSet;
+                            // Special case: Extract the complete rule set
+                            if ($this->extract) {
+                                $document->remove($ruleSet);
                             }
                         }
                     }
@@ -121,9 +104,11 @@ class CssBlocker
             }
         }
         // Iterate each value in our stylesheet
-        foreach ($document->getAllValues() as $val) {
-            $this->generateLocationChangeSetForSingleValue($document, $val, $this->extract, $removed, $setUrlChanges);
-        }
+        CssHelper::walkFlatValues($document, function ($values) use($document, &$removed, &$setUrlChanges) {
+            foreach ($values as $val) {
+                $this->generateLocationChangeSetForSingleValue($document, $val, $this->extract, $removed, $setUrlChanges);
+            }
+        });
         return [$setUrlChanges, $removed, $removedRuleSets];
     }
     /**
@@ -151,8 +136,8 @@ class CssBlocker
             $dummyFileName = 'dummy.png';
         }
         if ($location !== null) {
-            $url = $location->getURL()->getString();
-            $ruleResult = $this->createResultForSingleUrl(\html_entity_decode($url));
+            $url = \html_entity_decode($location->getURL()->getString());
+            $ruleResult = $this->createResultForSingleUrl($url);
             if ($ruleResult->isBlocked()) {
                 // Remove from original document
                 if ($extract) {
@@ -175,8 +160,8 @@ class CssBlocker
      */
     public function createResultForSingleUrl($url)
     {
-        $result = new BlockedResult('style', [], $this->getStyle());
         $cb = $this->matcher->getHeadlessContentBlocker();
+        $result = new BlockedResult('style', [], Markup::persist($this->match->getOriginalMatch(), $cb));
         // Find all public content blockers and check URL
         foreach ($cb->getBlockables() as $blockable) {
             // Iterate all wildcarded URLs
@@ -192,7 +177,7 @@ class CssBlocker
                 }
             }
         }
-        return $cb->runInlineStyleBlockRuleCallback($result, $url, $this, $this->match);
+        return $cb->runInlineStyleBlockRuleCallback($result, $url, $this->matcher, $this->match);
     }
     /**
      * Get the new URL for a blocked value.
@@ -203,7 +188,7 @@ class CssBlocker
      */
     protected function generateDummyUrl($result, $dummyFileName, $originalUrl)
     {
-        $pseudoMatch = new TagAttributeMatch(null, null, 'style', [], null, null, null, null);
+        $pseudoMatch = new TagAttributeMatch(null, null, 'style', [], null);
         $this->matcher->applyConsentAttributes($result, $pseudoMatch);
         $pseudoMatch->setAttribute(Constants::URL_QUERY_ARG_ORIGINAL_URL_IN_STYLE, \sprintf('%s-', \base64_encode($originalUrl)));
         // add trailing `-` to avoid removal of `==`]

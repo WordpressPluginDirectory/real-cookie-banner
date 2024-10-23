@@ -265,12 +265,12 @@ class TemplateConsumers
             // translators:
             'i18n.CdnMiddleware.introductionRemoveService' => \__('Please remove %s from your website!', RCB_TD),
             // translators:
-            'i18n.CdnMiddleware.moreInfoTooltipTitle' => \__('Why is %s integrated into my website at all?', RCB_TD),
+            'i18n.CdnMiddleware.moreInfoTitle' => \__('Why is %s integrated into my website at all?', RCB_TD),
             // translators:
-            'i18n.CdnMiddleware.moreInfoTooltipDescription' => \__('If you do not consciously integrate %1$s, it is most likely that a plugin or theme you are using uses this CDN to load external scripts, fonts or media such as images. The best way to find out who is integrating the CDN is to disable the individual plugins or themes and scan again. Once you have found out where the integration is coming from, contact the developer of the plugin or theme to see if it can be used without %1$s or replace this plugin/theme!', RCB_TD),
+            'i18n.CdnMiddleware.moreInfoDescription' => \__('If you do not consciously integrate %1$s, it is most likely that a plugin or theme you are using uses this CDN to load external scripts, fonts or media such as images. The best way to find out who is integrating the CDN is to disable the individual plugins or themes and scan again. Once you have found out where the integration is coming from, contact the developer of the plugin or theme to see if it can be used without %1$s or replace this plugin/theme!', RCB_TD),
             // translators:
             'i18n.CdnMiddleware.sccConclusionInstructionsNoticeTitle' => \__('How do I conclude standard contractual clauses with %s?', RCB_TD),
-            'i18n.CdnMiddleware.buttonLabel' => \__('Acknowledge', RCB_TD),
+            'i18n.CdnMiddleware.buttonLabel' => \__('Acknowledged', RCB_TD),
         ];
         foreach ($variables as $key => $value) {
             $resolver->add($key, $value);

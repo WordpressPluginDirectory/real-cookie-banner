@@ -381,9 +381,11 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('rest_api_init', [RestStats::instance(), 'rest_api_init']);
         \add_action('rest_api_init', [$restScanner, 'rest_api_init']);
         \add_action('rest_api_init', [Import::instance(), 'rest_api_init']);
+        \add_action('wp', [$this->getAssets(), 'wp']);
         \add_action('admin_enqueue_scripts', [$this->getAssets(), 'admin_enqueue_scripts']);
         \add_action('wp_enqueue_scripts', [$this->getAssets(), 'wp_enqueue_scripts'], 0);
         \add_action('login_enqueue_scripts', [$this->getAssets(), 'login_enqueue_scripts'], 0);
+        \add_action('fluent_community/portal_head', [$this->getAssets(), 'fluent_community_portal_head']);
         \add_action('DevOwl/RealQueue/Job/Label', [$scanner, 'real_queue_job_label'], 10, 3);
         \add_action('DevOwl/RealQueue/Job/Actions', [$scanner, 'real_queue_job_actions'], 10, 2);
         \add_action('DevOwl/RealQueue/Error/Description', [$scanner, 'real_queue_error_description'], 10, 3);

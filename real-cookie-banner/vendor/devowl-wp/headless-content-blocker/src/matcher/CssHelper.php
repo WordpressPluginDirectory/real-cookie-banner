@@ -2,15 +2,20 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher;
 
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\CSSBlockList;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\CSSList;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\KeyFrame;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\OutputFormat;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Property\Import;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Renderable;
-use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\RuleSet\AtRuleSet;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Rule\Rule;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\RuleSet\DeclarationBlock;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\RuleSet\RuleSet;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\CSSFunction;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\CSSString;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\LineName;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\RuleValueList;
+use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\Size;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\Value\URL;
 /**
  * Helper functionality for CSS documents.
@@ -34,12 +39,12 @@ class CssHelper
                 if (empty($oBlock->getRules())) {
                     $oList->remove($oBlock);
                 }
-            } elseif ($oBlock instanceof CSSBlockList) {
+            } elseif ($oBlock instanceof CSSList) {
                 self::removeBlanksFromCSSList($oBlock);
                 if (empty($oBlock->getContents())) {
                     $oList->remove($oBlock);
                 }
-            } elseif ($oBlock instanceof AtRuleSet) {
+            } elseif ($oBlock instanceof RuleSet) {
                 if (empty($oBlock->getRules())) {
                     $oList->remove($oBlock);
                 }
@@ -75,19 +80,20 @@ class CssHelper
         static $outputFormat = null;
         if ($outputFormat === null) {
             $outputFormat = OutputFormat::createCompact();
+            $outputFormat->indentWithSpaces();
         }
         return $outputFormat;
     }
     /**
      * Remove a given CSS value from a given document and return the removed elements.
      *
-     * @param mixed $value
+     * @param mixed $removeValue
      * @param Document $document
      */
-    public static function removeValueFromDocument($value, $document)
+    public static function removeValueFromDocument($removeValue, $document)
     {
-        if ($document->remove($value)) {
-            return [$value];
+        if ($document->remove($removeValue)) {
+            return [$removeValue];
         } else {
             $found = [];
             foreach ($document->getAllRuleSets() as $ruleSet) {
@@ -98,13 +104,24 @@ class CssHelper
                  */
                 $ruleSet = $ruleSet;
                 foreach ($ruleSet->getRules() as $rule) {
-                    if (self::strposValues($rule->getValue(), $value) !== \false) {
+                    if (self::strposValues($rule->getValue(), $removeValue) !== \false) {
                         $ruleSet->removeRule($rule);
                         $found[] = $rule->getValue();
                         break;
                     }
                 }
             }
+            self::walkFlatValues($document, static function ($values, $rule, $ruleSet) use(&$found, &$removeValue) {
+                foreach ($values as $value) {
+                    if ($rule !== null) {
+                        if (self::strposValues($value, $removeValue) !== \false) {
+                            $ruleSet->removeRule($rule);
+                            $found[] = $rule->getValue();
+                            break;
+                        }
+                    }
+                }
+            });
             return $found;
         }
     }
@@ -119,23 +136,78 @@ class CssHelper
         $outputFormat = self::getCompactOutputFormat();
         foreach ($setUrlChanges as $change) {
             $renderedChangeLocation = $change[0]->render($outputFormat);
-            foreach ($document->getAllValues() as $value) {
-                /**
-                 * The found URL instance.
-                 *
-                 * @var URL
-                 */
-                $location = null;
-                if ($value instanceof Import) {
-                    $location = $value->getLocation();
-                } elseif ($value instanceof URL) {
-                    $location = $value;
+            self::walkFlatValues($document, static function ($values) use(&$renderedChangeLocation, &$change, $outputFormat) {
+                foreach ($values as $value) {
+                    /**
+                     * The found URL instance.
+                     *
+                     * @var URL
+                     */
+                    $location = null;
+                    if ($value instanceof Import) {
+                        $location = $value->getLocation();
+                    } elseif ($value instanceof URL) {
+                        $location = $value;
+                    }
+                    if ($location !== null && $location->render($outputFormat) === $renderedChangeLocation) {
+                        $location->setURL($change[1]);
+                    }
                 }
-                if ($location !== null && $location->render($outputFormat) === $renderedChangeLocation) {
-                    $location->setURL($change[1]);
+            });
+        }
+    }
+    /**
+     * Walk through all values of a given document with a given callback.
+     *
+     * @param Document $document
+     * @param callable(array<CSSFunction|CSSString|LineName|Size|URL|string>, Rule, RuleSet, CSSList): void $callback
+     */
+    public static function walkFlatValues($document, $callback)
+    {
+        foreach ($document->getAllValues() as $val) {
+            if ($val instanceof CSSList) {
+                foreach ($val->getContents() as $content) {
+                    if ($content instanceof RuleSet) {
+                        foreach ($content->getRules() as $rule) {
+                            $ruleValues = self::flatRuleValues($rule);
+                            $callback($ruleValues, $rule, $content, $val);
+                        }
+                    }
                 }
+            } else {
+                $callback([$val], null, null, $document);
             }
         }
+    }
+    /**
+     * Get all values of a given rule.
+     *
+     * @param Rule $rule
+     */
+    public static function flatRuleValues($rule)
+    {
+        $value = $rule->getValue();
+        // @codeCoverageIgnoreStart
+        if ($value === null) {
+            return [];
+        }
+        // @codeCoverageIgnoreEnd
+        $res = [];
+        if ($value instanceof RuleValueList) {
+            foreach ($value->getListComponents() as $component) {
+                if ($component instanceof RuleValueList) {
+                    // Nested value lists
+                    foreach ($component->getListComponents() as $component2) {
+                        $res[] = $component2;
+                    }
+                } else {
+                    $res[] = $component;
+                }
+            }
+        } else {
+            $res[] = $value;
+        }
+        return $res;
     }
     /**
      * Remove all non-blocked rules depending on a "removal" list.
@@ -189,18 +261,29 @@ class CssHelper
                 }
             }
         }
-        // Also try to remove all `@import`'s
-        foreach ($document->getAllValues() as $value) {
+        self::walkFlatValues($document, static function ($values, $rule, $ruleSet, $list) use(&$removedFromOriginalDocumentRenderedStringMap) {
+            // A Keyframe may not be modified in the extracted document as CSS does not allow to override keyframes (inheritance)
+            if ($list instanceof KeyFrame) {
+                return;
+            }
             $found = \false;
-            foreach ($removedFromOriginalDocumentRenderedStringMap as $removedValue) {
-                if (self::strposValues($removedValue, $value) !== \false) {
-                    $found = \true;
-                    break;
+            foreach ($values as $value) {
+                foreach ($removedFromOriginalDocumentRenderedStringMap as $removedValue) {
+                    if (self::strposValues($removedValue, $value) !== \false) {
+                        $found = \true;
+                        break 2;
+                    }
                 }
             }
             if (!$found) {
-                $document->remove($value);
+                // @codeCoverageIgnoreStart
+                if ($ruleSet !== null) {
+                    $ruleSet->removeRule($rule);
+                    // @codeCoverageIgnoreEnd
+                } else {
+                    $list->remove($rule);
+                }
             }
-        }
+        });
     }
 }

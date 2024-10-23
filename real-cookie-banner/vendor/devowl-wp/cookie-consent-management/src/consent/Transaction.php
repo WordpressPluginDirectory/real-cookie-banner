@@ -242,7 +242,7 @@ class Transaction
     public function setForwarded($forwarded, $forwardedUuid, $isForwardedBlocker)
     {
         $this->forwarded = !\is_int($forwarded) && !\is_double($forwarded) ? 0 : \intval($forwarded);
-        $this->forwardedUuid = !\is_string($forwardedUuid) || empty($forwardedUuid) || !Validators::isValidUuid($forwardedUuid) ? null : $forwardedUuid;
+        $this->forwardedUuid = !$this->forwarded || !\is_string($forwardedUuid) || empty($forwardedUuid) || !Validators::isValidUuid($forwardedUuid) ? null : $forwardedUuid;
         $this->forwardedBlocker = !\is_bool($isForwardedBlocker) ? \false : $isForwardedBlocker;
     }
     /**

@@ -3,6 +3,358 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.8.3 (2024-10-23)
+
+
+### Bug Fixes
+
+* allow multiple sitemaps in robots.txt (CU-86967g80d)
+* always show original markup in scan entries and deduplicate (CU-86969de1q)
+* compatibility with FacetWP and reloading preloaded data twice (CU-869502z3k)
+* compatibility with FluentCommunity and no visual content blocker (CU-8696am4em)
+* compatibility with Presto Player not rendering all video embeds (CU-86960tuve)
+* compatibility with Visual Composer and Hide on this page feature (CU-869613ef5)
+* cookie policy could not be created with TranslatePress active (CU-86969m9g6)
+* explode() argument [#2](https://git.owlinfra.de/devowlio/devowl-wp/issues/2) () must be of type string, array given after importing TCF content blcker in free version (CU-8693dmfxd)
+* make getTranslatedName also work for WordPress langauges (CU-869657xp3)
+* make it better work with server jobs and reloading page (CU-861mva7bm)
+
+
+### Code Refactoring
+
+* move WordPress content blocker compatibility tweaks to isomorphic package (CU-8695mtnyu)
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)
+
+
+### Maintenance
+
+* update TCF vendors for Google AdSense network (CU-8694q1nfu)
+* update texts for CDN cards in scanner (CU-86963c70n)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 0.14.3</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.17.14</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 0.2.3</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* allow to skip uncompress when cookie policy is not compressed (CU-861mva7bm)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 0.10.3</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* failed to construct 'URL': Invalid URL when using MagnificPopup and WooCommerce Upload Files (CU-8695zwvhy)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.13</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 0.2.82</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 0.11.2</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)
+
+
+##### Tests
+
+* port fast-html-tag and headless-content-blocker to TypeScript with Vitest tests (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.91</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 0.18.2</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* always show original markup in scan entries and deduplicate (CU-86969de1q)
+* fatal error: Uncaught Error: Call to a member function getRegularExpressions() on null (CU-8695yj3g9)
+* streamline common Vimeo and YouTube content blocker rules to new selector syntax map functionality (CU-86964vzn3)
+
+
+##### Code Refactoring
+
+* move WordPress content blocker compatibility tweaks to isomorphic package (CU-8695mtnyu)
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)
+
+
+##### Tests
+
+* port fast-html-tag and headless-content-blocker to TypeScript with Vitest tests (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 0.8.16</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Presto Player not rendering all video embeds (CU-86960tuve)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.12</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* make getTranslatedName also work for WordPress langauges (CU-869657xp3)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 0.14.3</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* update links to standard contractual clauses (CU-86969h83e)
+* update texts for CDN cards in scanner (CU-86963c70n)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.28</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* do not invalidate license for elb.amazonaws.com (CU-86964ynay)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 0.7.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Bug Fixes
+
+* make it better work with server jobs and reloading page (CU-861mva7bm)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)
+
+
+##### Features
+
+* allow to define a job capability to assign jobs only to e.g. administrators (CU-861mva7bm)
+* allow to define a job priority (CU-861mva7bm)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.12</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Bug Fixes
+
+* uasort(): Argument [#1](https://git.owlinfra.de/devowlio/devowl-wp/issues/1) () must be of type array, null given in (CU-86967g2a2)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 0.6.3</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Dependency updates @devowl-wp/sitemap-crawler 0.2.36</summary>
+
+
+**_Purpose of dependency:_** _Find and crawl sitemaps to get a full list of URLs._
+##### Bug Fixes
+
+* allow multiple sitemaps in robots.txt (CU-86967g80d)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.12</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* content blocker cannot be saved with empty description text (CU-869625w64)
+
+
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 0.5.27</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 0.4.1</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/composer-licenses 0.1.17</summary>
+
+
+**_Purpose of dependency:_** _Helper functionalities for your composer project to validate licenses and generate a disclaimer._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.6</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)
+
+
+##### Maintenance
+
+* migrate away from envkey-source to infisical (CU-86959qnq2)
+
+
+##### Tests
+
+* port fast-html-tag and headless-content-blocker to TypeScript with Vitest tests (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* make retry mechanism work with FormData (CU-8695kguk7)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.10</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Tests
+
+* port fast-html-tag and headless-content-blocker to TypeScript with Vitest tests (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.7.16</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Maintenance
+
+* migrate away from envkey-source to infisical (CU-86959qnq2)</details>
+
+<details><summary>Development dependency update @devowl-wp/phpcs-config 0.1.16</summary>
+
+
+**_Purpose of dependency:_** _Predefined functionalities for PHPCS._
+##### Code Refactoring
+
+* remove jest and phpunit from packages which do not use it (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.7.1</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Bug Fixes
+
+* visual hero content blocker is not responsive when using a wide width teaching separator (CU-869627051)</details>
+
+
+
+
+
+## 4.8.2 (2024-09-27) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 0.7.1</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Bug Fixes
+
+* name of constents for Bunny.bet and Gcore server locations (CU-8695ybqtp)</details>
+
+
+
+
+
+## 4.8.1 (2024-09-27) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 0.7.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Features
+
+* server locations of Bunny.net and Gcore (CU-8695ybqtp)</details>
+
+
+
+
+
 # 4.8.0 (2024-09-26)
 
 

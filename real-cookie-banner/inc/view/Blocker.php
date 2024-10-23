@@ -10,6 +10,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\ScriptInlineExtractExternalUrl;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
+use DevOwl\RealCookieBanner\scanner\Scanner;
 use DevOwl\RealCookieBanner\settings\Blocker as SettingsBlocker;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\Utils;
@@ -134,7 +135,7 @@ class Blocker
                  * @var BlockableScanner
                  */
                 $scanner = $headlessContentBlocker->addPlugin(BlockableScanner::class);
-                $scanner->excludeHostByUrl(\home_url());
+                $scanner->setSourceUrl(Scanner::getCurrentSourceUrl());
             }
             $headlessContentBlocker->addBlockables($this->createBlockables($headlessContentBlocker));
             $headlessContentBlocker->setup();

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
+class ComposerStaticInitbfe7ccd1264d85fd710056740f019775
 {
     public static $files = array (
         '7aed44d824e149ce152c0fb82af9379a' => __DIR__ . '/..' . '/colinodell/json5/src/global.php',
@@ -270,6 +270,7 @@ class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\RemoveAlwaysCSSClasses' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/RemoveAlwaysCSSClasses.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\ScriptInlineExtractExternalUrl' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/ScriptInlineExtractExternalUrl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\ScriptInlineJsonBlocker' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/ScriptInlineJsonBlocker.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\StandardPlugin' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/StandardPlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\imagePreview\\FsImagePreviewCache' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/imagePreview/FsImagePreviewCache.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\imagePreview\\HtmlHeadThumbnailParser' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/imagePreview/HtmlHeadThumbnailParser.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\imagePreview\\ImagePreview' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/imagePreview/ImagePreview.php',
@@ -298,6 +299,7 @@ class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\serviceCloudConsumer\\ServiceCloudConsumerExternalUrlNotifierMiddleware' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/serviceCloudConsumer/ServiceCloudConsumerExternalUrlNotifierMiddleware.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfForwardGdprStringInUrl' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfForwardGdprStringInUrl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\tcf\\TcfVendorDomainsBlockable' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/tcf/TcfVendorDomainsBlockable.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\thirdParty\\ElementorProActionsPlugin' => __DIR__ . '/..' . '/devowl-wp/headless-content-blocker/src/plugins/thirdParty/ElementorProActionsPlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractLanguagePlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractLanguagePlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractOutputBufferPlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractOutputBufferPlugin.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\Multilingual\\AbstractSyncPlugin' => __DIR__ . '/..' . '/devowl-wp/multilingual/src/AbstractSyncPlugin.php',
@@ -807,7 +809,6 @@ class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
         'DevOwl\\RealCookieBanner\\view\\Notices' => __DIR__ . '/../..' . '/inc/view/Notices.php',
         'DevOwl\\RealCookieBanner\\view\\Scanner' => __DIR__ . '/../..' . '/inc/view/Scanner.php',
         'DevOwl\\RealCookieBanner\\view\\blockable\\BlockerPostType' => __DIR__ . '/../..' . '/inc/view/blockable/BlockerPostType.php',
-        'DevOwl\\RealCookieBanner\\view\\blocker\\ElementorProActionsPlugin' => __DIR__ . '/../..' . '/inc/view/blocker/ElementorProActionsPlugin.php',
         'DevOwl\\RealCookieBanner\\view\\blocker\\Plugin' => __DIR__ . '/../..' . '/inc/view/blocker/Plugin.php',
         'DevOwl\\RealCookieBanner\\view\\blocker\\PluginAutoplay' => __DIR__ . '/../..' . '/inc/view/blocker/PluginAutoplay.php',
         'DevOwl\\RealCookieBanner\\view\\checklist\\AbstractChecklistItem' => __DIR__ . '/../..' . '/inc/view/checklist/AbstractChecklistItem.php',
@@ -850,9 +851,9 @@ class ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4d0e61c826ff8c9250b1fc599f8eb35a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbfe7ccd1264d85fd710056740f019775::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbfe7ccd1264d85fd710056740f019775::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitbfe7ccd1264d85fd710056740f019775::$classMap;
 
         }, null, ClassLoader::class);
     }

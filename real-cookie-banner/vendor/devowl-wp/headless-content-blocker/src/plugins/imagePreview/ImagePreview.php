@@ -22,6 +22,8 @@ use Exception;
  *   purpose of the headless content blocker is to block external URLs, and we do not want to use an external URL as image preview!
  * - Your `AbstractBlockable` **needs** to implement `ImagePreviewBlockable` interface to determine if thumbnails
  *   should be loaded for the blocked content!
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 class ImagePreview extends AbstractPlugin
@@ -425,7 +427,6 @@ class ImagePreview extends AbstractPlugin
      * Setter.
      *
      * @param ImagePreviewCache $cache
-     * @codeCoverageIgnore
      */
     public function setCache($cache)
     {
@@ -444,8 +445,6 @@ class ImagePreview extends AbstractPlugin
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public function getCache()
     {

@@ -66,7 +66,7 @@ class MatchesUrl extends AbstractPlugin
                 // When we are using the syntax within `addSelectorSyntaxMap`, the match will not be blocked
                 // as the blockable probably will not have the same rule; we need to force use the block result
                 if ($blockable === null && $blockedResult->isBlocked()) {
-                    $match->setForceResult($blockedResult);
+                    $match->setData(SelectorSyntaxMatcher::DATA_FORCE_RESULT, $blockedResult);
                 }
             }
             return $blockedResult->isBlocked();

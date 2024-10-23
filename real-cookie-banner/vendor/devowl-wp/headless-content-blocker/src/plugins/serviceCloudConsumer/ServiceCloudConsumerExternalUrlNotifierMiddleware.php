@@ -12,6 +12,8 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\Blocker
 /**
  * This is not directly a plugin but a middleware to handle the service cloud consumer `@devowl-wp/service-cloud-consumer`.
  * This middleware will notify you when an external URL is now covered by a blocker template.
+ *
+ * @codeCoverageIgnore
  * @internal
  */
 abstract class ServiceCloudConsumerExternalUrlNotifierMiddleware extends AbstractConsumerMiddleware

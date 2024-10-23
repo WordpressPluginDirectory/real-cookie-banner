@@ -16,7 +16,7 @@ interface SelectorSyntaxAttributeFunctionVariableResolver
      *
      * @param string $variableName
      * @param mixed $default
-     * @return string[]
+     * @return string
      */
     public function getVariable($variableName, $default = '');
 }

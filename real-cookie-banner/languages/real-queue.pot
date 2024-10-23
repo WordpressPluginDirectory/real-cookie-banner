@@ -16,18 +16,18 @@ msgid "Process failed due to an unexpected error."
 msgstr ""
 
 #. translators:
-#: queue/Executor.php:141
+#: queue/Executor.php:145
 msgid "%1$d / %2$d (thereof %3$d remaining) tasks could not be executed properly."
 msgstr ""
 
-#: queue/Job.php:312
+#: queue/Job.php:347
 msgid "The passed callable persisted to the job cannot be called (`is_callable`)"
 msgstr ""
 
-#: queue/Job.php:343
+#: queue/Job.php:379
 msgid "This job is already running in another thread on your server."
 msgstr ""
 
-#: queue/Job.php:359
+#: queue/Job.php:407
 msgid "Unexpected exception."
 msgstr ""

@@ -22,7 +22,6 @@ abstract class AbstractPlugin
      * C'tor.
      *
      * @param HeadlessContentBlocker $headlessContentBlocker
-     * @codeCoverageIgnore
      */
     public final function __construct($headlessContentBlocker)
     {
@@ -189,8 +188,6 @@ abstract class AbstractPlugin
     }
     /**
      * Getter.
-     *
-     * @codeCoverageIgnore
      */
     public final function getHeadlessContentBlocker()
     {
