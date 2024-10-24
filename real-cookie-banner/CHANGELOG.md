@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.8.4 (2024-10-23)
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 0.7.2</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Bug Fixes
+
+* cookie banner separator is always left (CU-8696axtt5)</details>
+
+
+
+
+
 ## 4.8.3 (2024-10-23)
 
 

@@ -30,7 +30,7 @@ Copyright (c) 2017-2019 Colin O'Dell <colinodell@gmail.com>. Based on https://gi
 > THE SOFTWARE.
 
 
-### devowl-wp/utils (Version dev-develop | no sha)
+### devowl-wp/utils (Version dev-wordpress | no sha)
 Utility functionality for all your WordPress plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
