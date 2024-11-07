@@ -19,6 +19,7 @@ class CookiePolicy extends AbstractCookiePolicy
 {
     use UtilsProvider;
     const OPTION_GROUP = 'options';
+    const SYNC_OPTIONS = ['page' => ['data' => ['menu_order'], 'taxonomies' => [], 'meta' => ['copy' => [], 'copy-once' => []]]];
     /**
      * Singleton instance.
      *
@@ -115,6 +116,9 @@ class CookiePolicy extends AbstractCookiePolicy
     public function getContentLegalBasisGdpr()
     {
         $text = $this->translateString($this->getCustomizeSetting(BannerCookiePolicy::SETTING_LEGAL_BASIS_GDPR));
+        if (Core::getInstance()->getCompLanguage()->isCurrentlyInEditorPreview()) {
+            return $text;
+        }
         $euLegalBasis = \_x('Art. 5 (3) ePrivacy Directive and Recital 66 ePrivacy Directive', 'gdpr-legal-basis', RCB_TD);
         $locale = \get_locale();
         $localeTwoLetter = \substr($locale, 0, 2);
@@ -296,7 +300,7 @@ class CookiePolicy extends AbstractCookiePolicy
      */
     protected function getCustomizeSetting($id)
     {
-        return \do_shortcode(Core::getInstance()->getBanner()->getCustomize()->getSetting($id));
+        return Core::getInstance()->getBanner()->getCustomize()->getSetting($id);
     }
     /**
      * Get singleton instance.

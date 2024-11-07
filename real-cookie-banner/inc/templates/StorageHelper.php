@@ -93,7 +93,7 @@ class StorageHelper
             return [];
         }
         // phpcs:disable WordPress.DB
-        $result = $wpdb->get_results(\sprintf("SELECT t2.versions, %s AS response, is_invalidate_needed\n                    FROM {$table_name} t %s\n                    LEFT JOIN (\n                      SELECT identifier, context, GROUP_CONCAT(DISTINCT version) AS versions\n                      FROM {$table_name}\n                      GROUP BY identifier, context\n                    ) t2 ON t.identifier = t2.identifier AND t.context = t2.context\n                    WHERE %s\n                    ORDER BY headline ASC, version DESC", $middlewareRoutine . '_middleware', \join(' AND ', $joins), \join(' AND ', $where)), ARRAY_A);
+        $result = $wpdb->get_results(\sprintf("SELECT t2.versions, %s AS response, is_invalidate_needed, t2.context\n                    FROM {$table_name} t %s\n                    LEFT JOIN (\n                      SELECT identifier, context, GROUP_CONCAT(DISTINCT version) AS versions\n                      FROM {$table_name}\n                      GROUP BY identifier, context\n                    ) t2 ON t.identifier = t2.identifier AND t.context = t2.context\n                    WHERE %s\n                    ORDER BY headline ASC, version DESC", $middlewareRoutine . '_middleware', \join(' AND ', $joins), \join(' AND ', $where)), ARRAY_A);
         // phpcs:enable WordPress.DB
         if ($result === null) {
             // Error happened, do not try to refetch from data sources
@@ -111,7 +111,9 @@ class StorageHelper
                 return \false;
             }
             $versions = \array_filter(\array_map('intval', \explode(',', $row['versions'])));
+            $context = $row['context'];
             $row = $this->fromArray(\json_decode($row['response'], ARRAY_A));
+            $row->consumerData['context'] = $context;
             if ($field !== 'versions') {
                 $row->consumerData['versions'] = $versions;
             }
@@ -158,7 +160,7 @@ class StorageHelper
                 $values[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('(%s, %s, %s, %d, %s,
                             %s, %s, %s,
                             %d, %d, %d, %d, %d, %d, %d,
-                            %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode($template->getBeforeMiddleware()), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
+                            %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode(AbstractTemplate::toArray($template->getBeforeMiddleware())), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
                 $persistedIdentifierInSql[] = $wpdb->prepare('%s', $template->identifier);
                 $templateToVersionMap[$template->identifier] = $template->version;
             }
@@ -228,7 +230,8 @@ class StorageHelper
     {
         $option = $this->getExpireOption();
         $cache = $option->get();
-        return $cache !== $this->getCacheInvalidateKey() && $option->set($this->getCacheInvalidateKey());
+        $result = $cache !== $this->getCacheInvalidateKey() && $option->set($this->getCacheInvalidateKey());
+        return $result;
     }
     /**
      * Get type as string from template type class.

@@ -156,7 +156,7 @@ abstract class AbstractTemplate
      * really be contaced e.g. once a day and a invalidation should only "retrigger" recalculation of middlewares.
      * This data can be for example be saved in a Redis object cache or database column.
      *
-     * @var array
+     * @var AbstractTemplate
      */
     private $beforeMiddleware = null;
     /**
@@ -236,7 +236,7 @@ abstract class AbstractTemplate
      */
     public function memoizeBeforeMiddleware()
     {
-        $this->beforeMiddleware = self::toArray($this);
+        $this->beforeMiddleware = clone $this;
     }
     /**
      * Getter.

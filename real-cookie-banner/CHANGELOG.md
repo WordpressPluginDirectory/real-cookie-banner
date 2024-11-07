@@ -3,6 +3,335 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.0.0 (2024-11-07)
+
+
+### Bug Fixes
+
+* automatically split POMO translations into translatable strings when TranslatePress is active (CU-8696an3mp)
+
+
+### Documentation
+
+* update readme for wordpress.org (CU-869657pwb)
+
+
+### Features
+
+* upgrade wizard to v5 (CU-869657xp3)
+
+
+### Maintenance
+
+* allow to reset texts in Cookies > Settings (CU-8696an3mp)
+
+
+### Performance Improvements
+
+* convert renderPageSelector to functional component (CU-8696an3mp)
+* fix while loop when switching from TranslatePress to PolyLang (CU-8696an3mp)
+* too much memory consumed when downloading TCF GVL vendor list and services (CU-8696eq8k1)
+* use new database scheme for consents for better storage usage (CU-861mva7bm)
+
+
+### BREAKING CHANGES
+
+* Read more about it here https://devowl.io/news/real-cookie-banner-5-0/.
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* block video poster correctly (CU-8696gf2kg)
+* do not find data URLs as external URL (CU-8695mtnyu)
+
+
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.13</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* allow to force persist of translations for output buffer plugins (CU-8696an3mp)
+* automatically split POMO translations into translatable strings when TranslatePress is active (CU-8696an3mp)
+* make texts transformed with wptexturize work with TranslatePress (CU-8696an3mp)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* accessible link with alt text for sticky legal links
+* automatically split POMO translations into translatable strings when TranslatePress is active (CU-8696an3mp)
+* texts of cooie banner are not editable in TranslatePress edit screen (CU-8696em1me)
+
+
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* allow to reset texts in Cookies > Settings (CU-8696an3mp)
+* initial release (CU-869656drt)
+
+
+##### Performance Improvements
+
+* convert renderPageSelector to functional component (CU-8696an3mp)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### Performance Improvements
+
+* too much memory consumed when downloading TCF GVL vendor list and services (CU-8696eq8k1)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/sitemap-crawler 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Find and crawl sitemaps to get a full list of URLs._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.13</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Performance Improvements
+
+* too much memory consumed when downloading TCF GVL vendor list and services (CU-8696eq8k1)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 1.0.0</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Maintenance
+
+* initial release (CU-869656drt)
+
+
+##### BREAKING CHANGES
+
+* With Real Cookie Banner v5 we enter v1 of dependency packages.</details>
+
+
+
+
+
 ## 4.8.4 (2024-10-23)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.

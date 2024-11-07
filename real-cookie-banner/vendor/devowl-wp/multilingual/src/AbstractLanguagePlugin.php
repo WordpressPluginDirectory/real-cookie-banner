@@ -3,6 +3,8 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual;
 
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Localization;
+use SplObjectStorage;
+use Translation_Entry;
 use WP_REST_Response;
 use WP_REST_Request;
 use WP_POST;
@@ -18,6 +20,7 @@ use WP_Term;
 abstract class AbstractLanguagePlugin
 {
     const TEMPORARY_TEXT_DOMAIN_PREFIX = 'multilingual-temporary-text-domain';
+    const MARKER_SPLIT_TRANSLATION_ENTRY = 'splitTranslationEntry';
     /**
      * The sync instance for this plugin.
      *
@@ -49,6 +52,12 @@ abstract class AbstractLanguagePlugin
      * Current translations hold as an instance.
      */
     protected $currentTranslationEntries = null;
+    /**
+     * Cache for split translation entries.
+     *
+     * @var SplObjectStorage<Translation_Entry, Translation_Entry[]>
+     */
+    protected $splitTranslationEntriesCache = [];
     protected $findI18nKeyOfTranslationCache = [];
     protected $lockCurrentTranslations = \false;
     /**
@@ -64,6 +73,7 @@ abstract class AbstractLanguagePlugin
         $this->domain = $domain;
         $this->moFile = $moFile;
         $this->overrideClass = $overrideClass;
+        $this->splitTranslationEntriesCache = new SplObjectStorage();
     }
     /**
      * Switch to a given language code. Please do not use this function directly, use
@@ -201,11 +211,12 @@ abstract class AbstractLanguagePlugin
      * Maybe persist a translation in the database of available translations.
      *
      * @param string $sourceContent
-     * @param string $content
+     * @param string $content Pass `null` to delete the translation
      * @param string $sourceLocale
      * @param string $targetLocale
+     * @param boolean $force Pass `true` to force persist the translation
      */
-    public abstract function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale);
+    public abstract function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale, $force = \false);
     /**
      * Translate strings to a given locale. Do not use this function directly, use `translateArray` instead!
      *
@@ -214,6 +225,13 @@ abstract class AbstractLanguagePlugin
      * @param string[] $context
      */
     public abstract function translateStrings(&$content, $locale, $context = null);
+    /**
+     * Extract translatable strings from a given content. The returned array is a map of the original strings to the translatable strings.
+     *
+     * @param string[] $content
+     * @return string[][]
+     */
+    public abstract function translatableStrings($content);
     /**
      * Add a `multilingual` section to a given post type.
      *
@@ -298,7 +316,8 @@ abstract class AbstractLanguagePlugin
         return $result;
     }
     /**
-     * Translate a complete array to a given locale (recursively).
+     * Translate a complete array to a given locale (recursively). This is mostly implemented by output buffer plugins like
+     * TranslatePress or Weglot.
      *
      * @param array $content
      * @param string[] $skipKeys
@@ -490,6 +509,37 @@ abstract class AbstractLanguagePlugin
         return \false;
     }
     /**
+     * Filter a list of locales and check if translations from a PO/MO file exists.
+     *
+     * @param string[] $locales
+     * @param string[] $skip Allows to skip locales and they will never be in the result, e.g. minimal translations; the
+     *                       codes need to be compatible with the WordPress locale format.
+     */
+    public function filterWithExistingTranslatedTextDomain($locales, $skip = [])
+    {
+        $result = [];
+        foreach ($locales as $locale) {
+            $useLocale = $this->getWordPressCompatibleLanguageCode($locale);
+            $overrideClassInstance = $this->getOverrideClassInstance();
+            $potLanguages = [];
+            $mofile = \sprintf($this->moFile, $useLocale);
+            $isInPotLanguages = \false;
+            if ($overrideClassInstance !== null) {
+                // Check if fallback should be skipped if the POT language is currently in use
+                $potLanguages = $overrideClassInstance->getPotLanguages();
+                $isInPotLanguages = \in_array($useLocale, $potLanguages, \true);
+                list(, $newMofile) = $overrideClassInstance->getMofilePath($mofile, $this->domain);
+                if ($newMofile !== \false) {
+                    $mofile = $newMofile;
+                }
+            }
+            if (!\in_array($useLocale, $skip, \true) && (\is_readable($mofile) || $isInPotLanguages)) {
+                $result[] = $locale;
+            }
+        }
+        return $result;
+    }
+    /**
      * Get the current temporary text domain name which can be used for `__` when e.g. inside `switchToLanguage`.
      */
     public function getTemporaryTextDomainName()
@@ -516,6 +566,90 @@ abstract class AbstractLanguagePlugin
         $this->lockCurrentTranslations = $state;
     }
     /**
+     * Split a translation entry key into multiple parts. This is useful when using e.g. TranslatePress and we need to find translations from
+     * MO file which is divided into multiple "parts" like `<strong>Text</strong>: Another text`.
+     *
+     * @param Translation_Entry[] $entriesToSplit
+     * @see https://github.com/WordPress/WordPress/blob/8df15c4374b5cea6627e3f149058904bfa793dcf/wp-includes/pomo/entry.php
+     */
+    public function splitTranslationEntries(&$entriesToSplit)
+    {
+        /* Just for testing if the TRP is executing any query
+           add_filter('query', function ($query) {
+               echo '[[' . $query . ']]<br />';
+               return $query;
+           });*/
+        /**
+         * All entries which we would like to split.
+         *
+         * @var Translation_Entry[]
+         */
+        $translationEntriesToSplit = [];
+        foreach ($entriesToSplit as $key => $translation) {
+            if (\strpos($key, '<') !== \false && \count($translation->translations) > 0 && (\count($translation->references) === 0 || $translation->references[0] !== self::MARKER_SPLIT_TRANSLATION_ENTRY)) {
+                $translationEntriesToSplit[$key] = $translation;
+            }
+        }
+        // Collect all translatable strings in a single array to reduce the number of calls to `translatableStrings`
+        // as it is a heavy operation
+        $content = [];
+        foreach ($translationEntriesToSplit as $key => $entry) {
+            if (isset($this->splitTranslationEntriesCache[$entry])) {
+                foreach ($this->splitTranslationEntriesCache[$entry] as $splitEntry) {
+                    $entriesToSplit[$splitEntry->key()] = $splitEntry;
+                }
+                continue;
+            }
+            $content[] = $entry->singular ?? '';
+            $content[] = $entry->plural ?? '';
+            foreach ($entry->translations as $translation) {
+                $content[] = $translation;
+            }
+        }
+        if (\count($content) === 0) {
+            return;
+        }
+        $translateableStrings = $this->translatableStrings($content);
+        foreach ($translationEntriesToSplit as $entry) {
+            $cacheResult = [];
+            $translateableStringsSingular = $translateableStrings[$entry->singular] ?? [];
+            if (\count($translateableStringsSingular) > 1) {
+                // The key can be split up into multiple parts, split the single and plural form
+                $translateableStringsPlural = null;
+                if ($entry->is_plural) {
+                    $translateableStringsPlural = $translateableStrings[$entry->plural] ?? [];
+                }
+                $translateableStringsTranslations = [];
+                foreach ($entry->translations as $translation) {
+                    $translateableStringsTranslation = $translateableStrings[$translation] ?? [];
+                    if (\count($translateableStringsTranslation) === \count($translateableStringsSingular)) {
+                        $translateableStringsTranslations[] = $translateableStringsTranslation;
+                    }
+                }
+                if (($translateableStringsPlural === null || \count($translateableStringsSingular) === \count($translateableStringsPlural)) && \count($translateableStringsTranslations) === \count($entry->translations)) {
+                    foreach ($translateableStringsSingular as $idx => $translateableStringSingular) {
+                        // Skip printf like `%s` or `%d` or `%f` etc. and `%1$s`
+                        if (\strpos($translateableStringSingular, '%') === 0 && \preg_match('/^%[0-9]*\\$?[sdif]$/', $translateableStringSingular)) {
+                            continue;
+                        }
+                        $newEntry = new Translation_Entry();
+                        $newEntry->singular = $translateableStringSingular;
+                        if ($translateableStringsPlural !== null) {
+                            $newEntry->plural = $translateableStringsPlural[$idx];
+                            $newEntry->is_plural = \true;
+                        }
+                        $newEntry->translations = \array_column($translateableStringsTranslations, $idx);
+                        $newEntry->context = $entry->context;
+                        $newEntry->references[0] = self::MARKER_SPLIT_TRANSLATION_ENTRY;
+                        $entriesToSplit[$newEntry->key()] = $newEntry;
+                        $cacheResult[] = $newEntry;
+                    }
+                }
+            }
+            $this->splitTranslationEntriesCache[$entry] = $cacheResult;
+        }
+    }
+    /**
      * Snapshot the current translations.
      *
      * @param boolean $force
@@ -528,6 +662,8 @@ abstract class AbstractLanguagePlugin
                 $teardownTd = $this->createTemporaryTextDomain($this->getCurrentLanguageFallback());
             }
             $this->currentTranslationEntries = ['locale' => $this->temporaryTextDomain->getLocale(), 'items' => $this->temporaryTextDomain->getEntries(), 'mode' => 'temporaryTextDomain'];
+            // Allow to add additional entries by splitting them
+            $this->splitTranslationEntries($this->currentTranslationEntries['items']);
             if ($teardownTd) {
                 $this->teardownTemporaryTextDomain();
             }
@@ -575,6 +711,27 @@ abstract class AbstractLanguagePlugin
         $value = \call_user_func('__', $key, $td);
         if ($value !== $key) {
             return [$key, $value];
+        }
+        // Check if there is a translation entry from a splitted translation entry
+        if (isset($this->currentTranslationEntries)) {
+            $foundSplitTranslationEntry = null;
+            foreach ($this->currentTranslationEntries['items'] as $item) {
+                if (\count($item->references) > 0 && $item->references[0] === self::MARKER_SPLIT_TRANSLATION_ENTRY && $item->singular === $key) {
+                    if (\count($contexts) === 0 && !$item->context) {
+                        $foundSplitTranslationEntry = $item;
+                        break;
+                    }
+                    foreach ($contexts as $context) {
+                        if ($item->context === $context) {
+                            $foundSplitTranslationEntry = $item;
+                            break 2;
+                        }
+                    }
+                }
+            }
+            if ($foundSplitTranslationEntry !== null && $key !== $foundSplitTranslationEntry->translations[0]) {
+                return [$key, $foundSplitTranslationEntry->translations[0]];
+            }
         }
         /**
          * Get a translation for a given string. This allows you to translate strings programmatically for

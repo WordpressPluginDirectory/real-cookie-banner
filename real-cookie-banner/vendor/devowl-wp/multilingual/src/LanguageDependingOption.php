@@ -28,6 +28,12 @@ class LanguageDependingOption
     private $comp;
     private $originalOptionName;
     private $default;
+    /**
+     * The language of the passed `$default` value.
+     *
+     * @var string
+     */
+    private $defaultLanguage;
     private $defaultBehavior;
     const DEFAULT_USE_NON_EMPTY_FROM_OTHER_LANGUAGES = 1;
     /**
@@ -45,6 +51,7 @@ class LanguageDependingOption
         $this->originalOptionName = $originalOptionName;
         $this->default = $default;
         $this->defaultBehavior = $defaultBehavior;
+        $this->defaultLanguage = $comp->getCurrentLanguageFallback();
         $this->hooks();
     }
     /**
@@ -72,7 +79,9 @@ class LanguageDependingOption
             return $pre_option;
         }
         // Initially add option value with default to avoid `autoloading` issues
-        \add_option($optionName, \get_option($optionName, $this->getDefault()));
+        if ($this->defaultLanguage === $this->getComp()->getCurrentLanguageFallback()) {
+            \add_option($optionName, \get_option($optionName, $this->getDefault()));
+        }
         $defaultIdentifier = new stdClass();
         $value = \get_option($optionName, $defaultIdentifier);
         // Default handling

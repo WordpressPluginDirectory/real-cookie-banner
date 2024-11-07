@@ -3,8 +3,8 @@
 namespace DevOwl\RealCookieBanner;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset\AnonymousAssetBuilder;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\DeliverAnonymousAsset\DeliverAnonymousAsset;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\AbstractSyncPlugin;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\Sync;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
@@ -13,6 +13,8 @@ use DevOwl\RealCookieBanner\settings\BannerLink;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Cookie;
 use DevOwl\RealCookieBanner\settings\CookieGroup;
+use DevOwl\RealCookieBanner\settings\CookiePolicy;
+use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\settings\Revision;
 use DevOwl\RealCookieBanner\templates\PersistTranslationsMiddlewareImpl;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
@@ -93,6 +95,13 @@ class Activator
         $doCopyToOtherLanguages = \count($missingLanguages) > 0 && \count($allLanguages) > 1 && \count($createdLanguages) > 0;
         if ($doCopyToOtherLanguages && $compLanguage instanceof AbstractSyncPlugin) {
             $compLanguage->getSync()->startCopyProcess()->copyAll($createdLanguages[0], $missingLanguages);
+            // Sync cookie policy
+            $cookiePolicyId = General::getInstance()->getCookiePolicyId();
+            if ($cookiePolicyId > 0) {
+                $cookiePolicyId = $compLanguage->getCurrentPostId($cookiePolicyId, 'page', $createdLanguages[0]);
+                $sync = new Sync(CookiePolicy::SYNC_OPTIONS, [], $compLanguage);
+                $sync->startCopyProcess()->copyPost($cookiePolicyId, $createdLanguages[0], $missingLanguages);
+            }
             // Reload page to avoid javascript errors when in config page
             $configPage = \DevOwl\RealCookieBanner\Core::getInstance()->getConfigPage();
             if ($configPage->isVisible()) {
@@ -130,7 +139,7 @@ class Activator
     // Documented in Activator
     public function getFirstDatabaseTableName()
     {
-        return $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
+        return $this->getTableName(Revision::TABLE_NAME);
     }
     /**
      * Install tables, stored procedures or whatever in the database.
@@ -146,13 +155,6 @@ class Activator
         $this->removeTables([$this->getTableName('presets'), $this->getTableName('templates'), $this->getTableName('template_translations')]);
         $max_index_length = $this->getMaxIndexLength();
         $charset_collate = $this->getCharsetCollate();
-        // wp_rcb_revision
-        $table_name = $this->getTableName(Revision::TABLE_NAME);
-        $sql = "CREATE TABLE {$table_name} (\n            id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,\n            json_revision mediumtext NOT NULL,\n            `hash` char(32) NOT NULL,\n            created datetime NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
-        \dbDelta($sql);
-        if ($errorlevel) {
-            $wpdb->print_error();
-        }
         // wp_rcb_stats
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_TERMS);
         $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            context varchar(200) NOT NULL,\n            `day` date NOT NULL,\n            term_name varchar(70) NOT NULL,\n            term_id bigint(20) UNSIGNED NOT NULL,\n            accepted tinyint(1) NOT NULL,\n            `count` int UNSIGNED,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `dayGroup` (`context`({$max_index_length}), `day`, `term_id`, `accepted`)\n        ) {$charset_collate};";
@@ -178,6 +180,13 @@ class Activator
         if ($errorlevel) {
             $wpdb->print_error();
         }
+        // wp_rcb_revision
+        $table_name = $this->getTableName(Revision::TABLE_NAME);
+        $sql = "CREATE TABLE {$table_name} (\n            id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,\n            json_revision mediumtext NOT NULL,\n            `hash` char(32) NOT NULL,\n            created datetime NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
+        \dbDelta($sql);
+        if ($errorlevel) {
+            $wpdb->print_error();
+        }
         // wp_rcb_revision_independent
         $table_name = $this->getTableName(Revision::TABLE_NAME_INDEPENDENT);
         $sql = "CREATE TABLE {$table_name} (\n            id mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,\n            json_revision mediumtext NOT NULL,\n            `hash` char(32) NOT NULL,\n            created datetime NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
@@ -185,16 +194,37 @@ class Activator
         if ($errorlevel) {
             $wpdb->print_error();
         }
-        // wp_rcb_consent
+        // wp_rcb_consent_v2
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
-        /**
-         * Stats index:
-         *    $max_index_length_stats = $max_index_length - (36 + 32 + 20 + 8  DATETIME created); // subtract length of other fields
-         *    Currently configured as strict `40` length as the context is usually not greater
-         *        `KEY stats (created, context(40), forwarded, button_clicked, uuid)`
-         *    This key is currently not in use
-         */
-        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            plugin_version varchar(20) DEFAULT '0.0.0' NOT NULL,\n            design_version int(4) UNSIGNED DEFAULT 1 NOT NULL,\n            ipv4 int UNSIGNED,\n            ipv6 binary(16),\n            ipv4_hash char(64),\n            ipv6_hash char(64),\n            uuid char(36) NOT NULL,\n            revision char(32) NOT NULL,\n            revision_independent char(32) NOT NULL,\n            previous_decision tinytext NOT NULL,\n            decision_hash char(32) NOT NULL,\n            decision tinytext NOT NULL,\n            blocker bigint(20) UNSIGNED,\n            blocker_thumbnail bigint(20) UNSIGNED,\n            button_clicked varchar(32) NOT NULL,\n            context varchar(40) NOT NULL,\n            viewport_width int UNSIGNED NOT NULL,\n            viewport_height int UNSIGNED NOT NULL,\n            referer tinytext NOT NULL,\n            pure_referer tinytext NOT NULL,\n            url_imprint tinytext NOT NULL,\n            url_privacy_policy tinytext NOT NULL,\n            dnt tinyint(1) UNSIGNED NOT NULL,\n            custom_bypass varchar(50),\n            created datetime NOT NULL,\n            created_client_time datetime NULL,\n            forwarded bigint(20) UNSIGNED,\n            forwarded_blocker tinyint(1) NOT NULL,\n            user_country varchar(5),\n            previous_tcf_string text,\n            tcf_string text,\n            previous_gcm_consent tinytext,\n            gcm_consent tinytext,\n            recorder text,\n            ui_view varchar(15),\n            PRIMARY KEY  (id),\n            KEY ipFlooding (ipv4_hash, ipv6_hash, created),\n            KEY filters (created, context),\n            KEY revisions (revision, revision_independent)\n        ) {$charset_collate};";
+        $sql = "CREATE TABLE {$table_name} (\n            id bigint UNSIGNED NOT NULL AUTO_INCREMENT,\n            plugin_version varchar(20) DEFAULT '0.0.0' NOT NULL,\n            design_version tinyint UNSIGNED DEFAULT 1 NOT NULL,\n            ip bigint UNSIGNED NOT NULL,\n            uuid char(36) NOT NULL,\n            revision mediumint UNSIGNED NOT NULL,\n            revision_independent mediumint UNSIGNED NOT NULL,\n            previous_decision mediumint UNSIGNED NOT NULL,\n            decision mediumint UNSIGNED NOT NULL,\n            blocker bigint UNSIGNED,\n            blocker_thumbnail bigint UNSIGNED,\n            button_clicked varchar(32) NOT NULL,\n            context varchar(40) NOT NULL,\n            viewport_width mediumint UNSIGNED NOT NULL,\n            viewport_height mediumint UNSIGNED NOT NULL,\n            referer int UNSIGNED,\n            pure_referer int UNSIGNED,\n            url_imprint int UNSIGNED,\n            url_privacy_policy int UNSIGNED,\n            dnt tinyint(1) UNSIGNED NOT NULL,\n            custom_bypass varchar(50),\n            created datetime NOT NULL,\n            created_client_time datetime NULL,\n            forwarded bigint UNSIGNED,\n            forwarded_blocker tinyint(1) UNSIGNED NOT NULL,\n            user_country varchar(5),\n            previous_tcf_string int UNSIGNED,\n            tcf_string int UNSIGNED,\n            previous_gcm_consent mediumint UNSIGNED,\n            gcm_consent mediumint UNSIGNED,\n            recorder text,\n            ui_view varchar(15),\n            PRIMARY KEY  (id),\n            KEY fk_ip (ip),\n            KEY fk_revision (revision),\n            KEY fk_revision_independent (revision_independent),\n            KEY fk_previous_tcf_string (previous_tcf_string),\n            KEY fk_tcf_string (tcf_string),\n            KEY filters (ip, created, context, pure_referer)\n        ) {$charset_collate};";
+        \dbDelta($sql);
+        if ($errorlevel) {
+            $wpdb->print_error();
+        }
+        // wp_rcb_consent_ip
+        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_IP);
+        $sql = "CREATE TABLE {$table_name} (\n            id bigint UNSIGNED NOT NULL AUTO_INCREMENT,\n            ipv4 int UNSIGNED,\n            ipv6 binary(16),\n            save_ip tinyint(1) UNSIGNED NOT NULL,\n            ipv4_hash char(64) NOT NULL,\n            ipv6_hash char(64) NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY ipFlooding (ipv4_hash, ipv6_hash, save_ip)\n        ) {$charset_collate};";
+        \dbDelta($sql);
+        if ($errorlevel) {
+            $wpdb->print_error();
+        }
+        // wp_rcb_consent_decision
+        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_DECISION);
+        $sql = "CREATE TABLE {$table_name} (\n            id mediumint UNSIGNED NOT NULL AUTO_INCREMENT,\n            `hash` char(32) NOT NULL,\n            decision tinytext NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
+        \dbDelta($sql);
+        if ($errorlevel) {
+            $wpdb->print_error();
+        }
+        // wp_rcb_consent_url
+        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_URL);
+        $sql = "CREATE TABLE {$table_name} (\n            id int UNSIGNED NOT NULL AUTO_INCREMENT,\n            `hash` char(32) NOT NULL,\n            `url` tinytext NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
+        \dbDelta($sql);
+        if ($errorlevel) {
+            $wpdb->print_error();
+        }
+        // wp_rcb_consent_tcf_string
+        $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_TCF_STRING);
+        $sql = "CREATE TABLE {$table_name} (\n            id int UNSIGNED NOT NULL AUTO_INCREMENT,\n            `hash` char(32) NOT NULL,\n            `tcf_string` text NOT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `hash` (`hash`)\n        ) {$charset_collate};";
         \dbDelta($sql);
         if ($errorlevel) {
             $wpdb->print_error();

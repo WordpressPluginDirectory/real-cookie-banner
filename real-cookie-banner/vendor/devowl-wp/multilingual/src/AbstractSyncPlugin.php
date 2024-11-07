@@ -38,7 +38,7 @@ abstract class AbstractSyncPlugin extends AbstractLanguagePlugin
         return '';
     }
     // Documented in AbstractLanguagePlugin
-    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale)
+    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale, $force = \false)
     {
         // Silence is golden.
     }
@@ -51,6 +51,11 @@ abstract class AbstractSyncPlugin extends AbstractLanguagePlugin
     public function translateStrings(&$content, $locale, $context = null)
     {
         return $content;
+    }
+    // Documented in AbstractLanguagePlugin
+    public function translatableStrings($content)
+    {
+        return [];
     }
     /**
      * This method is called due to `Sync::created_term`. It allows you to get a list of all

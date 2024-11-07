@@ -100,6 +100,8 @@ class Job
      * A `json_encode`able object which gets persisted for this job which you can use
      * in your executor.
      *
+     * If you set `keepClientData` to `true`, the data will not be omitted when sending the job to the client.
+     *
      * @var mixed
      */
     public $data;
@@ -393,6 +395,10 @@ class Job
     public function omitClientData()
     {
         if ($this->worker === Job::WORKER_SERVER) {
+            if (\property_exists($this->data, 'keepClientData') && $this->data->keepClientData === \true) {
+                unset($this->data->keepClientData);
+                return;
+            }
             $this->data = (object) [];
             $this->callable = null;
         }

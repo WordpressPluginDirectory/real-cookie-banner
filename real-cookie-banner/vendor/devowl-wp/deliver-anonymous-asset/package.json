@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/deliver-anonymous-asset",
-    "version": "0.2.82",
+    "version": "1.0.0",
     "private": true,
     "description": "Provide a functionality to deliver assets anonymous",
     "homepage": "https://devowl.io",
@@ -163,5 +163,8 @@
             "coreJs": 3
         },
         "sourceMaps": true
-    }
+    },
+    "versionBump": [
+        "rcb-major-v5"
+    ]
 }

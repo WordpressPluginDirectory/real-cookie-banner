@@ -5,6 +5,7 @@ namespace DevOwl\RealCookieBanner\comp;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\settings\BannerLink as SettingsBannerLink;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\Multilingual\AbstractSyncPlugin;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\comp\migration\DbConsentV2;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
 use DevOwl\RealCookieBanner\scanner\Persist;
@@ -88,7 +89,31 @@ class DatabaseUpgrades
         $result[] = $this->migration_86940n0a0();
         $result[] = $this->migration_86951yt9g();
         $result[] = $this->migration_22wkegu();
-        //error_log('---> ' . json_encode($result));
+        // This should always be the last migration
+        $result[] = $this->updateRealCookieBannerTechnicalDefinitions();
+        (new DbConsentV2())->probablyCreateJob();
+    }
+    /**
+     * Update the technical definitions of the Real Cookie Banner service for some version updates.
+     *
+     * @see https://app.clickup.com/2088/v/dc/218-357/218-14272?block=block-6bdbdc5a-026f-435b-a87a-69b621614a8e
+     */
+    protected function updateRealCookieBannerTechnicalDefinitions()
+    {
+        if (Core::versionCompareOlderThan($this->installed, '4.8.4', ['4.8.5', '4.9.0', '5.0.0'])) {
+            // Lazy it, to be compatible with other plugins like WPML or PolyLang...
+            \add_action('init', function () {
+                $realCookieBannerService = Cookie::getInstance()->getServiceByIdentifier('real-cookie-banner');
+                if ($realCookieBannerService !== null) {
+                    $template = TemplateConsumers::getCurrentServiceConsumer()->retrieveBy('identifier', 'real-cookie-banner', \true);
+                    if (\count($template) > 0) {
+                        TemplateConsumers::getInstance()->createFromTemplate($template[0], null, $realCookieBannerService->ID, [Cookie::META_NAME_TECHNICAL_DEFINITIONS], \false);
+                    }
+                }
+            }, 20);
+            return \true;
+        }
+        return \false;
     }
     /**
      * Delete the already known, randomly selected powered-by text and regenerate it.
@@ -246,7 +271,7 @@ class DatabaseUpgrades
         global $wpdb;
         $table_name_stats_buttons_clicked = $this->getTableName(Stats::TABLE_NAME_BUTTONS_CLICKED);
         $table_name_stats_custom_bypass = $this->getTableName(Stats::TABLE_NAME_CUSTOM_BYPASS);
-        $table_name_consent = $this->getTableName(UserConsent::TABLE_NAME);
+        $table_name_consent = $this->getTableName(UserConsent::TABLE_NAME_DEPRECATED);
         if (Core::versionCompareOlderThan($this->installed, '3.4.13', ['3.4.14', '3.5.0'], function () use($wpdb, $table_name_stats_buttons_clicked) {
             // phpcs:disable WordPress.DB.PreparedSQL
             $exists = $wpdb->get_var("SHOW TABLES LIKE '{$table_name_stats_buttons_clicked}'") === $table_name_stats_buttons_clicked;
@@ -323,7 +348,7 @@ class DatabaseUpgrades
     protected function migration_2undj42()
     {
         global $wpdb;
-        $table_name = $this->getTableName(UserConsent::TABLE_NAME);
+        $table_name = $this->getTableName(UserConsent::TABLE_NAME_DEPRECATED);
         if (Core::versionCompareOlderThan($this->installed, '3.4.13', ['3.4.14', '3.5.0'])) {
             // phpcs:disable WordPress.DB
             $wpdb->query("UPDATE {$table_name} SET ui_view = 'initial' WHERE dnt = 0 AND custom_bypass IS NULL");
@@ -588,7 +613,7 @@ class DatabaseUpgrades
     protected function migration_86951yt9g()
     {
         global $wpdb;
-        $table_name = Core::getInstance()->getTableName(UserConsent::TABLE_NAME);
+        $table_name = Core::getInstance()->getTableName(UserConsent::TABLE_NAME_DEPRECATED);
         $table_name_revision = Core::getInstance()->getTableName(Revision::TABLE_NAME);
         if (Core::versionCompareOlderThan($this->installed, '4.7.11', ['4.7.12', '4.8.0'])) {
             // phpcs:disable WordPress.DB

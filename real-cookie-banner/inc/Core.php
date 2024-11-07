@@ -18,7 +18,9 @@ use DevOwl\RealCookieBanner\comp\language\Hooks;
 use DevOwl\RealCookieBanner\comp\migration\DashboardTileMigrationMajor2;
 use DevOwl\RealCookieBanner\comp\migration\DashboardTileMigrationMajor3;
 use DevOwl\RealCookieBanner\comp\migration\DashboardTileMigrationMajor4;
+use DevOwl\RealCookieBanner\comp\migration\DashboardTileMigrationMajor5;
 use DevOwl\RealCookieBanner\comp\migration\DashboardTileTcfV2IllegalUsage;
+use DevOwl\RealCookieBanner\comp\migration\DbConsentV2;
 use DevOwl\RealCookieBanner\comp\TemplatesPluginIntegrations;
 use DevOwl\RealCookieBanner\comp\ThirdPartyNotices;
 use DevOwl\RealCookieBanner\lite\Core as LiteCore;
@@ -385,6 +387,10 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('admin_enqueue_scripts', [$this->getAssets(), 'admin_enqueue_scripts']);
         \add_action('wp_enqueue_scripts', [$this->getAssets(), 'wp_enqueue_scripts'], 0);
         \add_action('login_enqueue_scripts', [$this->getAssets(), 'login_enqueue_scripts'], 0);
+        \add_action('DevOwl/RealQueue/Job/Label', [DbConsentV2::class, 'real_queue_job_label'], 10, 3);
+        \add_action('DevOwl/RealQueue/Job/Actions', [DbConsentV2::class, 'real_queue_job_actions'], 10, 2);
+        \add_action('DevOwl/RealQueue/Error/Description', [DbConsentV2::class, 'real_queue_error_description'], 10, 3);
+        \add_action('DevOwl/RealQueue/Rest/Status/AdditionalData/' . DbConsentV2::REAL_QUEUE_TYPE, [DbConsentV2::class, 'real_queue_additional_data_migration_progress']);
         \add_action('fluent_community/portal_head', [$this->getAssets(), 'fluent_community_portal_head']);
         \add_action('DevOwl/RealQueue/Job/Label', [$scanner, 'real_queue_job_label'], 10, 3);
         \add_action('DevOwl/RealQueue/Job/Actions', [$scanner, 'real_queue_job_actions'], 10, 2);
@@ -429,6 +435,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileMigrationMajor2(), 'actions']);
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileMigrationMajor3(), 'actions']);
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileMigrationMajor4(), 'actions']);
+        \add_action('RCB/Migration/RegisterActions', [new DashboardTileMigrationMajor5(), 'actions']);
         \add_action('RCB/Migration/RegisterActions', [new DashboardTileTcfV2IllegalUsage(), 'actions']);
         \add_action('added_post_meta', [$this->getNotices(), 'added_post_meta_data_processing_in_unsafe_countries'], 10, 4);
         \add_filter('request', [$configService, 'modify_wp_post_types_temporarily']);
@@ -493,9 +500,17 @@ class Core extends BaseCore implements IOverrideCore
         $this->overrideInitCustomize();
         $this->overrideInit();
         // Allow to reset all available data and recreated
-        if (isset($_GET['rcb-reset-all']) && \current_user_can('activate_plugins')) {
+        if (isset($_GET['rcb-reset-all']) && \current_user_can(self::MANAGE_MIN_CAPABILITY)) {
             \check_admin_referer('rcb-reset-all');
             Reset::getInstance()->all(isset($_GET['reset-consents']));
+            \wp_safe_redirect($this->getConfigPage()->getUrl());
+            exit;
+        }
+        // Allow to reset all available data and recreated
+        if (isset($_GET['rcb-reset-texts']) && \current_user_can(self::MANAGE_MIN_CAPABILITY)) {
+            \check_admin_referer('rcb-reset-texts');
+            $resetLang = $_GET['reset-lang'] ?? [];
+            Reset::getInstance()->texts(\is_array($resetLang) ? $resetLang : null);
             \wp_safe_redirect($this->getConfigPage()->getUrl());
             exit;
         }

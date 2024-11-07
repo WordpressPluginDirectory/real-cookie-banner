@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\consent\PersistedTransaction;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\Utils;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview\ImagePreview;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
@@ -24,7 +25,17 @@ use WP_HTTP_Response;
 class UserConsent
 {
     use UtilsProvider;
-    const TABLE_NAME = 'consent';
+    /**
+     * The old table name for saved consents.
+     *
+     * @deprecated Use `TABLE_NAME` instead.
+     */
+    const TABLE_NAME_DEPRECATED = 'consent';
+    const TABLE_NAME = 'consent_v2';
+    const TABLE_NAME_IP = 'consent_ip';
+    const TABLE_NAME_DECISION = 'consent_decision';
+    const TABLE_NAME_TCF_STRING = 'consent_tcf_string';
+    const TABLE_NAME_URL = 'consent_url';
     const CLICKABLE_BUTTONS = ['none', 'main_all', 'main_essential', 'main_close_icon', 'main_custom', 'ind_all', 'ind_essential', 'ind_close_icon', 'ind_custom', 'implicit_all', 'implicit_essential', LinkShortcode::BUTTON_CLICKED_IDENTIFIER, Blocker::BUTTON_CLICKED_IDENTIFIER];
     const BY_CRITERIA_RESULT_TYPE_JSON_DECODE = 'jsonDecode';
     const BY_CRITERIA_RESULT_TYPE_COUNT = 'count';
@@ -53,6 +64,10 @@ class UserConsent
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
         $table_name_revision = $this->getTableName(Revision::TABLE_NAME);
         $table_name_revision_independent = $this->getTableName(Revision::TABLE_NAME_INDEPENDENT);
+        $table_name_ip = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_IP);
+        $table_name_decision = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_DECISION);
+        $table_name_url = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_URL);
+        $table_name_tcf_string = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_TCF_STRING);
         $table_name_stats_terms = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_TERMS);
         $table_name_stats_buttons_clicked = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_BUTTONS_CLICKED);
         $table_name_stats_custom_bypass = $this->getTableName(\DevOwl\RealCookieBanner\Stats::TABLE_NAME_CUSTOM_BYPASS);
@@ -62,11 +77,15 @@ class UserConsent
         $consent = $wpdb->query("DELETE FROM {$table_name}");
         $revision = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name_revision} WHERE `hash` != %s", $revisionHash));
         $revision_independent = $wpdb->query("DELETE FROM {$table_name_revision_independent}");
+        $ip = $wpdb->query("DELETE FROM {$table_name_ip}");
+        $decision = $wpdb->query("DELETE FROM {$table_name_decision}");
+        $url = $wpdb->query("DELETE FROM {$table_name_url}");
+        $tcf_string = $wpdb->query("DELETE FROM {$table_name_tcf_string}");
         $stats_terms = $wpdb->query("DELETE FROM {$table_name_stats_terms}");
         $stats_buttons_clicked = $wpdb->query("DELETE FROM {$table_name_stats_buttons_clicked}");
         $stats_custom_bypass = $wpdb->query("DELETE FROM {$table_name_stats_custom_bypass}");
         // phpcs:enable WordPress.DB
-        return ['consent' => $consent, 'revision' => $revision, 'revision_independent' => $revision_independent, 'stats_terms' => $stats_terms, 'stats_buttons_clicked' => $stats_buttons_clicked, 'stats_custom_bypass' => $stats_custom_bypass];
+        return ['consent' => $consent, 'revision' => $revision, 'revision_independent' => $revision_independent, 'ip' => $ip, 'decision' => $decision, 'url' => $url, 'tcf_string' => $tcf_string, 'stats_terms' => $stats_terms, 'stats_buttons_clicked' => $stats_buttons_clicked, 'stats_custom_bypass' => $stats_custom_bypass];
     }
     /**
      * Check if there are truncated IPs saved in the current consents list and return the count of found rows.
@@ -75,8 +94,9 @@ class UserConsent
     {
         global $wpdb;
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
+        $table_name_ip = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_IP);
         // phpcs:disable WordPress.DB
-        $count = $wpdb->get_var("SELECT COUNT(1) FROM {$table_name} WHERE ipv4 = 0 AND ipv6 IS NULL");
+        $count = $wpdb->get_var("SELECT COUNT(1) FROM {$table_name} INNER JOIN {$table_name_ip} ON {$table_name}.ip = {$table_name_ip}.id WHERE ipv4 IS NULL AND ipv6 IS NULL");
         // phpcs:enable WordPress.DB
         return \intval($count);
     }
@@ -97,13 +117,21 @@ class UserConsent
             'revisionJson' => \false,
             // Filters
             'uuid' => '',
+            // --> uuid NO index
             'uuids' => null,
+            // --> uuid NO index
             'ip' => '',
+            // --> ip is index
             'exactIp' => \true,
+            // --> ip is index
             'from' => '',
+            // --> created is index
             'to' => '',
+            // --> created is index
             'sinceSeconds' => 0,
+            // --> created is index
             'pure_referer' => '',
+            // --> pure_referer is index
             'context' => null,
         ], $args);
         $revisionJson = \boolval($args['revisionJson']);
@@ -122,21 +150,49 @@ class UserConsent
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
         $table_name_revision = $this->getTableName(Revision::TABLE_NAME);
         $table_name_revision_independent = $this->getTableName(Revision::TABLE_NAME_INDEPENDENT);
+        $table_name_ip = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_IP);
+        $table_name_decision = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_DECISION);
+        $table_name_url = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_URL);
+        $table_name_tcf_string = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_TCF_STRING);
         // Build JOIN's
-        $joins = ['INNER JOIN ' . $table_name_revision . ' AS rev ON rev.hash = c.revision', 'INNER JOIN ' . $table_name_revision_independent . ' AS revc ON revc.hash = c.revision_independent'];
+        $joins = [
+            // Revisions
+            'revision' => 'INNER JOIN ' . $table_name_revision . ' AS join_revision ON join_revision.id = c.revision',
+            'revision_independent' => 'INNER JOIN ' . $table_name_revision_independent . ' AS join_revision_independent ON join_revision_independent.id = c.revision_independent',
+            // IPs
+            'ip' => 'INNER JOIN ' . $table_name_ip . ' AS join_ip ON join_ip.id = c.ip',
+            // Decisions
+            'previous_decision' => 'INNER JOIN ' . $table_name_decision . ' AS join_previous_decision ON join_previous_decision.id = c.previous_decision',
+            'decision' => 'INNER JOIN ' . $table_name_decision . ' AS join_decision ON join_decision.id = c.decision',
+            // URLs (can be null)
+            'referer' => 'LEFT JOIN ' . $table_name_url . ' AS join_referer ON join_referer.id = c.referer',
+            'pure_referer' => 'LEFT JOIN ' . $table_name_url . ' AS join_pure_referer ON join_pure_referer.id = c.pure_referer',
+            'url_imprint' => 'LEFT JOIN ' . $table_name_url . ' AS join_url_imprint ON join_url_imprint.id = c.url_imprint',
+            'url_privacy_policy' => 'LEFT JOIN ' . $table_name_url . ' AS join_url_privacy_policy ON join_url_privacy_policy.id = c.url_privacy_policy',
+            // GCM Consent (can be null)
+            'previous_gcm_consent' => 'LEFT JOIN ' . $table_name_decision . ' AS join_previous_gcm_consent ON join_previous_gcm_consent.id = c.previous_gcm_consent',
+            'gcm_consent' => 'LEFT JOIN ' . $table_name_decision . ' AS join_gcm_consent ON join_gcm_consent.id = c.gcm_consent',
+            // TCF String (can be null)
+            'previous_tcf_string' => 'LEFT JOIN ' . $table_name_tcf_string . ' AS join_previous_tcf_string ON join_previous_tcf_string.id = c.previous_tcf_string',
+            'tcf_string' => 'LEFT JOIN ' . $table_name_tcf_string . ' AS join_tcf_string ON join_tcf_string.id = c.tcf_string',
+        ];
+        $joinsForWhereSubquery = \array_map(function ($join) {
+            return \str_replace(['join_', 'c.'], ['jwoin_', 'cs.'], $join);
+        }, $joins);
         // Build WHERE statement for filtering
         // If you add a new filter, keep in mind to add the column to the index `filters` of `wp_rcb_consent`.
         // The following properties are not part of the index as they are currently used rarely:
-        //  IPs, UUID, Pure Referer
+        //  UUID
         $where = [];
         if (!empty($uuid)) {
             $where[] = $wpdb->prepare('(cs.uuid = %s)', $uuid);
         } elseif (\is_array($uuids)) {
-            $where[] = \sprintf('uuid IN (%s)', \join(', ', \array_map(function ($uuid) use($wpdb) {
+            $where[] = \sprintf('cs.uuid IN (%s)', \join(', ', \array_map(function ($uuid) use($wpdb) {
                 return $wpdb->prepare('%s', $uuid);
             }, $uuids)));
             // Usually, `uuid` should be `UNIQUE` index in database and be fast, but at the moment, due to
             // backwards-compatibility it isn't. So, use `LIMIT` to stop at when found x entries.
+            // Example: Forwarded consents use the same UUID but have different IDs.
             $perPage = \count($uuids) > 100 ? 100 : \count($uuids);
         }
         if (!empty($ip)) {
@@ -148,7 +204,7 @@ class UserConsent
             foreach ($ips as $key => $value) {
                 if (!empty($value)) {
                     // phpcs:disable WordPress.DB
-                    $whereIp[] = $wpdb->prepare('cs.' . $key . ' = %s', $value);
+                    $whereIp[] = $wpdb->prepare('jwoin_ip.' . $key . ' = ' . ($key === 'ipv6' ? '%d' : '%s'), $value);
                     // phpcs:enable WordPress.DB
                 }
             }
@@ -157,7 +213,7 @@ class UserConsent
             }
         }
         if (!empty($pure_referer)) {
-            $where[] = $wpdb->prepare('cs.pure_referer = %s', $pure_referer);
+            $where[] = $wpdb->prepare('jwoin_pure_referer.hash = %s', \md5($pure_referer));
         }
         if ($sinceSeconds > 0) {
             $where[] = $wpdb->prepare('cs.created > (NOW() - INTERVAL %d SECOND)', $sinceSeconds);
@@ -173,29 +229,34 @@ class UserConsent
         } else {
             // Force `SELECT` statement to use at least one index-possible column to try to boost performance
             // This is especially useful for `COUNT` statements
-            $where[] = '(context = "" OR context <> "")';
+            $where[] = '(cs.context = "" OR cs.context <> "")';
         }
-        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'c.ipv4', 'c.ipv6', 'c.ipv4_hash', 'c.ipv6_hash', 'c.uuid', 'c.previous_decision', 'c.decision', 'c.created', 'c.created_client_time', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'c.referer as viewed_page', 'c.url_imprint', 'c.url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'c.previous_tcf_string', 'c.tcf_string', 'c.previous_gcm_consent', 'c.gcm_consent', 'c.recorder', 'c.ui_view'];
+        $where = \join(' AND ', $where);
+        $fields = ['c.id', 'c.plugin_version', 'c.design_version', 'join_ip.ipv4 AS ipv4', 'join_ip.ipv6 AS ipv6', 'join_ip.ipv4_hash AS ipv4_hash', 'join_ip.ipv6_hash AS ipv6_hash', 'c.uuid', 'join_previous_decision.decision AS previous_decision', 'join_decision.decision AS decision', 'c.created', 'c.created_client_time', 'c.blocker', 'c.blocker_thumbnail', 'c.dnt', 'c.custom_bypass', 'c.user_country', 'c.button_clicked', 'c.context', 'c.viewport_width', 'c.viewport_height', 'join_referer.url AS referer', 'join_url_imprint.url AS url_imprint', 'join_url_privacy_policy.url AS url_privacy_policy', 'c.forwarded', 'c.forwarded_blocker', 'join_previous_tcf_string.tcf_string AS previous_tcf_string', 'join_tcf_string.tcf_string AS tcf_string', 'join_previous_gcm_consent.decision AS previous_gcm_consent', 'join_gcm_consent.decision AS gcm_consent', 'c.recorder', 'c.ui_view'];
+        // Due to `ORDERBY` and `INNER JOIN` optimization use a subquery for the filtering
+        // and paging to boost performance.
+        $sqlIds = \sprintf('SELECT %%s FROM %s AS cs %s WHERE %s', $table_name, \join(' ', \array_filter($joinsForWhereSubquery, function ($join, $key) use($where) {
+            return \strpos($where, \sprintf('jwoin_%s.', $key)) !== \false;
+        }, \ARRAY_FILTER_USE_BOTH)), $where);
         if ($returnType === self::BY_CRITERIA_RESULT_TYPE_COUNT) {
-            $sql = \sprintf('SELECT COUNT(1) AS cnt FROM %s AS cs WHERE %s', $table_name, \join(' AND ', $where));
+            $sql = \sprintf($sqlIds, 'COUNT(1) AS cnt');
         } else {
             if ($revisionJson) {
-                $fields[] = 'rev.json_revision AS revision';
-                $fields[] = 'revc.json_revision AS revision_independent';
+                $fields[] = 'join_revision.json_revision AS revision';
+                $fields[] = 'join_revision_independent.json_revision AS revision_independent';
             }
-            $fields[] = 'rev.hash AS revision_hash';
-            $fields[] = 'revc.hash AS revision_independent_hash';
-            // Read data
-            // phpcs:disable WordPress.DB
-            $sql = \sprintf('SELECT %s FROM (SELECT cs.id FROM %s AS cs WHERE %s ORDER BY cs.created DESC LIMIT %d, %d) AS cids %s ORDER BY c.created DESC', \join(',', $fields), $table_name, \join(' AND ', $where), $limitOffset, $perPage, \join(' ', \array_merge([
-                // Due to `ORDERBY` and `INNER JOIN` optimization use a subquery for the filtering
-                // and paging to boost performance.
-                'INNER JOIN ' . $table_name . ' AS c ON c.id = cids.id',
-            ], $joins)));
+            $fields[] = 'join_revision.hash AS revision_hash';
+            $fields[] = 'join_revision_independent.hash AS revision_independent_hash';
+            $fields = \join(',', $fields);
+            $sqlIds = \sprintf($sqlIds, 'cs.id');
+            $sql = \sprintf('SELECT %s FROM (%s ORDER BY cs.created DESC LIMIT %d, %d) AS cids INNER JOIN %s AS c ON c.id = cids.id %s ORDER BY c.created DESC', $fields, $sqlIds, $limitOffset, $perPage, $table_name, \join(' ', \array_filter($joins, function ($join, $key) use($fields) {
+                return \strpos($fields, \sprintf('join_%s.', $key)) !== \false;
+            }, \ARRAY_FILTER_USE_BOTH)));
         }
         if ($returnType === self::BY_CRITERIA_RESULT_TYPE_SQL_QUERY) {
             return $sql;
         }
+        // phpcs:disable WordPress.DB
         $results = $wpdb->get_results($sql);
         // phpcs:enable WordPress.DB
         if ($returnType === self::BY_CRITERIA_RESULT_TYPE_COUNT) {
@@ -222,15 +283,15 @@ class UserConsent
         $transaction->setMarkAsDoNotTrack($row->dnt);
         $transaction->setButtonClicked($row->button_clicked);
         $transaction->setViewPort($row->viewport_width, $row->viewport_height);
-        $transaction->setReferer($row->viewed_page);
+        $transaction->setReferer($row->referer);
         $transaction->setBlocker($row->blocker);
         $transaction->setBlockerThumbnail($row->blocker_thumbnail);
-        $transaction->setForwarded($row->forwarded, $row->forwarded_uuid, $row->forwarded_blocker);
+        $transaction->setForwarded($row->forwarded, $row->uuid, $row->forwarded_blocker);
         $transaction->setTcfString($row->tcf_string);
         $transaction->setGcmConsent($row->gcm_consent);
         $transaction->setCustomBypass($row->custom_bypass);
         $transaction->setCreatedClientTime($row->created_client_time);
-        $transaction->setRecorderJsonString($row->recorder);
+        $transaction->setRecorderJsonString(Utils::gzUncompressForDatabase($row->recorder, $row->recorder));
         $transaction->setUiView($row->ui_view);
         $transaction->setUserCountry($row->user_country);
         // We do not persist this fields to database
@@ -285,6 +346,9 @@ class UserConsent
             }
             if ($row->ipv6 !== null) {
                 $row->ipv6 = \inet_ntop($row->ipv6);
+            }
+            if (!empty($row->recorder)) {
+                $row->recorder = Utils::gzUncompressForDatabase($row->recorder, $row->recorder);
             }
         }
         // Populate blocker_thumbnails as object instead of the ID itself
@@ -358,8 +422,9 @@ class UserConsent
     {
         global $wpdb;
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
+        $table_name_url = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_URL);
         // phpcs:disable WordPress.DB.PreparedSQL
-        return $wpdb->get_col("SELECT DISTINCT(pure_referer) FROM {$table_name} WHERE pure_referer <> ''");
+        return $wpdb->get_col("SELECT DISTINCT(u.url) FROM {$table_name} c INNER JOIN {$table_name_url} u ON c.pure_referer = u.id");
         // phpcs:enable WordPress.DB.PreparedSQL
     }
     /**
@@ -414,11 +479,38 @@ class UserConsent
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME);
         $table_name_revision = $this->getTableName(Revision::TABLE_NAME);
         $table_name_revision_independent = $this->getTableName(Revision::TABLE_NAME_INDEPENDENT);
+        $table_name_ip = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_IP);
+        //$table_name_decision = $this->getTableName(UserConsent::TABLE_NAME_DECISION);
+        //$table_name_url = $this->getTableName(UserConsent::TABLE_NAME_URL);
+        $table_name_tcf_string = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_TCF_STRING);
         // phpcs:disable WordPress.DB
         $deleted = $wpdb->query($wpdb->prepare("DELETE FROM `{$table_name}` WHERE `created` < %s", $endDate));
         if ($deleted > 0) {
-            $wpdb->query("DELETE ri1 FROM {$table_name_revision} ri1\n                LEFT JOIN (\n                    SELECT DISTINCT(ri2.hash) FROM {$table_name_revision} ri2\n                    INNER JOIN {$table_name} c ON ri2.hash = c.revision\n                ) existing\n                ON ri1.hash = existing.hash\n                WHERE existing.hash IS NULL");
-            $wpdb->query("DELETE ri1 FROM {$table_name_revision_independent} ri1\n                LEFT JOIN (\n                    SELECT DISTINCT(ri2.hash) FROM {$table_name_revision_independent} ri2\n                    INNER JOIN {$table_name} c ON ri2.hash = c.revision_independent\n                ) existing\n                ON ri1.hash = existing.hash\n                WHERE existing.hash IS NULL");
+            $deleted += $wpdb->query("DELETE FROM {$table_name_revision} WHERE NOT EXISTS (SELECT 1 FROM {$table_name} c WHERE {$table_name_revision}.id = c.revision)");
+            $deleted += $wpdb->query("DELETE FROM {$table_name_revision_independent} WHERE NOT EXISTS (SELECT 1 FROM {$table_name} c WHERE {$table_name_revision_independent}.id = c.revision_independent)");
+            $deleted += $wpdb->query("DELETE FROM {$table_name_ip} WHERE NOT EXISTS (SELECT 1 FROM {$table_name} c WHERE {$table_name_ip}.id = c.ip)");
+            /**
+             * The URL and decision tables do not have a foreign key index to save disk space. Due to the fact that these
+             * data does not have any person related data, we can safely hold them. Additionally, those tables will not "explode"
+             * in terms of disk space.
+             *
+             * @see https://app.clickup.com/t/861mva7bm?comment=90120075659128
+             */
+            /* $deleted += $wpdb->query("DELETE url FROM $table_name_url url
+                   LEFT JOIN $table_name referer ON url.id = referer.referer
+                   LEFT JOIN $table_name pure_referer ON url.id = pure_referer.pure_referer
+                   LEFT JOIN $table_name url_imprint ON url.id = url_imprint.url_imprint
+                   LEFT JOIN $table_name url_privacy_policy ON url.id = url_privacy_policy.url_privacy_policy
+                   WHERE referer.id IS NULL AND pure_referer.id IS NULL AND url_imprint.id IS NULL AND url_privacy_policy.id IS NULL
+               ");
+               $deleted += $wpdb->query("DELETE decision FROM $table_name_decision decision
+                   LEFT JOIN $table_name previous_decision ON decision.id = previous_decision.previous_decision
+                   LEFT JOIN $table_name cdecision ON decision.id = cdecision.decision
+                   LEFT JOIN $table_name previous_gcm_consent ON decision.id = previous_gcm_consent.previous_gcm_consent
+                   LEFT JOIN $table_name gcm_consent ON decision.id = gcm_consent.gcm_consent
+                   WHERE previous_decision.id IS NULL AND cdecision.id IS NULL AND previous_gcm_consent.id IS NULL AND gcm_consent.id IS NULL
+               ");*/
+            $deleted += $wpdb->query("DELETE tcf_string FROM {$table_name_tcf_string} tcf_string\n                LEFT JOIN {$table_name} previous_tcf_string ON tcf_string.id = previous_tcf_string.previous_tcf_string\n                LEFT JOIN {$table_name} ctcf_string ON tcf_string.id = ctcf_string.tcf_string\n                WHERE previous_tcf_string.id IS NULL AND ctcf_string.id IS NULL\n            ");
         }
         // phpcs:enable WordPress.DB
     }

@@ -89,7 +89,7 @@ class IpHandler
         $truncateIp = \join($ipDel, $truncateIp);
         // Always use the truncated IP as hash
         $hashIp = \DevOwl\RealCookieBanner\Utils::hash($truncateIp);
-        $result = ['ipv4' => null, 'ipv6' => null, 'ipv4_hash' => null, 'ipv6_hash' => null];
+        $result = ['save_ip' => $saveIp, 'ipv4' => null, 'ipv6' => null, 'ipv4_hash' => null, 'ipv6_hash' => null];
         if ($ipVersion === 4) {
             if ($saveIp) {
                 $result['ipv4'] = \ip2long($ip);

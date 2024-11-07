@@ -30,6 +30,6 @@ class CookiePolicyShortcode
         $core = Core::getInstance();
         // Force to load banner assets
         $core->getAssets()->enqueue_scripts_and_styles(Constants::ASSETS_TYPE_FRONTEND);
-        return $core->getCookieConsentManagement()->getCookiePolicy()->renderHtml(!$core->getCompLanguage()->isCurrentlyInEditorPreview());
+        return \do_shortcode($core->getCookieConsentManagement()->getCookiePolicy()->renderHtml(!$core->getCompLanguage()->isCurrentlyInEditorPreview()));
     }
 }

@@ -18,7 +18,7 @@ use WeglotWP\Services\Translate_Service_Weglot;
 class Weglot extends AbstractOutputBufferPlugin
 {
     // Documented in AbstractOutputBufferPlugin
-    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale)
+    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale, $force = \false)
     {
         // TODO how can we persist known translations to Weglot?
     }
@@ -148,6 +148,11 @@ class Weglot extends AbstractOutputBufferPlugin
                 $this->switch($currentLanguage);
             }
         }
+    }
+    // Documented in AbstractLanguagePlugin
+    public function translatableStrings($content)
+    {
+        return [];
     }
     /**
      * Get the `Language_Service_Weglot` instance.

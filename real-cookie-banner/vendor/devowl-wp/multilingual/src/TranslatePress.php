@@ -45,9 +45,14 @@ class TranslatePress extends AbstractOutputBufferPlugin
         return $methods;
     }
     // Documented in AbstractOutputBufferPlugin
-    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale)
+    public function maybePersistTranslation($sourceContent, $content, $sourceLocale, $targetLocale, $force = \false)
     {
-        $this->pendingTranslations[$targetLocale][] = [$sourceContent, $content, $sourceLocale, $targetLocale];
+        $this->pendingTranslations[$targetLocale][] = [$sourceContent, $content, $sourceLocale, $targetLocale, $force];
+        // Also persist texturized version (https://i.imgur.com/hpAaZtB.png)
+        $sourceTexturized = \wptexturize($sourceContent, \true);
+        if ($sourceTexturized !== $sourceContent) {
+            $this->pendingTranslations[$targetLocale][] = [$sourceTexturized, $content, $sourceLocale, $targetLocale, $force];
+        }
         // Persist at the end of the WordPress session
         \add_action('shutdown', [$this, 'persistTranslations'], 1);
     }
@@ -58,30 +63,62 @@ class TranslatePress extends AbstractOutputBufferPlugin
     {
         global $wpdb;
         $query = $this->getTrpQueryManager();
-        // Iterate all source translations
+        $updatedOriginals = [];
+        // Iterate all source translations and update them
         foreach ($this->pendingTranslations as $targetLocale => $strings) {
             $table_name = $query->get_table_name($targetLocale);
             // Read Ids for translations so we can update it
-            $originals = [];
-            foreach ($strings as $strings_row) {
-                list($sourceContent, , , $targetLocale) = $strings_row;
-                $originals[] = $wpdb->prepare('%s', $sourceContent);
-            }
-            // phpcs:disable WordPress.DB.PreparedSQL
-            $result = $wpdb->get_results("SELECT id, original FROM {$table_name} WHERE original IN (" . \join(',', $originals) . ') AND status = 0', ARRAY_A);
-            // phpcs:enable WordPress.DB.PreparedSQL
             $updates = [];
-            foreach ($result as $row) {
-                $found_string_row = null;
+            foreach ([\true, \false] as $doForce) {
+                $originals = [];
                 foreach ($strings as $strings_row) {
-                    if ($row['original'] === $strings_row[0]) {
-                        $found_string_row = $strings_row;
-                        break;
+                    list($sourceContent, , , $targetLocale, $force) = $strings_row;
+                    if ($doForce !== $force) {
+                        continue;
                     }
+                    $originals[] = $wpdb->prepare('%s', $sourceContent);
                 }
-                $updates[] = ['id' => \intval($row['id']), 'translated' => $found_string_row[1], 'status' => 2, 'original' => $row['original']];
+                if (\count($originals) === 0) {
+                    continue;
+                }
+                // phpcs:disable WordPress.DB.PreparedSQL
+                $result = $wpdb->get_results("SELECT id, original, `status` FROM {$table_name} WHERE original IN (" . \join(',', $originals) . ')', ARRAY_A);
+                // phpcs:enable WordPress.DB.PreparedSQL
+                foreach ($result as $row) {
+                    $found_string_row = null;
+                    foreach ($strings as $strings_row) {
+                        if ($row['original'] === $strings_row[0]) {
+                            $found_string_row = $strings_row;
+                            break;
+                        }
+                    }
+                    // Skip already translated strings when we do not force
+                    $updatedOriginals[] = $row['original'];
+                    if (!$doForce && \intval($row['status']) === 2) {
+                        continue;
+                    }
+                    $updates[] = ['id' => \intval($row['id']), 'translated' => $found_string_row[1] === null ? '' : $found_string_row[1], 'status' => $found_string_row[1] === null ? 0 : 2, 'original' => $row['original']];
+                }
             }
             $query->update_strings($updates, $targetLocale, ['id', 'original', 'translated', 'status']);
+        }
+        // Persist new translations
+        $inserts = [];
+        foreach ($this->pendingTranslations as $targetLocale => $strings) {
+            $persisted = [];
+            foreach ($strings as $strings_row) {
+                list($sourceContent, $content, , $targetLocale) = $strings_row;
+                if (\in_array($sourceContent, $updatedOriginals, \true) || $sourceContent === $content || empty($content) || empty($sourceContent)) {
+                    continue;
+                }
+                $key = \md5($sourceContent . '|' . $targetLocale);
+                if (\in_array($key, $persisted, \true)) {
+                    continue;
+                }
+                $inserts[] = ['original' => $sourceContent, 'translated' => $content, 'status' => 2];
+                $persisted[] = $key;
+            }
+            $query->update_strings($inserts, $targetLocale, ['original', 'translated', 'status']);
         }
         $this->pendingTranslations = [];
     }
@@ -218,6 +255,60 @@ class TranslatePress extends AbstractOutputBufferPlugin
         }
         return \true;
     }
+    /**
+     * Get all strings which are translatable.
+     *
+     * @param string[] $content
+     * @param boolean $skipTranslate If you pass `true`, no translation is done and only the strings are returned.
+     *                               It additionally returns the 4th return array variable `$contentToTranslateableStringsMap` which maps the
+     *                               original strings to the translatable strings.
+     */
+    protected function translateAndParseTranslateableStrings($content, $skipTranslate = \false)
+    {
+        $translateableStrings = [];
+        $contentToTranslateableStringsMap = [];
+        $translatedStrings = [];
+        $fnTranslateableInformation = function ($translateable_strings, $translated_strings) use(&$translatedStrings) {
+            $translatedStrings = $translated_strings;
+        };
+        $fnTranslateableStrings = function ($translateableInformation) use($skipTranslate, &$translateableStrings, &$contentToTranslateableStringsMap, &$content) {
+            $translateableStrings = $translateableInformation['translateable_strings'];
+            if ($skipTranslate) {
+                // Make it empty so no translation is done and therefore no SQL query is executed
+                $translateableInformation['translateable_strings'] = [];
+            }
+            if ($skipTranslate) {
+                $this->mapInnerTextWithIdToOriginalString($translateableStrings, $content, $contentToTranslateableStringsMap);
+                /* Does not work as `parent()` is not working as expected in TranslatePress, see also https://i.imgur.com/A18g4jD.png
+                                foreach ($translateableInformation['nodes'] as $i => $node) {
+                                    // Get the ID of `wrapArrayToHtml` so we can remap translatable strings to the correct original string
+                                    if (!is_numeric($node['node']->parent()->attr['id'])) {
+                                        continue;
+                                    }
+                
+                                    $wrappedId = intval($node['node']->parent()->attr['id']);
+                
+                                    $contentString = $content[$wrappedId];
+                                    $contentToTranslateableStringsMap[$contentString] = $contentToTranslateableStringsMap[$contentString] ?? [];
+                                    $contentToTranslateableStringsMap[$contentString][] = $translateableStrings[$i];
+                                }
+                
+                                // Fix non-found strings
+                                foreach ($content as $contentString) {
+                                    if (!is_array($contentToTranslateableStringsMap[$contentString])) {
+                                        $contentToTranslateableStringsMap[$contentString] = [$contentString];
+                                    }
+                                }*/
+            }
+            return $translateableInformation;
+        };
+        \add_action('trp_translateable_information', $fnTranslateableInformation, 10, 2);
+        \add_action('trp_translateable_strings', $fnTranslateableStrings, 10, 1);
+        $result = $this->wrapHtmlToArray($this->getTrpRenderManager()->translate_page($this->wrapArrayToHtml($content, $skipTranslate)), [TRP_Translation_Manager::class, 'strip_gettext_tags']);
+        \remove_action('trp_translateable_information', $fnTranslateableInformation);
+        \remove_action('trp_translateable_strings', $fnTranslateableStrings);
+        return $skipTranslate ? [$translateableStrings, $contentToTranslateableStringsMap] : [$translateableStrings, $translatedStrings, $result];
+    }
     // Documented in AbstractOutputBufferPlugin
     public function translateStrings(&$content, $locale, $context = null)
     {
@@ -232,22 +323,12 @@ class TranslatePress extends AbstractOutputBufferPlugin
             }
             // Make hacky things: Simulate the `rest_prepare_` filter so we can force always to translate
             \array_push($wp_current_filter, 'rest_prepare_force_output_buffer_plugin');
+            $contentCount = $this->addWptexturizeToContent($content);
             /**
              * Try to find a translation from our MO file for each found "part" which TranslatePress finds before
              * trying to translate the complete HTML. Example: Multiline text with `<br><br>` as paragraph delimiter.
              */
-            $translateableStrings = [];
-            $translatedStrings = [];
-            $fnTranslateableInformation = function ($translateable_strings, $translated_strings) use(&$translateableStrings, &$translatedStrings) {
-                $translateableStrings = $translateable_strings['translateable_strings'];
-                $translatedStrings = $translated_strings;
-            };
-            $doTranslate = function () use($content) {
-                return $this->wrapHtmlToArray($this->getTrpRenderManager()->translate_page($this->wrapArrayToHtml($content)), [TRP_Translation_Manager::class, 'strip_gettext_tags']);
-            };
-            \add_action('trp_translateable_information', $fnTranslateableInformation, 10, 2);
-            $result = $doTranslate();
-            \remove_action('trp_translateable_information', $fnTranslateableInformation);
+            list($translateableStrings, $translatedStrings, $result) = $this->translateAndParseTranslateableStrings($content);
             // Translate each found part within a translatable text from our MO
             $foundTranslationFromMoForPart = \false;
             foreach ($translateableStrings as $idx => $translateableString) {
@@ -262,14 +343,35 @@ class TranslatePress extends AbstractOutputBufferPlugin
             // If we found a part within a translatable text, persist the translations and translate again
             if ($foundTranslationFromMoForPart) {
                 $this->persistTranslations();
-                $result = $doTranslate();
+                list(, , $result) = $this->translateAndParseTranslateableStrings($content);
             }
+            $this->remapWptexturizeFromContent($contentCount, $content, $result);
             $this->remapResultToReference($content, $result, $locale, $context);
             if ($locale !== null) {
                 $this->switch($currentLanguage);
             }
             \array_pop($wp_current_filter);
         }
+    }
+    // Documented in AbstractLanguagePlugin
+    public function translatableStrings($content)
+    {
+        if (\count($content) === 0) {
+            return [];
+        }
+        // Switch to non-default language so we can get the correct translatable strings
+        $currentLanguage = $this->getCurrentLanguageFallback();
+        $defaultLanguage = $this->getDefaultLanguage();
+        $activeLanguages = $this->getActiveLanguages();
+        $firstNonDefaultLanguage = \array_values(\array_diff($activeLanguages, [$defaultLanguage]))[0] ?? null;
+        if ($firstNonDefaultLanguage !== null) {
+            $this->switch($firstNonDefaultLanguage);
+        }
+        list(, $contentToTranslateableStringsMap) = $this->translateAndParseTranslateableStrings($content, \true);
+        if ($firstNonDefaultLanguage !== null) {
+            $this->switch($currentLanguage);
+        }
+        return $contentToTranslateableStringsMap;
     }
     /**
      * Get TranslatePress render manager class.

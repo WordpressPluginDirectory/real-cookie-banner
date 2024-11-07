@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "0.2.4",
+    "version": "1.0.0",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -71,5 +71,8 @@
         "packages": [
             "ignore-packages-here@1.0.0"
         ]
-    }
+    },
+    "versionBump": [
+        "rcb-major-v5"
+    ]
 }

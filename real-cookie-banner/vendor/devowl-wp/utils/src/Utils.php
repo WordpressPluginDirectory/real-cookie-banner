@@ -3,6 +3,9 @@
 namespace DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils;
 
 use Exception;
+use DevOwl\RealCookieBanner\Vendor\JsonMachine\Items;
+use DevOwl\RealCookieBanner\Vendor\JsonMachine\JsonDecoder\ExtJsonDecoder;
+use Throwable;
 use WP_Error;
 use WP_Filesystem_Direct;
 use WP_Hook;
@@ -17,6 +20,83 @@ use WP_Rewrite;
  */
 class Utils
 {
+    /**
+     * Pull a JSON file from a remote URL and parse it, effectively by streaming it.
+     * If streaming is not possible, it falls back to a normal `wp_remote_get` call which could
+     * cause memory issues.
+     *
+     * Attention: When using this static method, make sure to install [jsonmachine](https://packagist.org/packages/halaxa/json-machine)
+     * on your project as this is a peer dependency.
+     *
+     * @param string $url
+     * @param string[] $instantPointers This pathes are used to read scalar values which are not too big so we can directly parse them
+     * @param string[] $arrayInstantPointers This pathes are used to read array values which are not too big so we can directly parse them
+     * @param string[] $nonInstantPointers This pathes are used to read non-scalar values which are too big so we parse them via streaming
+     * @param boolean $useFallback
+     */
+    public static function pullJson($url, $instantPointers = [], $arrayInstantPointers = [], $nonInstantPointers = [], $useFallback = \false)
+    {
+        // Check if JsonMachine is installed
+        if (!\class_exists(Items::class) && !$useFallback) {
+            // Fallback to normal `wp_remote_get` call
+            return self::pullJson($url, $instantPointers, $arrayInstantPointers, $nonInstantPointers, \true);
+        }
+        // We need to use this file method to avoid memory issues and read the response as a stream
+        if (!$useFallback) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            $tempFile = \wp_tempnam();
+            if (!$tempFile) {
+                // Fallback to normal `wp_remote_get` call
+                return self::pullJson($url, $instantPointers, $arrayInstantPointers, $nonInstantPointers, \true);
+            }
+            \register_shutdown_function(function () use($tempFile) {
+                if (\file_exists($tempFile)) {
+                    @\unlink($tempFile);
+                }
+            });
+        }
+        $response = \wp_remote_get($url, $useFallback ? [] : ['stream' => \true, 'filename' => $tempFile]);
+        if (\is_wp_error($response)) {
+            // Fallback to normal `wp_remote_get` call
+            return $useFallback ? $response : self::pullJson($url, $instantPointers, $arrayInstantPointers, $nonInstantPointers, \true);
+        }
+        $code = \wp_remote_retrieve_response_code($response);
+        $codeIsOk = $code >= 200 && $code < 300;
+        if (!$codeIsOk) {
+            return new WP_Error('pull_json_remote_failed', $response['response']['message'] ?? '');
+        }
+        if ($useFallback) {
+            $body = \wp_remote_retrieve_body($response);
+            return \is_wp_error($body) ? $body : \json_decode($body, ARRAY_A);
+        }
+        try {
+            // Read scalar values we can store in the class instance without memory issues as they are not too big
+            $result = [];
+            if (\count($instantPointers) > 0) {
+                $result = \iterator_to_array(Items::fromFile($tempFile, ['pointer' => $instantPointers, 'decoder' => new ExtJsonDecoder(\true)]));
+            }
+            // Read array values we can store in the class instance without memory issues as they are not too big
+            if (\count($arrayInstantPointers) > 0) {
+                $data = Items::fromFile($tempFile, ['pointer' => $arrayInstantPointers, 'decoder' => new ExtJsonDecoder(\true)]);
+                foreach ($arrayInstantPointers as $pointer) {
+                    $propertyName = \substr($pointer, 1);
+                    $result[$propertyName] = [];
+                }
+                foreach ($data as $key => $value) {
+                    $propertyName = \substr($data->getCurrentJsonPointer(), 1);
+                    $result[$propertyName][$key] = $value;
+                }
+            }
+            foreach ($nonInstantPointers as $pointer) {
+                $propertyName = \substr($pointer, 1);
+                $result[$propertyName] = Items::fromFile($tempFile, ['pointer' => $pointer, 'decoder' => new ExtJsonDecoder(\true)]);
+            }
+            return $result;
+        } catch (Throwable $e) {
+            // Fallback to normal `wp_remote_get` call
+            return $useFallback ? [] : self::pullJson($url, $instantPointers, $arrayInstantPointers, $nonInstantPointers, \true);
+        }
+    }
     /**
      * Run $callback with the $handler disabled for the $hook action/filter
      *

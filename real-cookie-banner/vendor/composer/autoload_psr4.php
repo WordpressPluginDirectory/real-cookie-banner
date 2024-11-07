@@ -9,6 +9,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\Sabberworm\\CSS\\' => array($vendorDir . '/sabberworm/php-css-parser/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\MaxMind\\Db\\' => array($vendorDir . '/maxmind-db/reader/src/MaxMind/Db'),
     'DevOwl\\RealCookieBanner\\Vendor\\MatthiasWeb\\Utils\\' => array($vendorDir . '/devowl-wp/utils/src'),
+    'DevOwl\\RealCookieBanner\\Vendor\\JsonMachine\\' => array($vendorDir . '/halaxa/json-machine/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\Embera\\' => array($vendorDir . '/mpratt/embera/src/Embera'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\ServiceCloudConsumer\\' => array($vendorDir . '/devowl-wp/service-cloud-consumer/src'),
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\RealUtils\\' => array($vendorDir . '/devowl-wp/real-utils/src'),

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-queue",
-    "version": "0.7.0",
+    "version": "1.0.0",
     "private": true,
     "description": "Provide a promise-based queue system working in frontend for client and server tasks",
     "homepage": "https://devowl.io",
@@ -305,5 +305,8 @@
             "coreJs": 3
         },
         "sourceMaps": true
-    }
+    },
+    "versionBump": [
+        "rcb-major-v5"
+    ]
 }

@@ -101,7 +101,7 @@ class None extends AbstractLanguagePlugin
         // Silence is golden.
     }
     // Documented in AbstractOutputBufferPlugin
-    public function maybePersistTranslation($sourceContent, $content, $source, $locale)
+    public function maybePersistTranslation($sourceContent, $content, $source, $locale, $force = \false)
     {
         // Silence is golden.
     }
@@ -114,5 +114,10 @@ class None extends AbstractLanguagePlugin
     public function translateStrings(&$content, $locale, $context = null)
     {
         return $content;
+    }
+    // Documented in AbstractLanguagePlugin
+    public function translatableStrings($content)
+    {
+        return [];
     }
 }

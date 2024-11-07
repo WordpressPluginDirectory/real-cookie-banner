@@ -79,7 +79,7 @@ class SavingConsentViaRestApiEndpointChecker
                 'PHPSESSID',
             ], \true)) {
                 // Check for array, as a cookie with `[]` indicates an array, example: `test[]`
-                $this->requestArguments['cookies'][$key] = \is_array($value) ? \rawurlencode_deep($value) : \urlencode($value);
+                $this->requestArguments['cookies'][$key] = $value === null ? '' : (\is_array($value) ? \rawurlencode_deep($value) : \urlencode($value));
             }
         }
         $this->addError($url, []);

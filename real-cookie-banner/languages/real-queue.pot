@@ -20,14 +20,14 @@ msgstr ""
 msgid "%1$d / %2$d (thereof %3$d remaining) tasks could not be executed properly."
 msgstr ""
 
-#: queue/Job.php:347
+#: queue/Job.php:349
 msgid "The passed callable persisted to the job cannot be called (`is_callable`)"
 msgstr ""
 
-#: queue/Job.php:379
+#: queue/Job.php:381
 msgid "This job is already running in another thread on your server."
 msgstr ""
 
-#: queue/Job.php:407
+#: queue/Job.php:409
 msgid "Unexpected exception."
 msgstr ""

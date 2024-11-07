@@ -87,7 +87,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      *
      * @var string[]
      */
-    private $selectorSyntaxMap = ['source[src:matchesUrl(withHost=true)]'];
+    private $selectorSyntaxMap = ['source[src:matchesUrl(withHost=true)]', 'video[poster]'];
     /**
      * C'tor.
      */

@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\datasources\Abstr
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\Utils;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Service;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Utils as UtilsUtils;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -90,37 +91,30 @@ class CloudDataSource extends AbstractDataSource
         $apiUrl = Service::getExternalContainerUrl('rcb');
         $apiUrl .= \sprintf('1.0.0/template/%s', $this->getStorageHelper()->getType() === \DevOwl\RealCookieBanner\templates\StorageHelper::TYPE_BLOCKER ? 'content-blockers' : 'services');
         $apiUrl = \add_query_arg($args, $apiUrl);
-        $response = \wp_remote_get($apiUrl);
-        $responseCode = \wp_remote_retrieve_response_code($response);
-        $responseBody = \wp_remote_retrieve_body($response);
-        if (!empty($responseBody) && $responseCode === 200) {
-            $responseBody = \json_decode($responseBody, ARRAY_A);
-            if (isset($responseBody['data']) && \is_array($responseBody['data'])) {
-                foreach ($responseBody['data'] as $row) {
-                    $template = $this->getStorageHelper()->fromArray($row);
-                    $template->consumerData['isCloud'] = \true;
-                    $template->consumerData['isUntranslated'] = \strpos($apiLanguage, 'en') === 0 ? \false : $template->language !== $apiLanguage;
-                    $result[] = $template;
-                }
+        $data = UtilsUtils::pullJson($apiUrl, [], ['/responseMetadata'], ['/data']);
+        if (\is_wp_error($data)) {
+            return $result;
+        }
+        foreach ($data['data'] as $row) {
+            $template = $this->getStorageHelper()->fromArray($row);
+            $template->consumerData['isCloud'] = \true;
+            $template->consumerData['isUntranslated'] = \strpos($apiLanguage, 'en') === 0 ? \false : $template->language !== $apiLanguage;
+            $result[] = $template;
+        }
+        $this->latestResponseMetadata = $data['responseMetadata'];
+        // Check if cache is already filled or locked, so we wait x seconds until next request
+        // so we do not block WordPress usage (PHP FPM).
+        $cacheInfo = $data['responseMetadata']['cacheInfo'] ?? null;
+        if ($cacheInfo !== null) {
+            $cacheStatus = \strtoupper($cacheInfo['cacheStatus'] ?? 'DISABLED');
+            if (\in_array($cacheStatus, ['PENDING', 'REQUESTED'], \true)) {
+                throw new AbortDataSourceDownloadException($this, ['retryIn' => self::RETRY_IN_SECONDS_WHEN_ASYNC_RESPONSE]);
             }
-            $responseMetadata = $responseBody['responseMetadata'] ?? null;
-            if ($responseMetadata !== null) {
-                $this->latestResponseMetadata = $responseMetadata;
-                // Check if cache is already filled or locked, so we wait x seconds until next request
-                // so we do not block WordPress usage (PHP FPM).
-                $cacheInfo = $responseMetadata['cacheInfo'] ?? null;
-                if ($cacheInfo !== null) {
-                    $cacheStatus = \strtoupper($cacheInfo['cacheStatus'] ?? 'DISABLED');
-                    if (\in_array($cacheStatus, ['PENDING', 'REQUESTED'], \true)) {
-                        throw new AbortDataSourceDownloadException($this, ['retryIn' => self::RETRY_IN_SECONDS_WHEN_ASYNC_RESPONSE]);
-                    }
-                }
-                // Load next page
-                $nextCursor = $responseMetadata['nextCursor'] ?? null;
-                if ($nextCursor !== null) {
-                    $this->loadFromApi($result, $responseBody['responseMetadata']['nextCursor']);
-                }
-            }
+        }
+        // Load next page
+        $nextCursor = $data['responseMetadata']['nextCursor'] ?? null;
+        if ($nextCursor !== null) {
+            $this->loadFromApi($result, $nextCursor);
         }
         return $result;
     }

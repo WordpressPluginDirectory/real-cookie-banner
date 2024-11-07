@@ -12,6 +12,7 @@ use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\settings\TcfVendorConfiguration;
 use DevOwl\RealCookieBanner\settings\Blocker;
 use DevOwl\RealCookieBanner\settings\Cookie;
+use DevOwl\RealCookieBanner\settings\CookiePolicy;
 use DevOwl\RealCookieBanner\settings\CountryBypass;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\settings\Revision;
@@ -382,7 +383,7 @@ class Config extends WP_REST_Settings_Controller
                 return $result;
             });
             if (!\is_wp_error($result)) {
-                $sync = new Sync(['page' => ['data' => ['menu_order'], 'taxonomies' => [], 'meta' => ['copy' => [], 'copy-once' => []]]], [], $compLanguage);
+                $sync = new Sync(CookiePolicy::SYNC_OPTIONS, [], $compLanguage);
                 $sync->startCopyProcess()->copyPost($result, $sourceLanguage, \array_values(\array_diff($compLanguage->getActiveLanguages(), [$sourceLanguage])));
             }
         } else {

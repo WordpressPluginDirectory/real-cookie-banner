@@ -200,9 +200,10 @@ abstract class AbstractDashboardTileMigration
     /**
      * Delete customizer texts for given languages and option keys.
      *
-     * @param string[] $languages
+     * @param string[]|null $languages Pass `null` to delete all languages
      * @param string[] $ids
      * @return string[] Deleted option keys
+     * @deprecated Use `Reset#texts()` instead
      */
     public function deleteCustomizerTexts($languages, $ids)
     {
@@ -210,7 +211,11 @@ abstract class AbstractDashboardTileMigration
         // Prepare a list of all languages so we can also consider `LanguageDependingOption` options
         $suffixes = [];
         if ($compLanguage instanceof AbstractSyncPlugin) {
-            foreach ($compLanguage->getActiveLanguages() as $locale) {
+            $activeLanguages = $compLanguage->getActiveLanguages();
+            if ($languages === null) {
+                $languages = $activeLanguages;
+            }
+            foreach ($activeLanguages as $locale) {
                 foreach ($languages as $langToDelete) {
                     if (Utils::startsWith(\strtolower($locale), $langToDelete)) {
                         $suffixes[] = '-' . $locale;
@@ -239,6 +244,7 @@ abstract class AbstractDashboardTileMigration
      * Upgrade the group texts for a list of languages.
      *
      * @param string[] $deleteLanguages
+     * @deprecated Use `Reset#texts()` instead
      */
     public function applyNewGroupTexts($deleteLanguages)
     {
@@ -257,6 +263,7 @@ abstract class AbstractDashboardTileMigration
      *
      * @param string[] $deleteLanguages
      * @param string $locale
+     * @deprecated Use `Reset#texts()` instead
      */
     protected function applyNewGroupTextsForLanguage($deleteLanguages, $locale)
     {

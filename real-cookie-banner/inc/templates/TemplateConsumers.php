@@ -333,14 +333,15 @@ class TemplateConsumers
         return $result;
     }
     /**
-     * Create a WordPress post from a given template.
+     * Create or update a WordPress post from a given template.
      *
      * @param ServiceTemplate|BlockerTemplate $template
      * @param int[] $assignToTerm The key of the array needs to be the taxonomy name
      * @param int $updatePostId
-     * @return false|WP_Error|WP_Post
+     * @param string[] $metaKeys
+     * @param boolean $updateVersion
      */
-    public function createFromTemplate($template, $assignToTerm = null, $updatePostId = null)
+    public function createFromTemplate($template, $assignToTerm = null, $updatePostId = null, $metaKeys = null, $updateVersion = \true)
     {
         $metaInput = [];
         $postType = '';
@@ -350,24 +351,47 @@ class TemplateConsumers
             $use = $template->use();
             $postContent = $use->purpose;
             $postType = Cookie::CPT_NAME;
-            foreach (Cookie::META_KEYS as $metaKey) {
-                if (\property_exists($use, $metaKey)) {
-                    $metaInput[$metaKey] = $use->{$metaKey};
-                } else {
-                    switch ($metaKey) {
-                        case Cookie::META_NAME_UNIQUE_NAME:
-                        case Cookie::META_NAME_CODE_DYNAMICS:
-                            // Skip
-                            break;
-                        default:
-                            break;
-                    }
+            if ($metaKeys === null) {
+                $metaKeys = Cookie::META_KEYS;
+            }
+            foreach ($metaKeys as $metaKey) {
+                switch ($metaKey) {
+                    case Blocker::META_NAME_PRESET_ID:
+                    case Blocker::META_NAME_PRESET_VERSION:
+                    case Cookie::META_NAME_UNIQUE_NAME:
+                    case Cookie::META_NAME_CODE_DYNAMICS:
+                        // Skip
+                        break;
+                    default:
+                        if (\property_exists($use, $metaKey)) {
+                            $metaInput[$metaKey] = $use->{$metaKey};
+                        }
+                        break;
                 }
             }
         } elseif ($template instanceof BlockerTemplate) {
-            // TODO: implement this, but currently there is no need for this
+            $use = $template->use();
+            $postContent = $use->description;
+            $postType = Blocker::CPT_NAME;
+            if ($metaKeys === null) {
+                $metaKeys = Blocker::META_KEYS;
+            }
+            foreach ($metaKeys as $metaKey) {
+                switch ($metaKey) {
+                    case Blocker::META_NAME_PRESET_ID:
+                    case Blocker::META_NAME_PRESET_VERSION:
+                    case Blocker::META_NAME_VISUAL_DOWNLOAD_THUMBNAIL:
+                        // Skip
+                        break;
+                    default:
+                        if (\property_exists($use, $metaKey)) {
+                            $metaInput[$metaKey] = $use->{$metaKey};
+                        }
+                        break;
+                }
+            }
         }
-        if (\count($metaInput) > 0) {
+        if (\count($metaInput) > 0 || !empty($postContent) || !empty($postTitle)) {
             // `null` values or empty strings should not be persisted to database as they are handled through default-value
             foreach ($metaInput as $key => $value) {
                 if ($value === null || $value === '') {
@@ -376,8 +400,10 @@ class TemplateConsumers
                     $metaInput[$key] = \wp_slash(\json_encode($value));
                 }
             }
-            $metaInput[Blocker::META_NAME_PRESET_ID] = $template->identifier;
-            $metaInput[Blocker::META_NAME_PRESET_VERSION] = $template->version;
+            if ($updateVersion) {
+                $metaInput[Blocker::META_NAME_PRESET_ID] = $template->identifier;
+                $metaInput[Blocker::META_NAME_PRESET_VERSION] = $template->version;
+            }
             $postData = ['post_title' => $postTitle, 'post_content' => $postContent, 'meta_input' => $metaInput];
             if ($updatePostId !== null) {
                 $post = \get_post($updatePostId);
@@ -393,10 +419,10 @@ class TemplateConsumers
             }
             if (\is_array($assignToTerm)) {
                 foreach ($assignToTerm as $taxonomy => $termId) {
-                    $res = \wp_set_object_terms($result, $termId, $taxonomy);
+                    \wp_set_object_terms($result, $termId, $taxonomy);
                 }
             }
-            return \is_int($result) ? \get_post($result) : $result;
+            return \is_int($result) ? $postData : $result;
         }
         return \false;
     }

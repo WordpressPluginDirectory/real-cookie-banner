@@ -158,7 +158,7 @@ class BlockableScanner extends AbstractPlugin
      */
     protected function probablyMemorizeExternalUrl($isBlocked, $url, $tag, $attribute, $markup)
     {
-        if (!$isBlocked->isBlocked() && !\in_array($tag, ['a'], \true) && $this->isNotAnExcludedUrl($url)) {
+        if (!$isBlocked->isBlocked() && !\in_array($tag, ['a'], \true) && $this->isNotAnExcludedUrl($url) && !\preg_match('/^data:\\w+\\/[\\w+-]+[,;]/m', $url)) {
             $this->results[] = $entry = new ScanEntry();
             $entry->blocked_url = \strpos($url, '//') === 0 ? 'https:' . $url : $url;
             $entry->source_url = $this->sourceUrl;
@@ -242,10 +242,11 @@ class BlockableScanner extends AbstractPlugin
      *
      * @param string $linkAttribute
      * @param string $link
+     * @see https://regex101.com/r/gPlyEq/1
      */
     public function isStyleAttributeFalsePositive($linkAttribute, $link)
     {
-        return $linkAttribute === 'style' && \preg_match('/^\\s*[A-Za-z-_]+:\\s*\\d+\\s*[;]*\\s*$/m', $link);
+        return $linkAttribute === 'style' && !\preg_match('/^(?:https?)?:?\\/\\//m', $link);
     }
     /**
      * See `AbstractPlugin`.
