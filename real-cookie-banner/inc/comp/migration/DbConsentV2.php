@@ -80,40 +80,38 @@ class DbConsentV2
      *
      * @param Job $job
      * @param string $type
+     * @param string $field
      * @param array $config
      * @param int $originalMinId
      * @param int $originalMaxId
      * @return bool|WP_Error True if the migration can continue, otherwise false or a `WP_Error` instance
      */
-    protected function processMigrationType($job, $type, $config, $originalMinId, $originalMaxId)
+    protected function processMigrationType($job, $type, $field, $config, $originalMinId, $originalMaxId)
     {
         global $wpdb;
-        foreach ($config['fields'] as $field) {
-            $minId = $job->data->process->{$type}->{$field};
-            if ($minId > $originalMaxId) {
-                // This migration type is already finished
-                continue;
-            }
-            $previousHideError = $wpdb->hide_errors();
-            $result = $this->{$config['method']}($field, $minId, $minId === $originalMinId);
-            $wpdb->show_errors($previousHideError);
-            if (\is_wp_error($result)) {
-                if (\strpos(\strtolower($result->get_error_message()), 'lock wait timeout exceeded') !== \false) {
-                    // Scenario: A website user is accessing the database table when saving a consent
-                    // For a lock wait timeout exceeded error, we can simply retry the migration.
-                    return \true;
-                }
-                return $result;
-            } else {
-                $minId += $config['chunkSize'];
-                $job->data->process->{$type}->{$field} = $minId;
-                if ($result !== \false) {
-                    $job->data->results->{$type}->{$field} += $result;
-                }
-            }
-            return $minId <= $originalMaxId;
+        $minId = $job->data->process->{$type}->{$field};
+        if ($minId > $originalMaxId) {
+            // This migration type is already finished
+            return \false;
         }
-        return \false;
+        $previousHideError = $wpdb->hide_errors();
+        $result = $this->{$config['method']}($field, $minId, $minId === $originalMinId);
+        $wpdb->show_errors($previousHideError);
+        if (\is_wp_error($result)) {
+            if (\strpos(\strtolower($result->get_error_message()), 'lock wait timeout exceeded') !== \false) {
+                // Scenario: A website user is accessing the database table when saving a consent
+                // For a lock wait timeout exceeded error, we can simply retry the migration.
+                return \true;
+            }
+            return $result;
+        } else {
+            $minId += $config['chunkSize'];
+            $job->data->process->{$type}->{$field} = $minId;
+            if ($result !== \false) {
+                $job->data->results->{$type}->{$field} += $result;
+            }
+        }
+        return $minId <= $originalMaxId;
     }
     /**
      * Migrate URLs.
@@ -262,7 +260,7 @@ class DbConsentV2
     protected function getMigrationError()
     {
         global $wpdb;
-        return new WP_Error('rcb_migration_db_consent_v2_error', $wpdb->last_error);
+        return new WP_Error('rcb_migration_db_consent_v2_error', $wpdb->last_error, ['stack' => \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS)]);
     }
     /**
      * Get the count, minimum and maximum ID of the old consent table. This allows us to improve the `INSERT INTO` performance by
@@ -302,12 +300,25 @@ class DbConsentV2
     public static function migrate(Job $job)
     {
         $upgrader = new \DevOwl\RealCookieBanner\comp\migration\DbConsentV2();
+        // Short circuit in case of no migration needed (this could happen when the job for
+        // the migration was created twice due to database locking).
+        if (!$upgrader->isMigrationNeeded()) {
+            $job->updateProcess(\true);
+            return;
+        }
         $allowJobToContinue = \false;
         $maxId = $job->data->maxId;
         $minId = $job->data->minId;
+        $listToWork = [];
         foreach (self::MIGRATION_TYPES as $type => $config) {
+            foreach ($config['fields'] as $field) {
+                $listToWork[] = [$type, $config, $field];
+            }
+        }
+        foreach ($listToWork as $item) {
             if (!$allowJobToContinue) {
-                $allowJobToContinue = $upgrader->processMigrationType($job, $type, $config, $minId, $maxId);
+                list($type, $config, $field) = $item;
+                $allowJobToContinue = $upgrader->processMigrationType($job, $type, $field, $config, $minId, $maxId);
                 if (\is_wp_error($allowJobToContinue)) {
                     return $allowJobToContinue;
                 }

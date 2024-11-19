@@ -8,9 +8,8 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
  * Match defining a `ScriptInlineFinder` match.
  * @internal
  */
-class ScriptInlineMatch extends AbstractMatch
+class ScriptInlineMatch extends TagWithContentMatch
 {
-    private $script;
     /**
      * If an inline script starts with a given expression, let's test the complete script if it is a variable (CDATA).
      *
@@ -19,24 +18,6 @@ class ScriptInlineMatch extends AbstractMatch
      */
     const SKIP_VARIABLES_IF_REGEXP_START = '/((var|const|let)\\s+)?[A-Za-z0-9_\\.\\[\\]"\']+\\s?=\\s+?{/';
     const SKIP_VARIABLES_IF_REGEXP_END = '/};?$/';
-    /**
-     * C'tor.
-     *
-     * @param ScriptInlineFinder $finder
-     * @param string $originalMatch
-     * @param array $attributes
-     * @param string $script
-     */
-    public function __construct($finder, $originalMatch, $attributes, $script)
-    {
-        parent::__construct($finder, $originalMatch, 'script', $attributes);
-        $this->script = $script;
-    }
-    // See `AbstractRegexFinder`.
-    public function render()
-    {
-        return $this->encloseRendered($this->hasChanged() ? \sprintf('<%1$s%2$s>%3$s</%1$s>', $this->getTag(), $this->renderAttributes(), $this->getScript()) : $this->getOriginalMatch());
-    }
     /**
      * Check if the script is javascript.
      */
@@ -83,21 +64,20 @@ class ScriptInlineMatch extends AbstractMatch
         return \false;
     }
     /**
-     * Setter.
+     * Setter. Alternatively, use `setContent()`.
      *
      * @param string $script
      */
     public function setScript($script)
     {
-        $this->setChanged(\true);
-        $this->script = $script;
+        $this->setContent($script);
     }
     /**
-     * Getter.
+     * Getter. Alternatively, use `getContent()`.
      */
     public function getScript()
     {
-        return $this->script;
+        return $this->getContent();
     }
     /**
      * Getter.

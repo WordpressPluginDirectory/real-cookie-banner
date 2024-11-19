@@ -281,7 +281,7 @@ class Blocker
      */
     protected function isCurrentRequestException()
     {
-        return isset($_GET['callback']) && $_GET['callback'] === 'map-iframe' || isset($_GET['lease']) && \preg_match('/^[a-f0-9]{32}$/i', $_GET['lease']);
+        return isset($_GET['callback']) && $_GET['callback'] === 'map-iframe' || isset($_GET['lease']) && \preg_match('/^[a-f0-9]{32}$/i', $_GET['lease']) || isset($_GET['trustindex-google-widget-content']);
     }
     /**
      * Allows to modify content within a `admin-ajax.php` action.

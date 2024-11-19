@@ -106,7 +106,7 @@ class StorageHelper
             return \false;
         }
         foreach ($result as &$row) {
-            if ($middlewareRoutine === 'after' && \intval($row['is_invalidate_needed']) > 0 && $forceInvalidate !== 'never') {
+            if (isset($where['is_outdated']) && $middlewareRoutine === 'after' && \intval($row['is_invalidate_needed']) > 0 && $forceInvalidate !== 'never') {
                 // So, in this state we know that we should recalculate middlewares.
                 return \false;
             }

@@ -1273,21 +1273,21 @@ msgstr ""
 msgid "We need to inform you that on Feb. 02, 2022, the Belgian Data Protection Authority (APD) declared the collection of consents under the Transparency & Consent Framework (TCF) to be invalid. The decision is effective across the EU as it was issued in a one-stop-shop procedure."
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:480
+#: inc/comp/migration/DbConsentV2.php:497
 msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:496
+#: inc/comp/migration/DbConsentV2.php:513
 #: inc/scanner/Scanner.php:539
 msgid "https://devowl.io/support/"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:497
+#: inc/comp/migration/DbConsentV2.php:514
 #: inc/scanner/Scanner.php:540
 msgid "Contact support"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:517
+#: inc/comp/migration/DbConsentV2.php:534
 msgid "Real Cookie Banner v5.0 introduces an optimized database schema that allows consent documents to be stored in less storage space. The migration failed. Please try again or contact the support of Real Cookie Banner!"
 msgstr ""
 

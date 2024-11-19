@@ -5,9 +5,10 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\i
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\FastHtmlTag;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\TagAttributeMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\TagAttributeFinder;
-use Requests;
+use Requests as DeprecatedRequests;
 use Requests_Response;
 use SimpleXMLElement;
+use WpOrg\Requests\Requests;
 use WpOrg\Requests\Response;
 /**
  * The head parser extracts links and meta from HTML responses.
@@ -96,9 +97,16 @@ class HtmlHeadThumbnailParser extends FastHtmlTag
         // Avoid issues where mbstring.func_overload is enabled.
         \mbstring_binary_safe_encoding();
         // TODO: make framework-agnostic, e.g. curl_multi_init
-        $responses = Requests::request_multiple(\array_map(function ($u) {
+        $requests = \array_map(function ($u) {
             return ['url' => $u];
-        }, $urls), ['timeout' => 5, 'type' => 'GET', 'redirects' => 5]);
+        }, $urls);
+        $requestOptions = ['timeout' => 5, 'type' => 'GET', 'redirects' => 5];
+        // WordPress backwards-compatibilty 6.1
+        if (\class_exists(Requests::class)) {
+            $responses = Requests::request_multiple($requests, $requestOptions);
+        } else {
+            $responses = DeprecatedRequests::request_multiple($requests, $requestOptions);
+        }
         $result = [];
         foreach ($responses as $key => $response) {
             if ($response instanceof Requests_Response || $response instanceof Response) {

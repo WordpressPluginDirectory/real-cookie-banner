@@ -210,11 +210,12 @@ class MyConsent
         }
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_URL);
         $sqlValues = [];
-        $result = [];
+        $validUrls = [];
         foreach ($urls as $url) {
             if (!empty($url)) {
                 $hash = \md5($url);
                 $sqlValues[] = $wpdb->prepare('(%s, %s)', $hash, $url);
+                $validUrls[] = $url;
             }
         }
         // phpcs:disable WordPress.DB
@@ -229,14 +230,19 @@ class MyConsent
             return new WP_Error('rcb_consent_url_commit_failed');
         }
         // phpcs:disable WordPress.DB
-        $rows = $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($url) {
+        $rows = \count($validUrls) > 0 ? $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($url) {
             return \sprintf("'%s'", \md5($url));
-        }, $urls)) . ')', ARRAY_A);
+        }, $validUrls)) . ')', ARRAY_A) : [];
         // phpcs:enable WordPress.DB
         $hashes = \array_column($rows, 'hash');
+        $result = [];
         foreach ($urls as $url) {
-            $idx = \array_search(\md5($url), $hashes, \true);
-            $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            if (!empty($url)) {
+                $idx = \array_search(\md5($url), $hashes, \true);
+                $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            } else {
+                $result[] = null;
+            }
         }
         return $result;
     }
@@ -254,12 +260,13 @@ class MyConsent
         }
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_DECISION);
         $sqlValues = [];
-        $result = [];
+        $validDecisions = [];
         foreach ($decisions as $decision) {
             if (\is_array($decision)) {
                 $json = \json_encode($decision);
                 $hash = \md5($json);
                 $sqlValues[] = $wpdb->prepare('(%s, %s)', $hash, $json);
+                $validDecisions[] = $decision;
             }
         }
         // phpcs:disable WordPress.DB
@@ -274,14 +281,19 @@ class MyConsent
             return new WP_Error('rcb_consent_decision_commit_failed');
         }
         // phpcs:disable WordPress.DB
-        $rows = $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($decision) {
+        $rows = \count($validDecisions) > 0 ? $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($decision) {
             return \sprintf("'%s'", \md5(\json_encode($decision)));
-        }, $decisions)) . ')', ARRAY_A);
+        }, $validDecisions)) . ')', ARRAY_A) : [];
         // phpcs:enable WordPress.DB
         $hashes = \array_column($rows, 'hash');
+        $result = [];
         foreach ($decisions as $decision) {
-            $idx = \array_search(\md5(\json_encode($decision)), $hashes, \true);
-            $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            if (\is_array($decision)) {
+                $idx = \array_search(\md5(\json_encode($decision)), $hashes, \true);
+                $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            } else {
+                $result[] = null;
+            }
         }
         return $result;
     }
@@ -298,11 +310,12 @@ class MyConsent
         }
         $table_name = $this->getTableName(\DevOwl\RealCookieBanner\UserConsent::TABLE_NAME_TCF_STRING);
         $sqlValues = [];
-        $result = [];
+        $validTcfStrings = [];
         foreach ($tcfStrings as $tcfString) {
             if (!empty($tcfString)) {
                 $hash = \md5($tcfString);
                 $sqlValues[] = $wpdb->prepare('(%s, %s)', $hash, $tcfString);
+                $validTcfStrings[] = $tcfString;
             }
         }
         // phpcs:disable WordPress.DB
@@ -317,14 +330,19 @@ class MyConsent
             return new WP_Error('rcb_consent_tcf_string_commit_failed');
         }
         // phpcs:disable WordPress.DB
-        $rows = $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($tcfString) {
+        $rows = \count($validTcfStrings) > 0 ? $wpdb->get_results("SELECT `hash`, id FROM {$table_name} WHERE `hash` IN (" . \implode(',', \array_map(function ($tcfString) {
             return \sprintf("'%s'", \md5($tcfString));
-        }, $tcfStrings)) . ')', ARRAY_A);
+        }, $validTcfStrings)) . ')', ARRAY_A) : [];
         // phpcs:enable WordPress.DB
         $hashes = \array_column($rows, 'hash');
+        $result = [];
         foreach ($tcfStrings as $tcfString) {
-            $idx = \array_search(\md5($tcfString), $hashes, \true);
-            $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            if (!empty($tcfString)) {
+                $idx = \array_search(\md5($tcfString), $hashes, \true);
+                $result[] = $idx !== \false ? \intval($rows[$idx]['id']) : null;
+            } else {
+                $result[] = null;
+            }
         }
         return $result;
     }
