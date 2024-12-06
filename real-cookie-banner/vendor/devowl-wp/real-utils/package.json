@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.13.13",
+    "version": "1.13.14",
     "private": true,
     "description": "Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
@@ -32,6 +32,7 @@
         "test:jest:coverage": "dowl --silent task @devowl-wp/utils:jest/coverage",
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage",
+        "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
         "wp": "$(which wp)$(test $CI && echo ' --allow-root')",
         "wp:weak": "php -n -dextension=phar.so -dextension=json.so -dextension=mbstring.so -dextension=tokenizer.so -dmemory_limit=-1 $(which wp)$(test $CI && echo ' --allow-root')"
     },

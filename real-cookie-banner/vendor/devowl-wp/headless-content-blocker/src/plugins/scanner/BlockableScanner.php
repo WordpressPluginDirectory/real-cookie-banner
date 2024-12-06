@@ -143,8 +143,33 @@ class BlockableScanner extends AbstractPlugin
      */
     protected function processBlockedBySelectorSyntax($isBlocked, $match)
     {
-        $possibleUrl = $match->getLink();
-        $this->probablyMemorizeIsBlocked($isBlocked, $this->isNotAnExcludedUrl($possibleUrl) ? $possibleUrl : null, $match->getTag(), $match->getLinkAttribute());
+        /**
+         * A list of allowed attributes as a `SelectorSyntaxFinder` can block multiple attributes which
+         * potentially represent an URL.
+         *
+         * @var string[]
+         */
+        $allowedAttributes = [];
+        foreach ($isBlocked->getBlocked() as $blockable) {
+            $selectorSyntaxFinder = $blockable->findSelectorSyntaxFinderForMatch($match);
+            if ($selectorSyntaxFinder !== null) {
+                $allowedAttributes = \array_unique(\array_merge($allowedAttributes, \array_map(function ($attr) {
+                    return $attr->getAttribute();
+                }, $selectorSyntaxFinder->getAttributes())));
+            }
+        }
+        $foundUrl = \false;
+        foreach ($allowedAttributes as $attribute) {
+            $attributeValue = $match->getAttribute($attribute);
+            if ($this->isNotAnExcludedUrl($attributeValue)) {
+                $this->probablyMemorizeIsBlocked($isBlocked, $attributeValue, $match->getTag(), $attribute);
+                $foundUrl = \true;
+            }
+        }
+        if (!$foundUrl) {
+            $possibleUrl = $match->getLink();
+            $this->probablyMemorizeIsBlocked($isBlocked, $this->isNotAnExcludedUrl($possibleUrl) ? $possibleUrl : null, $match->getTag(), $match->getLinkAttribute());
+        }
         return $isBlocked;
     }
     /**

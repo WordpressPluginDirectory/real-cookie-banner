@@ -4410,19 +4410,19 @@ msgstr ""
 msgid "Read instructions for Google AdSense configuration with TCF consents"
 msgstr ""
 
-#: inc/view/Notices.php:1780
+#: inc/view/Notices.php:1784
 msgid "You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!"
 msgstr ""
 
-#: inc/view/Notices.php:1791
+#: inc/view/Notices.php:1795
 msgid "Scan website again"
 msgstr ""
 
-#: inc/view/Notices.php:1817
+#: inc/view/Notices.php:1821
 msgid "Are you really embedding ads and content from all created TCF vendors on your website? <strong>Asking for consent from vendors you don't use could be an abuse of rights and could make the entire consent ineffective.</strong> You make it difficult for your website visitors to make an informed choice by using too many vendors. We therefore recommend you to create only TCF vendors that you actually use!"
 msgstr ""
 
-#: inc/view/Notices.php:1822
+#: inc/view/Notices.php:1826
 msgid "Configure TCF vendors"
 msgstr ""
 

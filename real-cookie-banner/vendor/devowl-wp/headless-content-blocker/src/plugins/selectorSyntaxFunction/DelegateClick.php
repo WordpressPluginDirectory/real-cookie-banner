@@ -2,7 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction;
 
-use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\SelectorSyntaxAttributeFunction;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
@@ -35,7 +35,7 @@ class DelegateClick extends AbstractPlugin
      * Function implementation.
      *
      * @param SelectorSyntaxAttributeFunction $fn
-     * @param SelectorSyntaxMatch $match
+     * @param AbstractMatch $match
      * @param mixed $value
      */
     public function fn($fn, $match, $value)

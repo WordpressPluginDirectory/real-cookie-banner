@@ -320,7 +320,39 @@ abstract class AbstractMatcher
      */
     protected function applyCheckResultHooks($result, $match)
     {
-        return $this->getHeadlessContentBlocker()->runCheckResultCallback($result, $this, $match);
+        $result = $this->getHeadlessContentBlocker()->runCheckResultCallback($result, $this, $match);
+        // Is the match also covered by another selector syntax?
+        $attributes = $match->getAttributes();
+        $matchCallbacks = MatchPluginCallbacks::getFromMatch($match);
+        foreach ($this->getHeadlessContentBlocker()->findPotentialSelectorSyntaxFindersForMatch($match->getTag(), \array_keys($attributes)) as $finder) {
+            $matcher = $this->getHeadlessContentBlocker()->getFinderToMatcher()[$finder] ?? null;
+            // @codeCoverageIgnoreStart
+            if ($matcher === null) {
+                continue;
+            }
+            // @codeCoverageIgnoreEnd
+            $matchCallbacks->startTransaction();
+            $matchesAttributes = $finder->matchesAttributes($attributes, $match);
+            if ($matchesAttributes) {
+                $matchCallbacks->commit();
+                $applyAttributes = [];
+                foreach ($finder->getAttributes() as $attr) {
+                    $applyAttributes[$attr->getAttribute()] = $attributes[$attr->getAttribute()];
+                }
+                if ($matcher instanceof SelectorSyntaxMatcher && $matcher->getBlockable() !== null) {
+                    $result->addBlocked($matcher->getBlockable());
+                    $result->addBlockedExpression($finder->getExpression());
+                }
+                $matchCallbacks->addBlockedMatchCallback(function ($result) use($match, $applyAttributes) {
+                    foreach ($applyAttributes as $attribute => $value) {
+                        $this->applyNewLinkElement($match, $attribute, $value);
+                    }
+                });
+            } else {
+                $matchCallbacks->rollback();
+            }
+        }
+        return $result;
     }
     /**
      * Getter.
@@ -333,6 +365,7 @@ abstract class AbstractMatcher
      * Getter.
      *
      * @return AbstractBlockable[]
+     * @codeCoverageIgnore
      */
     public function getBlockables()
     {

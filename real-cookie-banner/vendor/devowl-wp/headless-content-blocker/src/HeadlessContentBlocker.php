@@ -75,7 +75,7 @@ class HeadlessContentBlocker extends FastHtmlTag
     private $markupPool = [];
     private $markupChain = [];
     private $finderToMatcher;
-    private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'embed', 'img'], 'attr' => ['href', 'data-src', 'src']]];
+    private $tagAttributeMap = [self::TAG_ATTRIBUTE_MAP_LINKABLE => ['tags' => ['script', 'link', 'iframe', 'embed', 'img', 'video', 'source', 'audio'], 'attr' => ['href', 'data-src', 'src', 'poster']]];
     /**
      * See `processMatch`.
      *
@@ -87,7 +87,16 @@ class HeadlessContentBlocker extends FastHtmlTag
      *
      * @var string[]
      */
-    private $selectorSyntaxMap = ['source[src:matchesUrl(withHost=true)]', 'video[poster]'];
+    private $selectorSyntaxMap = [];
+    /**
+     * This array holds instances of SelectorSyntaxFinder indexed by their associated tag.
+     * Each entry is an array containing the first attribute of the finder and the finder instance itself.
+     *
+     * Why? Get possible selector syntax finders for a match. See also `findPotentialSelectorSyntaxFindersForMatch`.
+     *
+     * @var array<string, array<string, SelectorSyntaxFinder[]>>
+     */
+    private $selectorSyntaxFindersTagMatrix = [];
     /**
      * C'tor.
      */
@@ -450,6 +459,7 @@ class HeadlessContentBlocker extends FastHtmlTag
             $selectorSyntaxFinder = SelectorSyntaxFinder::fromExpression($selectorSyntax);
             if ($selectorSyntaxFinder !== \false) {
                 $selectorSyntaxFinder->setFastHtmlTag($this);
+                // Find matches which are not yet covered by the selector-syntax-map in previous calls
                 $selectorSyntaxMatcher = new SelectorSyntaxMatcher($this, null, \false);
                 $selectorSyntaxFinder->addCallback(function ($match) use($selectorSyntaxMatcher) {
                     $this->processMatch($selectorSyntaxMatcher, $match);
@@ -459,6 +469,21 @@ class HeadlessContentBlocker extends FastHtmlTag
             }
         }
         $this->runAfterSetupCallback();
+    }
+    /**
+     * When adding a finder, save the instances of `SelectorSyntaxFinder`.
+     *
+     * @param AbstractFinder $finder
+     */
+    public function addFinder($finder)
+    {
+        parent::addFinder($finder);
+        if ($finder instanceof SelectorSyntaxFinder) {
+            $tag = $finder->getTag();
+            $firstAttribute = $finder->getAttributes()[0]->getAttribute();
+            $this->selectorSyntaxFindersTagMatrix[$tag] = $this->selectorSyntaxFindersTagMatrix[$tag] ?? [];
+            $this->selectorSyntaxFindersTagMatrix[$tag][] = [$firstAttribute, $finder];
+        }
     }
     /**
      * A match got found from one of our finders. Run plugins and hooks.
@@ -592,9 +617,9 @@ class HeadlessContentBlocker extends FastHtmlTag
     {
         foreach ($this->blockedMatchCallbacks as $callback) {
             $callback($result, $matcher, $match);
-            // Delegate `MatchPluginCallbacks`
-            MatchPluginCallbacks::getFromMatch($match)->runBlockedMatchCallback($result, $matcher);
         }
+        // Delegate `MatchPluginCallbacks`
+        MatchPluginCallbacks::getFromMatch($match)->runBlockedMatchCallback($result, $matcher);
     }
     /**
      * Run registered not-blocked-match callbacks.
@@ -785,6 +810,27 @@ class HeadlessContentBlocker extends FastHtmlTag
             $this->blockablesToHostsCache = $result;
         }
         return \array_map($prepareRows, $result);
+    }
+    /**
+     * Find potential selector syntax finders for a given match. You need to use `matchesAttributes` on the match
+     * to check if the match is covered by the returned finders.
+     *
+     * @param string $tag
+     * @param string[] $attributeNames
+     * @return SelectorSyntaxFinder[]
+     */
+    public function findPotentialSelectorSyntaxFindersForMatch($tag, $attributeNames)
+    {
+        $result = [];
+        $tagFinders = $this->selectorSyntaxFindersTagMatrix[$tag] ?? [];
+        foreach ($tagFinders as $entry) {
+            $attributeName = $entry[0];
+            $finder = $entry[1];
+            if (\in_array($attributeName, $attributeNames, \true)) {
+                $result[] = $finder;
+            }
+        }
+        return $result;
     }
     /**
      * Get blockable rules starting with a given string. This does only work for non-Selector-Syntax expressions.

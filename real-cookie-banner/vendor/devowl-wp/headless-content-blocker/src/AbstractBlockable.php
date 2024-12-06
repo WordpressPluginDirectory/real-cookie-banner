@@ -99,20 +99,20 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
              * @var SelectorSyntaxMatch
              */
             $useMatch = null;
+            // With the introduction of `findPotentialSelectorSyntaxFindersForMatch`, we have no test covering this
+            // case but we need it for backward compatibility.
+            // @codeCoverageIgnoreStart
             if ($match instanceof SelectorSyntaxMatch) {
-                // @codeCoverageIgnoreStart
                 $useMatch = $match;
-                // @codeCoverageIgnoreEnd
             } elseif (\count($match->getAttributes()) > 0) {
                 $useMatch = new SelectorSyntaxMatch($selectorSyntaxFinder, $match->getOriginalMatch(), $match->getTag(), $match->getAttributes(), \array_keys($match->getAttributes())[0]);
             } else {
                 // It can never `matchesAttributes` as we do not have any attribute
                 return null;
             }
-            if ($selectorSyntaxFinder->getTag() === $useMatch->getTag()) {
-                if ($selectorSyntaxFinder->matchesAttributes($useMatch->getAttributes(), $useMatch)) {
-                    return $selectorSyntaxFinder;
-                }
+            // @codeCoverageIgnoreEnd
+            if ($selectorSyntaxFinder->matchesAttributes($useMatch->getAttributes(), $useMatch)) {
+                return $selectorSyntaxFinder;
             }
         }
         return null;

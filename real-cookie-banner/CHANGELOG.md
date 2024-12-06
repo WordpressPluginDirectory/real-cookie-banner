@@ -3,6 +3,164 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.4 (2024-12-06)
+
+
+### Bug Fixes
+
+* allow to recommend an integration even if the template is already recommended (CU-8694x4tnx)
+* compatibility with ACF Frontend Form for Dynamicooo (CU-8696rw241)
+* do not show scanner notice when plugin toggled for users without permissions to manage cookies
+* wp_rcb_consent_give() PHP function also supports unique identifiers now (CU-8694x4tnx)
+
+
+### Maintenance
+
+* remove version from docker-compose files as this is no longer needed (CU-8696k3cct)
+
+
+### Performance Improvements
+
+* use matchesMedia native browser function to check for mobile experience (CU-8696w9pc0)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.17.16</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Bug Fixes
+
+* compatibility with TheGem Delay JS functionality (CU-8696rncw0)
+
+
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.2</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* wp_rcb_consent_give() PHP function also supports unique identifiers now (CU-8694x4tnx)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.1</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* compatibility with ACF Frontend Form for Dynamicooo (CU-8696rw241)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.0</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* html attributes can also contain hashes (CU-8696x8wm0)
+* vueJS templates did not longer work when they included a single quote and greater character (CU-8696x8wm0)
+
+
+##### Code Refactoring
+
+* make selector syntax map reliably work for already blocked items (CU-8696rw241)
+
+
+##### Features
+
+* allow to lock attributes so they can no longer be modified (CU-8696rw241)
+
+
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.93</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.1.1</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* allow to block by blockable rule on already blocked tag attribute (CU-8696vyeen)
+* compatibility with ACF Frontend Form for Dynamicooo (CU-8696rw241)
+* compatibility with Cinerama theme
+* scan and block <video and <audio with src attribute (CU-8696vyeen)
+* vueJS templates did not longer work when they included a single quote and greater character (CU-8696x8wm0)
+
+
+##### Code Refactoring
+
+* make selector syntax map reliably work for already blocked items (CU-8696rw241)
+
+
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.0.2</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* compatibility with darkroomengineering/lenis (CU-8696vxykv)
+
+
+##### Performance Improvements
+
+* use matchesMedia native browser function to check for mobile experience (CU-8696w9pc0)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.14</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.14</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Build System
+
+* cannot declare class InstalledVersions for composer (CU-8696ru88g)
+
+
+##### Performance Improvements
+
+* allow profiling PHPUnit tests via webgrind (CU-8696qqa89)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.1</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Performance Improvements
+
+* use matchesMedia native browser function to check for mobile experience (CU-8696w9pc0)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 1.0.1</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Performance Improvements
+
+* use matchesMedia native browser function to check for mobile experience (CU-8696w9pc0)</details>
+
+
+
+
+
 ## 5.0.3 (2024-11-19)
 
 

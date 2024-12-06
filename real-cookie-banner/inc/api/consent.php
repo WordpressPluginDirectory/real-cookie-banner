@@ -24,17 +24,23 @@ if (!\function_exists('wp_rcb_consent_given')) {
      * $consent = function_exists('wp_rcb_consent_given') ? wp_rcb_consent_given(15) : true;
      * ```
      *
+     * **Since 5.0.4**: You can also check for consent by service unique name:
+     *
+     * ```php
+     * $consent = function_exists('wp_rcb_consent_given') ? wp_rcb_consent_given("google-analytics-ua") : true;
+     * ```
+     *
      * **Attention:** Do not use this function if you can get the conditional consent into your frontend
      * coding and use instead the `window.consentApi`!
      *
-     * @param string|int $typeOrId
+     * @param string|int $typeOrIdOrUniqueName
      * @param string $name
      * @param string $host
      * @since 2.11.1
      * @internal
      */
-    function wp_rcb_consent_given($typeOrId, $name = null, $host = null)
+    function wp_rcb_consent_given($typeOrIdOrUniqueName, $name = null, $host = null)
     {
-        return MyConsent::getInstance()->getCurrentUser()->hasConsent($typeOrId, $name, $host);
+        return MyConsent::getInstance()->getCurrentUser()->hasConsent($typeOrIdOrUniqueName, $name, $host);
     }
 }

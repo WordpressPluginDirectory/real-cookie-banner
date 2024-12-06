@@ -10,16 +10,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils as FastHtmlTagUtils;
 class AttributesHelper
 {
     /**
-     * Check if a given set of HTML attributes already contains the "blocked"-attribute
-     * so we can skip duplicate blockages.
-     *
-     * @param string[] $attributes
-     */
-    public static function isAlreadyBlocked($attributes)
-    {
-        return isset($attributes[Constants::HTML_ATTRIBUTE_BLOCKER_ID]) || isset($attributes[Constants::HTML_ATTRIBUTE_INLINE_STYLE]);
-    }
-    /**
      * Transform an attribute to `consent-original-%s_` attribute.
      *
      * @param string $attribute

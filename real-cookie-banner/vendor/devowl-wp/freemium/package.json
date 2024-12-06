@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/freemium",
-    "version": "1.3.92",
+    "version": "1.3.93",
     "private": true,
     "description": "Make your plugin to a freemium plugin with predefined Envato support",
     "homepage": "https://devowl.io",
@@ -30,6 +30,7 @@
         "task": "task --taskfile ./tasks/Taskfile.yml",
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage",
+        "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
         "wp": "$(which wp)$(test $CI && echo ' --allow-root')",
         "wp:weak": "php -n -dextension=phar.so -dextension=json.so -dextension=mbstring.so -dextension=tokenizer.so -dmemory_limit=-1 $(which wp)$(test $CI && echo ' --allow-root')"
     },

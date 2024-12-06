@@ -2,7 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder;
 
-use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 /**
  * An function definition for `SelectorSyntaxAttribute` with function name and parsed arguments.
@@ -41,7 +41,7 @@ class SelectorSyntaxAttributeFunction
     /**
      * Execute the function with registered functions.
      *
-     * @param SelectorSyntaxMatch $match
+     * @param AbstractMatch $match
      */
     public function execute($match)
     {

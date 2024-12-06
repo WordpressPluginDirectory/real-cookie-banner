@@ -62,7 +62,7 @@ class FastHtmlTag
      *
      * The callback gets the following parameters and expects `boolean` as result:
      *
-     * `SelectorSyntaxAttributeFunction $function, SelectorSyntaxMatch $match, mixed $value`
+     * `SelectorSyntaxAttributeFunction $function, AbstractMatch $match, mixed $value`
      *
      * @param string $functionName
      * @param callable $callback

@@ -13,6 +13,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\Utils;
 abstract class AbstractMatch
 {
     const HTML_ATTRIBUTE_INVISIBLE_PREFIX = 'consent-attribute-invisible-';
+    const HTML_ATTRIBUTE_INVISIBLE_LOCKED_ATTRIBUTE = 'locked-attribute';
     private $finder;
     private $originalMatch;
     private $tag;
@@ -137,6 +138,34 @@ abstract class AbstractMatch
         return $this->doOmit;
     }
     /**
+     * Lock a given attribute so it can no longer be modified. This is useful for plugins like `KeepAttributes`
+     * in `@devowl-wp/headless-content-blocker` which need to keep `class` for example and disallows transformation
+     * of the next block iteration.
+     *
+     * Example: Without lock and keep class `a`
+     *
+     * 1. `<div class="a b c">`
+     * 2. `<div consent-original-class="a b c">`
+     * 3. `<div class="a" consent-original-class="a b c">`
+     * 4. Next iteration of the matcher
+     * 5. `<div class="a" consent-original-class="a">`
+     *
+     * Example: With lock and keep class `a`
+     *
+     * 1. `<div class="a b c">`
+     * 2. `<div consent-original-class="a b c">`
+     * 3. `<div class="a" consent-original-class="a b c">`
+     * 4. Next iteration of the matcher
+     * 5. `<div class="a" consent-original-class="a b c">`
+     *
+     * @param string $attribute
+     * @param boolean $state
+     */
+    public function lockAttribute($attribute, $state = \true)
+    {
+        $this->setInvisibleAttribute(self::HTML_ATTRIBUTE_INVISIBLE_LOCKED_ATTRIBUTE . '-' . $attribute, $state ? '1' : null);
+    }
+    /**
      * Check if a given attribute is a data URL and return the mime type.
      *
      * @param string $key
@@ -193,26 +222,42 @@ abstract class AbstractMatch
      * Calculate a unique key for this match.
      *
      * @param string[] $idKeys Consider ID keys as unique (ordered by priority)
-     * @param string[][] $looseAttributes
+     * @param array[] $looseAttributes
      * @return string|null Can return `null` if we cannot calculate a unique key for this container
      */
     public function calculateUniqueKey($idKeys = ['id'], $looseAttributes = [])
     {
-        $result = [];
+        $result = $looseAttributes;
+        $foundUnique = \false;
         // Generate unique key by ID attribute
         foreach ($idKeys as $idKey) {
             if ($this->hasAttribute($idKey)) {
-                $result[$idKey] = \trim($this->getAttribute($idKey));
+                $result[] = ['key' => $idKey, 'value' => $this->getAttribute($idKey)];
+                $foundUnique = \true;
                 break;
             }
         }
-        if (\count($result) === 0) {
+        if (!$foundUnique) {
             // Fallback to loose identification (all attributes)
-            $looseAttributes['attributes'] = $this->getAttributes();
-            if (\count($looseAttributes['attributes']) !== 0) {
-                \ksort($looseAttributes['attributes']);
-                $result = $looseAttributes;
+            $result = \array_merge($result, \array_filter(\array_map(function ($key, $value) {
+                // @codeCoverageIgnoreStart
+                if (\strpos($key, 'consent-') === 0) {
+                    return null;
+                }
+                // @codeCoverageIgnoreEnd
+                return ['key' => $key, 'value' => $value];
+            }, \array_keys($this->getAttributes()), $this->getAttributes())));
+            // Sort result by `key`
+            \usort($result, function ($a, $b) {
+                return \strcmp($a['key'], $b['key']);
+            });
+        }
+        foreach ($result as &$item) {
+            $value =& $item['value'];
+            if (\is_bool($value)) {
+                $value = $value ? 'true' : 'false';
             }
+            $value = \trim(\strval($value));
         }
         // Use JSON_UNESCAPED_SLASHES to avoid escaping slashes in the result and streamline with JS' JSON.stringify
         // See https://stackoverflow.com/a/56647087/5506547
@@ -254,6 +299,10 @@ abstract class AbstractMatch
      */
     public function setAttribute($key, $value, $dataUrlTransformation = null)
     {
+        $locked = $this->getInvisibleAttribute(self::HTML_ATTRIBUTE_INVISIBLE_LOCKED_ATTRIBUTE . '-' . $key);
+        if ($locked === '1') {
+            return;
+        }
         $this->setChanged(\true);
         $attributes =& $this->attributes;
         $dataUrlAttributes =& $this->dataUrlAttributes;

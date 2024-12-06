@@ -8,7 +8,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelpe
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\Image;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\internal\DummyBlockable;
 /**
  * Block a HTML element by CSS-like selectors, e.g. `div[class="my-class"]`.
  * @internal
@@ -74,11 +73,6 @@ class SelectorSyntaxMatcher extends AbstractMatcher
      */
     public function createResult($match)
     {
-        $forceResult = $match->getData(self::DATA_FORCE_RESULT);
-        if ($forceResult instanceof BlockedResult) {
-            $match->setData(self::DATA_FORCE_RESULT, null);
-            return $forceResult;
-        }
         $result = $this->createPlainResultFromMatch($match);
         if ($this->blockAutomatically) {
             if ($this->getHeadlessContentBlocker()->isAllowMultipleBlockerResults()) {
@@ -86,7 +80,7 @@ class SelectorSyntaxMatcher extends AbstractMatcher
                 // to the result for the current match
                 foreach ($this->getHeadlessContentBlocker()->getBlockables() as $blockable) {
                     foreach ($blockable->getSelectorSyntaxFinder() as $selectorSyntaxFinder) {
-                        if ($selectorSyntaxFinder->getTag() === $match->getTag() && $selectorSyntaxFinder->matchesAttributes($match->getAttributes(), $match)) {
+                        if ($selectorSyntaxFinder->matchesAttributes($match->getAttributes(), $match)) {
                             $result->addBlocked($blockable);
                             $result->addBlockedExpression($selectorSyntaxFinder->getExpression());
                         }
@@ -97,22 +91,16 @@ class SelectorSyntaxMatcher extends AbstractMatcher
                 $result->setBlockedExpressions([$match->getFinder()->getExpression()]);
             }
         } else {
-            foreach ($match->getFinder()->getAttributes() as $attribute) {
-                $value = $match->getAttribute($attribute->getAttribute());
-                if (\count($attribute->getFunctions()) > 0) {
-                    // When using a selector syntax map to only apply further rules to attributes (e.g. `iframe[data-reporting-enabled="1":keepAttributes(value=data-reporting-enabled),jQueryHijackEach()])`)
-                    // without checking for another attribute like `data-src`, we need to check if functions are passed. When there is a function do a simple comparator match
-                    // and create a dummy blockable. But this should only applied to already blocked elements.
-                    if (AttributesHelper::isAlreadyBlocked($match->getAttributes()) && $attribute->matchesComparator($value)) {
-                        $result->addBlocked(new DummyBlockable($this->getHeadlessContentBlocker()));
-                        $result->addBlockedExpression(\sprintf('selector-syntax-map:%s', $match->getFinder()->getExpression()));
-                        break;
-                    }
-                } else {
-                    $this->iterateBlockablesInString($result, $value);
-                    if ($result->isBlocked()) {
-                        break;
-                    }
+            $attributes = $match->getAttributes();
+            $finder = $match->getFinder();
+            $matchesAttributes = $finder->matchesAttributes($attributes, $match);
+            $forceResult = $match->getData(self::DATA_FORCE_RESULT);
+            if ($matchesAttributes && $forceResult instanceof BlockedResult) {
+                foreach ($forceResult->getBlocked() as $blockable) {
+                    $result->addBlocked($blockable);
+                }
+                foreach ($forceResult->getBlockedExpressions() as $expression) {
+                    $result->addBlockedExpression($expression);
                 }
             }
         }

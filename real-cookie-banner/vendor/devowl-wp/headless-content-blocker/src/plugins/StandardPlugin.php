@@ -48,43 +48,45 @@ class StandardPlugin extends AbstractPlugin
         ]);
         $cb->addSelectorSyntaxMap([
             // [Plugin Comp] https://themenectar.com/salient/
-            'a[href][class*="nectar_video_lightbox"]',
+            'a[href:matchesUrl()][class*="nectar_video_lightbox"]',
             // [Plugin Comp] Elementor media carousel
-            'a[href][data-elementor-lightbox-video]',
+            'a[href:matchesUrl()][data-elementor-lightbox-video]',
             // [Plugin Comp] https://promo-theme.com/
-            'a[data-popup-json]',
+            'a[data-popup-json:matchesUrl()]',
             // [Plugin Comp] Kadence Blocks
-            'a[href][class*="kadence-video-popup-link":delegateClick()]',
+            'a[href:matchesUrl()][class*="kadence-video-popup-link":delegateClick()]',
             // [Plugin Comp] Bricks Builder
             'a[data-pswp-video-url:matchesUrl(),delegateClick()]',
             // [Plugin Comp] Elementor Lightbox
-            'a[href][data-elementor-open-lightbox:confirm(),keepAttributes(value=href)]',
+            'a[href:matchesUrl()][data-elementor-open-lightbox:confirm(),keepAttributes(value=href)]',
             // [Plugin Comp] Thrive Visual Editor
             'iframe[data-reporting-enabled="1":keepAttributes(value=data-reporting-enabled),jQueryHijackEach()]',
             // [Plugin Comp] Authentic theme using jarallax
-            'div[data-video][class*="parallax-video":keepAttributes(value=class),jQueryHijackEach()]',
+            'div[data-video:matchesUrl()][class*="parallax-video":keepAttributes(value=class),jQueryHijackEach()]',
             // [Plugin Comp] https://wordpress.org/plugins/advanced-backgrounds/
-            'div[data-awb-video][class*="nk-awb-wrap":eval(js=AWB.init())]',
+            'div[data-awb-video:matchesUrl()][class*="nk-awb-wrap":eval(js=AWB.init())]',
             // [Plugin Comp] https://wordpress.org/plugins/wp-youtube-lyte/
             'div[id^="lyte_":visualParent(value=2)]',
             // [Plugin Comp] OMGF
             '!script[id="omgf-pro-remove-async-google-fonts"]',
             // [Plugin Comp] https://github.com/paulirish/lite-youtube-embed
-            'a[href][rel="wp-video-lightbox"]',
+            'a[href:matchesUrl()][rel="wp-video-lightbox"]',
             // [Plugin Comp] https://elementor.com/help/lightbox/
-            'a[href][class*="awb-lightbox"]',
+            'a[href:matchesUrl()][class*="awb-lightbox"]',
             // [Plugin Comp] Elementor Lightbox
-            'div[data-elementor-lightbox]',
+            'div[data-elementor-lightbox:matchesUrl()]',
             // [Plugin Comp] https://oxygenbuilder.com/
-            'div[onclick][class*="w-video"]',
+            'div[onclick:matchesUrl()][class*="w-video"]',
             // [Plugin Comp] https://themeforest.net/item/enfold-responsive-multipurpose-theme/4519990
-            'div[data-original_url][class*="avia-video"]',
+            'div[data-original_url:matchesUrl()][class*="avia-video"]',
             // [Plugin Comp] https://unlimited-elements.com/
             'a[class*="button_uc_blox_play_button":delegateClick(selector=.video-button)][href:matchesUrl(),visualParent(value=2)]',
             // [Plugin Comp] https://bandtheme.com/
-            'video-js[data-setup][data-player-id]',
+            'video-js[data-setup:matchesUrl()][data-player-id]',
             // [Plugin Comp] https://videojs.com/
-            'video-js[data-settings][class*="videojs-native"]',
+            'video-js[data-settings:matchesUrl()][class*="videojs-native"]',
+            // [Plugin Comp] https://themeforest.net/item/cinerama-a-theme-for-movie-studios-and-filmmakers/22037150
+            'a[href:matchesUrl()][data-rel*="prettyPhoto":confirm(),keepAttributes(value=data-rel)]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a
@@ -158,6 +160,8 @@ class StandardPlugin extends AbstractPlugin
             'bt_bb_google_maps_map' => ['class'],
             // [Plugin Comp] Kadence Blocks
             'kadence-video-popup-link' => ['class', 'href'],
+            // [Plugin Comp] https://www.dynamic.ooo/dynamic-content-for-elementor/features/acf-frontend-form/
+            'acf-field' => ['class'],
         ]);
         $cb->addVisualParentIfClass([
             // [Theme Comp] FloThemes

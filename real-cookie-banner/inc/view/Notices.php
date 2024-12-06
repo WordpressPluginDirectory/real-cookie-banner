@@ -945,7 +945,7 @@ class Notices
      */
     public function admin_notice_scanner_rerun_after_plugin_toggle()
     {
-        if ($this->getStates()->get(self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, \false)) {
+        if ($this->getStates()->get(self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, \false) && \current_user_can(Core::MANAGE_MIN_CAPABILITY)) {
             echo \sprintf('<div class="notice notice-warning" style="position:relative"><p>%s &bull; <a onClick="%s" href="#">%s</a></p>%s</div>', \__('You have enabled or disabled plugins on your website, which may require your cookie banner to be adjusted. Please scan your website again as soon as you have finished the changes!', RCB_TD), \esc_js($this->getStates()->noticeDismissOnClickHandler(self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, 'false', Core::getInstance()->getConfigPage()->getUrl() . '#/scanner?start=1')), \__('Scan website again', RCB_TD), \sprintf('<button type="button" class="notice-dismiss" onClick="%s"></button>', \esc_js($this->getStates()->noticeDismissOnClickHandler(self::NOTICE_SCANNER_RERUN_AFTER_PLUGIN_TOGGLE, 'false'))));
         }
     }

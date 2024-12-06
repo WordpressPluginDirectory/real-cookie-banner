@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\PregReplaceCallbackRerunException;
 use DOMDocument;
 /**
  * Utility helpers.
@@ -15,6 +16,8 @@ class Utils
      * @deprecated No longer needed, only left for `prepareMatch`
      */
     const PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE = 'PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE';
+    const PARSE_HTML_ATTRIBUTES_CUSTOM_TAG = 'my-awesome-fast-html-tag';
+    public static $inPregReplaceCallbackRecursive = \false;
     /**
      * Check if a string starts with a given needle.
      *
@@ -128,17 +131,38 @@ class Utils
      */
     public static function preg_replace_callback_recursive($pattern, $callback, $subject)
     {
-        $f = function ($matches) use($pattern, $callback, &$f) {
+        self::$inPregReplaceCallbackRecursive = \true;
+        $replayWithSubject = \false;
+        $f = function ($matchesWithOffsets) use($pattern, $callback, &$f, &$subject, &$replayWithSubject) {
+            $matches = \array_column($matchesWithOffsets, 0);
             $current = $matches[0];
-            $result = $callback($matches);
+            try {
+                $result = $callback($matches);
+            } catch (PregReplaceCallbackRerunException $e) {
+                // We need to calculate the offsets at purpose as `utf8_decode` is very expensive
+                $offsets = [];
+                foreach ($matchesWithOffsets as $match) {
+                    // See https://www.php.net/manual/en/function.preg-match.php#106804
+                    $offsets[] = \strlen(\utf8_decode(\substr($subject, 0, $match[1])));
+                }
+                $replayWithSubject = $e->fetchNewSubject($subject, $matches, $offsets);
+                return '';
+            }
             if ($current !== $result) {
-                return \preg_replace_callback($pattern, $f, $result);
+                $count = 0;
+                return \preg_replace_callback($pattern, $f, $result, -1, $count, \PREG_OFFSET_CAPTURE);
             }
             return $result;
         };
-        return self::preg_jit_safe($pattern, function ($p) use($f, $subject) {
-            return \preg_replace_callback($p, $f, $subject);
+        $jitSafeResult = self::preg_jit_safe($pattern, function ($p) use($f, $subject) {
+            $count = 0;
+            return \preg_replace_callback($p, $f, $subject, -1, $count, \PREG_OFFSET_CAPTURE);
         });
+        self::$inPregReplaceCallbackRecursive = \false;
+        if (\is_string($replayWithSubject)) {
+            $jitSafeResult = self::preg_replace_callback_recursive($pattern, $callback, $replayWithSubject);
+        }
+        return $jitSafeResult;
     }
     /**
      * If a PHP environment is using the PCRE JIT compiler, all `preg_replace` functions
@@ -187,6 +211,7 @@ class Utils
      * Parse a HTML attributes string to an associative array.
      *
      * @param string $str
+     * @throws PregReplaceCallbackRerunException
      */
     public static function parseHtmlAttributes($str)
     {
@@ -222,13 +247,22 @@ class Utils
             \libxml_clear_errors();
             $previous = \libxml_use_internal_errors(\true);
             // Load content as UTF-8 content (see https://stackoverflow.com/a/8218649/5506547)
-            $dom->loadHTML(\sprintf('<?xml encoding="utf-8" ?><div %s></div>', $str));
-            $node = $dom->getElementsByTagName('div')->item(0);
+            $dom->loadHTML(\sprintf('<?xml encoding="utf-8" ?><%1$s %2$s></%1$s>', self::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG, $str));
+            $node = $dom->getElementsByTagName(self::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG)->item(0);
             $attributes = [];
             if ($node) {
                 foreach ($node->attributes as $attrName => $attrNode) {
                     $nodeValue = \in_array($attrName, $booleanAttributes, \true) ? \true : $attrNode->nodeValue;
                     $attributes[$attrName] = $nodeValue;
+                    // Fix VueJS attributes like `v-else-if="button_type > 'woo'"></template` which causes
+                    // the regular expression to fail
+                    if (self::$inPregReplaceCallbackRecursive && \is_string($nodeValue) && self::endsWith($nodeValue, '></' . Utils::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG . '>')) {
+                        throw new PregReplaceCallbackRerunException(function ($subject, $matches, $offsets) use($str) {
+                            $offsetMatch = $offsets[0];
+                            $strPos = \strpos($subject, \sprintf('%s>', $str), $offsetMatch > 0 ? $offsetMatch - 1 : 0) + \strlen($str);
+                            return \substr_replace($subject, '&gt;', $strPos, 1);
+                        });
+                    }
                 }
             }
             \libxml_clear_errors();
@@ -248,7 +282,7 @@ class Utils
     public static function legacy_html_attributes_parser($text)
     {
         $atts = [];
-        $pattern = '/([\\w-]+)\\s*=\\s*"([^"]*)"(?:\\s|$)|([\\w-]+)\\s*=\\s*\'([^\']*)\'(?:\\s|$)|([\\w-]+)\\s*=\\s*([^\\s\'"]+)(?:\\s|$)|"([^"]*)"(?:\\s|$)|\'([^\']*)\'(?:\\s|$)|(\\S+)(?:\\s|$)/';
+        $pattern = '/([\\w#:-]+)\\s*=\\s*"([^"]*)"(?:\\s|$)|([\\w#:-]+)\\s*=\\s*\'([^\']*)\'(?:\\s|$)|([\\w#:-]+)\\s*=\\s*([^\\s\'"]+)(?:\\s|$)|"([^"]*)"(?:\\s|$)|\'([^\']*)\'(?:\\s|$)|(\\S+)(?:\\s|$)/';
         $text = \preg_replace('/[\\x{00a0}\\x{200b}]+/u', ' ', $text);
         if (\preg_match_all($pattern, $text, $match, \PREG_SET_ORDER)) {
             foreach ($match as $m) {
@@ -287,10 +321,15 @@ class Utils
     public static function htmlAttributes($attributes)
     {
         $attributes = \array_map(function ($key) use($attributes) {
-            if (\is_bool($attributes[$key])) {
-                return $attributes[$key] ? $key : '';
+            $val = $attributes[$key];
+            if (\is_bool($val)) {
+                return $val ? $key : '';
             }
-            return $key . '="' . \htmlspecialchars($attributes[$key], \ENT_QUOTES, 'UTF-8') . '"';
+            $val = \htmlspecialchars($val, \ENT_QUOTES, 'UTF-8');
+            // Compatibility with VueJS
+            // See also https://github.com/vuejs/vue/issues/8805 and https://github.com/vuejs/vue/blob/8d3fce029f20a73d5d0b1ff10cbf6fa73c989e62/src/compiler/parser/html-parser.js#L38-L45
+            $val = \str_replace('&#039;', '&#39;', $val);
+            return \sprintf('%s="%s"', $key, $val);
         }, \array_keys($attributes));
         return \join(' ', \array_filter($attributes));
     }

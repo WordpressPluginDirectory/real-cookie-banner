@@ -19,28 +19,10 @@ class ScriptInlineMatcher extends AbstractMatcher
     public function match($match)
     {
         $result = $this->createResult($match);
-        $blockedBySyntaxSelector = [];
         if (!$result->isBlocked()) {
-            // Check if this script got blocked by a custom element blocker
-            foreach ($this->getBlockables() as $blockable) {
-                $foundSelectorSyntaxFinder = $blockable->findSelectorSyntaxFinderForMatch($match);
-                if ($foundSelectorSyntaxFinder !== null) {
-                    foreach ($foundSelectorSyntaxFinder->getAttributes() as $attributeInstance) {
-                        $blockedBySyntaxSelector[$attributeInstance->getAttribute()] = $match->getAttribute($attributeInstance->getAttribute());
-                    }
-                    $result->setBlocked([$blockable]);
-                    $result->setBlockedExpressions([$foundSelectorSyntaxFinder->getExpression()]);
-                }
-            }
-            // Still not blocked?
-            if (!$result->isBlocked()) {
-                return $result;
-            }
+            return $result;
         }
         $this->applyCommonAttributes($result, $match);
-        foreach ($blockedBySyntaxSelector as $linkAttribute => $link) {
-            $this->applyNewLinkElement($match, $linkAttribute, $link);
-        }
         // Example: SendInBlue could be blocked twice by URL in script and Selector Syntax
         if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_INLINE)) {
             $match->setAttribute(Constants::HTML_ATTRIBUTE_INLINE, $match->getScript());

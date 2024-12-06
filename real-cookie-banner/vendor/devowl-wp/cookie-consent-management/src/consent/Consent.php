@@ -125,6 +125,10 @@ class Consent
                 if ($service->getId() === $typeOrId) {
                     $found[] = ['cookie' => $service, 'relevance' => 10];
                 }
+            } elseif (\is_string($typeOrId) && $name === null && $host === null) {
+                if ($service->getUniqueName() === $typeOrId) {
+                    $found[] = ['cookie' => $service, 'relevance' => 10];
+                }
             } else {
                 $technicalDefinitions = $service->getTechnicalDefinitions() ?? [];
                 if (\count($technicalDefinitions) > 0) {

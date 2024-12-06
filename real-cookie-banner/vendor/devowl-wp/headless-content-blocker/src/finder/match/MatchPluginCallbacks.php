@@ -18,6 +18,12 @@ class MatchPluginCallbacks
     private $keepAlwaysAttributes = [];
     private $blockedMatchCallbacks = [];
     /**
+     * See `startTransaction()`.
+     *
+     * @var null|callable[]
+     */
+    private $transaction = null;
+    /**
      * C'tor.
      *
      * @param AbstractMatch $match
@@ -28,6 +34,35 @@ class MatchPluginCallbacks
         $this->match = $match;
     }
     /**
+     * Start a transaction. This allows to "delay" the addition of new callbacks through e.g. `addBlockedMatchCallback()`
+     * until the transaction is rolled back or committed.
+     */
+    public function startTransaction()
+    {
+        $this->transaction = [];
+    }
+    /**
+     * Commit a transaction. This means, all changes within the transaction will be applied.
+     */
+    public function commit()
+    {
+        if ($this->transaction !== null) {
+            $transactions = $this->transaction;
+            $this->transaction = null;
+            foreach ($transactions as $call) {
+                list($method, $args) = $call;
+                $this->{$method}(...$args);
+            }
+        }
+    }
+    /**
+     * Rollback a transaction. This means, all changes within the transaction will be discarded.
+     */
+    public function rollback()
+    {
+        $this->transaction = null;
+    }
+    /**
      * In some cases we need to keep the attributes as original instead of prefix it with `consent-original-`.
      * Keep in mind, that no external data should be loaded if the attribute is set!
      *
@@ -35,7 +70,11 @@ class MatchPluginCallbacks
      */
     public function addKeepAlwaysAttributes($attributes)
     {
-        $this->keepAlwaysAttributes = \array_merge($this->keepAlwaysAttributes, $attributes);
+        if ($this->transaction !== null) {
+            $this->transaction[] = ['addKeepAlwaysAttributes', [$attributes]];
+        } else {
+            $this->keepAlwaysAttributes = \array_merge($this->keepAlwaysAttributes, $attributes);
+        }
     }
     /**
      * Add a callable after a blocked match got found so you can alter the match again. Parameters:
@@ -45,7 +84,11 @@ class MatchPluginCallbacks
      */
     public function addBlockedMatchCallback($callback)
     {
-        $this->blockedMatchCallbacks[] = $callback;
+        if ($this->transaction !== null) {
+            $this->transaction[] = ['addBlockedMatchCallback', [$callback]];
+        } else {
+            $this->blockedMatchCallbacks[] = $callback;
+        }
     }
     /**
      * Run registered blocked-match callbacks.

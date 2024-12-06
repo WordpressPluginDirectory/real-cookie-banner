@@ -52,6 +52,8 @@ class FalsePositivesProcessor
      *
      * This would lead to duplicate entries in the scanner result list. Never show double-scanned elements when they e.g. caught by two rules
      * and a rerun through `Utils::preg_replace_callback_recursive`. In this case, we will modify the already existing scan entries' found expressions.
+     *
+     * @codeCoverageIgnore With the introduction of `findPotentialSelectorSyntaxFindersForMatch`, we have no test covering this case but we need it for backward compatibility.
      */
     public function removeDuplicateScannedItems()
     {
@@ -239,6 +241,9 @@ class FalsePositivesProcessor
             if ($markup !== null && !empty($entry->tag) && !empty($entry->blocked_url) && empty($entry->template) && !$entry->lock) {
                 $markup = $contentBlocker->modifyAny($markup->getContent());
                 if (\preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches)) {
+                    // With the introduction of `findPotentialSelectorSyntaxFindersForMatch`, we have no test covering this
+                    // case but we need it for backward compatibility.
+                    // @codeCoverageIgnoreStart
                     $entry->template = $consentIdMatches[1];
                     foreach ($scannableBlockables as $scannableBlockable) {
                         if ($scannableBlockable->getIdentifier() === $entry->template) {
@@ -246,6 +251,7 @@ class FalsePositivesProcessor
                             break;
                         }
                     }
+                    // @codeCoverageIgnoreEnd
                 }
             }
         }
@@ -279,7 +285,7 @@ class FalsePositivesProcessor
                 // Collect all found scan entries for this template
                 $foundEntriesForThisTemplate = [$scanEntry];
                 foreach ($this->entries as $anotherEntry) {
-                    if ($anotherEntry !== $scanEntry && $anotherEntry->template === $scanEntry->template) {
+                    if ($anotherEntry !== $scanEntry && $anotherEntry->template === $scanEntry->template && $anotherEntry->markup !== null && $anotherEntry->markup->getContent() !== $markup) {
                         $foundEntriesForThisTemplate[] = $anotherEntry;
                     }
                 }
@@ -288,7 +294,7 @@ class FalsePositivesProcessor
                 }
             }
         }
-        if (\count($convert)) {
+        if (\count($convert) > 0) {
             $added = [];
             foreach ($convert as $convertScanEntry) {
                 $key = \array_search($convertScanEntry, $this->entries, \true);

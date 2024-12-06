@@ -132,16 +132,16 @@ class RecommendedHooksMiddleware extends AbstractTemplateMiddleware
              * @since 3.16.0
              */
             $recommended = \apply_filters('RCB/Templates/Recommended', $recommended, $template);
-            // Run plugin integrations
-            if ($template instanceof ServiceTemplate) {
-                $integration = \DevOwl\RealCookieBanner\templates\ServiceTemplateTechnicalHandlingIntegration::applyFilters($template->identifier);
-                if ($integration->isIntegrated()) {
-                    $template->consumerData['technicalHandlingIntegration'] = ['name' => $integration->getPluginName(), 'codeOptIn' => $integration->getCodeOptIn(), 'codeOptOut' => $integration->getCodeOptOut()];
-                    $recommended = \true;
-                }
-            }
-            $template->consumerData['isRecommended'] = $recommended;
         }
+        // Run plugin integrations
+        if ($template instanceof ServiceTemplate) {
+            $integration = \DevOwl\RealCookieBanner\templates\ServiceTemplateTechnicalHandlingIntegration::applyFilters($template->identifier);
+            if ($integration->isIntegrated()) {
+                $template->consumerData['technicalHandlingIntegration'] = ['name' => $integration->getPluginName(), 'codeOptIn' => $integration->getCodeOptIn(), 'codeOptOut' => $integration->getCodeOptOut()];
+                $recommended = \true;
+            }
+        }
+        $template->consumerData['isRecommended'] = $recommended;
     }
     // Documented in AbstractTemplateMiddleware
     public function beforeUsingTemplate($template)

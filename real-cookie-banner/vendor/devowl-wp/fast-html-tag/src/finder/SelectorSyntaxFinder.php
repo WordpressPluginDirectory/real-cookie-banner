@@ -2,6 +2,7 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 /**
  * Find HTML tags by a selector syntax like `div[id="my-id"]`.
@@ -22,16 +23,16 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      *      $match[3] => Comparator (can be empty)
      *      $match[4] => Value (can be empty)
      *
-     * @see https://regex101.com/r/vlbn3Y/6
+     * @see https://regex101.com/r/vlbn3Y/8
      */
     const EXPRESSION_REGEXP = '/^([A-Za-z_-]+)(?:%s)+$/m';
     /**
      * PCRE does currently not support repeating capture groups, we need to capture this manually
      * by duplicating the attribute regular expression.
      *
-     * @see https://regex101.com/r/CMXjMl/3
+     * @see https://regex101.com/r/CMXjMl/5
      */
-    const EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE = '\\[([0-9A-Za-z_-]+)(?:(%s)"([^"]+)")?(?:\\s*:((?:(?!\\]\\s*\\[).)*))?\\]';
+    const EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE = '\\[([\\w#:-]+)(?:(%s)"([^"]+)")?(?:\\s*:((?:(?!\\]\\s*\\[).)*))?\\]';
     /**
      * C'tor.
      *
@@ -54,14 +55,12 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     public function createMatch($m)
     {
         list($tag, $attributes) = self::extractAttributesFromMatch($m);
-        list($linkAttribute, $link) = $this->getRegexpAttributesInMatch($attributes);
+        list($linkAttribute) = $this->getRegexpAttributesInMatch($attributes);
         // @codeCoverageIgnoreStart
         if ($linkAttribute === null) {
             return \false;
         }
         // @codeCoverageIgnoreEnd
-        // Append our original link attribute to the attributes
-        $attributes[$linkAttribute] = $link;
         $match = new SelectorSyntaxMatch($this, $m[0], $tag, $attributes, $linkAttribute);
         if ($this->matchesAttributes($attributes, $match)) {
             return $match;
@@ -72,16 +71,22 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      * Checks if the current attribute and value matches all our defined attributes.
      *
      * @param array $values
-     * @param SelectorSyntaxMatch $match
+     * @param AbstractMatch $match
+     * @param bool $satisfiesFunctions
      */
-    public function matchesAttributes($values, $match)
+    public function matchesAttributes($values, $match, $satisfiesFunctions = \true)
     {
+        // @codeCoverageIgnoreStart e.g. `@devowl-wp/headless-content-blocker` uses this API on non-matching tags
+        if ($this->getTag() !== $match->getTag()) {
+            return \false;
+        }
+        // @codeCoverageIgnoreEnd
         foreach ($this->attributes as $attribute) {
             $value = $values[$attribute->getAttribute()] ?? null;
             if (!$attribute->matchesComparator($value)) {
                 return \false;
             }
-            if (!$attribute->satisfiesFunctions($match)) {
+            if ($satisfiesFunctions && !$attribute->satisfiesFunctions($match)) {
                 return \false;
             }
         }
