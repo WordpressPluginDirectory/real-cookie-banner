@@ -132,8 +132,7 @@ class Utils
     public static function preg_replace_callback_recursive($pattern, $callback, $subject)
     {
         self::$inPregReplaceCallbackRecursive = \true;
-        $replayWithSubject = \false;
-        $f = function ($matchesWithOffsets) use($pattern, $callback, &$f, &$subject, &$replayWithSubject) {
+        $f = function ($matchesWithOffsets) use($pattern, $callback, &$f) {
             $matches = \array_column($matchesWithOffsets, 0);
             $current = $matches[0];
             try {
@@ -143,10 +142,10 @@ class Utils
                 $offsets = [];
                 foreach ($matchesWithOffsets as $match) {
                     // See https://www.php.net/manual/en/function.preg-match.php#106804
-                    $offsets[] = \strlen(\utf8_decode(\substr($subject, 0, $match[1])));
+                    $offsets[] = \strlen(\utf8_decode(\substr($current, 0, $match[1])));
                 }
-                $replayWithSubject = $e->fetchNewSubject($subject, $matches, $offsets);
-                return '';
+                $e->setMatches($matches, $offsets);
+                throw $e;
             }
             if ($current !== $result) {
                 $count = 0;
@@ -154,10 +153,15 @@ class Utils
             }
             return $result;
         };
-        $jitSafeResult = self::preg_jit_safe($pattern, function ($p) use($f, $subject) {
-            $count = 0;
-            return \preg_replace_callback($p, $f, $subject, -1, $count, \PREG_OFFSET_CAPTURE);
-        });
+        $replayWithSubject = \false;
+        try {
+            $jitSafeResult = self::preg_jit_safe($pattern, function ($p) use($f, $subject) {
+                $count = 0;
+                return \preg_replace_callback($p, $f, $subject, -1, $count, \PREG_OFFSET_CAPTURE);
+            });
+        } catch (PregReplaceCallbackRerunException $e) {
+            $replayWithSubject = $e->fetchNewSubject($subject);
+        }
         self::$inPregReplaceCallbackRecursive = \false;
         if (\is_string($replayWithSubject)) {
             $jitSafeResult = self::preg_replace_callback_recursive($pattern, $callback, $replayWithSubject);

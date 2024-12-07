@@ -19,6 +19,8 @@ class PregReplaceCallbackRerunException extends RuntimeException
      * @var callable
      */
     private $subject;
+    private $matches;
+    private $offsets;
     /**
      * C'tor.
      *
@@ -30,16 +32,25 @@ class PregReplaceCallbackRerunException extends RuntimeException
         $this->subject = $subject;
     }
     /**
+     * Set the matches and offsets.
+     *
+     * @param string[] $matches
+     * @param int[] $offsets
+     */
+    public function setMatches($matches, $offsets)
+    {
+        $this->matches = $matches;
+        $this->offsets = $offsets;
+    }
+    /**
      * Fetch the new subject.
      *
      * @param string $subject
-     * @param array $matches
-     * @param array $offsets
      * @return string
      */
-    public function fetchNewSubject($subject, $matches, $offsets)
+    public function fetchNewSubject($subject)
     {
         $fn = $this->subject;
-        return $fn($subject, $matches, $offsets);
+        return $fn($subject, $this->matches, $this->offsets);
     }
 }
