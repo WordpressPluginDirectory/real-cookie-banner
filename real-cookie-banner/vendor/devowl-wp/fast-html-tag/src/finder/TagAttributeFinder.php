@@ -38,8 +38,7 @@ class TagAttributeFinder extends AbstractRegexFinder
      */
     public function createMatch($m)
     {
-        list($tag, $attributes) = self::extractAttributesFromMatch($m);
-        list($linkAttribute, $link) = $this->getRegexpAttributesInMatch($attributes);
+        list($tag, $attributes, $linkAttribute, $link) = $this->extractAttributesFromMatch($m);
         // @codeCoverageIgnoreStart
         if ($linkAttribute === null) {
             return \false;
@@ -99,13 +98,14 @@ class TagAttributeFinder extends AbstractRegexFinder
      *
      * @param array $m
      */
-    public static function extractAttributesFromMatch($m)
+    public function extractAttributesFromMatch($m)
     {
         $tag = $m[2];
         $attributesString = \preg_split(\sprintf('/%s\\s/', $tag), $m[0], 2)[1];
         $attributesString = \preg_replace('/[\\/]?>$/', '', $attributesString);
         $attributes = Utils::parseHtmlAttributes($attributesString);
-        return [$tag, $attributes];
+        list($linkAttribute, $link) = $this->getRegexpAttributesInMatch($attributes);
+        return [$tag, $attributes, $linkAttribute, $link];
     }
     /**
      * Prepare the result match of a `createRegexp` regexp.

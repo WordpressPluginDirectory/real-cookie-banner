@@ -93,14 +93,16 @@ class SelectorSyntaxMatcher extends AbstractMatcher
         } else {
             $attributes = $match->getAttributes();
             $finder = $match->getFinder();
-            $matchesAttributes = $finder->matchesAttributes($attributes, $match);
-            $forceResult = $match->getData(self::DATA_FORCE_RESULT);
-            if ($matchesAttributes && $forceResult instanceof BlockedResult) {
-                foreach ($forceResult->getBlocked() as $blockable) {
-                    $result->addBlocked($blockable);
-                }
-                foreach ($forceResult->getBlockedExpressions() as $expression) {
-                    $result->addBlockedExpression($expression);
+            if ($finder->matchesAttributesLoose($match->getOriginalMatch())) {
+                $matchesAttributes = $finder->matchesAttributes($attributes, $match);
+                $forceResult = $match->getData(self::DATA_FORCE_RESULT);
+                if ($matchesAttributes && $forceResult instanceof BlockedResult) {
+                    foreach ($forceResult->getBlocked() as $blockable) {
+                        $result->addBlocked($blockable);
+                    }
+                    foreach ($forceResult->getBlockedExpressions() as $expression) {
+                        $result->addBlockedExpression($expression);
+                    }
                 }
             }
         }

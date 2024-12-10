@@ -92,7 +92,7 @@ class Utils
      */
     public static function isBase64DataUrl($str)
     {
-        if (\preg_match('/^data:(\\w+\\/\\w+);base64,(.*)$/', $str, $matches)) {
+        if (\strpos($str, 'data:') === 0 && \preg_match('/^data:(\\w+\\/\\w+);base64,(.*)$/', $str, $matches)) {
             $mime = $matches[1];
             $base64 = $matches[2];
             $decoded = \base64_decode($base64);
@@ -263,8 +263,16 @@ class Utils
                     if (self::$inPregReplaceCallbackRecursive && \is_string($nodeValue) && self::endsWith($nodeValue, '></' . Utils::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG . '>')) {
                         throw new PregReplaceCallbackRerunException(function ($subject, $matches, $offsets) use($str) {
                             $offsetMatch = $offsets[0];
-                            $strPos = \strpos($subject, \sprintf('%s>', $str), $offsetMatch > 0 ? $offsetMatch - 1 : 0) + \strlen($str);
-                            return \substr_replace($subject, '&gt;', $strPos, 1);
+                            // Check if there is a `/>` which would break the regex, too, and we need to replace it accordingly
+                            $strPosSubject = \strpos($subject, \sprintf('%s/>', $str), $offsetMatch > 0 ? $offsetMatch - 1 : 0);
+                            if ($strPosSubject !== \false) {
+                                $strPos = $strPosSubject + \strlen($str);
+                                return \substr_replace($subject, '/&gt;', $strPos, 2);
+                            } else {
+                                $strPosSubject = \strpos($subject, \sprintf('%s>', $str), $offsetMatch > 0 ? $offsetMatch - 1 : 0);
+                                $strPos = $strPosSubject + \strlen($str);
+                                return \substr_replace($subject, '&gt;', $strPos, 1);
+                            }
                         });
                     }
                 }

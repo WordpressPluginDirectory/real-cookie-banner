@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.6 (2024-12-09)
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.2</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* blank page on some pages with low memory (CU-8696x8wm0)
+
+
+##### Performance Improvements
+
+* speed up HTML parsing and blocking (CU-8696x8wm0)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.1.3</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Performance Improvements
+
+* speed up HTML parsing and blocking (CU-8696x8wm0)</details>
+
+
+
+
+
 ## 5.0.5 (2024-12-07)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.

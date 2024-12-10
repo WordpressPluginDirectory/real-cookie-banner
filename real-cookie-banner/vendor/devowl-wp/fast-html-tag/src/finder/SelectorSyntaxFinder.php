@@ -54,8 +54,11 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      */
     public function createMatch($m)
     {
-        list($tag, $attributes) = self::extractAttributesFromMatch($m);
-        list($linkAttribute) = $this->getRegexpAttributesInMatch($attributes);
+        // Short circuit in terms of performance
+        if (!$this->matchesAttributesLoose($m[0])) {
+            return \false;
+        }
+        list($tag, $attributes, $linkAttribute) = $this->extractAttributesFromMatch($m);
         // @codeCoverageIgnoreStart
         if ($linkAttribute === null) {
             return \false;
@@ -66,6 +69,24 @@ class SelectorSyntaxFinder extends TagAttributeFinder
             return $match;
         }
         return \false;
+    }
+    /**
+     * Check if the tag and attributes matches the selector syntax. It does not check for the exact value but only for the presence
+     * of the attribute and value.
+     *
+     * @param string $str
+     */
+    public function matchesAttributesLoose($str)
+    {
+        if (\strpos($str, $this->tag) === \false) {
+            return \false;
+        }
+        foreach ($this->attributes as $attribute) {
+            if (!$attribute->matchesComparatorLoose($str)) {
+                return \false;
+            }
+        }
+        return \true;
     }
     /**
      * Checks if the current attribute and value matches all our defined attributes.

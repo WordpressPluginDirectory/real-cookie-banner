@@ -75,7 +75,6 @@ abstract class AbstractMatcher
      */
     public function iterateBlockablesInString($result, $string, $useContainsRegularExpression = \false, $multilineRegexp = \false, $useRegularExpressionFromMap = null, $useBlockables = null)
     {
-        $expressionStrposCache = [];
         $cb = $this->getHeadlessContentBlocker();
         $allowMultiple = $cb->isAllowMultipleBlockerResults();
         $string = $this->prepareChunksFromString($string);
@@ -87,26 +86,12 @@ abstract class AbstractMatcher
                 if (!$useRegex) {
                     continue;
                 }
-                // Performance-boost: Extract the searchable strings for this expression, so we can first check for simple `contains` pattern
-                // Currently, the only supported wildcard is `*`, for which we can extract the words between asterisks.
-                if (!isset($expressionStrposCache[$expression]) && $useRegularExpressionFromMap === null) {
-                    if (\preg_match_all('/([^\\*]{1,})/m', $expression, $expressionStrposMatch, \PREG_SET_ORDER, 0) && \count($expressionStrposMatch) > 0) {
-                        $expressionStrposCache[$expression] = \array_column($expressionStrposMatch, 1);
-                    } else {
-                        // @codeCoverageIgnoreStart
-                        $expressionStrposCache[$expression] = \false;
-                        // @codeCoverageIgnoreEnd
-                    }
-                }
                 foreach ($string as $chunkString) {
                     // Before doing an expensive regular expression match, check if the string generally exists in our chunk
-                    $expressionStrpos = $expressionStrposCache[$expression] ?? \false;
-                    if ($expressionStrpos) {
-                        foreach ($expressionStrpos as $expressionStrposSingle) {
-                            if (\strpos($chunkString, $expressionStrposSingle) === \false) {
-                                continue 2;
-                            }
-                        }
+                    // Do not create the cache for custom maps as they can differ from expression -> regular expression mapping (e.g. `blockablesToHosts`)
+                    // This could lead to wrong `strpos` assertions in the inner `foreach`
+                    if ($useRegularExpressionFromMap === null && !$blockable->matchesExpressionLoose($expression, $chunkString)) {
+                        continue;
                     }
                     if (\preg_match($useRegex . ($multilineRegexp ? 'm' : ''), $chunkString)) {
                         // This link is definitely blocked by configuration

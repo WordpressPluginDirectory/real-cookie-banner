@@ -18,6 +18,7 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
      * @var SelectorSyntaxFinder[]
      */
     private $selectorSyntaxFinder = [];
+    private $expressionToStrposCache = null;
     private $regexp = ['wildcard' => [], 'contains' => []];
     private $headlessContentBlocker;
     /**
@@ -84,6 +85,38 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
         foreach ($blockers as $host) {
             $this->regexp['contains'][$host] = Utils::createRegexpPatternFromWildcardName('*' . $host . '*');
         }
+        $this->expressionToStrposCache = null;
+    }
+    /**
+     * It is a performance-boost to extract the searchable strings for this expression, so we can first check for simple `contains` pattern
+     * with `strpos` instead of expensive `preg_match`.
+     *
+     * @param string $expression
+     * @param string $str
+     */
+    public function matchesExpressionLoose($expression, $str)
+    {
+        if ($this->expressionToStrposCache === null) {
+            $this->expressionToStrposCache = [];
+            foreach (\array_keys($this->regexp['wildcard']) as $originalExpression) {
+                if (\preg_match_all('/([^\\*]{1,})/m', $originalExpression, $expressionStrposMatch, \PREG_SET_ORDER, 0) && \count($expressionStrposMatch) > 0) {
+                    $this->expressionToStrposCache[$originalExpression] = \array_column($expressionStrposMatch, 1);
+                } else {
+                    // @codeCoverageIgnoreStart
+                    $this->expressionToStrposCache[$originalExpression] = \false;
+                    // @codeCoverageIgnoreEnd
+                }
+            }
+        }
+        $expressionStrpos = $this->expressionToStrposCache[$expression] ?? \false;
+        if ($expressionStrpos) {
+            foreach ($expressionStrpos as $expressionStrposSingle) {
+                if (\strpos($str, $expressionStrposSingle) === \false) {
+                    return \false;
+                }
+            }
+        }
+        return \true;
     }
     /**
      * Find a `SyntaxSelectorFinder` for a given `AbstractMatch`.
@@ -111,7 +144,7 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
                 return null;
             }
             // @codeCoverageIgnoreEnd
-            if ($selectorSyntaxFinder->matchesAttributes($useMatch->getAttributes(), $useMatch)) {
+            if ($selectorSyntaxFinder->matchesAttributesLoose($useMatch->getOriginalMatch()) && $selectorSyntaxFinder->matchesAttributes($useMatch->getAttributes(), $useMatch)) {
                 return $selectorSyntaxFinder;
             }
         }

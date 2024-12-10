@@ -73,6 +73,28 @@ class SelectorSyntaxAttribute
         }
     }
     /**
+     * Loose comparator that does not check for the exact value but only for the presence of the attribute and value.
+     *
+     * @param string $str
+     */
+    public function matchesComparatorLoose($str)
+    {
+        switch ($this->comparator) {
+            case self::COMPARATOR_EXISTS:
+                return \strpos($str, $this->attribute) !== \false;
+            case SelectorSyntaxAttribute::COMPARATOR_EQUAL:
+            case SelectorSyntaxAttribute::COMPARATOR_STARTS_WITH:
+            case SelectorSyntaxAttribute::COMPARATOR_CONTAINS:
+            case SelectorSyntaxAttribute::COMPARATOR_ENDS_WITH:
+                return \is_string($this->attribute) && \is_string($this->value) && \strpos($str, $this->attribute) !== \false && \strpos($str, $this->value) !== \false;
+            case SelectorSyntaxAttribute::COMPARATOR_REGULAR_EXPRESSION:
+                return \true;
+            // @codeCoverageIgnoreStart
+            default:
+                return \false;
+        }
+    }
+    /**
      * Checks if the current attribute satisfies the passed functions.
      *
      * @param AbstractMatch $match
