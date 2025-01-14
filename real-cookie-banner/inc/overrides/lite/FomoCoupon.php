@@ -32,6 +32,17 @@ class FomoCoupon
      */
     protected function fetchFomoCoupon()
     {
+        // Uncomment for testing
+        /*return [
+              'id' => 'fake-id-123',
+              'clientUuid' => 'fake-client-uuid-456',
+              'hostname' => 'fake.hostname.com',
+              'product' => 'fake-product',
+              'coupon' => 'FAKECOUPON2023',
+              'valueInPercent' => 10,
+              'validUntil' => '2026-12-31T23:59:59Z',
+              'isUsed' => false,
+          ];*/
         $license = Core::getInstance()->getRpmInitiator()->getPluginUpdater()->getCurrentBlogLicense();
         $licenseActivation = $license->getActivation();
         $code = $licenseActivation->getCode();
@@ -87,6 +98,18 @@ class FomoCoupon
     public function revisionCurrent($arr)
     {
         $arr['fomo_coupon'] = $this->fetchFomoCoupon();
+        return $arr;
+    }
+    /**
+     * Output the FOMO coupon to the pages where also needed where the current revision is not available.
+     *
+     * @param array $arr
+     */
+    public function localize($arr)
+    {
+        if (\is_customize_preview()) {
+            $arr['fomoCoupon'] = $this->fetchFomoCoupon();
+        }
         return $arr;
     }
     /**

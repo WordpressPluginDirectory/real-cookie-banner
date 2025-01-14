@@ -92,7 +92,6 @@ class TemplateConsumers
             $serviceConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\PersistTranslationsMiddlewareImpl($serviceConsumer));
             $serviceConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\TranslationsMiddlewareImpl($serviceConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\ConsumerMiddleware($blockerConsumer));
-            $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\RecommendedHooksMiddleware($blockerConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\PersistTranslationsMiddlewareImpl($blockerConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\TranslationsMiddlewareImpl($blockerConsumer));
             $blockerConsumer->addMiddleware(new \DevOwl\RealCookieBanner\templates\ServiceCloudConsumerExternalUrlNotifierMiddlewareImpl($blockerConsumer));

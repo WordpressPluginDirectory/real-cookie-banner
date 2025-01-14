@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cache-invalidate",
-    "version": "1.17.16",
+    "version": "1.18.0",
     "private": true,
     "description": "Provide a single entry point to trigger cache invalidation of known caching plugins",
     "homepage": "https://devowl.io",

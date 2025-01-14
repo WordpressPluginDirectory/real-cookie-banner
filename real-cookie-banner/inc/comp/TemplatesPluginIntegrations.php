@@ -54,11 +54,15 @@ class TemplatesPluginIntegrations
     const OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS = 'woocommerce_google_analytics_pro_settings';
     const OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS = 'seopress_google_analytics_option_name';
     const OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION = 'woocommerce_feature_order_attribution_enabled';
+    const OPTION_NAME_CF_TURNSTILE_LOGIN = 'cfturnstile_login';
+    const OPTION_NAME_CF_TURNSTILE_REGISTER = 'cfturnstile_register';
+    const OPTION_NAME_CF_TURNSTILE_RESET = 'cfturnstile_reset';
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
     const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION];
     const ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS];
+    const ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_CF_TURNSTILE_LOGIN, self::OPTION_NAME_CF_TURNSTILE_REGISTER, self::OPTION_NAME_CF_TURNSTILE_RESET, self::OPTION_NAME_USERS_CAN_REGISTER];
     const INVALIDATE_WHEN_SITE_OPTION_CHANGES = [self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL];
     /**
      * Singleton instance.
@@ -85,10 +89,18 @@ class TemplatesPluginIntegrations
             \wp_rcb_invalidate_templates_cache();
         };
         $addedHomeUrl = \false;
-        $callbackAddHomeUrlToScanner = function () use(&$addedHomeUrl) {
+        $scanner = Core::getInstance()->getScanner();
+        $callbackAddHomeUrlToScanner = function () use(&$addedHomeUrl, $scanner) {
             if (!$addedHomeUrl) {
                 $addedHomeUrl = \true;
-                Core::getInstance()->getScanner()->addUrlsToQueue([\home_url()]);
+                $scanner->addUrlsToQueue([\home_url()]);
+            }
+        };
+        $addedUserLoginUrls = \false;
+        $callbackAddUserLoginUrlsToScanner = function () use(&$addedUserLoginUrls, $scanner) {
+            if (!$addedUserLoginUrls) {
+                $addedUserLoginUrls = \true;
+                $scanner->addUrlsToQueue($scanner->getUserLoginUrls());
             }
         };
         foreach (self::INVALIDATE_WHEN_OPTION_CHANGES as $optionName) {
@@ -101,11 +113,17 @@ class TemplatesPluginIntegrations
             \add_action('add_option_' . $optionName, $callbackAddHomeUrlToScanner);
             \add_action('delete_option_' . $optionName, $callbackAddHomeUrlToScanner);
         }
+        foreach (self::ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES as $optionName) {
+            \add_action('update_option_' . $optionName, $callbackAddUserLoginUrlsToScanner);
+            \add_action('add_option_' . $optionName, $callbackAddUserLoginUrlsToScanner);
+            \add_action('delete_option_' . $optionName, $callbackAddUserLoginUrlsToScanner);
+        }
         foreach (self::INVALIDATE_WHEN_SITE_OPTION_CHANGES as $optionName) {
             \add_action('update_site_option_' . $optionName, $callback);
             \add_action('add_site_option_' . $optionName, $callback);
             \add_action('delete_site_option_' . $optionName, $callback);
         }
+        \add_action('wpforms_settings_updated', $callback);
         $this->serverSideConsentInjection();
     }
     /**
@@ -137,6 +155,18 @@ class TemplatesPluginIntegrations
             \add_filter('woocommerce_ga_gtag_consent_modes', function ($modes) {
                 return GoogleConsentMode::getInstance()->isEnabled() ? [] : $modes;
             });
+        }
+        // WPForms
+        if (\wp_doing_ajax() && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], ['wpforms_submit'], \true)) {
+            \add_filter('wpforms_setting', function ($value, $key) {
+                if (\in_array($key, ['gdpr', 'gdpr-disable-details'], \true)) {
+                    $cookieOptIn = \wp_rcb_consent_given('http', '_wpfuuid', '*')['cookieOptIn'];
+                    if (!$cookieOptIn) {
+                        return \true;
+                    }
+                }
+                return $value;
+            }, 10, 2);
         }
     }
     /**
@@ -182,9 +212,6 @@ class TemplatesPluginIntegrations
     public function templates_cookies_recommended($recommended, $identifier)
     {
         switch ($identifier) {
-            case 'wordpress-user-login':
-                $recommended = \get_option(self::OPTION_NAME_USERS_CAN_REGISTER) > 0;
-                break;
             case 'cloudflare':
                 $recommended = isset($_SERVER['HTTP_CF_CONNECTING_IP']) && !empty($_SERVER['HTTP_CF_CONNECTING_IP']);
                 break;
@@ -220,6 +247,14 @@ class TemplatesPluginIntegrations
             case 'exact-metrics-analytics-4':
                 if (\function_exists('exactmetrics_get_v4_id') && !empty(\exactmetrics_get_v4_id())) {
                     $recommended = \true;
+                }
+                break;
+            case 'wpforms':
+                if (\function_exists('wpforms_setting')) {
+                    $gdprEnhancements = \wpforms_setting('gdpr', \false);
+                    $gdprDisableUuid = $gdprEnhancements && \wpforms_setting('gdpr-disable-uuid');
+                    $gdprDisableIp = $gdprEnhancements && \wpforms_setting('gdpr-disable-details');
+                    $recommended = !$gdprDisableUuid || !$gdprDisableIp;
                 }
                 break;
             default:

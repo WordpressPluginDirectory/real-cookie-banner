@@ -152,6 +152,7 @@ class ComposerStaticInit952f591b010f2bab40debe9421f04622
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\CustomCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/CustomCacheImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\DebloatImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/DebloatImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\EnhanceComNginxFastCgiImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/EnhanceComNginxFastCgiImpl.php',
+        'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\FlyingPressImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/FlyingPressImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\HummingbirdImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/HummingbirdImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\IonosPerformanceCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/IonosPerformanceCacheImpl.php',
         'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\LiteSpeedCacheImpl' => __DIR__ . '/..' . '/devowl-wp/cache-invalidate/src/caches/LiteSpeedCacheImpl.php',

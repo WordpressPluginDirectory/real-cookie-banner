@@ -3,7 +3,7 @@
 namespace DevOwl\RealCookieBanner\templates;
 
 use DevOwl\RealCookieBanner\comp\TemplatesPluginIntegrations;
-use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\AbstractTemplateMiddleware;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\AbstractPoolMiddleware;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\BlockerTemplate;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\ServiceTemplate;
 // @codeCoverageIgnoreStart
@@ -14,10 +14,10 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\Service
  * Set `recommended` through a hook / filter for both service and blocker templates.
  * @internal
  */
-class RecommendedHooksMiddleware extends AbstractTemplateMiddleware
+class RecommendedHooksMiddleware extends AbstractPoolMiddleware
 {
-    // Documented in AbstractTemplateMiddleware
-    public function beforePersistTemplate($template, &$allTemplates)
+    // Documented in AbstractPoolMiddleware
+    public function beforePersistTemplateWithinPool($template, &$allTemplates)
     {
         $recommended = $template->consumerData['isRecommended'] ?? \false;
         if (!$recommended) {
@@ -138,13 +138,20 @@ class RecommendedHooksMiddleware extends AbstractTemplateMiddleware
             $integration = \DevOwl\RealCookieBanner\templates\ServiceTemplateTechnicalHandlingIntegration::applyFilters($template->identifier);
             if ($integration->isIntegrated()) {
                 $template->consumerData['technicalHandlingIntegration'] = ['name' => $integration->getPluginName(), 'codeOptIn' => $integration->getCodeOptIn(), 'codeOptOut' => $integration->getCodeOptOut()];
+                // Persist the integration data in the template consumer data of the blocker template, too. This allows
+                // to show the technical handling integration in the scanner for found blocker templates.
+                foreach ($allTemplates[BlockerTemplate::class] as $blockerTemplate) {
+                    if ($blockerTemplate->identifier === $template->identifier) {
+                        $blockerTemplate->consumerData['technicalHandlingIntegration'] = $template->consumerData['technicalHandlingIntegration'];
+                    }
+                }
                 $recommended = \true;
             }
         }
         $template->consumerData['isRecommended'] = $recommended;
     }
-    // Documented in AbstractTemplateMiddleware
-    public function beforeUsingTemplate($template)
+    // Documented in AbstractPoolMiddleware
+    public function afterPersistTemplatesWithinPool($consumer, &$typeClassToAllTemplates)
     {
         // Silence is golden.
     }

@@ -30,7 +30,11 @@ class Query
      *
      * Arguments:
      * - `[limit]`
-     * - `[type=all|pending|failure]`
+     * - `[type=all|pending|failure|pending-all]`
+     *      - `all` reads all jobs
+     *      - `pending` reads all pending jobs and respects the locking
+     *      - `failure` reads all failed jobs
+     *      - `pending-all` reads all pending jobs, even if they are locked
      * - `[jobType]`
      * - `[dataContains]` Allows you in a very basic way to check if a job exists by `data LIKE '%YOUR_STRING%'`
      * - `[ids]` An array of Job ids which should be read
@@ -74,7 +78,11 @@ class Query
         } else {
             switch ($type) {
                 case 'pending':
-                    $where .= ' AND process < process_total AND runs < (retries + 1) AND CURRENT_TIMESTAMP >= lock_until';
+                case 'pending-all':
+                    $where .= ' AND process < process_total AND runs < (retries + 1)';
+                    if ($type === 'pending') {
+                        $where .= ' AND CURRENT_TIMESTAMP >= lock_until';
+                    }
                     break;
                 case 'failure':
                     $where .= ' AND process < process_total AND runs > retries';
@@ -105,7 +113,7 @@ class Query
                 $where .= $wpdb->prepare(" AND (capability IS NULL OR %s LIKE CONCAT('%%[', capability, ']%%'))", $myCapabilities);
                 // phpcs:enable WordPress.DB
             } else {
-                $where .= ' AND 1=0';
+                $where .= ' AND (1=0 || capability IS NULL)';
             }
         }
         // phpcs:disable WordPress.DB
@@ -214,7 +222,7 @@ class Query
      */
     public function readCurrentJobs($omitClientData = \false)
     {
-        $jobs = $this->read(['type' => 'all', 'omitClientData' => $omitClientData, 'groupBy' => 'type']);
+        $jobs = $this->read(['type' => 'pending-all', 'omitClientData' => $omitClientData, 'groupBy' => 'type']);
         $result = [];
         foreach ($jobs as $job) {
             $result[$job->type] = $job;

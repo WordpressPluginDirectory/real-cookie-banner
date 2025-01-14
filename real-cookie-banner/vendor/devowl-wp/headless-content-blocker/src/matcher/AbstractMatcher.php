@@ -18,6 +18,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 abstract class AbstractMatcher
 {
     private $headlessContentBlocker;
+    private $currentlyInIterateBlockablesInString = \false;
     /**
      * C'tor.
      *
@@ -94,6 +95,17 @@ abstract class AbstractMatcher
                         continue;
                     }
                     if (\preg_match($useRegex . ($multilineRegexp ? 'm' : ''), $chunkString)) {
+                        $pluginResult = \true;
+                        if (!$this->currentlyInIterateBlockablesInString) {
+                            $this->currentlyInIterateBlockablesInString = \true;
+                            $pluginResult = $this->getHeadlessContentBlocker()->runBeforeSetBlockedInResultCallback($result, $blockable, $expression, $this);
+                            $this->currentlyInIterateBlockablesInString = \false;
+                        }
+                        // @codeCoverageIgnoreStart
+                        if ($pluginResult === \false) {
+                            continue;
+                        }
+                        // @codeCoverageIgnoreEnd
                         // This link is definitely blocked by configuration
                         if (!$result->isBlocked()) {
                             $result->setBlocked([$blockable]);

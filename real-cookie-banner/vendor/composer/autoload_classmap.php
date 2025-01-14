@@ -38,6 +38,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\CustomCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/CustomCacheImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\DebloatImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/DebloatImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\EnhanceComNginxFastCgiImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/EnhanceComNginxFastCgiImpl.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\FlyingPressImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/FlyingPressImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\HummingbirdImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/HummingbirdImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\IonosPerformanceCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/IonosPerformanceCacheImpl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\CacheInvalidate\\caches\\LiteSpeedCacheImpl' => $vendorDir . '/devowl-wp/cache-invalidate/src/caches/LiteSpeedCacheImpl.php',

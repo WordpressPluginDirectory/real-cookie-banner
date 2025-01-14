@@ -235,10 +235,19 @@ abstract class AbstractConsent extends BaseSettings
             if (empty($transaction->getTcfString()) && $this->getSettings()->getTcf()->isActive() && !empty($defaultTcfString)) {
                 $transaction->setTcfString($defaultTcfString);
             }
+            /**
+             * When bannerless consent is enabled, we use the `legitimateInterest` consent type as we recommend the
+             * website operator to create the informed consent for the legitimate interest in form of a cookie policy.
+             * The legitimate interest is in general to required to be "accepted" by the user and we need to provide
+             * an opt-out.
+             *
+             * @see https://support.google.com/adsense/answer/14893312?hl=de
+             */
+            $useConsent = 'legitimateInterest';
             if (empty($consent->getUuid())) {
-                $transaction->setDecision($consent->sanitizeDecision('essentials'));
+                $transaction->setDecision($consent->sanitizeDecision($useConsent));
             } else {
-                $transaction->setDecision($consent->optInOrOptOutExistingDecision($consent->getDecision(), 'essentials', 'optIn'));
+                $transaction->setDecision($consent->optInOrOptOutExistingDecision($consent->getDecision(), $useConsent, 'optIn'));
             }
             return \true;
         }

@@ -3,6 +3,132 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.7 (2025-01-14)
+
+
+### Bug Fixes
+
+* compatibility with Brix modal and visual content blockers
+* compatibility with Routiz / Brikks theme and Google Maps embeds (CU-8696zdp8b)
+* compatibility with WPForms (CU-apxdwt)
+* dropdown for all queriable post types does not work Custom Post Types without description (CU-869719q4x)
+* recommended services should mark the content blocker as recommended, too (CU-u9p1w9)
+* scan also the login URLs (CU-8696xvnk6)
+* set default api documentation version to 1.0.0 to improve UX on api docs (CU-869727naj)
+* show fomo coupon in free version in customizer (CU-8697e3hnp)
+
+
+### Maintenance
+
+* add security hashes (CU-861mmp30r)
+* update TCF vendors for Google AdSense network (CU-8694q1nfu)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.0</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Features
+
+* integration into FlyingPress (CU-8696uzcjp)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.3</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* include legitimate interest services when implicit bannerless consent is given (CU-8697cpm6k)
+* wp_rcb_consent_given API in PHP returns wrong consentGiven when service does not exist (CU-8694x4tnx)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.3</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* allow selector syntax attributes matching quotes with backslashed quotes (CU-gt22gk)
+* allow wildcard-tag with asterisk in selector syntax (CU-gt22gk)
+
+
+##### Maintenance
+
+* remove console.log (CU-8696heugb)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.1.4</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* allow wildcard-tag with asterisk in selector syntax (CU-gt22gk)
+* new plugin method beforeSetBlockedInResult (CU-8696heugb)
+
+
+##### Maintenance
+
+* make processMatch public method (CU-8696heugb)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.0.1</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* delegate click to unblocked nodes after all resources are loaded (CU-gt22gk)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.3</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* recommended services should mark the content blocker as recommended, too (CU-u9p1w9)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.31</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* remove potential whitespaces on license keys to improve UX (CU-86974pd8z)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.0.3</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Bug Fixes
+
+* show current working URL in scanner (CU-8696xvnk6)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.2</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* recommended services should mark the content blocker as recommended, too (CU-u9p1w9)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* ensure to retry on locked component after 2,5 minutes (CU-8695kguk7)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.2</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Styles
+
+* cookie banner language switcher is not responsive (CU-86971prz3)</details>
+
+
+
+
+
 ## 5.0.6 (2024-12-09)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.

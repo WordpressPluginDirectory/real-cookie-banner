@@ -51,6 +51,7 @@ class HeadlessContentBlocker extends FastHtmlTag
     private $inlineStyleBlockRuleByCallback = [];
     private $visualParentCallback = [];
     private $blockableStringExpressionCallback = [];
+    private $beforeSetBlockedInResultCallback = [];
     private $replaceAlwaysAttributes = ['iframe' => ['sandbox'], 'script' => ['type'], 'style' => ['type']];
     private $visualParentIfClass = [];
     private $allowMultipleBlockerResults = \false;
@@ -143,6 +144,7 @@ class HeadlessContentBlocker extends FastHtmlTag
         $this->addInlineStyleModifyDocumentsCallback([$plugin, 'inlineStyleModifyDocuments']);
         $this->addInlineStyleBlockRuleCallback([$plugin, 'inlineStyleBlockRule']);
         $this->addBlockableStringExpressionCallback([$plugin, 'blockableStringExpression']);
+        $this->addBeforeSetBlockedInResultCallback([$plugin, 'beforeSetBlockedInResult']);
         return $plugin;
     }
     /**
@@ -351,6 +353,15 @@ class HeadlessContentBlocker extends FastHtmlTag
         $this->blockableStringExpressionCallback[] = $callback;
     }
     /**
+     * Add a callable before an blockable and expression gets added to a `BlockedResult`.
+     *
+     * @param callable $callback
+     */
+    public function addBeforeSetBlockedInResultCallback($callback)
+    {
+        $this->beforeSetBlockedInResultCallback[] = $callback;
+    }
+    /**
      * A set of HTML tags => attribute names which should always prefix with `consent-original-`.
      *
      * @param string[][] $tagToAttributesMap
@@ -491,7 +502,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
      */
-    protected function processMatch($matcher, $match)
+    public function processMatch($matcher, $match)
     {
         $originalMatch = $match->getOriginalMatch();
         $rerunExceptionDispatcher = [];
@@ -750,6 +761,28 @@ class HeadlessContentBlocker extends FastHtmlTag
             $expression = $callback($expression, $blockable);
         }
         return $expression;
+    }
+    /**
+     * Run registered callbacks before a blockable and expression gets added to a `BlockedResult`.
+     *
+     * @param BlockedResult $result
+     * @param AbstractBlockable $blockable
+     * @param string $expression
+     * @param AbstractMatcher $matcher
+     * @return boolean
+     */
+    public function runBeforeSetBlockedInResultCallback($result, $blockable, $expression, $matcher)
+    {
+        $returnResult = \true;
+        foreach ($this->beforeSetBlockedInResultCallback as $callback) {
+            $returnResult = $callback($result, $blockable, $expression, $matcher);
+            // @codeCoverageIgnoreStart
+            if ($returnResult === \false) {
+                break;
+            }
+            // @codeCoverageIgnoreEnd
+        }
+        return $returnResult;
     }
     /**
      * Add a callback which should throw an `Exception` when the content blocker is not setup.

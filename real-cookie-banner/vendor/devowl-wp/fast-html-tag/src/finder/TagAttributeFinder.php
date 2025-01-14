@@ -160,6 +160,6 @@ class TagAttributeFinder extends AbstractRegexFinder
      */
     public static function createRegexp($searchTags, $searchAttributes)
     {
-        return \sprintf('/(<(%s)(?:\\s[^>]*?[\\s"\']|\\s))(?<=[\\s"\'])(?:(%s)(?!\\s*?=\\s*?[\\\\]?(?:&quot|&#039)\\b))(?:\\s*?=\\s*?([\\"\']??)([^\\4]*?)(\\4[^>]*?>)|((?=\\s+?|>)[^>]*?>))/si', \count($searchTags) > 0 ? \join('|', $searchTags) : '[A-Za-z_-]+', \join('|', $searchAttributes));
+        return \sprintf('/(<(%s)(?:\\s[^>]*?[\\s"\']|\\s))(?<=[\\s"\'])(?:(%s)(?!\\s*?=\\s*?[\\\\]?(?:&quot|&#039)\\b))(?:\\s*?=\\s*?([\\"\']??)([^\\4]*?)(\\4[^>]*?>)|((?=\\s+?|>)[^>]*?>))/si', \count($searchTags) > 0 && !\in_array('*', $searchTags, \true) ? \join('|', $searchTags) : '[A-Za-z_-]+', \join('|', $searchAttributes));
     }
 }

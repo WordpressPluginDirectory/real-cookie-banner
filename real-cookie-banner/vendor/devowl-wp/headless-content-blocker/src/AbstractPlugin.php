@@ -187,6 +187,19 @@ abstract class AbstractPlugin
         return $expression;
     }
     /**
+     * Allows to add an additional check before a blockable and expression gets added to a `BlockedResult`.
+     *
+     * @param BlockedResult $result
+     * @param AbstractBlockable $blockable
+     * @param string $expression
+     * @param AbstractMatcher $matcher
+     * @return boolean
+     */
+    public function beforeSetBlockedInResult($result, $blockable, $expression, $matcher)
+    {
+        return \true;
+    }
+    /**
      * Getter.
      */
     public final function getHeadlessContentBlocker()

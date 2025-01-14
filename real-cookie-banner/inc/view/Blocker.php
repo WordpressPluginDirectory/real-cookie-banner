@@ -77,6 +77,8 @@ class Blocker
         '.mfp-hide',
         // [Plugin Comp] Thrive Architect lightbox
         'div[id^="tve_thrive_lightbox_"]',
+        // [Plugin Comp] Bricks
+        '.brxe-xpromodalnestable',
     ];
     /**
      * See `disableDeduplicateExceptions` parameter in `createVisual` for more information.

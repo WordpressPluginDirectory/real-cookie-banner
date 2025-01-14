@@ -31,5 +31,6 @@ trait Core
     public function overrideInit()
     {
         \add_filter('RCB/Revision/Current', [new \DevOwl\RealCookieBanner\lite\FomoCoupon(), 'revisionCurrent']);
+        \add_filter('RCB/Localize', [new \DevOwl\RealCookieBanner\lite\FomoCoupon(), 'localize']);
     }
 }

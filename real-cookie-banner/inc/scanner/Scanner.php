@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Cache;
 use DevOwl\RealCookieBanner\comp\ComingSoonPlugins;
+use DevOwl\RealCookieBanner\comp\TemplatesPluginIntegrations;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
@@ -43,6 +44,7 @@ class Scanner
     const QUERY_ARG_FORCE_SITEMAP = 'rcb-force-sitemap';
     private $query;
     private $onChangeDetection;
+    private $isActiveCache = null;
     /**
      * C'tor.
      *
@@ -60,7 +62,7 @@ class Scanner
      */
     public function force_blocker_enabled($enabled)
     {
-        return isset($_GET[self::QUERY_ARG_TOKEN]) && Core::getInstance()->getRealQueue()->currentUserAllowedToQuery() ? \true : $enabled;
+        return $this->isActive() ? \true : $enabled;
     }
     /**
      * All templates and external URLs got catched, let's persist them to database.
@@ -89,7 +91,11 @@ class Scanner
          *
          * @var BlockableScanner
          */
-        $contentBlockerScanner = Core::getInstance()->getBlocker()->getHeadlessContentBlocker()->getPluginsByClassName(BlockableScanner::class)[0];
+        $contentBlockerScanner = Core::getInstance()->getBlocker()->getHeadlessContentBlocker()->getPluginsByClassName(BlockableScanner::class)[0] ?? null;
+        // This could be the case in WP REST API requests
+        if ($contentBlockerScanner === null) {
+            return;
+        }
         $contentBlockerScanner->filterFalsePositives();
         $scanEntries = $contentBlockerScanner->flushResults();
         // Persist scan entries to database but only when the current URL is not a `/wp-admin` URL.
@@ -304,7 +310,19 @@ class Scanner
      */
     public function isActive()
     {
-        return isset($_GET[self::QUERY_ARG_TOKEN]) && Core::getInstance()->getRealQueue()->currentUserAllowedToQuery();
+        if ($this->isActiveCache === null) {
+            $requestsScan = isset($_GET[self::QUERY_ARG_TOKEN]);
+            $this->isActiveCache = $requestsScan && Core::getInstance()->getRealQueue()->currentUserAllowedToQuery();
+            if ($requestsScan && !$this->isActiveCache && isset($_GET[self::QUERY_ARG_JOB_ID])) {
+                // Check if the requested job ID exists and is a loopback request, so we allow it
+                $jobId = \intval($_GET[self::QUERY_ARG_JOB_ID]);
+                $job = $jobId > 0 ? Core::getInstance()->getRealQueue()->getQuery()->fetchById($jobId) : null;
+                if ($job !== null && \property_exists($job->data, 'isLoopback') && $job->data->isLoopback) {
+                    $this->isActiveCache = \true;
+                }
+            }
+        }
+        return $this->isActiveCache;
     }
     /**
      * Force sitemaps in
@@ -341,9 +359,16 @@ class Scanner
     public function addUrlsToQueue($urls, $purgeUnused = \false)
     {
         global $wpdb;
+        $userLoginUrls = $this->getUserLoginUrls();
         if ($purgeUnused) {
-            $urls = \array_values(\array_merge(ComingSoonPlugins::getInstance()->getComputedUrlsForSitemap(), $urls));
+            $urls = \array_values(\array_merge(ComingSoonPlugins::getInstance()->getComputedUrlsForSitemap(), $userLoginUrls, $urls));
         }
+        $urls = \array_values(\array_map(function ($url) use($userLoginUrls) {
+            if (\in_array($url, $userLoginUrls, \true)) {
+                return ['url' => $url, 'isLoopback' => \true, 'allowFailure' => \true];
+            }
+            return $url;
+        }, $urls));
         // In unlicensed state we cannot start the scanner as we do not have any templates available
         if (!Core::getInstance()->isLicenseActive()) {
             return 0;
@@ -356,7 +381,10 @@ class Scanner
         if ($purgeUnused) {
             $persist->startGroup();
         }
-        foreach ($urls as $url) {
+        foreach ($urls as $urlRow) {
+            $args = \wp_parse_args(\is_string($urlRow) ? ['url' => $urlRow] : $urlRow, ['url' => '', 'isLoopback' => \false, 'allowFailure' => \false]);
+            $url = $args['url'];
+            $isLoopback = $args['isLoopback'];
             if (\filter_var($url, \FILTER_VALIDATE_URL)) {
                 // Check if this URL belongs to our current installation with a loose "contains" check
                 // from the original home URL as external URLs could never be scanned due to CORS errors.
@@ -378,13 +406,17 @@ class Scanner
                 $job->type = self::REAL_QUEUE_TYPE;
                 $job->data = new stdClass();
                 $job->data->url = $url;
+                $job->data->isLoopback = $isLoopback;
+                $job->data->allowFailure = $args['allowFailure'];
                 $job->retries = 3;
                 $persist->addJob($job);
             }
         }
         if ($purgeUnused) {
             // This is a complete sitemap
-            $this->purgeUnused($urls);
+            $this->purgeUnused(\array_map(function ($url) {
+                return \is_array($url) ? $url['url'] : $url;
+            }, $urls));
             Cache::getInstance()->invalidate();
             // Update URLs in existing scanner results to avoid issues when a website got cloned (e.g. `source_url_hash` represents the old URL)
             $table_name = $this->getTableName(\DevOwl\RealCookieBanner\scanner\Persist::TABLE_NAME);
@@ -525,6 +557,16 @@ class Scanner
             }
             return $option;
         });
+    }
+    /**
+     * Get user login URLs like login, register and lost password.
+     */
+    public function getUserLoginUrls()
+    {
+        if (\get_option(TemplatesPluginIntegrations::OPTION_NAME_USERS_CAN_REGISTER)) {
+            return [\wp_login_url(), \wp_lostpassword_url(), \wp_registration_url()];
+        }
+        return [];
     }
     /**
      * Getter.

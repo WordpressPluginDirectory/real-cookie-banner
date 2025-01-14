@@ -54,6 +54,10 @@ class SelectorSyntaxAttribute
      */
     public function matchesComparator($value)
     {
+        // Special case: When we search for a value with quotes, we should revert the decoding of the quotes of the passed `$value`
+        if (\strpos($this->value, '&quot;') !== \false) {
+            $value = \str_replace('"', '&quot;', $value);
+        }
         switch ($this->comparator) {
             case self::COMPARATOR_EXISTS:
                 return $value !== null;

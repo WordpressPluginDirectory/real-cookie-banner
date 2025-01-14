@@ -14,7 +14,7 @@ $loader = (static function () {
     // Restore the backup and ensure the excluded files are properly marked as loaded
     $GLOBALS['__composer_autoload_files_real-cookie-banner'] = \array_merge(
         $existingComposerAutoloadFiles,
-        \array_fill_keys(['c8472dc6a0f20e34b02f7c4975203541', 'a91ce56b52ca00ce2db0b98e23da7cce', 'aef0ba5e48128d6bfd2443d1ffd6d97e', '9d51596ff8b3235677d992760edd9fdc', 'b8f3e9d6befa81422d6297437ac4bc1f', '539e6a7b3dbc75f0cbca9212e4a47d20', '0fb57bef01bf634fb01f154b00afe962'], true)
+        \array_fill_keys(['a91ce56b52ca00ce2db0b98e23da7cce', 'b8f3e9d6befa81422d6297437ac4bc1f', '0fb57bef01bf634fb01f154b00afe962', 'c8472dc6a0f20e34b02f7c4975203541', '9d51596ff8b3235677d992760edd9fdc', '539e6a7b3dbc75f0cbca9212e4a47d20', 'aef0ba5e48128d6bfd2443d1ffd6d97e'], true)
     );
 
     return $loader;

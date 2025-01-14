@@ -10,6 +10,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSynta
  */
 class SelectorSyntaxFinder extends TagAttributeFinder
 {
+    const WILDCARD_TAG = '*';
     private $expression;
     private $tag;
     private $attributes;
@@ -18,21 +19,21 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      *
      * Available matches:
      *      $match[0] => Full string
-     *      $match[1] => Tag
+     *      $match[1] => Tag (can be `*`)
      *      $match[2] => Attribute
      *      $match[3] => Comparator (can be empty)
      *      $match[4] => Value (can be empty)
      *
-     * @see https://regex101.com/r/vlbn3Y/8
+     * @see https://regex101.com/r/vlbn3Y/10
      */
-    const EXPRESSION_REGEXP = '/^([A-Za-z_-]+)(?:%s)+$/m';
+    const EXPRESSION_REGEXP = '/^([A-Za-z_-]+|\\*)(?:%s)+$/m';
     /**
      * PCRE does currently not support repeating capture groups, we need to capture this manually
      * by duplicating the attribute regular expression.
      *
-     * @see https://regex101.com/r/CMXjMl/5
+     * @see https://regex101.com/r/CMXjMl/6
      */
-    const EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE = '\\[([\\w#:-]+)(?:(%s)"([^"]+)")?(?:\\s*:((?:(?!\\]\\s*\\[).)*))?\\]';
+    const EXPRESSION_REGEXP_INNER_SINGLE_ATTRIBUTE = '\\[([\\w#:-]+)(?:(%s)"(.*?(?<!\\\\))")?(?:\\s*:((?:(?!\\]\\s*\\[).)*))?\\]';
     /**
      * C'tor.
      *
@@ -78,7 +79,7 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      */
     public function matchesAttributesLoose($str)
     {
-        if (\strpos($str, $this->tag) === \false) {
+        if ($this->tag !== self::WILDCARD_TAG && \strpos($str, $this->tag) === \false) {
             return \false;
         }
         foreach ($this->attributes as $attribute) {
@@ -98,7 +99,7 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     public function matchesAttributes($values, $match, $satisfiesFunctions = \true)
     {
         // @codeCoverageIgnoreStart e.g. `@devowl-wp/headless-content-blocker` uses this API on non-matching tags
-        if ($this->getTag() !== $match->getTag()) {
+        if ($this->getTag() !== self::WILDCARD_TAG && $this->getTag() !== $match->getTag()) {
             return \false;
         }
         // @codeCoverageIgnoreEnd
@@ -155,6 +156,10 @@ class SelectorSyntaxFinder extends TagAttributeFinder
                 foreach ($attributeMatches as $attributeMatch) {
                     $comparator = $attributeMatch[2] ?? null;
                     $comparator = empty($comparator) ? SelectorSyntaxAttribute::COMPARATOR_EXISTS : $comparator;
+                    if (!empty($attributeMatch[3])) {
+                        // Replace backslashed quotes with escaped quotes like the same way as they are treated in HTML attributes
+                        $attributeMatch[3] = \str_replace('\\"', '&quot;', $attributeMatch[3]);
+                    }
                     $attributeInstances[] = new SelectorSyntaxAttribute(null, $attributeMatch[1], $comparator, $attributeMatch[3] ?? null, $attributeMatch[4] ?? null);
                 }
                 $finder = new SelectorSyntaxFinder($expression, $tag, $attributeInstances);

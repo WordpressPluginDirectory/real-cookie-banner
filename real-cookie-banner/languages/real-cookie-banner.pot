@@ -1,4 +1,4 @@
-# Copyright (C) 2024 devowl.io
+# Copyright (C) 2025 devowl.io
 # This file is distributed under the same license as the Real Cookie Banner plugin.
 msgid ""
 msgstr ""
@@ -1278,12 +1278,12 @@ msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:513
-#: inc/scanner/Scanner.php:539
+#: inc/scanner/Scanner.php:599
 msgid "https://devowl.io/support/"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:514
-#: inc/scanner/Scanner.php:540
+#: inc/scanner/Scanner.php:600
 msgid "Contact support"
 msgstr ""
 
@@ -1821,30 +1821,30 @@ msgstr ""
 msgid "I allow to place a link in the cookie banner, which informs about the use of this plugin."
 msgstr ""
 
-#: inc/scanner/Scanner.php:520
+#: inc/scanner/Scanner.php:580
 msgid "Real Cookie Banner: Scan of your pages"
 msgstr ""
 
-#: inc/scanner/Scanner.php:522
+#: inc/scanner/Scanner.php:582
 msgid "Real Cookie Banner: Automatic scan of complete website"
 msgstr ""
 
-#: inc/scanner/Scanner.php:544
+#: inc/scanner/Scanner.php:604
 msgid "Cancel scan"
 msgstr ""
 
-#: inc/scanner/Scanner.php:548
+#: inc/scanner/Scanner.php:608
 msgid "Skip failed pages"
 msgstr ""
 
 #. translators:
-#: inc/scanner/Scanner.php:570
+#: inc/scanner/Scanner.php:630
 msgid "%1$d pages failed to be scanned."
 msgid_plural "%1$d pages failed to be scanned."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/scanner/Scanner.php:579
+#: inc/scanner/Scanner.php:639
 msgid "Real Cookie Banner tried to automatically scan your entire website for services and external URLs."
 msgstr ""
 
@@ -1906,19 +1906,19 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:391
 #: inc/settings/CookieGroup.php:412
-#: inc/templates/TemplateConsumers.php:280
+#: inc/templates/TemplateConsumers.php:279
 msgid "Essential"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:392
 #: inc/settings/CookieGroup.php:413
-#: inc/templates/TemplateConsumers.php:283
+#: inc/templates/TemplateConsumers.php:282
 msgid "Functional"
 msgstr ""
 
 #: inc/settings/CookieGroup.php:393
 #: inc/settings/CookieGroup.php:414
-#: inc/templates/TemplateConsumers.php:286
+#: inc/templates/TemplateConsumers.php:285
 msgid "Statistics"
 msgstr ""
 
@@ -1930,7 +1930,7 @@ msgstr ""
 
 #: inc/settings/CookieGroup.php:397
 #: inc/settings/CookieGroup.php:415
-#: inc/templates/TemplateConsumers.php:289
+#: inc/templates/TemplateConsumers.php:288
 msgid "Marketing"
 msgstr ""
 
@@ -2322,113 +2322,113 @@ msgstr ""
 msgid "Local caching of selection in cookie banner until server documents consent; documentation periodic or at page switches attempted if server is unavailable or overloaded."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:249
+#: inc/templates/TemplateConsumers.php:248
 msgid "Load content"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:252
+#: inc/templates/TemplateConsumers.php:251
 msgid "Load map"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:255
+#: inc/templates/TemplateConsumers.php:254
 msgid "Load form"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:258
+#: inc/templates/TemplateConsumers.php:257
 #: inc/view/ConfigPage.php:191
 #: inc/view/customize/banner/FooterDesign.php:243
 msgid "Disabled"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:259
+#: inc/templates/TemplateConsumers.php:258
 msgid "Already created"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:260
+#: inc/templates/TemplateConsumers.php:259
 msgid "You have already created a Content Blocker with this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:264
+#: inc/templates/TemplateConsumers.php:263
 msgid "You have already created a Service (Cookie) with this template."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:269
+#: inc/templates/TemplateConsumers.php:268
 msgid "This service template is optimized to work with %s."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:271
+#: inc/templates/TemplateConsumers.php:270
 msgid "Please activate %s in settings to use this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:275
+#: inc/templates/TemplateConsumers.php:274
 msgid "A suitable content blocker for this service can be created automatically."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:294
+#: inc/templates/TemplateConsumers.php:293
 msgid "This template is currently disabled because the respective WordPress plugin is not installed or the desired function is not active. <a href=\"%s\" target=\"_blank\">Learn more</a>"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:298
+#: inc/templates/TemplateConsumers.php:297
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-disabled-cookie-templates/"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:301
+#: inc/templates/TemplateConsumers.php:300
 msgid "TCF required"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:302
+#: inc/templates/TemplateConsumers.php:301
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:307
+#: inc/templates/TemplateConsumers.php:306
 msgid "%s is a network of globally distributed servers that cache content and deliver it to your website visitors faster based on their location, reducing website load times and improving performance. This technology is also known as a content delivery network (CDN). {{strong}}Servers may also be located in countries that are considered unsafe in terms of data protection law.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:312
+#: inc/templates/TemplateConsumers.php:311
 msgid "In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %1$s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses). Unfortunately, %1$s does not offer the option of concluding standard contractual clauses to our knowledge. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:317
+#: inc/templates/TemplateConsumers.php:316
 msgid "%s unfortunately sets cookies that are not technically essential according to our knowledge, for which consent would be required. At the same time, the CDN cannot be blocked with a content blocker until the website visitors have given their consent, as otherwise parts of your website may malfunction. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:322
+#: inc/templates/TemplateConsumers.php:321
 msgid "In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses)."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:327
+#: inc/templates/TemplateConsumers.php:326
 msgid "{{strong}}Please make sure that you have concluded standard contract clauses with %1$s, which can be done on their website!{{/strong}} Since %1$s does not set cookies to our knowledge, we do not recommend creating a service in your cookie banner for it. However, you must mention the use of %1$s in your privacy policy."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:332
+#: inc/templates/TemplateConsumers.php:331
 msgid "Please remove %s from your website!"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:334
+#: inc/templates/TemplateConsumers.php:333
 msgid "Why is %s integrated into my website at all?"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:336
+#: inc/templates/TemplateConsumers.php:335
 msgid "If you do not consciously integrate %1$s, it is most likely that a plugin or theme you are using uses this CDN to load external scripts, fonts or media such as images. The best way to find out who is integrating the CDN is to disable the individual plugins or themes and scan again. Once you have found out where the integration is coming from, contact the developer of the plugin or theme to see if it can be used without %1$s or replace this plugin/theme!"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:341
+#: inc/templates/TemplateConsumers.php:340
 msgid "How do I conclude standard contractual clauses with %s?"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:345
+#: inc/templates/TemplateConsumers.php:344
 msgid "Acknowledged"
 msgstr ""
 

@@ -1007,6 +1007,13 @@ class Notices
         return $this->getStates()->get(\DevOwl\RealCookieBanner\view\Notices::CHECKLIST_PREFIX . $id);
     }
     /**
+     * Check if a non-blocking request has started.
+     */
+    public function isNonBlockingRequestStarted()
+    {
+        return $this->nonBlockingRequestStarted;
+    }
+    /**
      * Get list of clicked modal hints.
      *
      * @return string[]
