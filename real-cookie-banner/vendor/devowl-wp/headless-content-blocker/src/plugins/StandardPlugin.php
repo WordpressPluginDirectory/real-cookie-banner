@@ -19,6 +19,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selecto
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\EvalJs;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\ForceVisual;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\JQueryHijackEach;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\JQueryHijackFn;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\KeepAttributes;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\MatchesUrl;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\selectorSyntaxFunction\Style;
@@ -87,6 +88,8 @@ class StandardPlugin extends AbstractPlugin
             'video-js[data-settings:matchesUrl()][class*="videojs-native"]',
             // [Plugin Comp] https://themeforest.net/item/cinerama-a-theme-for-movie-studios-and-filmmakers/22037150
             'a[href:matchesUrl()][data-rel*="prettyPhoto":confirm(),keepAttributes(value=data-rel)]',
+            // [Plugin Comp] Bricks Builder
+            'div[data-iframe-src:matchesUrl(),delegateClick()]',
         ]);
         /**
          * `<div>` elements are expensive in Regexp cause there a lot of them, let's assume only a
@@ -245,6 +248,7 @@ class StandardPlugin extends AbstractPlugin
         $cb->addPlugin(MatchesUrl::class);
         $cb->addPlugin(ForceVisual::class);
         $cb->addPlugin(JQueryHijackEach::class);
+        $cb->addPlugin(JQueryHijackFn::class);
         $cb->addPlugin(VisualParent::class);
         $cb->addPlugin(KeepAttributes::class);
         $cb->addPlugin(Style::class);

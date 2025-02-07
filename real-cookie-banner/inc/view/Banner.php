@@ -115,7 +115,11 @@ class Banner
         echo \join('', $output);
         // Web vitals: Avoid large rerenderings when the content blocker gets overlapped the original item
         // E.g. SVGs are loaded within the blocked element.
-        echo \sprintf('<style>[%s]:not(.rcb-content-blocker):not([%s]):not([%s^="children:"]):not([%s]){opacity:0!important;}</style>', Constants::HTML_ATTRIBUTE_BLOCKER_ID, Constants::HTML_ATTRIBUTE_UNBLOCKED_TRANSACTION_COMPLETE, Constants::HTML_ATTRIBUTE_VISUAL_PARENT, Constants::HTML_ATTRIBUTE_CONFIRM);
+        // Additionally, when a visual parent is used with the `childrenSelector` option, we need to hide all children of the blocked element
+        // when the specified children are not found.
+        // TODO: Move this to a frontend package?
+        echo \sprintf('<style>[%s]:not(.rcb-content-blocker):not([%s]):not([%s^="children:"]):not([%s]){opacity:0!important;}
+.rcb-content-blocker+.rcb-content-blocker-children-fallback~*{display:none!important;}</style>', Constants::HTML_ATTRIBUTE_BLOCKER_ID, Constants::HTML_ATTRIBUTE_UNBLOCKED_TRANSACTION_COMPLETE, Constants::HTML_ATTRIBUTE_VISUAL_PARENT, Constants::HTML_ATTRIBUTE_CONFIRM);
     }
     /**
      * Print out the overlay at `wp_body_open`. See also `wp_footer` for backwards-compatibilty.

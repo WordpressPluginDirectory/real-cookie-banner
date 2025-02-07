@@ -79,6 +79,8 @@ class Blocker
         'div[id^="tve_thrive_lightbox_"]',
         // [Plugin Comp] Bricks
         '.brxe-xpromodalnestable',
+        // [Plugin Comp] EventON
+        '.evcal_eventcard',
     ];
     /**
      * See `disableDeduplicateExceptions` parameter in `createVisual` for more information.

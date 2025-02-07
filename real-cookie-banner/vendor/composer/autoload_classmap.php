@@ -186,6 +186,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\EvalJs' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/EvalJs.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\ForceVisual' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/ForceVisual.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\JQueryHijackEach' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/JQueryHijackEach.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\JQueryHijackFn' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/JQueryHijackFn.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\KeepAttributes' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/KeepAttributes.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\MatchesUrl' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/MatchesUrl.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\selectorSyntaxFunction\\Style' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/selectorSyntaxFunction/Style.php',

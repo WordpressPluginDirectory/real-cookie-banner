@@ -11,21 +11,23 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\Ma
  * This plugin registers the selector syntax `style()`.
  *
  * ```
- * div[class="my-div":style(this=display:block&rule[]=>.my-selector{display:table;width:100%;})]
+ * div[class="my-div":style(this=display:block&rule[]=>.my-selector{display:table;width:100%;}&global[]=>.my-global-selector:has(.blocked-element){display:table;width:100%;})]
  * ```
  *
  * Parameters:
  *
  * - `[this]` (string): CSS rules applied to the blocked element
  * - `[applyUnblocked=false]` (boolean): If true, the styles will still be applied after unblocking the element
- * - `[rules]` (string[]): An array of CSS selectors and rules relative to the blocked element
+ * - `[rule]` (string[]): An array of CSS selectors and rules relative to the blocked element
+ * - `[global]` (string[]): An array of CSS selectors and rules which will be applied to the whole document. Use ".blocked-element" to target the blocked element
  *
  * The above example will result in the following CSS which modifies the style of the blocked element:
  *
  * ```
  * <style>
- *   .my-div{display:block;}
- *   .my-div>.selector{display:table;width:100%;}
+ *   div[consent-required][consent-style-2]{display:block;}
+ *   div[consent-required][consent-style-2]>.selector{display:table;width:100%;}
+ *   .my-global-selector:has(div[consent-required][consent-style-2]){display:table;width:100%;}
  * </style>
  * ```
  * @internal
@@ -66,6 +68,11 @@ class Style extends AbstractPlugin
                             if ($strpos !== \false) {
                                 $styles[] = \sprintf('%s %s%s', $selector, \substr($ruleValue, 0, $strpos), \substr($ruleValue, $strpos));
                             }
+                        }
+                    } elseif ($argName === 'global') {
+                        $value = \is_array($value) ? $value : [$value];
+                        foreach ($value as $ruleValue) {
+                            $styles[] = \str_replace('.blocked-element', $selector, $ruleValue);
                         }
                     }
                 }

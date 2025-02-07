@@ -24,10 +24,10 @@ msgstr ""
 msgid "The passed callable persisted to the job cannot be called (`is_callable`)"
 msgstr ""
 
-#: queue/Job.php:381
+#: queue/Job.php:382
 msgid "This job is already running in another thread on your server."
 msgstr ""
 
-#: queue/Job.php:409
+#: queue/Job.php:410
 msgid "Unexpected exception."
 msgstr ""

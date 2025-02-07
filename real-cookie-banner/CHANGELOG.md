@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.8 (2025-02-06)
+
+
+### Bug Fixes
+
+* compatibility with Elementors optimized markup experimental feature (CU-8697pxjtc)
+* compatibility with EventON (CU-8697ptyry)
+* only enable WordPress comments template when necessary (CU-863h7mbwk)
+
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.4</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* deprecation notice for strpos in SelectorSyntaxAttribute (CU-344wg4f)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibility with Bricks Builder and iframe embeds
+
+
+##### Features
+
+* allow to configure global styles in style selector syntax function (CU-86971x71q)
+* introduce new selector syntax function jQueryHijackFn to hijack jQuery functions (CU-8697ptyry)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Elementors optimized markup experimental feature (CU-8697pxjtc)
+
+
+##### Features
+
+* introduce new selector syntax function jQueryHijackFn to hijack jQuery functions (CU-8697ptyry)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.32</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Maintenance
+
+* typo</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Bug Fixes
+
+* database migration to new schema does not get triggered by queue (CU-8697md9fq)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.7</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Bug Fixes
+
+* always validate docker images when built (CU-8696heugb)
+
+
+##### Build System
+
+* streamline docker and setup.sh into a Taskfile.setup.yml (CU-8696k3cct)
+
+
+##### Continuous Integration
+
+* always validate and try to fix docker images (CU-8697pj0tx)
+* validate docker images with new CNCF scopes and socket hang up in Weblate translations (CU-8697pj0tx)
+
+
+##### Tests
+
+* make static files inclusive domain mapping available in playwright tests and create first test (CU-8695mtnyu)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.11</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* retry weblate request on socket hang up while uploading a file (CU-8695kguk7)
+
+
+##### Continuous Integration
+
+* validate docker images with new CNCF scopes and socket hang up in Weblate translations (CU-8697pj0tx)</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Features
+
+* requestLanguage added  to controller | find iso 639 language(CU-86971bxhd)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.0</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Continuous Integration
+
+* validate docker images with new CNCF scopes and socket hang up in Weblate translations (CU-8697pj0tx)
+
+
+##### Features
+
+* new command merge-request-tree (also as VSCode task) to visually show Merge Requests (CU-8692xtha4)</details>
+
+
+
+
+
 ## 5.0.7 (2025-01-14)
 
 

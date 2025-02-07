@@ -315,8 +315,9 @@ class Job
         // Do not update run if the process got incremented (at least, something got done?)
         $previousProcess = $this->process;
         $previousDataMd5 = \md5(\json_encode($this->data ?? (object) []));
-        // Already running?
-        if ($this->locked) {
+        // Is the job locked because the `finally` below did not update the `locked` attribute?
+        // This could be checked by comparing the `lock_until` timestamp.
+        if ($this->locked && $this->lock_until > \time()) {
             return new WP_Error('real_queue_job_locked', \__('This job is already running in another thread on your server.', REAL_QUEUE_TD));
         }
         $this->updatedLocked(\true);

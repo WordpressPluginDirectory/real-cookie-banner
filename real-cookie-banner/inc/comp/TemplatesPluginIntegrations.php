@@ -35,6 +35,7 @@ class TemplatesPluginIntegrations
     const SLUG_PERFMATTERS = 'perfmatters';
     const SLUG_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO = 'woocommerce-google-analytics-pro';
     const OPTION_NAME_USERS_CAN_REGISTER = 'users_can_register';
+    const OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN = 'show_comments_cookies_opt_in';
     const OPTION_NAME_RANK_MATH_GA = 'rank_math_google_analytic_options';
     const OPTION_NAME_ANALYTIFY_AUTHENTICATION = 'wp-analytify-authentication';
     const OPTION_NAME_ANALYTIFY_PROFILE = 'wp-analytify-profile';
@@ -60,7 +61,7 @@ class TemplatesPluginIntegrations
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
-    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION];
+    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION, self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN];
     const ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS];
     const ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_CF_TURNSTILE_LOGIN, self::OPTION_NAME_CF_TURNSTILE_REGISTER, self::OPTION_NAME_CF_TURNSTILE_RESET, self::OPTION_NAME_USERS_CAN_REGISTER];
     const INVALIDATE_WHEN_SITE_OPTION_CHANGES = [self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL];
@@ -182,28 +183,6 @@ class TemplatesPluginIntegrations
         return $set_default_location_to;
     }
     /**
-     * Automatically set the `recommended` attribute to `true` for some special cases.
-     *
-     * @param array $template
-     */
-    public function middleware_cookies_recommended(&$template)
-    {
-        // Documented in RecommendedHooksMiddleware
-        $template['recommended'] = \apply_filters('RCB/Presets/Cookies/Recommended', $this->templates_cookies_recommended($template['recommended'] ?? \false, $template['id']), $template);
-        return $template;
-    }
-    /**
-     * Automatically set the `recommended` attribute to `true` for some special cases.
-     *
-     * @param array $template
-     */
-    public function middleware_blocker_recommended(&$template)
-    {
-        // Documented in RecommendedHooksMiddleware
-        $template['recommended'] = \apply_filters('RCB/Presets/Blocker/Recommended', $this->templates_blocker_recommended($template['recommended'] ?? \false, $template['id']), $template);
-        return $template;
-    }
-    /**
      * Check if cookie is recommended by native integrations of plugins we know.
      *
      * @param boolean $recommended
@@ -275,6 +254,21 @@ class TemplatesPluginIntegrations
                 break;
         }
         return $recommended;
+    }
+    /**
+     * Check if a cookie is enabled by native integrations of plugins we know.
+     *
+     * @param string $identifier
+     */
+    public function templates_cookies_enabled($identifier)
+    {
+        switch ($identifier) {
+            case 'wordpress-comments':
+                return \get_option(self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN);
+            default:
+                break;
+        }
+        return null;
     }
     /**
      * Check multiple plugins for native integration.

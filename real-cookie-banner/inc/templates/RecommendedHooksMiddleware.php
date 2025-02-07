@@ -23,6 +23,10 @@ class RecommendedHooksMiddleware extends AbstractPoolMiddleware
         if (!$recommended) {
             $templatePluginIntegrations = TemplatesPluginIntegrations::getInstance();
             $legacyPresetObj = ['id' => $template->identifier];
+            $enabled = $templatePluginIntegrations->templates_cookies_enabled($template->identifier);
+            if ($enabled !== null) {
+                $template->consumerData['isDisabled'] = !$enabled;
+            }
             if ($template instanceof ServiceTemplate) {
                 $recommended = $templatePluginIntegrations->templates_cookies_recommended($recommended, $template->identifier);
                 /**

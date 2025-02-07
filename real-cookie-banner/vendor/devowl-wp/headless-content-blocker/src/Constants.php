@@ -104,6 +104,10 @@ abstract class Constants
      */
     const HTML_ATTRIBUTE_JQUERY_HIJACK_EACH = 'consent-jquery-hijack-each';
     /**
+     * See `JQueryHijackFn`.
+     */
+    const HTML_ATTRIBUTE_JQUERY_HIJACK_FN = 'consent-jquery-hijack-fn';
+    /**
      * If set it will trigger a window resize event when the unblocked item got clicked (or delegated a click).
      * This needs to be defined as number as it can be delayed. Use `0` for instant dispatch.
      */

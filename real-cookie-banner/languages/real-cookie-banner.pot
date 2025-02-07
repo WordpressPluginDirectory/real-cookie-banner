@@ -20,7 +20,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: index.php
-#: inc/view/Banner.php:255
+#: inc/view/Banner.php:259
 msgid "https://devowl.io/wordpress-real-cookie-banner/"
 msgstr ""
 
