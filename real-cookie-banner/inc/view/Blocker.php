@@ -81,6 +81,8 @@ class Blocker
         '.brxe-xpromodalnestable',
         // [Plugin Comp] EventON
         '.evcal_eventcard',
+        // [Plugin Comp] Divi Builder
+        '.divioverlay',
     ];
     /**
      * See `disableDeduplicateExceptions` parameter in `createVisual` for more information.

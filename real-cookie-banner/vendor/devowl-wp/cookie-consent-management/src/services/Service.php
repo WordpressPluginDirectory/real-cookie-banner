@@ -283,7 +283,7 @@ class Service
      */
     public function getTechnicalDefinitions()
     {
-        return $this->technicalDefinitions;
+        return $this->isEmbeddingOnlyExternalResources() ? [] : $this->technicalDefinitions;
     }
     /**
      * Getter.

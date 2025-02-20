@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/headless-content-blocker",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "private": true,
     "description": "Block HTML content by URLs and selector syntax",
     "homepage": "https://devowl.io",
@@ -26,6 +26,9 @@
         "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
         "test:vitest": "dowl --silent task @devowl-wp/vitest-config",
         "test:vitest:coverage": "dowl --silent task @devowl-wp/vitest-config:coverage"
+    },
+    "config": {
+        "phpunit-coverage-threshold": 100
     },
     "dependencies": {
         "@devowl-wp/fast-html-tag": "workspace:*",
@@ -78,7 +81,6 @@
             "ignore-packages-here@1.0.0"
         ]
     },
-    "phpunit-coverage-threshold": 100,
     "versionBump": [
         "rcb-major-v5"
     ]

@@ -563,10 +563,7 @@ class Scanner
      */
     public function getUserLoginUrls()
     {
-        if (\get_option(TemplatesPluginIntegrations::OPTION_NAME_USERS_CAN_REGISTER)) {
-            return [\wp_login_url(), \wp_lostpassword_url(), \wp_registration_url()];
-        }
-        return [];
+        return [\wp_login_url(), \wp_lostpassword_url(), \wp_registration_url()];
     }
     /**
      * Getter.

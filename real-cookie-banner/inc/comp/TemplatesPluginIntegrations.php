@@ -191,6 +191,10 @@ class TemplatesPluginIntegrations
     public function templates_cookies_recommended($recommended, $identifier)
     {
         switch ($identifier) {
+            case 'wordpress-comments':
+                return \get_option(self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN);
+            case 'wordpress-user-login':
+                return \get_option(self::OPTION_NAME_USERS_CAN_REGISTER) > 0;
             case 'cloudflare':
                 $recommended = isset($_SERVER['HTTP_CF_CONNECTING_IP']) && !empty($_SERVER['HTTP_CF_CONNECTING_IP']);
                 break;
@@ -265,6 +269,8 @@ class TemplatesPluginIntegrations
         switch ($identifier) {
             case 'wordpress-comments':
                 return \get_option(self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN);
+            case 'wordpress-user-login':
+                return \get_option(self::OPTION_NAME_USERS_CAN_REGISTER) > 0;
             default:
                 break;
         }

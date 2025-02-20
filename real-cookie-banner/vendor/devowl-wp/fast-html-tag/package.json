@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/fast-html-tag",
-    "version": "1.2.4",
+    "version": "1.2.6",
     "private": true,
     "description": "Find tags within HTML content and modify it in speed of light",
     "homepage": "https://devowl.io",
@@ -26,6 +26,9 @@
         "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
         "test:vitest": "dowl --silent task @devowl-wp/vitest-config",
         "test:vitest:coverage": "dowl --silent task @devowl-wp/vitest-config:coverage"
+    },
+    "config": {
+        "phpunit-coverage-threshold": 100
     },
     "dependencies": {
         "node-html-parser": "6.1.13",
@@ -75,7 +78,6 @@
             "ignore-packages-here@1.0.0"
         ]
     },
-    "phpunit-coverage-threshold": 100,
     "versionBump": [
         "rcb-major-v5"
     ]

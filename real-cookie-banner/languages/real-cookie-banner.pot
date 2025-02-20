@@ -1273,21 +1273,21 @@ msgstr ""
 msgid "We need to inform you that on Feb. 02, 2022, the Belgian Data Protection Authority (APD) declared the collection of consents under the Transparency & Consent Framework (TCF) to be invalid. The decision is effective across the EU as it was issued in a one-stop-shop procedure."
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:497
+#: inc/comp/migration/DbConsentV2.php:527
 msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:513
+#: inc/comp/migration/DbConsentV2.php:543
 #: inc/scanner/Scanner.php:599
 msgid "https://devowl.io/support/"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:514
+#: inc/comp/migration/DbConsentV2.php:544
 #: inc/scanner/Scanner.php:600
 msgid "Contact support"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:534
+#: inc/comp/migration/DbConsentV2.php:564
 msgid "Real Cookie Banner v5.0 introduces an optimized database schema that allows consent documents to be stored in less storage space. The migration failed. Please try again or contact the support of Real Cookie Banner!"
 msgstr ""
 
@@ -1646,40 +1646,50 @@ msgstr ""
 
 #: inc/overrides/pro/view/GcmBanner.php:45
 msgctxt "legal-text"
-msgid "Additional purposes of data processing according to Google Consent Mode on the basis of consent (applies to all services)"
+msgid "More information on personal data processing by Google and partners:"
+msgstr ""
+
+#: inc/overrides/pro/view/GcmBanner.php:50
+msgctxt "legal-text"
+msgid "https://business.safety.google/privacy/"
 msgstr ""
 
 #: inc/overrides/pro/view/GcmBanner.php:51
 msgctxt "legal-text"
+msgid "Additional purposes of data processing according to Google Consent Mode on the basis of consent (applies to all services)"
+msgstr ""
+
+#: inc/overrides/pro/view/GcmBanner.php:57
+msgctxt "legal-text"
 msgid "Storing and reading of data such as cookies (web) or device identifiers (apps) related to advertising."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:56
+#: inc/overrides/pro/view/GcmBanner.php:62
 msgctxt "legal-text"
 msgid "Sending user data to Google for online advertising purposes."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:61
+#: inc/overrides/pro/view/GcmBanner.php:67
 msgctxt "legal-text"
 msgid "Evaluation and display of personalized advertising."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:66
+#: inc/overrides/pro/view/GcmBanner.php:72
 msgctxt "legal-text"
 msgid "Storing and reading of data such as cookies (web) or device identifiers (apps), related to analytics (e.g. visit duration)."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:71
+#: inc/overrides/pro/view/GcmBanner.php:77
 msgctxt "legal-text"
 msgid "Storing and reading of data that supports the functionality of the website or app (e.g. language settings)."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:76
+#: inc/overrides/pro/view/GcmBanner.php:82
 msgctxt "legal-text"
 msgid "Storing and reading of data related to personalization (e.g. video recommendations)."
 msgstr ""
 
-#: inc/overrides/pro/view/GcmBanner.php:81
+#: inc/overrides/pro/view/GcmBanner.php:87
 msgctxt "legal-text"
 msgid "Storing and reading of data related to security (e.g. authentication functionality, fraud prevention, and other user protection)."
 msgstr ""

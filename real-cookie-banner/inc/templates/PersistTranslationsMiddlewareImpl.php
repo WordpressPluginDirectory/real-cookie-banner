@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\templates;
 
 use DevOwl\RealCookieBanner\base\UtilsProvider;
+use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\middlewares\translations\PersistTranslationsMiddleware;
 // @codeCoverageIgnoreStart
@@ -28,7 +29,14 @@ class PersistTranslationsMiddlewareImpl extends PersistTranslationsMiddleware
     {
         parent::afterPersistTemplatesWithinPool($consumers, $typeClassToAllTemplates);
         if ($this->isPro()) {
-            TCF::getInstance()->updateGvl();
+            // This hook is also called daily when new templates are downloaded. To avoid a daily download of the GVL
+            // (and therefore a new consent on daily basis), we need to check if the GVL is already downloaded in our
+            // language.
+            $query = Core::getInstance()->getTcfVendorListNormalizer()->getQuery();
+            $stacks = $query->stacks(['fallbackToDefaultLanguage' => \false]);
+            if (\count($stacks['stacks']) === 0) {
+                TCF::getInstance()->updateGvl();
+            }
         }
     }
     // Documented in PersistTranslationsMiddleware

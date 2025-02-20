@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",
@@ -22,6 +22,9 @@
         "task": "task --taskfile ./tasks/Taskfile.yml",
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage"
+    },
+    "config": {
+        "phpunit-coverage-threshold": 50
     },
     "devDependencies": {
         "@devowl-wp/api-real-cookie-banner": "workspace:*",
@@ -68,7 +71,6 @@
             "ignore-packages-here@1.0.0"
         ]
     },
-    "phpunit-coverage-threshold": 50,
     "versionBump": [
         "rcb-major-v5"
     ]

@@ -15,12 +15,13 @@ class TagWithContentMatch extends AbstractMatch
      *
      * @param TagWithContentFinder $finder
      * @param string $originalMatch
+     * @param string $tag
      * @param array $attributes
      * @param string $content
      */
-    public function __construct($finder, $originalMatch, $attributes, $content)
+    public function __construct($finder, $originalMatch, $tag, $attributes, $content)
     {
-        parent::__construct($finder, $originalMatch, $finder->getTag(), $attributes);
+        parent::__construct($finder, $originalMatch, $tag, $attributes);
         $this->content = $content;
     }
     // See `AbstractRegexFinder`.

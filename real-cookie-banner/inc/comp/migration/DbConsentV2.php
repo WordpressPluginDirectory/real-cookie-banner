@@ -103,6 +103,29 @@ class DbConsentV2
                 // For a lock wait timeout exceeded error, we can simply retry the migration.
                 return \true;
             }
+            if (\stripos(\strtolower($result->get_error_message()), 'unknown column') !== \false && !\property_exists($job->data, 'alterTableColumns')) {
+                // Scenario: The old consent table has not all needed columns - we do not yet know why this could
+                // happen but perhaps the `dbDelta()` did not run correctly. Due to the fact that the migration
+                // needs to run, we need to try to add those columns.
+                //
+                // > Row size too large. The maximum row size for the used table type, not counting BLOBs,
+                // > is 8126. This includes storage overhead, check the manual. You have to change some columns to TEXT or BLOBS
+                // To avoid issues like this, we use `tinytext` for the columns. As they will never be filled again with any
+                // data, this should be save.
+                $table_name_old = $this->getTableName(UserConsent::TABLE_NAME_DEPRECATED);
+                $previousHideError = $wpdb->hide_errors();
+                // phpcs:disable WordPress.DB.PreparedSQL
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD created_client_time datetime NULL");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD previous_tcf_string tinytext");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD tcf_string tinytext");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD previous_gcm_consent tinytext");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD gcm_consent tinytext");
+                // phpcs:enable WordPress.DB.PreparedSQL
+                $wpdb->show_errors($previousHideError);
+                // We do this type of "fix" only once, otherwise the user needs to contact us in support
+                $job->data->alterTableColumns = \true;
+                return \true;
+            }
             return $result;
         } else {
             $minId += $config['chunkSize'];

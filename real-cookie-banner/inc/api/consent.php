@@ -33,9 +33,19 @@ if (!\function_exists('wp_rcb_consent_given')) {
      * **Attention:** Do not use this function if you can get the conditional consent into your frontend
      * coding and use instead the `window.consentApi`!
      *
+     * The return value is an array with the following keys:
+     *
+     * - `cookie`: If the website operator has defined a cookie or service with the information you requested, it will be returned here.
+     * - `consentGiven`: This variable defines whether a valid consent has generally been given. This does not refer to the technical information
+     *   that you have passed as arguments. For example: If the user clicks "Continue without Consent", this variable is set to `true`.
+     *   The variable is `false` if the user has not yet given consent and the cookie banner is displayed.
+     * - `cookieOptIn`: This variable defines whether the technical information has been accepted.
+     *   **Attention:** This variable is also `true` if no service (see `cookie`) is found.
+     *
      * @param string|int $typeOrIdOrUniqueName
      * @param string $name
      * @param string $host
+     * @return array
      * @since 2.11.1
      * @internal
      */

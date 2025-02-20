@@ -86,7 +86,7 @@ class Rule
     public function urlMatchesQueryArgumentValidations($url)
     {
         // E.g. URLs without Scheme
-        if (\filter_var(Utils::setUrlSchema($url, 'http'), \FILTER_VALIDATE_URL)) {
+        if (\parse_url(Utils::setUrlSchema($url, 'http'))) {
             $query = $this->parseUrlQueryEncodedSafe($url);
             // Remove empty values, so they get considered as null
             foreach ($query as $key => $value) {

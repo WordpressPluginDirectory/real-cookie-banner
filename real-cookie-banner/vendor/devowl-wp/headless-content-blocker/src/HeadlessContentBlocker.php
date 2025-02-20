@@ -422,13 +422,6 @@ class HeadlessContentBlocker extends FastHtmlTag
         }
         $this->isSetup = \true;
         $this->runSetupCallback();
-        // Block by inline style within HTML attribute `style=""`
-        $styleInlineAttributeMatcher = new StyleInlineAttributeMatcher($this);
-        $styleInlineAttributeFinder = new StyleInlineAttributeFinder();
-        $styleInlineAttributeFinder->addCallback(function ($match) use($styleInlineAttributeMatcher) {
-            $this->processMatch($styleInlineAttributeMatcher, $match);
-        });
-        $this->addFinder($styleInlineAttributeFinder);
         // Block by inline script
         $inlineScriptMatcher = new ScriptInlineMatcher($this);
         $inlineScriptFinder = new ScriptInlineFinder();
@@ -479,6 +472,13 @@ class HeadlessContentBlocker extends FastHtmlTag
                 $this->finderToMatcher[$selectorSyntaxFinder] = $selectorSyntaxMatcher;
             }
         }
+        // Block by inline style within HTML attribute `style=""`
+        $styleInlineAttributeMatcher = new StyleInlineAttributeMatcher($this);
+        $styleInlineAttributeFinder = new StyleInlineAttributeFinder();
+        $styleInlineAttributeFinder->addCallback(function ($match) use($styleInlineAttributeMatcher) {
+            $this->processMatch($styleInlineAttributeMatcher, $match);
+        });
+        $this->addFinder($styleInlineAttributeFinder);
         $this->runAfterSetupCallback();
     }
     /**

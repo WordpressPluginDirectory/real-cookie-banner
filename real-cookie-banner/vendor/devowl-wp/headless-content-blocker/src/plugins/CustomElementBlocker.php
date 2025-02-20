@@ -2,9 +2,12 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\FastHtmlTag;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\TagWithContentFinder;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
 /**
  * Allows to block custom elements.
@@ -16,6 +19,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\Abstrac
 class CustomElementBlocker extends AbstractPlugin
 {
     const HTML_TAG_EXCLUDE = ['font-face'];
+    private $customElements = [];
     /**
      * See `AbstractPlugin`.
      *
@@ -27,7 +31,31 @@ class CustomElementBlocker extends AbstractPlugin
     {
         $tag = $match->getTag();
         if ($result->isBlocked() && !\in_array($tag, self::HTML_TAG_EXCLUDE, \true) && \strpos($tag, '-') !== \false) {
-            $match->setTag(\sprintf('%s-%s', 'consent', $match->getTag()));
+            if (!\in_array($tag, $this->customElements, \true)) {
+                $this->customElements[] = $tag;
+            }
         }
+    }
+    /**
+     * We are using multiple mechanisms to block custom elements, like selector syntax rule `SelectorSyntaxFinder` or
+     * `TagAttributeFinder`. At this time, the match is never a `TagWithContentMatch` and therefore we cannot simply use
+     * `->setTag()` in the above `blockedMatch` method. For this, we are setting an invisible attribute on the custom
+     * element which we are now cleaning up here and use the `TagWithContentFinder` to find the custom element and set
+     * the correct tag e.g. `<mui-avatar` to `<consent-mui-avatar>`.
+     *
+     * @param string $html
+     */
+    public function modifyHtmlAfterProcessing($html)
+    {
+        if (!empty($this->customElements)) {
+            $fastHtmlTag = new FastHtmlTag();
+            $finder = new TagWithContentFinder($this->customElements, [Constants::HTML_ATTRIBUTE_BLOCKER_ID], \true);
+            $finder->addCallback(function ($match) {
+                $match->setTag('consent-' . $match->getTag());
+            });
+            $fastHtmlTag->addFinder($finder);
+            $html = $fastHtmlTag->modifyHtml($html);
+        }
+        return $html;
     }
 }

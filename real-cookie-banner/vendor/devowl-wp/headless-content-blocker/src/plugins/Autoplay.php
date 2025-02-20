@@ -59,6 +59,9 @@ class Autoplay extends AbstractPlugin
         if (Utils::endsWith($host, 'youtube.com') || Utils::endsWith($host, 'dailymotion.com') || Utils::endsWith($host, 'loom.com') || Utils::endsWith($host, 'wistia.net') || Utils::endsWith($host, 'vimeo.com')) {
             $autoplayUrl = FastHtmlTagUtils::addParametersToUrl($link, ['autoplay' => '1']);
         }
+        if (Utils::endsWith($host, 'videopress.com')) {
+            $autoplayUrl = FastHtmlTagUtils::addParametersToUrl($link, ['autoPlay' => '1']);
+        }
         // no `esc_url` needed cause this is done by `DevOwl\FastHtmlTag\Utils#htmlAttributes()`
         return $autoplayUrl;
     }

@@ -62,9 +62,10 @@ class FalsePositivesProcessor
         foreach ($this->entries as $idx => $scanEntry) {
             if (!empty($scanEntry->template) && $scanEntry->markup !== null && \strpos($scanEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) !== \false) {
                 $previousBlockables = $contentBlocker->getBlockables();
+                $scanEntryOriginalMarkup = $contentBlocker->findOriginalMarkup($scanEntry->markup);
                 $contentBlocker->setBlockables([$scanEntry->blockable]);
                 foreach ($this->entries as $anotherEntry) {
-                    if ($anotherEntry !== $scanEntry && $scanEntry->template === $anotherEntry->template && $anotherEntry->markup !== null && \strpos($anotherEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) === \false) {
+                    if ($anotherEntry !== $scanEntry && $scanEntry->template === $anotherEntry->template && $anotherEntry->markup !== null && \strpos($anotherEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) === \false && $scanEntryOriginalMarkup->getId() === $anotherEntry->markup->getId()) {
                         // Check if this blockable matches the "original" first found item
                         $markup = $contentBlocker->modifyAny($anotherEntry->markup->getContent());
                         if (\preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches)) {

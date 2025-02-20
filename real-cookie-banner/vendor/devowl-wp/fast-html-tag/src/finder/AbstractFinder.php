@@ -41,11 +41,11 @@ abstract class AbstractFinder
     /**
      * Apply registered callbacks to our match.
      *
-     * @param AbstractMatch|false $match
+     * @param AbstractMatch|false|string $match
      */
     protected function applyCallbacks($match)
     {
-        if ($match === \false) {
+        if ($match === \false || \is_string($match)) {
             return;
         }
         foreach ($this->callbacks as $callback) {

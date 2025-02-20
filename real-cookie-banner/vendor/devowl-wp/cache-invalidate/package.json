@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cache-invalidate",
-    "version": "1.18.1",
+    "version": "1.18.3",
     "private": true,
     "description": "Provide a single entry point to trigger cache invalidation of known caching plugins",
     "homepage": "https://devowl.io",
@@ -33,6 +33,9 @@
         "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
         "wp": "$(which wp)$(test $CI && echo ' --allow-root')",
         "wp:weak": "php -n -dextension=phar.so -dextension=json.so -dextension=mbstring.so -dextension=tokenizer.so -dmemory_limit=-1 $(which wp)$(test $CI && echo ' --allow-root')"
+    },
+    "config": {
+        "phpunit-coverage-threshold": 1
     },
     "browserslist": [
         "defaults",
@@ -142,7 +145,6 @@
             "ignore-packages-here@1.0.0"
         ]
     },
-    "phpunit-coverage-threshold": 1,
     "swc": {
         "jsc": {
             "loose": true,

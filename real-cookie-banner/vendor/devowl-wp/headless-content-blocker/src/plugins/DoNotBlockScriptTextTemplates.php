@@ -56,7 +56,7 @@ class DoNotBlockScriptTextTemplates extends AbstractPlugin
         $this->getHeadlessContentBlocker()->addFinder($finder);
         // We are using `id` as attribute to find the template tag as `TagAttributeFinder`
         // does currently not support "all" attributes.
-        $finder = new TagWithContentFinder('template');
+        $finder = new TagWithContentFinder(['template']);
         $finder->addCallback(function ($match) {
             /**
              * Var.

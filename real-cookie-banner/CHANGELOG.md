@@ -3,6 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.10 (2025-02-20)
+
+
+### Bug Fixes
+
+* always recommend the WordPress comments template when necessary (CU-863h7mbwk)
+* always scan login URLs and only enable User Login template when necessary (CU-8697p8zfx, CU-8696xvnk6)
+* compatibility with Divi overlays and blocked contents
+* correctly block lazy custom web elements by using window.consentApi.unblock API (CU-8697zc5r2)
+* do not download TCF GVL on a daily basis (CU-8697zkqjj)
+* in GCM mode show link / teach about business.safety.google/privacy (CU-866avf03w)
+* unknown column previous_gcm_consent in field list after v5 upgrade (CU-86980grnw)
+
+
+### Documentation
+
+* improve API docs for consent-checking functions (CU-8694x4tnx)
+* typo in wordpress.org description
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.6</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* cookie policy shows cookies despite option which disables cookies for a service (CU-86980khf9)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* add return parameter to the asyn window.consentApi.consent API method (CU-8694x4tnx)
+
+
+##### Documentation
+
+* improve API docs for consent-checking functions (CU-8694x4tnx)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.6</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* correctly block custom web elements by modifying the end tag correctly (CU-8697zc5r2)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.2</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* autoplay videopress embed on unblock (CU-8697ynbqy)
+* correctly block custom web elements by modifying the end tag correctly (CU-8697zc5r2)
+* correctly match selector syntax rules when also StyleInlineMatcher matches on the element (CU-8697pthng)
+* pinterest embed code got found as external URL instead of template (CU-8697ze2yw)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.1</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* correctly block lazy custom web elements by using window.consentApi.unblock API (CU-8697zc5r2)
+* make ratio- a ratio CSS class to set the correct height of a blocked element</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.0.5</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* in GCM mode show link / teach about business.safety.google/privacy (CU-866avf03w)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.6</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* allow to clear all data processing in countries with one click (CU-8694ezcau)
+* only show integration notice for opt-in script if opt-in script is given (CU-8694x4tnx)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.12</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Maintenance
+
+* console log weblate error message (CU-8695kguk7)</details>
+
+
+
+
+
+## 5.0.9 (2025-02-17) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.2</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.5</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.96</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.1</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.17</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.17</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* upgrade to PNPM 10 (CU-8697je0ta)</details>
+
+
+
+
+
 ## 5.0.8 (2025-02-06)
 
 

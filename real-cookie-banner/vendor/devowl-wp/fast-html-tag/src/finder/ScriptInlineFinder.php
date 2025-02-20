@@ -14,7 +14,7 @@ class ScriptInlineFinder extends TagWithContentFinder
      */
     public function __construct()
     {
-        parent::__construct('script');
+        parent::__construct(['script']);
     }
     /**
      * See `AbstractRegexFinder`.
@@ -27,13 +27,18 @@ class ScriptInlineFinder extends TagWithContentFinder
         if (!$tagWithContentMatch) {
             return \false;
         }
+        // @codeCoverageIgnoreStart
+        if (\is_string($tagWithContentMatch)) {
+            return $tagWithContentMatch;
+        }
+        // @codeCoverageIgnoreEnd
         $attributes = $tagWithContentMatch->getAttributes();
         $content = $tagWithContentMatch->getContent();
         // Ignore scripts with `src` attribute as they are not treated as inline scripts
         if (self::isNotAnInlineScript($attributes)) {
             return \false;
         }
-        return new ScriptInlineMatch($this, $m[0], $attributes, $content);
+        return new ScriptInlineMatch($this, $m[0], 'script', $attributes, $content);
     }
     /**
      * Checks if the passed attributes of a found `<script` tag is not an inline script.
