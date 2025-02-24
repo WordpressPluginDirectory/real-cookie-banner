@@ -5,6 +5,8 @@ namespace DevOwl\RealCookieBanner\comp;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\settings\GoogleConsentMode;
 use DevOwl\RealCookieBanner\Utils;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\AbstractTemplate;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\BlockerTemplate;
 use Jetpack;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -191,8 +193,6 @@ class TemplatesPluginIntegrations
     public function templates_cookies_recommended($recommended, $identifier)
     {
         switch ($identifier) {
-            case 'wordpress-comments':
-                return \get_option(self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN);
             case 'wordpress-user-login':
                 return \get_option(self::OPTION_NAME_USERS_CAN_REGISTER) > 0;
             case 'cloudflare':
@@ -364,6 +364,33 @@ class TemplatesPluginIntegrations
                 break;
         }
         return $isActive;
+    }
+    /**
+     * Allows to add rules and rule groups to the blocker template before it is persisted.
+     *
+     * @param AbstractTemplate $template
+     */
+    public function templates_before_persist($template)
+    {
+        $identifier = $template->identifier;
+        if ($template instanceof BlockerTemplate) {
+            switch ($identifier) {
+                case 'wordpress-comments':
+                    $ruleExpression = 'form[action*="wp-comments-post.php"]';
+                    $hasRule = \false;
+                    foreach ($template->rules as $rule) {
+                        if ($rule['expression'] === $ruleExpression) {
+                            $hasRule = \true;
+                        }
+                    }
+                    if (!$hasRule) {
+                        $template->rules[] = ['expression' => $ruleExpression, 'roles' => [BlockerTemplate::ROLE_SCANNER]];
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     /**
      * Get singleton instance.

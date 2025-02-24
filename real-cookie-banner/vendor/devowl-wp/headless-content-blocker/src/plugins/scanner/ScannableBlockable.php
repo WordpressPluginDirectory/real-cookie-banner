@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\s
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates\BlockerTemplate;
 /**
  * Describe a blockable item.
  * @internal
@@ -47,8 +48,8 @@ class ScannableBlockable extends AbstractBlockable
      *                   'regExp' => '/^UA-/'
      *               ]
      *          ],
-     *          'needsRequiredSiblingRule' => false
-     *     ]
+     *          'needsRequiredSiblingRule' => false,
+     *          'roles' => ['blocker', 'scanner']
      * ]
      * ```
      *
@@ -98,7 +99,7 @@ class ScannableBlockable extends AbstractBlockable
         // Create host rule instances
         foreach ($rules as $rule) {
             if (\is_array($rule)) {
-                $newRule = new Rule($this, $rule['expression'], $rule['assignedToGroups'] ?? [], $rule['queryArgs'] ?? [], $rule['needsRequiredSiblingRule'] ?? \false);
+                $newRule = new Rule($this, $rule['expression'], $rule['roles'] ?? null, $rule['assignedToGroups'] ?? [], $rule['queryArgs'] ?? [], $rule['needsRequiredSiblingRule'] ?? \false);
                 // @codeCoverageIgnoreStart
             } elseif ($rule instanceof Rule) {
                 $newRule = $rule;
@@ -110,6 +111,9 @@ class ScannableBlockable extends AbstractBlockable
                 continue;
             }
             // @codeCoverageIgnoreEnd
+            if (!$newRule->hasRole(BlockerTemplate::ROLE_SCANNER)) {
+                continue;
+            }
             // Create rule group if not yet existing
             $this->rules[] = $newRule;
             foreach ($newRule->getAssignedToGroups() as $assignedToGroup) {

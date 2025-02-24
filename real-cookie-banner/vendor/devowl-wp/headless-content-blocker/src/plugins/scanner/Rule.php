@@ -12,6 +12,17 @@ class Rule
     private $blockable;
     private $expression;
     /**
+     * The roles that are allowed to see this rule. Can be `null` (or undefined, or empty array) if the rule is allowed for all roles.
+     *
+     * Allowed roles:
+     *
+     * - `blocker`: The rule will be used by the created Content Blocker
+     * - `scanner`: The rule will be used by the scanner
+     *
+     * @var string[]
+     */
+    private $roles;
+    /**
      * If you want to configure group resolving, you need to configure the appropriated group via `$ruleGroups`.
      * Otherwise, defaults of the group are considered. Means: Without group configured it will be marked as
      * "one rule within the group must-be-resolved".
@@ -65,14 +76,16 @@ class Rule
      *
      * @param ScannableBlockable $blockable
      * @param string $expression
+     * @param null|string[] $roles
      * @param string|string[] $assignedToGroups
      * @param array[] $queryArgs
      * @param boolean $needsRequiredSiblingRule
      */
-    public function __construct($blockable, $expression, $assignedToGroups = [], $queryArgs = [], $needsRequiredSiblingRule = \false)
+    public function __construct($blockable, $expression, $roles = null, $assignedToGroups = [], $queryArgs = [], $needsRequiredSiblingRule = \false)
     {
         $this->blockable = $blockable;
         $this->expression = $expression;
+        $this->roles = $roles;
         $this->assignedToGroups = \is_array($assignedToGroups) ? $assignedToGroups : [$assignedToGroups];
         $this->queryArgs = $queryArgs;
         $this->needsRequiredSiblingRule = $needsRequiredSiblingRule;
@@ -183,5 +196,15 @@ class Rule
     public function isNeedsRequiredSiblingRule()
     {
         return $this->needsRequiredSiblingRule;
+    }
+    /**
+     * Getter.
+     *
+     * @param string $role
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        return $this->roles === null || empty($this->roles) || \in_array($role, $this->roles, \true);
     }
 }

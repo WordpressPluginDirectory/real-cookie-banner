@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.11 (2025-02-24)
+
+
+### Bug Fixes
+
+* compatibility with presto-player (CU-8697zc5r2)
+* recommend WordPress comments only when necessary (CU-863h7mbwk)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.5</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* compatibility with presto-player (CU-8697zc5r2)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.3</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* recommend WordPress comments only when necessary (CU-863h7mbwk)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.2</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with presto-player (CU-8697zc5r2)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.5</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* recommend WordPress comments only when necessary (CU-863h7mbwk)</details>
+
+
+
+
+
 ## 5.0.10 (2025-02-20)
 
 

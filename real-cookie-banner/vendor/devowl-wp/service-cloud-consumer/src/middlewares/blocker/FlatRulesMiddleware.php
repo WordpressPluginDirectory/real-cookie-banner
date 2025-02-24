@@ -22,7 +22,10 @@ class FlatRulesMiddleware extends AbstractTemplateMiddleware
         if ($template instanceof BlockerTemplate) {
             $rules = [];
             foreach ($template->rules as $rule) {
-                $rules[] = $rule['expression'];
+                $roles = $rule['roles'] ?? null;
+                if ($roles === null || \in_array(BlockerTemplate::ROLE_BLOCKER, $roles, \true)) {
+                    $rules[] = $rule['expression'];
+                }
             }
             $template->consumerData['rules'] = \array_values(\array_unique($rules));
         }

@@ -8,6 +8,8 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\ServiceCloudConsumer\templates;
  */
 class BlockerTemplate extends AbstractTemplate
 {
+    const ROLE_BLOCKER = 'blocker';
+    const ROLE_SCANNER = 'scanner';
     /**
      * Connected services as identifier.
      *

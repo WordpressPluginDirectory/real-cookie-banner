@@ -19,9 +19,10 @@ class RecommendedHooksMiddleware extends AbstractPoolMiddleware
     // Documented in AbstractPoolMiddleware
     public function beforePersistTemplateWithinPool($template, &$allTemplates)
     {
+        $templatePluginIntegrations = TemplatesPluginIntegrations::getInstance();
+        $templatePluginIntegrations->templates_before_persist($template);
         $recommended = $template->consumerData['isRecommended'] ?? \false;
         if (!$recommended) {
-            $templatePluginIntegrations = TemplatesPluginIntegrations::getInstance();
             $legacyPresetObj = ['id' => $template->identifier];
             $enabled = $templatePluginIntegrations->templates_cookies_enabled($template->identifier);
             if ($enabled !== null) {
