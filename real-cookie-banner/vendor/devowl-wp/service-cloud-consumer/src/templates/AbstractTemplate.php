@@ -115,6 +115,14 @@ abstract class AbstractTemplate
      */
     public $logoUrl;
     /**
+     * Meta data: Is the template fully machine translated?
+     *
+     * Can be `'no-translation' | 'full' | 'partly'`
+     *
+     * @var string
+     */
+    public $machineTranslationStatus;
+    /**
      * Calculated consumer data which can be filled by middlewares.
      *
      * Predefined data:
@@ -228,6 +236,7 @@ abstract class AbstractTemplate
             $this->createdAt = \is_string($arr['createdAt'] ?? null) ? \strtotime($arr['createdAt']) : \time();
             $this->tier = \in_array($arr['tier'] ?? null, [self::TIER_FREE, self::TIER_PRO], \true) ? $arr['tier'] : self::TIER_FREE;
             $this->logoUrl = \is_string($arr['logoUrl'] ?? null) ? $arr['logoUrl'] : null;
+            $this->machineTranslationStatus = $arr['machineTranslationStatus'] ?? 'no-translation';
             $this->consumerData = \is_array($arr['consumerData'] ?? null) ? $arr['consumerData'] : $this->consumerData;
         }
     }

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",
@@ -25,6 +25,9 @@
     },
     "config": {
         "phpunit-coverage-threshold": 50
+    },
+    "dependencies": {
+        "@devowl-wp/api": "workspace:*"
     },
     "devDependencies": {
         "@devowl-wp/api-real-cookie-banner": "workspace:*",

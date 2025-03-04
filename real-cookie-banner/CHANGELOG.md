@@ -3,6 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.13 (2025-03-04)
+
+
+### Bug Fixes
+
+* show a notice when a template is machine translated (CU-8692xtha4)
+* show a notice when a template is machine translated (CU-8692xtha4)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* adding isFullyMachineTranslated to wp client responses (CU-8692xtha4)
+* copy only properties on machine translation (CU-8692xtha4)
+* introduce machine translation status (CU-8692xtha4)
+* review [#5](https://git.owlinfra.de/devowlio/devowl-wp/issues/5) (CU-2yt6wa5)
+* review points from comments (CU-8692xtha4)
+* skip known missing glossaries supported by deepl (CU-8692xtha4)
+
+
+##### Code Refactoring
+
+* introduce field names for template types (CU-8695y66h0)
+* reading single service and blocker with translations (CU-8692xtha4)
+* rename pre-release client route to plural form (CU-2yt6wa5)
+
+
+##### Documentation
+
+* add documentation (CU-8692xtha4)
+
+
+##### Features
+
+* introduce fully machine translated flag to translation status (CU-8692xtha4)
+* introduce machine translation api WIP (CU-8692xtha4)
+* introduce machine translation including relational metadata service WiP (CU-8692xtha4)
+* sync weblate and deepl glossaries for translations (CU-8692xtha4)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.9</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* show a notice when a template is machine translated (CU-8692xtha4)
+* show a notice when a template is machine translated (CU-8692xtha4)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 1.0.3</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Bug Fixes
+
+* show a notice when a template is machine translated (CU-8692xtha4)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.7</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* show a notice when a template is machine translated (CU-8692xtha4)
+* show a notice when a template is machine translated (CU-8692xtha4)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* corrected calculation full machine translation and introduce flag ignoreOnMachineTranslation (CU-8692xtha4)
+* enhance machine translation with granular translation options (CU-8692xtha4)
+* introduce machine translation status (CU-8692xtha4)
+
+
+##### Features
+
+* introduce fully machine translated flag to translation status (CU-8692xtha4)
+* introduce machine translation including relational metadata service WiP (CU-8692xtha4)</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 1.0.3</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Bug Fixes
+
+* changed licenses route to use params instead of body data (CU-8695xwj6u)
+* license post and patch routes (CU-2yt6wa5)
+
+
+##### Maintenance
+
+* introduce transactions in controllers (CU-861mfub3j)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.7.0</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Continuous Integration
+
+* build docker containers only after the install job (CU-8697hja46)
+* generate production certificates for devowl.io and owlinfra.de (CU-8697hja46)
+* generate production Lets Encrypt certificates instead of staging server (CU-8697hja46)
+
+
+##### Features
+
+* run develop pipeline which creates review app certificates on new branch (CU-8697hja46)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.11</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Maintenance
+
+* implement transaction handling in email and storage operations, update ESLint rules for ORM CUD methods (CU-861mfub3j)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.38</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Build System
+
+* exclude @antv/g2 resources from being inline required as it leads to issues when rendering charts (CU-8695xwj6u)</details>
+
+
+
+
+
+## 5.0.12 (2025-02-25) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.6.8</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Continuous Integration
+
+* create checksum over all certificates (CU-8697hja46)
+* generate certificates for swarm revie apps (CU-8697hja46)
+* generate regularily certificates with go-acme/lego for our CI runners (CU-8697hja46)
+* generate regularily wildcard certificates with go-acme/lego for our CI runners (CU-8697hja46)
+* remove orphan certificates (CU-8697hja46)
+* use home-runner for WordPress.org push (CU-86980hdd8)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.1</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Continuous Integration
+
+* generate certificates for swarm revie apps (CU-8697hja46)</details>
+
+
+
+
+
 ## 5.0.11 (2025-02-24)
 
 

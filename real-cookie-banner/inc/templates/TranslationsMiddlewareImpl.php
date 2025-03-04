@@ -33,7 +33,7 @@ class TranslationsMiddlewareImpl extends TranslationsMiddleware
             $activeLanguagesMap[$compLanguage->getWordPressCompatibleLanguageCode($a)] = $a;
         }
         // phpcs:disable WordPress.DB
-        $result = $wpdb->get_results($wpdb->prepare("SELECT context AS `language`, is_untranslated AS isUntranslated FROM {$table_name} WHERE identifier = %s AND type = %s", $template->identifier, $template instanceof ServiceTemplate ? 'service' : 'blocker'), ARRAY_A);
+        $result = $wpdb->get_results($wpdb->prepare("SELECT context AS `language`, is_untranslated AS isUntranslated, machine_translation_status AS machineTranslationStatus FROM {$table_name} WHERE identifier = %s AND type = %s", $template->identifier, $template instanceof ServiceTemplate ? 'service' : 'blocker'), ARRAY_A);
         // phpcs:enable WordPress.DB
         foreach ($result as $key => &$row) {
             if (!\in_array($row['language'], \array_keys($activeLanguagesMap), \true)) {
@@ -41,7 +41,9 @@ class TranslationsMiddlewareImpl extends TranslationsMiddleware
                 continue;
             }
             $row['isUntranslated'] = \boolval($row['isUntranslated']);
+            $row['machineTranslationStatus'] = $row['machineTranslationStatus'];
             $useLanguageCode = $activeLanguagesMap[$row['language']] ?? $row['language'];
+            $row['flag'] = $compLanguage->getCountryFlag($useLanguageCode);
             $translatedName = $compLanguage->getTranslatedName($useLanguageCode);
             if ($row['language'] !== $translatedName) {
                 $row['name'] = $translatedName;

@@ -20,7 +20,7 @@ abstract class TranslationsMiddleware extends AbstractTemplateMiddleware
      *
      * ```
      * [
-     *      ['isUntranslated' => false, 'language' => 'de_DE', 'name' => 'German'],
+     *      ['isUntranslated' => false, 'machineTranslationStatus' => 'no-translation' | 'full' | 'partly', 'language' => 'de_DE', 'name' => 'German', 'flag' => false],
      *      ...
      * ]
      * ```

@@ -159,8 +159,8 @@ class StorageHelper
                 $otherMeta = \is_callable($otherMetaKeysResolver) ? $otherMetaKeysResolver($template) : [];
                 $values[] = \str_ireplace("'NULL'", 'NULL', $wpdb->prepare('(%s, %s, %s, %d, %s,
                             %s, %s, %s,
-                            %d, %d, %d, %d, %d, %d, %d,
-                            %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode(AbstractTemplate::toArray($template->getBeforeMiddleware())), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
+                            %d, %d, %d, %d, %s, %d, %d, %d,
+                            %s, %s, %s, %s, %s, %s)', $template->identifier, $context, $type, $template->version, \mysql2date('c', \gmdate('Y-m-d H:i:s', $template->createdAt), \false), $template->headline ?? '', $template->subHeadline ?? '', $template->logoUrl ?? '', 0, $template->consumerData['isDisabled'] ? 1 : 0, 0, $template->consumerData['isUntranslated'] ?? \false, $template->machineTranslationStatus ?? 'no-translation', $template->isHidden ? 1 : 0, $template->consumerData['isRecommended'] ? 1 : 0, isset($template->consumerData['isCloud']) && $template->consumerData['isCloud'] ? 1 : 0, $template->tier, \count($template->consumerData['tags']) > 0 ? \json_encode($template->consumerData['tags']) : \json_encode((object) []), \json_encode(AbstractTemplate::toArray($template->getBeforeMiddleware())), \json_encode(AbstractTemplate::toArray($template)), \count($otherMeta) > 0 ? \json_encode($otherMeta) : \json_encode((object) []), \count($template->successorOfIdentifierInfo) > 0 ? \json_encode($template->successorOfIdentifierInfo) : 'NULL'));
                 $persistedIdentifierInSql[] = $wpdb->prepare('%s', $template->identifier);
                 $templateToVersionMap[$template->identifier] = $template->version;
             }
@@ -168,7 +168,7 @@ class StorageHelper
             $result = $wpdb->query(\sprintf('INSERT INTO %s (
                         `identifier`, `context`, `type`, `version`, `created_at`,
                         `headline`, `sub_headline`, `logo_url`,
-                        `is_outdated`, `is_disabled`, `is_invalidate_needed`, `is_untranslated`, `is_hidden`, `is_recommended`, `is_cloud`,
+                        `is_outdated`, `is_disabled`, `is_invalidate_needed`, `is_untranslated`, `machine_translation_status`, `is_hidden`, `is_recommended`, `is_cloud`,
                         `tier`, `tags`, `before_middleware`, `after_middleware`, `other_meta`, `successor_of_identifiers`
                     )
                     VALUES %s ON DUPLICATE KEY UPDATE
@@ -181,6 +181,7 @@ class StorageHelper
                         `is_disabled` = VALUES(`is_disabled`),
                         `is_invalidate_needed` = VALUES(`is_invalidate_needed`),
                         `is_untranslated` = VALUES(`is_untranslated`),
+                        `machine_translation_status` = VALUES(`machine_translation_status`),
                         `is_hidden` = VALUES(`is_hidden`),
                         `is_recommended` = VALUES(`is_recommended`),
                         `is_cloud` = VALUES(`is_cloud`),
