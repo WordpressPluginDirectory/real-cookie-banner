@@ -275,6 +275,7 @@ abstract class AbstractTemplate
     {
         $res = \json_decode(\json_encode($template));
         $res->createdAt = \gmdate('c', $res->createdAt);
+        $res->{'$$skipFastHtmlTag'} = ['HeadlessContentBlocker'];
         return $res;
     }
     /**

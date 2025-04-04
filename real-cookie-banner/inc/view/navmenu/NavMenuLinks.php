@@ -164,8 +164,11 @@ class NavMenuLinks
      */
     public function nav_menu_link_attributes($atts, $item)
     {
-        if ($this->isMenuItem($item) && $item->url === '#consent-revoke') {
-            $atts['data-success-message'] = \get_post_meta($item->ID, self::META_SUCCESS_MESSAGE_META_NAME, \true);
+        if ($this->isMenuItem($item)) {
+            if ($item->url === '#consent-revoke') {
+                $atts['data-success-message'] = \get_post_meta($item->ID, self::META_SUCCESS_MESSAGE_META_NAME, \true);
+            }
+            $atts['role'] = 'button';
         }
         return $atts;
     }

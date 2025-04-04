@@ -28,13 +28,273 @@ class FalsePositivesProcessor
      */
     public function process()
     {
+        $this->convertTemplatesWithNonMatchingQueryArgsToExternalUrl();
         $this->convertTemplatesWithNonMatchingGroupsToExternalUrl();
         $this->deduplicate();
-        $this->convertExternalUrlsCoveredByTemplate();
         $this->convertStandaloneLinkRelTemplateToExternalUrl();
         $this->removeExternalUrlsWithTemplateDuplicate();
         $this->removeDuplicateScannedItems();
         return $this->getEntries();
+    }
+    /**
+     * Convert templates with non-matching query args of the blocked URL to an external URL.
+     */
+    public function convertTemplatesWithNonMatchingQueryArgsToExternalUrl()
+    {
+        foreach ($this->entries as $scanEntry) {
+            if (empty($scanEntry->template) || empty($scanEntry->blocked_url)) {
+                continue;
+            }
+            $blockable = $scanEntry->blockable;
+            foreach ($scanEntry->expressions as $expression) {
+                $rules = $blockable->getRulesByExpression($expression);
+                if (\count($rules) === 0) {
+                    continue;
+                }
+                // The same expression can be assigned to multiple rules, e.g. Google Analytics with different query args (`isOptional` and `assignedToGroups`)
+                $ruleMatches = 0;
+                foreach ($rules as $rule) {
+                    if ($rule->urlMatchesQueryArgumentValidations($scanEntry->blocked_url)) {
+                        ++$ruleMatches;
+                    }
+                }
+                if ($ruleMatches === 0) {
+                    $scanEntry->template = '';
+                    break;
+                }
+            }
+        }
+    }
+    /**
+     * Remove all entries when there is not a scan entry with the needed host and convert it to an external URL.
+     */
+    public function convertTemplatesWithNonMatchingGroupsToExternalUrl()
+    {
+        $remove = [];
+        $resetTemplates = [];
+        $templateGroups = [];
+        // Group entries by template and collect expressions
+        foreach ($this->entries as $scanEntry) {
+            if (empty($scanEntry->template)) {
+                continue;
+            }
+            $template = $scanEntry->template;
+            if (!isset($templateGroups[$template])) {
+                $templateGroups[$template] = ['entries' => [], 'expressions' => []];
+            }
+            $templateGroups[$template]['entries'][] = $scanEntry;
+            $templateGroups[$template]['expressions'] = \array_merge($templateGroups[$template]['expressions'], $scanEntry->expressions);
+        }
+        // Process each template group
+        foreach ($templateGroups as $template => $group) {
+            $firstEntry = $group['entries'][0];
+            $blockable = $firstEntry->blockable;
+            $foundRules = [];
+            // Process all expressions for this template at once
+            foreach ($group['expressions'] as $foundExpression) {
+                $rules = $blockable->getRulesByExpression($foundExpression);
+                foreach ($rules as $rule) {
+                    foreach ($rule->getAssignedToGroups() as $groupName) {
+                        if (!isset($foundRules[$groupName])) {
+                            $foundRules[$groupName] = [];
+                        }
+                        if (!\in_array($rule, $foundRules[$groupName], \true)) {
+                            $foundRules[$groupName][] = $rule;
+                        }
+                    }
+                }
+            }
+            if (!$blockable->checkFoundRulesMatchesGroups($foundRules)) {
+                foreach ($group['entries'] as $scanEntry) {
+                    if (!empty($scanEntry->blocked_url) && $this->blockableScanner->isNotAnExcludedUrl($scanEntry->blocked_url) && !$this->canExternalUrlBeBypassed($scanEntry)) {
+                        $resetTemplates[] = $scanEntry;
+                        $scanEntry->lock = \true;
+                    } else {
+                        $remove[] = $scanEntry;
+                    }
+                }
+            }
+        }
+        // Lazily reset templates and remove non-URL items so above calculations can calculate with original items
+        foreach ($this->entries as $key => $value) {
+            if (\in_array($value, $remove, \true)) {
+                unset($this->entries[$key]);
+            } elseif (\in_array($value, $resetTemplates, \true)) {
+                $this->entries[$key]->template = '';
+            }
+        }
+        // Reset indexes
+        $this->entries = \array_values($this->entries);
+    }
+    /**
+     * Deduplicate coexisting templates. Examples:
+     *
+     * - CF7 with reCaptcha over Google reCaptcha
+     * - MonsterInsights > Google Analytics (`extended`)
+     */
+    public function deduplicate()
+    {
+        $removeByIdentifier = [];
+        $entriesWithTemplate = [];
+        $hostsByEntry = [];
+        $hostCountByEntry = [];
+        $extendedByEntry = [];
+        // Collect data for each entry to avoid duplicate calculations in nested loops
+        foreach ($this->entries as $key => $value) {
+            if (empty($value->template)) {
+                continue;
+            }
+            $entriesWithTemplate[$key] = $value;
+            $currentHosts = $value->blockable->getOriginalExpressions();
+            $hostsByEntry[$key] = $currentHosts;
+            $hostCountByEntry[$key] = \count($currentHosts);
+            $extendedByEntry[$key] = $value->blockable->getExtended();
+        }
+        // Index entries by host count for faster comparison
+        $entriesByHostCount = [];
+        foreach ($hostCountByEntry as $key => $count) {
+            if (!isset($entriesByHostCount[$count])) {
+                $entriesByHostCount[$count] = [];
+            }
+            $entriesByHostCount[$count][] = $key;
+        }
+        // Sort host counts in descending order for optimization
+        $hostCounts = \array_keys($entriesByHostCount);
+        \rsort($hostCounts);
+        // Create a lookup map for hosts to quickly check containment
+        $hostLookupByEntry = [];
+        foreach ($hostsByEntry as $key => $hosts) {
+            $hostLookupByEntry[$key] = \array_flip($hosts);
+            // Use array_flip for O(1) lookups
+        }
+        // Identify entries to remove based on host coverage
+        $keysToRemove = [];
+        foreach ($entriesWithTemplate as $key => $value) {
+            $currentHostCount = $hostCountByEntry[$key];
+            $currentHosts = $hostsByEntry[$key];
+            $foundBetterTemplate = \false;
+            foreach ($hostCounts as $count) {
+                // Only compare with larger host counts
+                if ($count <= $currentHostCount) {
+                    break;
+                }
+                foreach ($entriesByHostCount[$count] as $existingKey) {
+                    $existingHostLookup = $hostLookupByEntry[$existingKey];
+                    // Check if all current hosts are contained in the existing hosts
+                    // Using array_flip lookup is much faster than in_array in loops
+                    $allHostsContained = \true;
+                    foreach ($currentHosts as $currentHost) {
+                        if (!isset($existingHostLookup[$currentHost])) {
+                            $allHostsContained = \false;
+                            break;
+                        }
+                    }
+                    if ($allHostsContained) {
+                        $keysToRemove[] = $key;
+                        $foundBetterTemplate = \true;
+                        break 2;
+                    }
+                }
+            }
+            // Only check for extended templates if no better template was found
+            if (!$foundBetterTemplate && !\is_null($extendedByEntry[$key])) {
+                $removeByIdentifier[] = $extendedByEntry[$key];
+            }
+        }
+        // Remove entries that are covered by better templates
+        foreach ($keysToRemove as $key) {
+            unset($this->entries[$key]);
+        }
+        // Remove entries with extended templates
+        foreach ($this->entries as $key => $value) {
+            if (\in_array($value->template, $removeByIdentifier, \true)) {
+                unset($this->entries[$key]);
+            }
+        }
+        // Reset indexes
+        $this->entries = \array_values($this->entries);
+    }
+    /**
+     * Convert a found `link[rel="preconnect|dns-prefetch"]` within a template and stands alone within this template
+     * to an external URL as a DNS-prefetch and preconnect **must** be loaded in conjunction with another script.
+     */
+    public function convertStandaloneLinkRelTemplateToExternalUrl()
+    {
+        /**
+         * Scan entries.
+         *
+         * @var ScanEntry[]
+         */
+        $convert = [];
+        // Group entries by template and count unique markups per template
+        $templateMarkupCounts = [];
+        foreach ($this->entries as $scanEntry) {
+            if (empty($scanEntry->template) || empty($scanEntry->markup)) {
+                continue;
+            }
+            $template = $scanEntry->template;
+            $markupContent = $scanEntry->markup->getContent();
+            if (!isset($templateMarkupCounts[$template])) {
+                $templateMarkupCounts[$template] = ['entries' => [], 'uniqueMarkups' => []];
+            }
+            $templateMarkupCounts[$template]['entries'][] = $scanEntry;
+            if (!\in_array($markupContent, $templateMarkupCounts[$template]['uniqueMarkups'], \true)) {
+                $templateMarkupCounts[$template]['uniqueMarkups'][] = $markupContent;
+            }
+        }
+        // Find link[rel] entries that stand alone in their template
+        foreach ($this->entries as $scanEntry) {
+            if (empty($scanEntry->template) || empty($scanEntry->markup)) {
+                continue;
+            }
+            $markup = $scanEntry->markup->getContent();
+            if ($scanEntry->tag === 'link' && (\strpos($markup, 'dns-prefetch') !== \false || \strpos($markup, 'preconnect') !== \false) && isset($templateMarkupCounts[$scanEntry->template])) {
+                // If there's only one unique markup for this template, it's a standalone
+                if (\count($templateMarkupCounts[$scanEntry->template]['uniqueMarkups']) === 1) {
+                    $convert[] = $scanEntry;
+                }
+            }
+        }
+        if (\count($convert) > 0) {
+            $added = [];
+            foreach ($convert as $convertScanEntry) {
+                $key = \array_search($convertScanEntry, $this->entries, \true);
+                $this->entries[] = $added[] = $entry = new ScanEntry();
+                $entry->blocked_url = $convertScanEntry->blocked_url;
+                $entry->source_url = $convertScanEntry->source_url;
+                $entry->tag = $convertScanEntry->tag;
+                $entry->attribute = $convertScanEntry->attribute;
+                $entry->markup = $convertScanEntry->markup;
+                unset($this->entries[$key]);
+            }
+        }
+    }
+    /**
+     * Remove external URLs which are duplicated as template, too.
+     * Performance optimized version that uses a hash map for faster lookups.
+     */
+    public function removeExternalUrlsWithTemplateDuplicate()
+    {
+        // Create a map of markup IDs to entries with templates
+        $templatedMarkupIds = [];
+        foreach ($this->entries as $entry) {
+            if (!empty($entry->template) && $entry->markup) {
+                $templatedMarkupIds[$entry->markup->getId()] = \true;
+            }
+        }
+        $remove = [];
+        foreach ($this->entries as $scanEntry) {
+            if ($scanEntry->markup && empty($scanEntry->template) && isset($templatedMarkupIds[$scanEntry->markup->getId()])) {
+                $remove[] = $scanEntry;
+            }
+        }
+        foreach ($this->entries as $key => $value) {
+            if (\in_array($value, $remove, \true)) {
+                unset($this->entries[$key]);
+            }
+        }
+        // Reset indexes
+        $this->entries = \array_values($this->entries);
     }
     /**
      * Example: We have the following markup:
@@ -52,297 +312,91 @@ class FalsePositivesProcessor
      *
      * This would lead to duplicate entries in the scanner result list. Never show double-scanned elements when they e.g. caught by two rules
      * and a rerun through `Utils::preg_replace_callback_recursive`. In this case, we will modify the already existing scan entries' found expressions.
-     *
-     * @codeCoverageIgnore With the introduction of `findPotentialSelectorSyntaxFindersForMatch`, we have no test covering this case but we need it for backward compatibility.
      */
     public function removeDuplicateScannedItems()
     {
-        $previousActive = $this->blockableScanner->setActive(\false);
         $contentBlocker = $this->blockableScanner->getHeadlessContentBlocker();
+        $previousActive = $this->blockableScanner->setActive(\false);
+        $previousBlockables = $contentBlocker->getBlockables();
+        // Find all unique blockables within our found scan entries
+        $scanEntriesBlockables = [];
+        foreach ($this->entries as $scanEntry) {
+            if ($scanEntry->blockable instanceof ScannableBlockable && !\in_array($scanEntry->blockable, $scanEntriesBlockables, \true)) {
+                $scanEntriesBlockables[] = $scanEntry->blockable;
+            }
+        }
+        // Run the content blocker for each found blockable and collect the results on a per-blockable basis
+        // This is necessary because the content blocker does not support multiple blockables at once
+        // Additionally, we are using a marker to join and split the HTML markups accordingly so we can use a
+        // single HTML string for the expensive `modifyHtml` call.
+        $blockablesScanEntries = [];
+        $blockableMarkupsMarker = \uniqid('blockable-markups-');
+        foreach ($scanEntriesBlockables as $blockable) {
+            $contentBlocker->setBlockables([$blockable]);
+            $blockableMarkups = [];
+            foreach ($this->entries as $scanEntryKey => $scanEntry) {
+                if (!empty($scanEntry->template) && $scanEntry->markup !== null && \strpos($scanEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) === \false) {
+                    // Check if this blockable matches, with a cache for the markup as `modifyAny` is expensive
+                    $markupCacheKey = $scanEntry->markup->getId();
+                    if (!isset($blockableMarkups[$markupCacheKey])) {
+                        $blockableMarkups[$markupCacheKey] = ['markup' => $scanEntry->markup, 'entries' => []];
+                    }
+                    $blockableMarkups[$markupCacheKey]['entries'][] = $scanEntryKey;
+                }
+            }
+            // Run the content blocker once for all HTML markups and collect the results
+            if (\count($blockableMarkups) > 0) {
+                $html = '';
+                foreach ($blockableMarkups as $markup) {
+                    $html .= $blockableMarkupsMarker . "\n";
+                    $html .= \join(',', $markup['entries']) . ';';
+                    $html .= $markup['markup']->getId() . ';';
+                    $html .= $markup['markup']->getContent() . "\n";
+                }
+                $html = $contentBlocker->modifyHtml($html);
+                $html = \array_filter(\explode($blockableMarkupsMarker, $html));
+                foreach ($html as $htmlPart) {
+                    $htmlPart = \trim($htmlPart);
+                    $htmlPart = \explode(';', $htmlPart, 3);
+                    $entries = \array_map('intval', \explode(',', $htmlPart[0]));
+                    $markupId = $htmlPart[1];
+                    $markup = $htmlPart[2];
+                    $isBlocked = \preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches);
+                    $blockablesScanEntriesKey = \sprintf('%s-%s', $markupId, $blockable->getIdentifier());
+                    if (!$isBlocked) {
+                        continue;
+                    }
+                    if (!isset($blockablesScanEntries[$blockablesScanEntriesKey])) {
+                        $blockablesScanEntries[$blockablesScanEntriesKey] = [];
+                    }
+                    foreach ($entries as $entry) {
+                        $blockablesScanEntries[$blockablesScanEntriesKey][] = $this->entries[$entry];
+                    }
+                }
+            }
+        }
+        $contentBlocker->setBlockables($previousBlockables);
+        // Merge duplicate scan entries
         foreach ($this->entries as $idx => $scanEntry) {
             if (!empty($scanEntry->template) && $scanEntry->markup !== null && \strpos($scanEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) !== \false) {
-                $previousBlockables = $contentBlocker->getBlockables();
-                $scanEntryOriginalMarkup = $contentBlocker->findOriginalMarkup($scanEntry->markup);
-                $contentBlocker->setBlockables([$scanEntry->blockable]);
-                foreach ($this->entries as $anotherEntry) {
-                    if ($anotherEntry !== $scanEntry && $scanEntry->template === $anotherEntry->template && $anotherEntry->markup !== null && \strpos($anotherEntry->markup->getContent(), \sprintf('%s="%s"', Constants::HTML_ATTRIBUTE_BY, 'scannable')) === \false && $scanEntryOriginalMarkup->getId() === $anotherEntry->markup->getId()) {
-                        // Check if this blockable matches the "original" first found item
-                        $markup = $contentBlocker->modifyAny($anotherEntry->markup->getContent());
-                        if (\preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches)) {
-                            $anotherEntry->expressions = \array_values(\array_unique(\array_merge($anotherEntry->expressions, $scanEntry->expressions)));
-                            // Copy some fields which could be interesting for the first found scan entry, too
-                            foreach (['blocked_url', 'source_url'] as $copyAttr) {
-                                if (empty($anotherEntry->{$copyAttr})) {
-                                    $anotherEntry->{$copyAttr} = $scanEntry->{$copyAttr};
-                                }
-                            }
+                $originalMarkup = $contentBlocker->findOriginalMarkup($scanEntry->markup);
+                $blockableScanEntriesKey = \sprintf('%s-%s', $originalMarkup->getId(), $scanEntry->blockable->getIdentifier());
+                $blockableScanEntries = $blockablesScanEntries[$blockableScanEntriesKey] ?? [];
+                foreach ($blockableScanEntries as $anotherEntry) {
+                    $anotherEntry->expressions = \array_values(\array_unique(\array_merge($anotherEntry->expressions, $scanEntry->expressions)));
+                    // Copy some fields which could be interesting for the first found scan entry, too
+                    foreach (['blocked_url', 'source_url'] as $copyAttr) {
+                        if (empty($anotherEntry->{$copyAttr})) {
+                            $anotherEntry->{$copyAttr} = $scanEntry->{$copyAttr};
                         }
                     }
                 }
-                $contentBlocker->setBlockables($previousBlockables);
                 unset($this->entries[$idx]);
             }
         }
         // Reset indexes
         $this->blockableScanner->setActive($previousActive);
         $this->entries = \array_values($this->entries);
-    }
-    /**
-     * Remove external URLs which are duplicated as template, too.
-     */
-    public function removeExternalUrlsWithTemplateDuplicate()
-    {
-        $remove = [];
-        foreach ($this->entries as $scanEntry) {
-            if ($scanEntry->markup && empty($scanEntry->template)) {
-                foreach ($this->entries as $anotherEntry) {
-                    if ($anotherEntry !== $scanEntry && !empty($anotherEntry->template) && $anotherEntry->markup && $anotherEntry->markup->getId() === $scanEntry->markup->getId()) {
-                        $remove[] = $scanEntry;
-                    }
-                }
-            }
-        }
-        foreach ($this->entries as $key => $value) {
-            if (\in_array($value, $remove, \true)) {
-                unset($this->entries[$key]);
-            }
-        }
-        // Reset indexes
-        $this->entries = \array_values($this->entries);
-    }
-    /**
-     * Deduplicate coexisting templates. Examples:
-     *
-     * - CF7 with reCaptcha over Google reCaptcha
-     * - MonsterInsights > Google Analytics (`extended`)
-     */
-    public function deduplicate()
-    {
-        $removeByIdentifier = [];
-        foreach ($this->entries as $key => $value) {
-            $foundBetterTemplate = $this->alreadyExistsInOtherFoundTemplate($value);
-            if ($foundBetterTemplate !== \false) {
-                unset($this->entries[$key]);
-                continue;
-            }
-            // Scenario: MonsterInsights > Google Analytics
-            $blockable = $value->blockable ?? null;
-            if (\is_null($blockable)) {
-                continue;
-            }
-            $extended = $blockable->getExtended();
-            if (!\is_null($extended)) {
-                $removeByIdentifier[] = $extended;
-                continue;
-            }
-        }
-        foreach ($this->entries as $key => $value) {
-            if (\in_array($value->template, $removeByIdentifier, \true)) {
-                unset($this->entries[$key]);
-            }
-        }
-        // Reset indexes
-        $this->entries = \array_values($this->entries);
-    }
-    /**
-     * Remove all entries when there is not a scan entry with the needed host and convert it to an external URL.
-     */
-    public function convertTemplatesWithNonMatchingGroupsToExternalUrl()
-    {
-        $remove = [];
-        $resetTemplates = [];
-        foreach ($this->entries as $key => $scanEntry) {
-            if (empty($scanEntry->template)) {
-                continue;
-            }
-            $blockable = $scanEntry->blockable ?? null;
-            // This is mostly covered by previous check
-            // @codeCoverageIgnoreStart
-            if (\is_null($blockable)) {
-                continue;
-            }
-            // @codeCoverageIgnoreEnd
-            // Collect all found host expressions for this template
-            $foundExpressions = [];
-            foreach ($this->entries as $anotherEntry) {
-                if ($anotherEntry->template === $scanEntry->template) {
-                    foreach ($anotherEntry->expressions as $foundExpression) {
-                        // Exclude found expressions when it does not match with query validation
-                        $rules = $blockable->getRulesByExpression($foundExpression);
-                        foreach ($rules as $rule) {
-                            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
-                            // Since the introduction of the `__default__` group this will never be the case but we keep for backwards-compatibility
-                            // @codeCoverageIgnoreStart
-                            if (empty($rule->getAssignedToGroups())) {
-                                continue;
-                            }
-                            // @codeCoverageIgnoreEnd
-                            if (!empty($anotherEntry->blocked_url) && !$rule->urlMatchesQueryArgumentValidations($anotherEntry->blocked_url)) {
-                                continue;
-                            }
-                            foreach ($rule->getAssignedToGroups() as $group) {
-                                $foundExpressions[$group][] = $foundExpression;
-                            }
-                        }
-                    }
-                }
-            }
-            if (!$blockable->checkExpressionsMatchesGroups($foundExpressions)) {
-                if (!empty($scanEntry->blocked_url) && $this->blockableScanner->isNotAnExcludedUrl($scanEntry->blocked_url) && !$this->canExternalUrlBeBypassed($scanEntry)) {
-                    $resetTemplates[] = $scanEntry;
-                    $scanEntry->lock = \true;
-                } else {
-                    $remove[] = $scanEntry;
-                }
-            }
-        }
-        // Lazily reset templates and remove non-URL items so above calculations can calculate with original items
-        foreach ($this->entries as $key => $value) {
-            if (\in_array($value, $remove, \true)) {
-                unset($this->entries[$key]);
-            } elseif (\in_array($value, $resetTemplates, \true)) {
-                $this->entries[$key]->template = '';
-            }
-        }
-        // Reset indexes
-        $this->entries = \array_values($this->entries);
-    }
-    /**
-     * Convert external URLs which got covered by a template. When is this the case? When using a
-     * `SelectorSyntaxBlocker` with e.g. `link[href=""]` (for example WordPress emojis).
-     *
-     * @param ScanEntry[] $entries The entries to check, defaults to current instance entries
-     */
-    public function convertExternalUrlsCoveredByTemplate($entries = null)
-    {
-        $previousActive = $this->blockableScanner->setActive(\false);
-        // Remove all not-found templates as we want to only remove by found template
-        $foundTemplateIds = \array_values(\array_unique(\array_column($this->entries, 'template')));
-        $contentBlocker = $this->blockableScanner->getHeadlessContentBlocker();
-        $previousBlockables = $contentBlocker->getBlockables();
-        /**
-         * ScannableBlockable.
-         *
-         * @var ScannableBlockable[]
-         */
-        $scannableBlockables = \array_filter($previousBlockables, function ($blockable) use($foundTemplateIds) {
-            if ($blockable instanceof ScannableBlockable) {
-                return \in_array($blockable->getIdentifier(), $foundTemplateIds, \true);
-            }
-            // @codeCoverageIgnoreStart
-            return \true;
-            // @codeCoverageIgnoreEnd
-        });
-        $contentBlocker->setBlockables($scannableBlockables);
-        foreach ($this->entries as $entry) {
-            if ($entries !== null && !\in_array($entry, $entries, \true)) {
-                continue;
-            }
-            $markup = $entry->markup;
-            if ($markup !== null && !empty($entry->tag) && !empty($entry->blocked_url) && empty($entry->template) && !$entry->lock) {
-                $markup = $contentBlocker->modifyAny($markup->getContent());
-                if (\preg_match(\sprintf('/%s="([^"]+)"/m', Constants::HTML_ATTRIBUTE_BLOCKER_ID), $markup, $consentIdMatches)) {
-                    // With the introduction of `findPotentialSelectorSyntaxFindersForMatch`, we have no test covering this
-                    // case but we need it for backward compatibility.
-                    // @codeCoverageIgnoreStart
-                    $entry->template = $consentIdMatches[1];
-                    foreach ($scannableBlockables as $scannableBlockable) {
-                        if ($scannableBlockable->getIdentifier() === $entry->template) {
-                            $entry->blockable = $scannableBlockable;
-                            break;
-                        }
-                    }
-                    // @codeCoverageIgnoreEnd
-                }
-            }
-        }
-        $contentBlocker->setBlockables($previousBlockables);
-        // Reset indexes
-        $this->blockableScanner->setActive($previousActive);
-        $this->entries = \array_values($this->entries);
-    }
-    /**
-     * Convert a found `link[rel="preconnect|dns-prefetch"]` within a template and stands alone within this template
-     * to an external URL as a DNS-prefetch and preconnect **must** be loaded in conjunction with another script.
-     */
-    public function convertStandaloneLinkRelTemplateToExternalUrl()
-    {
-        /**
-         * Scan entries.
-         *
-         * @var ScanEntry[]
-         */
-        $convert = [];
-        foreach ($this->entries as $key => $scanEntry) {
-            $markup = $scanEntry->markup;
-            // When writing tests for this function I did no longer found a reproduce case for this but I keep this for backwards-compatibility
-            // @codeCoverageIgnoreStart
-            if (!isset($scanEntry->template) || \in_array($scanEntry->template, $convert, \true) || !isset($markup)) {
-                continue;
-            }
-            // @codeCoverageIgnoreEnd
-            $markup = $markup->getContent();
-            if ($scanEntry->tag === 'link' && (\strpos($markup, 'dns-prefetch') !== \false || \strpos($markup, 'preconnect') !== \false)) {
-                // Collect all found scan entries for this template
-                $foundEntriesForThisTemplate = [$scanEntry];
-                foreach ($this->entries as $anotherEntry) {
-                    if ($anotherEntry !== $scanEntry && $anotherEntry->template === $scanEntry->template && $anotherEntry->markup !== null && $anotherEntry->markup->getContent() !== $markup) {
-                        $foundEntriesForThisTemplate[] = $anotherEntry;
-                    }
-                }
-                if (\count($foundEntriesForThisTemplate) === 1) {
-                    $convert[] = $scanEntry;
-                }
-            }
-        }
-        if (\count($convert) > 0) {
-            $added = [];
-            foreach ($convert as $convertScanEntry) {
-                $key = \array_search($convertScanEntry, $this->entries, \true);
-                $this->entries[] = $added[] = $entry = new ScanEntry();
-                $entry->blocked_url = $convertScanEntry->blocked_url;
-                $entry->source_url = $convertScanEntry->source_url;
-                $entry->tag = $convertScanEntry->tag;
-                $entry->attribute = $convertScanEntry->attribute;
-                $entry->markup = $convertScanEntry->markup;
-                unset($this->entries[$key]);
-            }
-            // Check again for the external URLs as they can indeed have links covered by other templates
-            $this->convertExternalUrlsCoveredByTemplate($added);
-        }
-    }
-    /**
-     * Check if a given template already exists in another scan result.
-     *
-     * @param ScanEntry $scanEntry
-     * @return false|ScanEntry The found entry which better suits this template
-     */
-    protected function alreadyExistsInOtherFoundTemplate($scanEntry)
-    {
-        $blockable = $scanEntry->blockable ?? null;
-        if (\is_null($blockable)) {
-            return \false;
-        }
-        foreach ($this->entries as $existing) {
-            if ($existing !== $scanEntry && isset($existing->blockable) && !empty($existing->template)) {
-                $currentHosts = $blockable->getOriginalExpressions();
-                $existingHosts = $existing->blockable->getOriginalExpressions();
-                if (\count($existingHosts) > \count($currentHosts)) {
-                    // Only compare when our opposite scan entry has more hosts to block
-                    // This avoids to alert false-positives when using `extends` middleware
-                    $foundSame = 0;
-                    foreach ($currentHosts as $currentHost) {
-                        if (\in_array($currentHost, $existingHosts, \true)) {
-                            ++$foundSame;
-                        }
-                    }
-                    if ($foundSame === \count($currentHosts)) {
-                        return $existing;
-                    }
-                }
-            }
-        }
-        return \false;
     }
     /**
      * Example: A blocked form does not have reCAPTCHA, got found as "CleverReach". The `form[action]` does

@@ -234,7 +234,22 @@ trait Activator
         }
         if ($installThisCallable === null) {
             $this->persistPreviousVersion();
-            \update_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version', $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION));
+            $slug = $this->getPluginConstant(Constants::PLUGIN_CONST_SLUG);
+            /**
+             * Modify an array of any data and when this data changes, the database version will be invalidated
+             * and therefore the `dbDelta` will be called again.
+             *
+             * Use case:
+             *
+             * - Freemium: Add a tier to the invalidate key so we can invalidate the database version when the tier changes,
+             *   e.g. when the user switches from Lite to Pro version.
+             *
+             * @hook DevOwl/Utils/DatabaseVersion/InvalidateKey/$slug
+             * @param {array} $invalidateKey
+             * @since 1.19.21
+             */
+            $invalidateKey = \apply_filters('DevOwl/Utils/DatabaseVersion/InvalidateKey/' . $slug, []);
+            \update_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version', ['version' => $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION), 'invalidateKey' => $invalidateKey]);
         }
         return \true;
     }
@@ -260,11 +275,25 @@ trait Activator
         }
     }
     /**
-     * Get the current persisted database version.
+     * Get the current persisted database version. It is stored in the database option `PREFIX_db_version`.
+     *
+     * Since version <= 1.19.20 the version is stored in semver format, e.g. `5.0.14`.
+     * Since version > 1.19.20 the version is stored in a serialized array with the following structure:
+     *
+     * ```
+     * [
+     *   'version' => '5.0.14',
+     *   'invalidateKey' => [...] // See filter DevOwl/Utils/DatabaseVersion/InvalidateKey
+     * ]
+     * ```
      */
     public function getDatabaseVersion()
     {
-        return \get_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version');
+        $optionValue = \get_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version');
+        if (\is_array($optionValue)) {
+            return $optionValue;
+        }
+        return ['version' => $optionValue, 'invalidateKey' => []];
     }
     /**
      * Get a list of previous installed database versions.
@@ -280,7 +309,7 @@ trait Activator
      */
     public function persistPreviousVersion()
     {
-        $currentVersion = \get_option($this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_version');
+        $currentVersion = $this->getDatabaseVersion()['version'];
         if ($currentVersion !== \false) {
             $previousVersionsOptionName = $this->getPluginConstant(Constants::PLUGIN_CONST_OPT_PREFIX) . '_db_previous_version';
             $previousVersions = $this->getPreviousDatabaseVersions();

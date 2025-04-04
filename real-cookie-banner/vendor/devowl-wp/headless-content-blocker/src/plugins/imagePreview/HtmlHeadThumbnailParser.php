@@ -34,6 +34,7 @@ class HtmlHeadThumbnailParser extends FastHtmlTag
      */
     public function __construct()
     {
+        parent::__construct('HtmlHeadThumbnailParser');
         $finder = new TagAttributeFinder(['meta', 'link'], ['rel', 'property']);
         $finder->addCallback(function ($match) {
             /**

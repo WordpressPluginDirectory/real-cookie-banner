@@ -108,6 +108,15 @@ class Frontend
                 'tcfString' => $transaction->getTcfString(),
             ] : null,
         ]];
+        // "Revert" the lazy loaded data from the revisions as we are building the lazy loaded data for the history viewer again
+        foreach ([$transaction->getRevisionIndependent(), $transaction->getRevision()] as $revision) {
+            if (isset($revision['lazyLoadedDataForSecondView'])) {
+                $vendorsInContext =& $obj['context']['tcf']['tcf']['vendors'];
+                foreach ($revision['lazyLoadedDataForSecondView']['tcf']['vendors'] as $vendorId => $vendor) {
+                    $vendorsInContext[$vendorId] = \array_merge_recursive($vendorsInContext[$vendorId], $vendor);
+                }
+            }
+        }
         $lazyLoaded = $this->prepareLazyData($obj['context']['tcf']);
         $obj['context']['lazyLoadedDataForSecondView'] = $lazyLoaded;
         // Backwards-compatibility for older records using Geo-restriction bypass

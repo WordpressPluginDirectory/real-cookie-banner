@@ -362,11 +362,10 @@ class Assets
             // translators:
             'hideLessRelevantDetails' => \_x('Hide more details (%s)', 'legal-text', RCB_TD),
             'other' => \_x('Other', 'legal-text', RCB_TD),
-            'legalBasis' => \_x('Use on legal basis of', 'legal-text', RCB_TD),
+            'legalBasis' => ['label' => \_x('Use on legal basis of', 'legal-text', RCB_TD), 'consentPersonalData' => \_x('Consent for processing personal data', 'legal-text', RCB_TD), 'consentStorage' => \_x('Consent for storing or accessing information on the terminal equipment of the user', 'legal-text', RCB_TD), 'legitimateInterestPersonalData' => \_x('Legitimate interest for the processing of personal data', 'legal-text', RCB_TD), 'legitimateInterestStorage' => \_x('Provision of explicitly requested digital service for storing or accessing information on the terminal equipment of the user', 'legal-text', RCB_TD), 'legalRequirementPersonalData' => \_x('Compliance with a legal obligation for processing of personal data', 'legal-text', RCB_TD)],
             // See als `useTerritorialLegalBasisArticles.tsx`
             'territorialLegalBasisArticles' => [General::TERRITORIAL_LEGAL_BASIS_GDPR => ['dataProcessingInUnsafeCountries' => \_x('Art. 49 (1) (a) GDPR', 'legal-text', RCB_TD)], General::TERRITORIAL_LEGAL_BASIS_DSG_SWITZERLAND => ['dataProcessingInUnsafeCountries' => \_x('Art. 17 (1) (a) DSG (Switzerland)', 'legal-text', RCB_TD)]],
             'legitimateInterest' => \_x('Legitimate interest', 'legal-text', RCB_TD),
-            'legalRequirement' => \_x('Compliance with a legal obligation', 'legal-text', RCB_TD),
             'consent' => \_x('Consent', 'legal-text', RCB_TD),
             'crawlerLinkAlert' => \_x('We have recognized that you are a crawler/bot. Only natural persons must consent to cookies and processing of personal data. Therefore, the link has no function for you.', 'legal-text', RCB_TD),
             'technicalCookieDefinitions' => \_x('Technical cookie definitions', 'legal-text', RCB_TD),
@@ -409,10 +408,14 @@ class Assets
             'devLicenseLink' => \__('https://devowl.io/knowledge-base/license-installation-type/', RCB_TD),
             // translators:
             'andSeparator' => \__(' and ', RCB_TD),
-            // @deprecated Replaced by `safetyMechanisms`
-            'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
-            // @deprecated Replaced by `dataProcessingInThirdCountries`
-            'dataProcessingInUnsafeCountries' => \_x('Data processing in unsafe third countries', 'legal-text', RCB_TD),
+            'deprecated' => [
+                // @deprecated Replaced by `safetyMechanisms`
+                'appropriateSafeguard' => \_x('Appropriate safeguard', 'legal-text', RCB_TD),
+                // @deprecated Replaced by `dataProcessingInThirdCountries`
+                'dataProcessingInUnsafeCountries' => \_x('Data processing in unsafe third countries', 'legal-text', RCB_TD),
+                // @deprecated Replaced by `legalRequirementPersonalData`
+                'legalRequirement' => \_x('Compliance with a legal obligation', 'legal-text', RCB_TD),
+            ],
         ], [], null, ['legal-text'])), 'pageRequestUuid4' => $core->getPageRequestUuid4(), 'pageByIdUrl' => \add_query_arg('page_id', '', \home_url()), 'pluginUrl' => $core->getPluginData('PluginURI')]), $context);
     }
     /**

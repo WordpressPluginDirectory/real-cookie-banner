@@ -150,32 +150,25 @@ class ScannableBlockable extends AbstractBlockable
         return 'scannable';
     }
     /**
-     * Check if a set of expressions matches at least one in our configured groups.
+     * Check if a set of found rules matches our group configuration.
      *
-     * It returns only `true` when all configured groups got resolved.
-     *
-     * @param string[][] $expressionsMap
+     * @param Rule[][] $foundRules
      */
-    public function checkExpressionsMatchesGroups($expressionsMap)
+    public function checkFoundRulesMatchesGroups($foundRules)
     {
-        // A map of group name and count of matched expressions and group expressions
+        // A map of group name and count of matched rules and group rules
         $result = [];
-        // Check if there is a rule which is not assigned to any rule, as it skips this check completely
-        // not implemented like this, as e.g. the youtube template does not define a group and default of
-        // `mustGroupBeResolved = false`.
-        /*foreach ($expressionsMap as $expressions) {
-              foreach ($expressions as $expression) {
-                  foreach ($this->rules as $rule) {
-                      if ($rule->getExpression() === $expression && empty($rule->getAssignedToGroups())) {
-                          return true;
-                      }
-                  }
-              }
-          }*/
         // Calculate current result
-        foreach ($this->getGroupsWithExpressionsMap() as $groupName => $groupExpressions) {
-            $expressions = \array_values(\array_unique($expressionsMap[$groupName] ?? []));
-            $result[$groupName] = [\count(\array_intersect($groupExpressions, $expressions)), \count($groupExpressions)];
+        foreach ($this->getGroupsWithRulesMap() as $groupName => $groupRules) {
+            $rules = \array_values(\array_unique($foundRules[$groupName] ?? [], \SORT_REGULAR));
+            $result[$groupName] = [
+                // Count of rules that are in both arrays
+                \count(\array_uintersect($groupRules, $rules, static function ($a, $b) {
+                    return $a <=> $b;
+                })),
+                // Count of rules in the group
+                \count($groupRules),
+            ];
         }
         // Check for rule groups validitity
         foreach ($this->ruleGroups as $groupName => $group) {
@@ -190,9 +183,9 @@ class ScannableBlockable extends AbstractBlockable
         return \true;
     }
     /**
-     * Get a map of `Record<string (group), string[] (expressions)>`.
+     * Get a map of `Record<string (group), Rule[] (rules)>`.
      */
-    public function getGroupsWithExpressionsMap()
+    public function getGroupsWithRulesMap()
     {
         $result = [];
         foreach ($this->rules as $rule) {
@@ -204,7 +197,7 @@ class ScannableBlockable extends AbstractBlockable
                 if (!isset($result[$group])) {
                     $result[$group] = [];
                 }
-                $result[$group][] = $rule->getExpression();
+                $result[$group][] = $rule;
             }
         }
         return $result;

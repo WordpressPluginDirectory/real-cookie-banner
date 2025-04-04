@@ -3,6 +3,8 @@
 namespace DevOwl\RealCookieBanner\view\checklist;
 
 use DevOwl\RealCookieBanner\view\Checklist;
+use DevOwl\RealCookieBanner\view\shortcode\CookiePolicyShortcode;
+use DevOwl\RealCookieBanner\view\shortcode\LinkShortcode;
 use WP_Post;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -56,10 +58,16 @@ class PrivacyPolicyMentionUsage extends \DevOwl\RealCookieBanner\view\checklist\
         if ($postId > 0) {
             $content = \get_post($postId);
             if ($content instanceof WP_Post) {
+                // Temporary remove shortcodes to avoid enqueue assets via `Assets#enqueue_scripts_and_styles`
+                \remove_shortcode(LinkShortcode::TAG);
+                \remove_shortcode(CookiePolicyShortcode::TAG);
                 $content = \apply_filters('the_content', $content->post_content);
                 if (\stripos($content, 'real cookie banner') !== \false) {
                     $toggleState = \true;
                 }
+                // Re-add shortcodes
+                \add_shortcode(LinkShortcode::TAG, [LinkShortcode::class, 'render']);
+                \add_shortcode(CookiePolicyShortcode::TAG, [CookiePolicyShortcode::class, 'render']);
             }
         }
         Checklist::getInstance()->toggle(self::IDENTIFIER, $toggleState);

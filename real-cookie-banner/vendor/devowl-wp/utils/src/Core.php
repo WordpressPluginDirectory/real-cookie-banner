@@ -86,9 +86,11 @@ trait Core
     public function updateDbCheck()
     {
         $activator = $this->getActivator();
-        $installed = $activator->getDatabaseVersion();
-        if ($installed !== $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION) && !$activator->isMigrationLocked() && $activator->isMigrationLocked(\time())) {
-            $slug = $this->getPluginConstant(Constants::PLUGIN_CONST_SLUG);
+        $databaseVersion = $activator->getDatabaseVersion();
+        $installed = $databaseVersion['version'];
+        $invalidateKey = $databaseVersion['invalidateKey'];
+        $slug = $this->getPluginConstant(Constants::PLUGIN_CONST_SLUG);
+        if (($installed !== $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION) || \json_encode($invalidateKey) !== \json_encode(\apply_filters('DevOwl/Utils/DatabaseVersion/InvalidateKey/' . $slug, []))) && !$activator->isMigrationLocked() && $activator->isMigrationLocked(\time())) {
             $textdomain = $this->getPluginConstant(Constants::PLUGIN_CONST_TEXT_DOMAIN);
             $this->debug('(Re)install the database tables', __FUNCTION__);
             // Clear localization cache for JSON MO files

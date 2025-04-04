@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/fast-html-tag",
-    "version": "1.2.8",
+    "version": "1.2.10",
     "private": true,
     "description": "Find tags within HTML content and modify it in speed of light",
     "homepage": "https://devowl.io",

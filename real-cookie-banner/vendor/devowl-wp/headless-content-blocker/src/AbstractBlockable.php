@@ -88,6 +88,20 @@ abstract class AbstractBlockable implements SelectorSyntaxAttributeFunctionVaria
         $this->expressionToStrposCache = null;
     }
     /**
+     * Check if the blockable matches the expression loosely.
+     *
+     * @param string $str
+     */
+    public function matchesLoose($str)
+    {
+        foreach ($this->getRegularExpressions() as $expression => $regexp) {
+            if ($this->matchesExpressionLoose($expression, $str)) {
+                return $expression;
+            }
+        }
+        return null;
+    }
+    /**
      * It is a performance-boost to extract the searchable strings for this expression, so we can first check for simple `contains` pattern
      * with `strpos` instead of expensive `preg_match`.
      *

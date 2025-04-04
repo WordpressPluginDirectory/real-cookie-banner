@@ -4,6 +4,7 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\Freemium;
 
 use Exception;
 use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Base;
+use DevOwl\RealCookieBanner\Vendor\MatthiasWeb\Utils\Constants as UtilsConstants;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -20,12 +21,25 @@ trait CorePro
          * @var Base
          */
         $base = $this;
-        $slug = $base->getPluginConstant(Constants::PLUGIN_CONST_SLUG_PRO);
+        $slug = $base->getPluginConstant(UtilsConstants::PLUGIN_CONST_SLUG);
+        $slugPro = $base->getPluginConstant(Constants::PLUGIN_CONST_SLUG_PRO);
         \add_filter('http_request_args', [$this, 'http_request_args_lite'], 10, 2);
         \add_filter('site_transient_update_plugins', [$this, 'site_transient_update_plugins']);
         \add_filter('plugin_row_meta', [$this, 'plugin_row_meta_lite'], 10, 2);
-        \add_filter('DevOwl/Utils/Localization/LanguagePacks/' . $slug, [$this, 'language_packs'], 10, 2);
+        \add_filter('DevOwl/Utils/Localization/LanguagePacks/' . $slugPro, [$this, 'language_packs'], 10, 2);
+        \add_filter('DevOwl/Utils/DatabaseVersion/InvalidateKey/' . $slug, [$this, 'database_version_invalidate_key'], 10, 1);
         \register_activation_hook(\plugin_basename($base->getPluginConstant('FILE')), [$this, 'deactivate_lite_version']);
+    }
+    /**
+     * Add a tier to the invalidate key.
+     *
+     * @param array $invalidateKey
+     * @return array
+     */
+    public function database_version_invalidate_key($invalidateKey)
+    {
+        $invalidateKey['tier'] = 'pro';
+        return $invalidateKey;
     }
     /**
      * Deactivate lite version of this plugin. Warning: You need also implement this functionality in your

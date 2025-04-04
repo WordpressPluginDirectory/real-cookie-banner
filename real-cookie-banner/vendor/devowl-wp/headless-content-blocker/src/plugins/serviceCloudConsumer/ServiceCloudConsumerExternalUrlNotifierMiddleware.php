@@ -24,11 +24,13 @@ abstract class ServiceCloudConsumerExternalUrlNotifierMiddleware extends Abstrac
      * Return an array of objects with the following properties:
      * - `identifier` (string): The identifier of the external URL.
      * - `externalUrl` (string): The external URL.
+     * - `externalHost` (string): The host of the external URL.
      * - `markup` (string): The markup of the external URL. (optional)
      *
+     * @param string[] $alreadyNotified A list of hostnames which are already notified so we do not notify them again.
      * @return array[]
      */
-    public abstract function fetchExternalUrls();
+    public abstract function fetchExternalUrls($alreadyNotified);
     /**
      * Notify the external URL which is now covered by a blocker template.
      *
@@ -81,7 +83,8 @@ abstract class ServiceCloudConsumerExternalUrlNotifierMiddleware extends Abstrac
             }
         }
         if (\count($headlessContentBlocker->getBlockables()) > 0) {
-            $externalUrls = $this->fetchExternalUrls();
+            $alreadyNotified = $this->alreadyNotified();
+            $externalUrls = $this->fetchExternalUrls($alreadyNotified);
             if (\count($externalUrls) > 0) {
                 /**
                  * This plugin needs to be available after our custom hooks fired in `Plugin`
@@ -91,13 +94,39 @@ abstract class ServiceCloudConsumerExternalUrlNotifierMiddleware extends Abstrac
                 $scanner = $headlessContentBlocker->addPlugin(BlockableScanner::class);
                 $headlessContentBlocker->addPlugin(ScriptInlineExtractExternalUrl::class);
                 $this->configure($headlessContentBlocker);
-                $headlessContentBlocker->setup();
+                // Filter blockables by only using those for which we have external URLs (by host)
+                // For this, we group the external URLs by host and then filter the blockables
+                // This improves performance when having a lot of external URLs, especially when having
+                // a lot of external URLs which are currently not covered by any blocker template.
+                $externalUrlsByHost = [];
                 foreach ($externalUrls as $externalUrl) {
-                    $headlessContentBlocker->modifyHtml($externalUrl['markup'] ?? \sprintf('<script src="%s"></script>', $externalUrl['externalUrl']));
+                    $externalUrlsByHost[$externalUrl['externalHost']][] = $externalUrl;
                 }
+                $headlessContentBlocker->setup();
+                $allBlockables = $headlessContentBlocker->getBlockables();
+                foreach ($externalUrlsByHost as $host => $hostExternalUrls) {
+                    $html = '';
+                    $hostBlockables = \array_values(\array_filter($allBlockables, function ($blockable) use($host) {
+                        return $blockable->matchesLoose($host) !== null;
+                    }));
+                    if (\count($hostBlockables) === 0) {
+                        continue;
+                    }
+                    $headlessContentBlocker->setBlockables($hostBlockables);
+                    foreach ($hostExternalUrls as $externalUrl) {
+                        $html .= $externalUrl['markup'] ?? \sprintf('<script src="%s"></script>', $externalUrl['externalUrl']);
+                        if (\strlen($html) >= 1000000) {
+                            $headlessContentBlocker->modifyHtml($html);
+                            $html = '';
+                            // Reset for the next chunk
+                        }
+                    }
+                    $headlessContentBlocker->modifyHtml($html);
+                    // Process any remaining HTML
+                }
+                $headlessContentBlocker->setBlockables($allBlockables);
                 $scanner->filterFalsePositives();
                 $scanEntries = $scanner->flushResults();
-                $alreadyNotified = $this->alreadyNotified();
                 $relevantScanEntries = [];
                 foreach ($scanEntries as $scanEntry) {
                     if (empty($scanEntry->template)) {

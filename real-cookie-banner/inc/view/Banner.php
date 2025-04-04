@@ -38,7 +38,7 @@ class Banner
      *
      * For the chronically changes have a look at the `@devowl-wp/react-cookie-banner` package.
      */
-    const DESIGN_VERSION = 11;
+    const DESIGN_VERSION = 12;
     const ACTION_CLEAR_CURRENT_COOKIE = 'rcb-clear-current-cookie';
     /**
      * Example:

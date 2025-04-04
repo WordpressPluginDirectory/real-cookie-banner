@@ -21,6 +21,7 @@ class Revision
     const TYPE_INDEPENDENT = 'independent';
     const TYPE_REQUIRE_NEW_CONSENT = 'dependent';
     const TYPE_ALL = 'all';
+    const TCF_VENDOR_INDEPENDENT_KEYS = ['deviceStorageDisclosure'];
     /**
      * See `CookieConsentManagement`.
      *
@@ -80,7 +81,7 @@ class Revision
         $revision = \array_merge(['options' => $this->optionsToJson(self::TYPE_REQUIRE_NEW_CONSENT), 'groups' => $this->serviceGroupsToJson(), 'websiteOperator' => $this->websiteOperatorToJson(), 'predefinedDataProcessingInSafeCountriesLists' => AbstractConsent::PREDEFINED_DATA_PROCESSING_IN_SAFE_COUNTRIES_LISTS, 'nonVisualBlocker' => $this->nonVisualBlockersToJson(), 'cookiePolicy' => $cookiePolicy], $this->getPersistence()->getContextVariablesExplicit());
         $tcf = $settings->getTcf();
         if ($tcf->isActive()) {
-            $revision['tcf'] = $this->tcfToJson();
+            $revision['tcf'] = $this->tcfToJson(self::TYPE_REQUIRE_NEW_CONSENT);
         }
         $gcm = $settings->getGoogleConsentMode();
         if ($gcm->isEnabled()) {
@@ -121,7 +122,11 @@ class Revision
         $tcf = $settings->getTcf();
         if ($tcf->isActive()) {
             $revision['tcfMetadata'] = $this->tcfMetadataToJson();
+            $revision['tcf'] = $this->tcfToJson(self::TYPE_INDEPENDENT);
         }
+        $frontend = $this->getCookieConsentManagement()->getFrontend();
+        $lazyLoadedData = $frontend->prepareLazyData($revision);
+        $revision['lazyLoadedDataForSecondView'] = $lazyLoadedData;
         $revision = $this->getPersistence()->alterRevisionIndependent($revision);
         $json_revision = \json_encode($revision);
         $hash = \md5($json_revision);
@@ -194,8 +199,36 @@ class Revision
     }
     /**
      * TCF data (vendors, declarations, stacks, ...) to array.
+     *
+     * TCF Policy 2025-01-16.5.0.a, Chapter IV, point 21(8) defines (without annotations):
+     *
+     * > 8. If a Vendor that was not included in a prior use of the Framework UI is added by the Publisher,
+     * > the Publisher must resurface or instruct its CMP to resurface the Framework UI to establish that
+     * > Vendor’s Legal Bases before signalling that the Vendor’s Legal Bases have been established. It also
+     * > means resurfacing the UI, for example, when a previously surfaced Vendor claims a previously
+     * > undisclosed Purpose or changes its declared Legal Basis for a previously disclosed Purpose before
+     * > signalling that the Vendor’s Legal Bases have been established.
+     *
+     * This means, we **must** according to the TCF policy resurface the cookie banner if:
+     *
+     * - An new vendor configuration is created
+     * - A legal basis of an of a purpose existing vendor configuration has been changed
+     * - A new purpose has been added by a vendor
+     *
+     * From a legal point of view, all information according to Art. 13 GDPR are relevant for a informed consent,
+     * which includes more information from the vendor definition as required by TCF (e.g. privacy policy link or
+     * contact information of the vendor).
+     *
+     * **Suggested solution**: All data of the vendor except of the device disclosure (controlled by the vendor's
+     * server, but not IAB Europe) trigger a resurface. This should be a balance between legal compliance,
+     * fulfilling the IAB Europe requirements and user-friendliness.
+     *
+     * @see https://iabeurope.eu/iab-europe-transparency-consent-framework-policies/
+     * @see https://app.clickup.com/t/8698ggfna?comment=90120113671756&threadedComment=90120113906767
+     *
+     * @param string $type See `TYPE_` constants
      */
-    public function tcfToJson()
+    public function tcfToJson($type = self::TYPE_ALL)
     {
         $tcf = $this->getCookieConsentManagement()->getSettings()->getTcf();
         if (!$tcf->isActive()) {
@@ -203,31 +236,46 @@ class Revision
         }
         $gvl = $tcf->getGvl();
         $vendorConfigurations = $tcf->getVendorConfigurations();
-        $output = ['vendors' => [], 'stacks' => [], StackCalculator::DECLARATION_TYPE_PURPOSES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_PURPOSES => [], StackCalculator::DECLARATION_TYPE_FEATURES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_FEATURES => [], StackCalculator::DECLARATION_TYPE_DATA_CATEGORIES => []];
+        $output = ['vendors' => [], 'stacks' => [], StackCalculator::DECLARATION_TYPE_PURPOSES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_PURPOSES => [], StackCalculator::DECLARATION_TYPE_FEATURES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_FEATURES => [], StackCalculator::DECLARATION_TYPE_DATA_CATEGORIES => [], 'vendorConfigurations' => []];
         $usedDeclarations = [StackCalculator::DECLARATION_TYPE_PURPOSES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_PURPOSES => [], StackCalculator::DECLARATION_TYPE_FEATURES => [], StackCalculator::DECLARATION_TYPE_SPECIAL_FEATURES => [], StackCalculator::DECLARATION_TYPE_DATA_CATEGORIES => []];
         foreach ($vendorConfigurations as $vendorConfiguration) {
             $vendorId = $vendorConfiguration->getVendorId();
-            $output['vendorConfigurations'][$vendorId] = $vendorConfiguration->toJson();
+            if (\in_array($type, [self::TYPE_REQUIRE_NEW_CONSENT, self::TYPE_ALL], \true)) {
+                $output['vendorConfigurations'][$vendorId] = $vendorConfiguration->toJson();
+            }
             $output['vendors'][$vendorId] = $vendorConfiguration->getVendor();
+            if ($type !== self::TYPE_ALL) {
+                foreach ($output['vendors'][$vendorId] as $key => $value) {
+                    $isIndependent = \in_array($key, self::TCF_VENDOR_INDEPENDENT_KEYS, \true);
+                    if ($type === self::TYPE_REQUIRE_NEW_CONSENT && $isIndependent || $type === self::TYPE_INDEPENDENT && !$isIndependent) {
+                        unset($output['vendors'][$vendorId][$key]);
+                    }
+                }
+            }
             foreach ($usedDeclarations as $declaration => $used) {
                 $usedDeclarations[$declaration] = \array_values(\array_unique(\array_merge($vendorConfiguration->getUsedDeclarations()[$declaration], $used)));
             }
         }
         // Map declaration types to objects and mark unused
-        $output = \array_merge($output, $gvl->allDeclarations(['onlyReturnDeclarations' => \true]));
-        foreach (StackCalculator::DECLARATION_TYPES as $declaration) {
-            foreach ($output[$declaration] as $id => $declarationObject) {
-                if (isset($usedDeclarations[$declaration]) && !\in_array($id, $usedDeclarations[$declaration], \true)) {
-                    $output['unused'][$declaration][] = $id;
+        if (\in_array($type, [self::TYPE_REQUIRE_NEW_CONSENT, self::TYPE_ALL], \true)) {
+            $output = \array_merge($output, $gvl->allDeclarations(['onlyReturnDeclarations' => \true]));
+            foreach (StackCalculator::DECLARATION_TYPES as $declaration) {
+                foreach ($output[$declaration] as $id => $declarationObject) {
+                    if (isset($usedDeclarations[$declaration]) && !\in_array($id, $usedDeclarations[$declaration], \true)) {
+                        $output['unused'][$declaration][] = $id;
+                    }
                 }
             }
-        }
-        foreach (StackCalculator::DECLARATION_TYPES as $declaration) {
-            $output['unused'][$declaration] = $output['unused'][$declaration] ?? [];
-        }
-        // Calculate stacks on used
-        if (\count($usedDeclarations) > 0) {
-            $output['stacks'] = (new StackCalculator($gvl->stacks()['stacks'], $usedDeclarations))->calculateBestSuitableStacks();
+            foreach (StackCalculator::DECLARATION_TYPES as $declaration) {
+                $output['unused'][$declaration] = $output['unused'][$declaration] ?? [];
+            }
+            // Calculate stacks on used
+            if (\count($usedDeclarations) > 0) {
+                $output['stacks'] = (new StackCalculator($gvl->stacks()['stacks'], $usedDeclarations))->calculateBestSuitableStacks();
+            }
+        } else {
+            // In independent revision we currently hold the vendors only with their device disclosure
+            return ['vendors' => (object) $output['vendors']];
         }
         // Cast the output values to objects as they can be empty
         foreach (\array_keys($output) as $key) {

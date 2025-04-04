@@ -3,6 +3,539 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.1.0 (2025-04-02)
+
+
+### Bug Fixes
+
+* call to a member function byHandle() on null in Assets.php:223 (CU-8698j0qp0)
+* do not request new consent on TCF vendor device disclosure update (CU-8698ggfna)
+
+
+### Features
+
+* overwork some texts for Orientierungshilfe der Aufsichtsbehörden 1.2 (CU-86972222q)
+
+
+### Performance Improvements
+
+* consider blockables only relevant for an external URL instead of using all (CU-86980mzm5)
+* do not scan already notified service templates (CU-86980mzm5)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.4</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### FEAT
+
+* Service Cloud - Option to enable/disable deactivating all pre-release clients at release (CU-86980gubq)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.8</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Bug Fixes
+
+* compatibility with TheGem and The Events Calendar (CU-8696rncw0)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.13</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* do not request new consent on TCF vendor device disclosure update (CU-8698ggfna)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.10</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* invalid service template opt-in code when using Referrer-Policy: origin (CU-8698jkz8y)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.7</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* invalid service template opt-in code when using Referrer-Policy: origin (CU-8698jkz8y)
+* isolate the query validation on a per-scan-entry basis (CU-86980mzm5)
+
+
+##### Code Refactoring
+
+* clean up false positive processor (CU-86980mzm5)
+
+
+##### Performance Improvements
+
+* consider blockables only relevant for an external URL instead of using all (CU-86980mzm5)
+* do not scan already notified service templates (CU-86980mzm5)
+* false positive processor optimization when checking thousands of scan entries (CU-86980mzm5)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.23</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* translation for service and content blocker could not be created with the + icon (CU-8698j0bjb)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Features
+
+* overwork some texts for Orientierungshilfe der Aufsichtsbehörden 1.2 (CU-86972222q)
+
+
+##### Performance Improvements
+
+* improve LCP count by avoiding a lot of repaints (CU-8698ejjw0)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.1.0</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Features
+
+* overwork some texts for Orientierungshilfe der Aufsichtsbehörden 1.2 (CU-86972222q)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.11</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Bug Fixes
+
+* invalid service template opt-in code when using Referrer-Policy: origin (CU-8698jkz8y)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 1.0.6</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Performance Improvements
+
+* improve LCP count by avoiding a lot of repaints (CU-8698ejjw0)</details>
+
+
+
+
+
+## 5.0.16 (2025-03-27) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+
+### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.3</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.7</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.12</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.10</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.23</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 1.0.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.2.9</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.101</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.6</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.6</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.22</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.0.11</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.12</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.38</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.0.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.22</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/resolve-none-computed-style 1.1.39</summary>
+
+
+**_Purpose of dependency:_** _Read the actually applied CSS property value instead of the calculated one._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.10</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/sitemap-crawler 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Find and crawl sitemaps to get a full list of URLs._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.22</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.1.1</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/api-real-product-manager 1.0.4</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Commerce backend._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.7.1</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)
+
+
+##### Continuous Integration
+
+* create wildcard certificate for owlsrv.de (CU-8697hja46)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.15</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* retry up to 10 minutes when component is locked in weblate (CU-8695kguk7)
+
+
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.12</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 1.2.1</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/monorepo-utils 0.2.10</summary>
+
+
+**_Purpose of dependency:_** _Predefined monorepo utilities and tasks._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.3</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/regexp-translation-extractor 0.2.35</summary>
+
+
+**_Purpose of dependency:_** _Provide a performant translation extractor based on regular expression._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/ts-config 0.1.13</summary>
+
+
+**_Purpose of dependency:_** _Predefined compiler options for our backends._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.6</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 1.0.5</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.39</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Code Refactoring
+
+* update ESLint to v9, organize imports, and refactor imports for ESM preparation (CU-8694tbwme)</details>
+
+
+
+
+
+## 5.0.15 (2025-03-19)
+
+
+### Bug Fixes
+
+* accessibility issue with link shortcodes (CU-869813z13)
+* add role button to menu links (CU-869813z13)
+* compatibility with Tutor LMS and non visual content blockers (CU-8698bt1vz)
+* do not download defect TCF vendors every 6 hours which leads to daily cookie banner (CU-8697zkqjj)
+* invalidate the database scheme when upgrading from free to PRO version (CU-8697zkqjj)
+
+
+### Maintenance
+
+* add new ad-network The Moneytizer (CU-8693fhybx)
+* rmeove error log (CU-8697zkqjj)
+* upgrade TCF library to 1.5.15 (CU-86981r4ga)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.2</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Maintenance
+
+* upgrade TCF library to 1.5.15 (CU-86981r4ga)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.9</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Maintenance
+
+* upgrade TCF library to 1.5.15 (CU-86981r4ga)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.100</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Bug Fixes
+
+* invalidate the database scheme when upgrading from free to PRO version (CU-8697zkqjj)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.5</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Elementor widget CSS and cut visual content blocker headline (CU-8698c7t2b)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.0.10</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* upgrade TCF library to 1.5.15 (CU-86981r4ga)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.0.11</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* add new ad-network The Moneytizer (CU-8693fhybx)
+* upgrade TCF library to 1.5.15 (CU-86981r4ga)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.9</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Maintenance
+
+* add new ad-network The Moneytizer (CU-8693fhybx)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.21</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* invalidate the database scheme when upgrading from free to PRO version (CU-8697zkqjj)</details>
+
+
+
+
+
+## 5.0.14 (2025-03-10) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 1.2.0</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Features
+
+* add Microsoft Azure to data processing country groups (CU-8697h1a7m)</details>
+
+
+
+
+
 ## 5.0.13 (2025-03-04)
 
 

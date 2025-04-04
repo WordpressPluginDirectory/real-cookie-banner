@@ -103,6 +103,7 @@ class HeadlessContentBlocker extends FastHtmlTag
      */
     public function __construct()
     {
+        parent::__construct('HeadlessContentBlocker');
         $this->init();
         $this->addPlugin(NegatePlugin::class);
         $this->finderToMatcher = new SplObjectStorage();

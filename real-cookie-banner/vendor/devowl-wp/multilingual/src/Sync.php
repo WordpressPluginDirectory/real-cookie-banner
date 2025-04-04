@@ -104,7 +104,7 @@ class Sync
                 }
                 return new WP_REST_Response(['sourceId' => $id, 'sourceLocale' => $sourceLocale, 'targetLocale' => $targetLocale, 'type' => $postType, 'translations' => $translations], 201);
             }, 'permission_callback' => function () use($postType) {
-                return \current_user_can(\sprintf('publish_%ss', $postType));
+                return \current_user_can(\get_post_type_object($postType)->cap->publish_posts);
             }, 'args' => ['id' => ['type' => 'integer', 'required' => \true], 'targetLocale' => ['required' => \true]]]);
         }
         foreach ($this->getTaxonomies() as $taxonomy => $configuration) {

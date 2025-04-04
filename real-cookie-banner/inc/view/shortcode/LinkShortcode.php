@@ -57,6 +57,6 @@ class LinkShortcode
         // Force to show banner
         $core->getAssets()->enqueue_scripts_and_styles(Constants::ASSETS_TYPE_FRONTEND);
         Checklist::getInstance()->toggle(Shortcode::IDENTIFIER, \true);
-        return \sprintf('<%s %s href="%s" id="%s" data-success-message="%s" class="rcb-sc-link rcb-sc-link-%s %s">%s</%s>', $atts['tag'], \is_customize_preview() ? \sprintf('onClick="alert(\'%s\')"', \esc_html(\__('This legal link on your website has the corresponding functionality. It is deactivated in the preview you are currently in.', RCB_TD))) : '', '#consent-' . $atts['type'], !empty($atts['id']) ? \esc_attr($atts['id']) : 'rcb-sc-link-' . $atts['type'], \esc_attr($atts['successmessage']), $atts['type'], \esc_attr($atts['class']), \esc_html($atts['text']), $atts['tag']);
+        return \sprintf('<%s %s href="%s" role="button" id="%s" data-success-message="%s" class="rcb-sc-link rcb-sc-link-%s %s">%s</%s>', $atts['tag'], \is_customize_preview() ? \sprintf('onClick="alert(\'%s\')"', \esc_html(\__('This legal link on your website has the corresponding functionality. It is deactivated in the preview you are currently in.', RCB_TD))) : '', '#consent-' . $atts['type'], !empty($atts['id']) ? \esc_attr($atts['id']) : 'rcb-sc-link-' . $atts['type'], \esc_attr($atts['successmessage']), $atts['type'], \esc_attr($atts['class']), \esc_html($atts['text']), $atts['tag']);
     }
 }

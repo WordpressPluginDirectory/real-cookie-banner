@@ -11,6 +11,14 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch
 class FastHtmlTag
 {
     /**
+     * Unique name of this instance.
+     *
+     * Can be useful in conjunction with `$$skipFastHtmlTag`.
+     *
+     * @var string
+     */
+    private $name;
+    /**
      * Callbacks.
      *
      * @var callable[]
@@ -34,10 +42,12 @@ class FastHtmlTag
     private $finder = [];
     /**
      * C'tor.
+     *
+     * @param string $name
      */
-    public function __construct()
+    public function __construct($name = 'FastHtmlTag')
     {
-        // Silence is golden.
+        $this->name = $name;
     }
     /**
      * Add a finder scheme. See `finder/` for available ones.
@@ -91,6 +101,9 @@ class FastHtmlTag
             }
             // We have now a complete JSON array, let's walk it recursively and apply content blocker
             if ($json !== null) {
+                if (isset($json['$$skipFastHtmlTag']) && \is_array($json['$$skipFastHtmlTag']) && \in_array($this->name, $json['$$skipFastHtmlTag'], \true)) {
+                    return $mixed;
+                }
                 \array_walk_recursive($json, function (&$value) {
                     if (Utils::isHtml($value)) {
                         $value = $this->modifyHtml($value);

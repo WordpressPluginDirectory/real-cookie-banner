@@ -35,14 +35,21 @@ class ServiceCloudConsumerExternalUrlNotifierMiddlewareImpl extends ServiceCloud
         $scanner->setSourceUrl(\home_url());
     }
     // Documentation in `ServiceCloudConsumerExternalUrlNotifierMiddleware`.
-    public function fetchExternalUrls()
+    public function fetchExternalUrls($alreadyNotified)
     {
         global $wpdb;
         // Get all external URLs from the database
         $table_name = $this->getTableName(Persist::TABLE_NAME);
         $table_name_markup = $this->getTableName(Persist::TABLE_NAME_MARKUP);
+        // Escape the already notified hostnames
+        $alreadyNotified[] = 'localhost';
+        // the `IN` needs to have at least one element so use a dummy value
+        $alreadyNotified = \array_map(function ($hostname) {
+            global $wpdb;
+            return $wpdb->prepare('%s', $hostname);
+        }, $alreadyNotified);
         // phpcs:disable WordPress.DB
-        $externalUrls = $wpdb->get_results("SELECT DISTINCT(s.blocked_url_hash) AS identifier, s.blocked_url AS externalUrl, m.markup\n            FROM {$table_name} s\n            INNER JOIN {$table_name_markup} m ON s.markup_hash = m.markup_hash\n            WHERE s.blocked_url IS NOT NULL AND s.preset = ''", ARRAY_A);
+        $externalUrls = $wpdb->get_results("SELECT DISTINCT(s.blocked_url_hash) AS identifier, s.blocked_url_host AS externalHost, s.blocked_url AS externalUrl, m.markup\n            FROM {$table_name} s\n            INNER JOIN {$table_name_markup} m ON s.markup_hash = m.markup_hash\n            WHERE s.blocked_url IS NOT NULL AND s.preset = ''\n            AND s.blocked_url_host NOT IN (" . \join(', ', $alreadyNotified) . ')', ARRAY_A);
         // phpcs:enable WordPress.DB
         return $externalUrls;
     }
