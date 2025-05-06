@@ -449,7 +449,7 @@ class Assets
     public function real_queue_enqueue_scripts($handle)
     {
         $handle = $this->enqueueScript('queue', [[$this->isPro(), 'queue.pro.js'], 'queue.lite.js'], [$handle]);
-        \wp_localize_script($handle, 'realCookieBannerQueue', ['originalHomeUrl' => \DevOwl\RealCookieBanner\Utils::getOriginalHomeUrl()]);
+        \wp_localize_script($handle, 'realCookieBannerQueue', ['originalHomeUrl' => \DevOwl\RealCookieBanner\Utils::getOriginalHomeUrl(), 'blogId' => \get_current_blog_id()]);
     }
     /**
      * Enqueue assets for Fluent Community. With this hook, we are in the `<head` section.

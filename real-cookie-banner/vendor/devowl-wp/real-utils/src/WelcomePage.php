@@ -117,30 +117,7 @@ class WelcomePage
     	</div>
 
 		%featuresHtml
-        
-        <div class="feature-section has-1-columns column-links real-utils-newsletter-box">
-            <h2>' . \__('Newsletter', REAL_UTILS_TD) . '</h2>
-            <p class="about-description">' . \__('Receive the latest news about devowl.io WordPress plugins directly in your inbox', REAL_UTILS_TD) . '</p>
-            <p>
-                <input type="text" name="newsletter-email" value="%currentEmail" placeholder="' . \__('Enter your email...', REAL_UTILS_TD) . '" class="large-text" />
-                <div>
-                    <label>
-                        <input type="checkbox" name="newsletter-privacy" />
-                        ' . \sprintf(
-            // translators:
-            \_x('I hereby consent to the processing of my data by devowl.io GmbH for the purpose of sending the newsletter. The consent can be revoked at any time with effect for the future by clicking on the "Unsubscribe" button or by e-mail.', 'legal-text', REAL_UTILS_TD)
-        ) . '</span>
-                    </label>
-                </div>
-                <div style="margin-top:15px;">' . \sprintf(
-            // translators:
-            \_x('Information on the processing of your personal data can be found in our <a %s>privacy policy</a>.', 'legal-text', REAL_UTILS_TD),
-            'href="' . \esc_attr(\__('https://devowl.io/privacy-policy/', REAL_UTILS_TD)) . '" target="_blank"'
-        ) . '</div>
-            </p>
-            <a href="#" class="button button-primary button-hero">' . \__('Subscribe', REAL_UTILS_TD) . '</a>
-            <div class="hidden error-msg"></div>
-        </div>
+
         %ourPluginsHeader
     </div>
 </div>';
@@ -164,7 +141,7 @@ class WelcomePage
         $outputHeader = '';
         $_REQUEST['type'] = 'author';
         $_REQUEST['s'] = 'devowl';
-        $_GET['tab'] = 'search';
+        $_REQUEST['tab'] = 'search';
         $wp_list_table = \_get_list_table('WP_Plugin_Install_List_Table');
         $wp_list_table->order = 'DESC';
         $wp_list_table->orderby = 'last_updated';
@@ -201,6 +178,10 @@ class WelcomePage
                     continue;
                 }
                 // Remove already installed plugins
+                if (\defined('DEVOWL_WP_DEV') && \constant('DEVOWL_WP_DEV')) {
+                    // In dev mode, we want to see all plugins
+                    continue;
+                }
                 $slug = $plugin['slug'];
                 $fix = isset(self::PLUGIN_SLUG_FIXER[$slug]) ? self::PLUGIN_SLUG_FIXER[$slug] : null;
                 $exists = \is_dir($pluginDir . $slug) || $fix !== null && \is_dir($pluginDir . $fix);

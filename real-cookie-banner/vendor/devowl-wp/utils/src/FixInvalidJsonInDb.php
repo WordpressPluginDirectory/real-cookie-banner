@@ -128,6 +128,18 @@ class FixInvalidJsonInDb
         if (!\is_string($val) || !$this->json5Supported) {
             return $val;
         }
+        // Json5 is expensive, so we only use it if the string is not valid JSON
+        if (\function_exists('DevOwl\\RealCookieBanner\\Vendor\\json_validate')) {
+            $valid = json_validate($val);
+            if ($valid === \true) {
+                return $val;
+            }
+        } else {
+            \json_decode($val);
+            if (\json_last_error() === \JSON_ERROR_NONE) {
+                return $val;
+            }
+        }
         try {
             $decoded = Json5Decoder::decode($val, \true);
             $newVal = \json_encode($decoded);

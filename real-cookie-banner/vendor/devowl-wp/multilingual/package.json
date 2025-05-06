@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.13.23",
+    "version": "1.13.27",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",
@@ -232,10 +232,10 @@
                 "system": "weblate",
                 "weblate": {
                     "componentSettings": {
-                        "check_flags": "php-format",
+                        "check_flags": "php-format,automattic-components-format",
                         "enforced_checks": [
                             "php_format",
-                            "automatic_interpolate_components"
+                            "automattic_components_format"
                         ]
                     }
                 },

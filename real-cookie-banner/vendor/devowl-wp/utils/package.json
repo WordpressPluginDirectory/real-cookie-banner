@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.19.23",
+    "version": "1.19.27",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",
@@ -270,10 +270,10 @@
                 "system": "weblate",
                 "weblate": {
                     "componentSettings": {
-                        "check_flags": "php-format",
+                        "check_flags": "php-format,automattic-components-format",
                         "enforced_checks": [
                             "php_format",
-                            "automatic_interpolate_components"
+                            "automattic_components_format"
                         ]
                     }
                 },

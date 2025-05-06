@@ -34,6 +34,7 @@ class FalsePositivesProcessor
         $this->convertStandaloneLinkRelTemplateToExternalUrl();
         $this->removeExternalUrlsWithTemplateDuplicate();
         $this->removeDuplicateScannedItems();
+        $this->removeTemplatesWithoutBlockedUrlIfThereIsOneWithBlockedUrl();
         return $this->getEntries();
     }
     /**
@@ -396,6 +397,36 @@ class FalsePositivesProcessor
         }
         // Reset indexes
         $this->blockableScanner->setActive($previousActive);
+        $this->entries = \array_values($this->entries);
+    }
+    /**
+     * Remove templates without blocked URL if there is one with blocked URL.
+     */
+    public function removeTemplatesWithoutBlockedUrlIfThereIsOneWithBlockedUrl()
+    {
+        $scanEntriesById = [];
+        $excludeAttributesFromId = ['blocked_url_hash', 'attribute'];
+        foreach ($this->entries as $scanEntry) {
+            if ($scanEntry->blocked_url === null || $scanEntry->attribute === null) {
+                continue;
+            }
+            $id = $scanEntry->getId($excludeAttributesFromId);
+            if (!isset($scanEntriesById[$id])) {
+                $scanEntriesById[$id] = [];
+            }
+            $scanEntriesById[$id][] = $scanEntry;
+        }
+        foreach ($this->entries as $idx => $scanEntry) {
+            // Keep entries without any attribute target (e.g. content of inline scripts)
+            if ($scanEntry->attribute === null || $scanEntry->blocked_url !== null) {
+                continue;
+            }
+            $withBlockedUrl = $scanEntriesById[$scanEntry->getId($excludeAttributesFromId)] ?? [];
+            if (\count($withBlockedUrl) > 0) {
+                unset($this->entries[$idx]);
+            }
+        }
+        // Reset indexes
         $this->entries = \array_values($this->entries);
     }
     /**

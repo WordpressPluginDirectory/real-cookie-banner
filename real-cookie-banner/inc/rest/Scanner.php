@@ -217,8 +217,8 @@ class Scanner
         $checker = new SavingConsentViaRestApiEndpointChecker();
         // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
         $checker->setRequestArgument('sslverify', \apply_filters('https_local_ssl_verify', \false));
-        $isNonBlockingRequestStarted = Core::getInstance()->getNotices()->isNonBlockingRequestStarted();
-        if ($checker->start($url, $isNonBlockingRequestStarted)) {
+        //$isNonBlockingRequestStarted = Core::getInstance()->getNotices()->isNonBlockingRequestStarted(); // Not needed here in REST
+        if ($checker->start($url, \false)) {
             $requestArguments = $checker->getRequestArguments();
             $result = \wp_remote_get($url, ['redirection' => 0, 'cookies' => $requestArguments['cookies'], 'headers' => $requestArguments['headers'], 'timeout' => $requestArguments['timeout'], 'sslverify' => $requestArguments['sslverify']]);
             if (\is_wp_error($result)) {

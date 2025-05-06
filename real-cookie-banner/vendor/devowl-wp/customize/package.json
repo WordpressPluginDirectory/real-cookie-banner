@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.12.24",
+    "version": "1.12.28",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -37,6 +37,7 @@
     ],
     "dependencies": {
         "core-js": "3.37.1",
+        "dompurify": "3.2.5",
         "jquery": "3.7.1",
         "react": "18.3.1",
         "react-dom": "18.3.1"
@@ -238,10 +239,10 @@
                 "system": "weblate",
                 "weblate": {
                     "componentSettings": {
-                        "check_flags": "php-format",
+                        "check_flags": "php-format,automattic-components-format",
                         "enforced_checks": [
                             "php_format",
-                            "automatic_interpolate_components"
+                            "automattic_components_format"
                         ]
                     }
                 },

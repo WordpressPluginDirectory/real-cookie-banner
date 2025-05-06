@@ -85,17 +85,12 @@ msgstr ""
 msgid "Your uploads can say more than a thousand words. Unfortunately, search engines do not understand the content of images, for example. Organize your uploads directly in meaningful folder names and achieve a better ranking in search engines!"
 msgstr ""
 
-#: Service.php:162
-#: Service.php:276
+#: Service.php:140
 msgid "No such plugin slug available."
 msgstr ""
 
-#: Service.php:214
+#: Service.php:192
 msgid "The abstract implementation for your slug could not be found."
-msgstr ""
-
-#: Service.php:269
-msgid "You must agree to our privacy policy to continue."
 msgstr ""
 
 #. translators:
@@ -136,42 +131,10 @@ msgid_plural "Key features"
 msgstr[0] ""
 msgstr[1] ""
 
-#: WelcomePage.php:179
-msgid "Newsletter"
-msgstr ""
-
-#: WelcomePage.php:182
-msgid "Receive the latest news about devowl.io WordPress plugins directly in your inbox"
-msgstr ""
-
-#: WelcomePage.php:186
-msgid "Enter your email..."
-msgstr ""
-
-#. translators:
-#: WelcomePage.php:194
-msgctxt "legal-text"
-msgid "I hereby consent to the processing of my data by devowl.io GmbH for the purpose of sending the newsletter. The consent can be revoked at any time with effect for the future by clicking on the \"Unsubscribe\" button or by e-mail."
-msgstr ""
-
-#. translators:
-#: WelcomePage.php:206
-msgctxt "legal-text"
-msgid "Information on the processing of your personal data can be found in our <a %s>privacy policy</a>."
-msgstr ""
-
-#: WelcomePage.php:211
-msgid "https://devowl.io/privacy-policy/"
-msgstr ""
-
-#: WelcomePage.php:216
-msgid "Subscribe"
-msgstr ""
-
-#: WelcomePage.php:290
+#: WelcomePage.php:247
 msgid "Additional plugins by devowl.io"
 msgstr ""
 
-#: WelcomePage.php:366
+#: WelcomePage.php:328
 msgid "Available in"
 msgstr ""

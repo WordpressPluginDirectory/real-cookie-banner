@@ -64,7 +64,7 @@ msgstr ""
 #: inc/import/ImportBlocker.php:206
 #: inc/settings/Blocker.php:132
 #: inc/view/ConfigPage.php:209
-#: inc/view/customize/banner/Texts.php:314
+#: inc/view/customize/banner/Texts.php:321
 #: inc/view/Notices.php:787
 #: inc/view/Notices.php:839
 msgid "Content Blocker"
@@ -1303,12 +1303,12 @@ msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:543
-#: inc/scanner/Scanner.php:599
+#: inc/scanner/Scanner.php:629
 msgid "https://devowl.io/support/"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:544
-#: inc/scanner/Scanner.php:600
+#: inc/scanner/Scanner.php:630
 msgid "Contact support"
 msgstr ""
 
@@ -1318,13 +1318,13 @@ msgstr ""
 
 #. translators:
 #: inc/comp/RevisionBackwardsCompatibility.php:78
-#: inc/view/customize/banner/Texts.php:554
+#: inc/view/customize/banner/Texts.php:562
 msgctxt "legal-text"
 msgid "{{name}} blocked due to privacy settings"
 msgstr ""
 
 #: inc/comp/RevisionBackwardsCompatibility.php:79
-#: inc/view/customize/banner/Texts.php:555
+#: inc/view/customize/banner/Texts.php:563
 msgctxt "legal-text"
 msgid "Show all services you still need to agree to"
 msgstr ""
@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
 msgstr ""
 
-#: inc/Core.php:418
+#: inc/Core.php:419
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1595,12 +1595,12 @@ msgid "The link to Real Cookie Banner is an affiliate link. If you buy the produ
 msgstr ""
 
 #: inc/overrides/pro/settings/CountryBypass.php:146
-#: inc/overrides/pro/settings/TCF.php:136
+#: inc/overrides/pro/settings/TCF.php:143
 msgid "This functionality is currently not available."
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/settings/TCF.php:114
+#: inc/overrides/pro/settings/TCF.php:121
 msgid "Downloading the GVL has failed. Please try again later! (%1$s: %2$s)"
 msgstr ""
 
@@ -1856,30 +1856,30 @@ msgstr ""
 msgid "I allow to place a link in the cookie banner, which informs about the use of this plugin."
 msgstr ""
 
-#: inc/scanner/Scanner.php:580
+#: inc/scanner/Scanner.php:610
 msgid "Real Cookie Banner: Scan of your pages"
 msgstr ""
 
-#: inc/scanner/Scanner.php:582
+#: inc/scanner/Scanner.php:612
 msgid "Real Cookie Banner: Automatic scan of complete website"
 msgstr ""
 
-#: inc/scanner/Scanner.php:604
+#: inc/scanner/Scanner.php:634
 msgid "Cancel scan"
 msgstr ""
 
-#: inc/scanner/Scanner.php:608
+#: inc/scanner/Scanner.php:638
 msgid "Skip failed pages"
 msgstr ""
 
 #. translators:
-#: inc/scanner/Scanner.php:630
+#: inc/scanner/Scanner.php:660
 msgid "%1$d pages failed to be scanned."
 msgid_plural "%1$d pages failed to be scanned."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/scanner/Scanner.php:639
+#: inc/scanner/Scanner.php:669
 msgid "Real Cookie Banner tried to automatically scan your entire website for services and external URLs."
 msgstr ""
 
@@ -3206,231 +3206,231 @@ msgstr ""
 msgid "Instruction"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:127
+#: inc/view/customize/banner/CookiePolicy.php:128
 msgid "Table of contents"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:136
+#: inc/view/customize/banner/CookiePolicy.php:137
 msgid "Controller of the website"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/CookiePolicy.php:140
+#: inc/view/customize/banner/CookiePolicy.php:141
 msgid "Controller is the website operator specified in %1$sSettings > General > Website operator details%2$s."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:160
+#: inc/view/customize/banner/CookiePolicy.php:161
 msgid "Addition to the privacy policy"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:181
+#: inc/view/customize/banner/CookiePolicy.php:183
 msgid "What are cookies and similar technologies?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:202
+#: inc/view/customize/banner/CookiePolicy.php:205
 msgid "What is the legal basis for setting/reading cookies?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:212
+#: inc/view/customize/banner/CookiePolicy.php:215
 msgid "Use <code>{{euLegalBasis}}</code> as a placeholder to display the legal bases for the most important countries in which the website language is spoken."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:230
+#: inc/view/customize/banner/CookiePolicy.php:234
 msgid "Addition for the DSG in Switzerland"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:244
+#: inc/view/customize/banner/CookiePolicy.php:249
 msgid "What rights does the website visitor have?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:265
+#: inc/view/customize/banner/CookiePolicy.php:271
 msgid "How to manage cookies in a browser?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:286
+#: inc/view/customize/banner/CookiePolicy.php:293
 msgid "What types of cookies exist?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:308
+#: inc/view/customize/banner/CookiePolicy.php:316
 msgid "Mention of self-created service groups in the cookie policy"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:318
+#: inc/view/customize/banner/CookiePolicy.php:326
 msgid "Who can set cookies on this website?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:339
+#: inc/view/customize/banner/CookiePolicy.php:348
 msgid "Which cookies are used on this website?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:348
+#: inc/view/customize/banner/CookiePolicy.php:357
 msgid "Show table in dark mode"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:358
+#: inc/view/customize/banner/CookiePolicy.php:367
 msgid "Further information / free text field"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:359
+#: inc/view/customize/banner/CookiePolicy.php:368
 msgid "Use <code>{{dateOfUpdate}}</code> as a placeholder to show date of the cookie policy when it was last changed."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/CookiePolicy.php:386
+#: inc/view/customize/banner/CookiePolicy.php:396
 msgid "This section is currently not displayed in your cookie policy because the data provided is incomplete. Please set the website operator details at %1$sSettings > General > Website operator details%2$s!"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:405
+#: inc/view/customize/banner/CookiePolicy.php:415
 msgctxt "legal-text"
 msgid "With this cookie policy, we would like to explain what cookies and cookie-like technologies are, how we and other service provider use them on this website, what information they collect, for how long and for what purposes we use them."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:410
+#: inc/view/customize/banner/CookiePolicy.php:420
 msgctxt "legal-text"
 msgid "Table of contents"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:411
+#: inc/view/customize/banner/CookiePolicy.php:421
 msgctxt "legal-text"
 msgid "Controller of the website"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:412
+#: inc/view/customize/banner/CookiePolicy.php:422
 msgctxt "legal-text"
 msgid "Addition to the privacy policy"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:413
+#: inc/view/customize/banner/CookiePolicy.php:423
 msgctxt "legal-text"
 msgid "What are cookies and similar technologies?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:418
+#: inc/view/customize/banner/CookiePolicy.php:428
 msgctxt "legal-text"
 msgid "What is the legal basis for setting/reading cookies?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:423
+#: inc/view/customize/banner/CookiePolicy.php:433
 msgctxt "legal-text"
 msgid "What rights does the website visitor have?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:428
+#: inc/view/customize/banner/CookiePolicy.php:438
 msgctxt "legal-text"
 msgid "How to manage cookies in a browser?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:429
+#: inc/view/customize/banner/CookiePolicy.php:439
 msgctxt "legal-text"
 msgid "What types of cookies exist?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:430
+#: inc/view/customize/banner/CookiePolicy.php:440
 msgctxt "legal-text"
 msgid "Who can set cookies on this website?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:431
+#: inc/view/customize/banner/CookiePolicy.php:441
 msgctxt "legal-text"
 msgid "Which cookies are used on this website?"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:432
+#: inc/view/customize/banner/CookiePolicy.php:442
 msgctxt "legal-text"
 msgid "This cookie policy is a supplement to this website's {{privacyPolicy}}privacy policy{{/privacyPolicy}}. The cookie policy specifies how a website uses cookies and what data it collects through them, while the privacy policy is a more comprehensive overview of all data processing activities on the website and beyond."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:438
+#: inc/view/customize/banner/CookiePolicy.php:448
 msgctxt "legal-text"
 msgid "Cookies are small pieces of information similar to text files that can be stored and read on the end device. They serve various purposes, including maintaining basic functionalities of the website, security and privacy, providing optional functions of the website, collecting statistic data on visitor flows and providing marketing systems. Practical examples of what can be stored in cookies are the storage of login status in user accounts, the content of shopping baskets in e-commerce platforms, or a user ID for tracking behavior on the website."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:443
+#: inc/view/customize/banner/CookiePolicy.php:453
 msgctxt "legal-text"
 msgid "The information can technically be stored in various ways. The best-known examples of this are HTTP cookies and cookie-like technologies like local storage, session storage or IndexedDB. Each type of storage has different properties, which determine the technical handling, accessibility and controllers authorized to access the information. All these types of storage are usually summarized under the term \"cookies\" and are therefore called as such in this cookie policy."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:449
+#: inc/view/customize/banner/CookiePolicy.php:459
 msgctxt "legal-text"
 msgid "The setting and reading of cookies in the European Union (EU) and the European Economic Area (EEA) is in accordance with {{euLegalBasis}} only permitted if a user has given his consent on the basis of comprehensive information about the purposes of the processing. The website operator may also set cookies if they are strictly necessary to provide you as a user with the expressly requested service, e.g. the basic content of this website or other strictly necessary cookies for basic functionality of the website to be displayed to you without your consent."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:454
+#: inc/view/customize/banner/CookiePolicy.php:464
 msgctxt "legal-text"
 msgid "The setting and reading of cookies in Switzerland is in accordance with Art. 45c (b) FMG (Fernmeldegesetz) only permitted if a user has the option to object the processing of data on the basis of comprehensive information about the purposes of the processing. In exceptional cases, consent must be obtained for the processing of personal data in cookies in Switzerland."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:461
+#: inc/view/customize/banner/CookiePolicy.php:471
 msgctxt "legal-text"
 msgid "Services and their cookies can be set and read on the legal basis of your consent or a legitimate interest. When you first visited this website, you were asked for your consent and you had the opportunity to object to the use of certain services. We explained which legal basis is used for which service in our consent dialog.<br /><br />You have the right to view the history of your decisions, change your privacy settings, object to the use of services and revoke your consent at any time. Below you find possibilities to exercise your rights:"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:467
+#: inc/view/customize/banner/CookiePolicy.php:477
 msgctxt "legal-text"
 msgid "[rcb-consent type=\"change\" tag=\"a\" text=\"Change privacy settings\"]"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:472
+#: inc/view/customize/banner/CookiePolicy.php:482
 msgctxt "legal-text"
 msgid "[rcb-consent type=\"history\" tag=\"a\" text=\"Privacy settings history\"]"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:477
+#: inc/view/customize/banner/CookiePolicy.php:487
 msgctxt "legal-text"
 msgid "[rcb-consent type=\"revoke\" tag=\"a\" text=\"Revoke consents\" successmessage=\"You have successfully revoked consent for services with its cookies and personal data processing. The page will be reloaded now!\"]"
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:487
+#: inc/view/customize/banner/CookiePolicy.php:497
 msgctxt "legal-text"
 msgid "<strong>How to remove cookies in a browser:</strong> To remove cookies from your device, you can clear the browsing data in the settings of your browser. This action will remove all cookies from all websites you've visited, potentially including saved login details and site preferences. In some browsers, you can just delete the cookies and similar data without deleting the whole browsing history."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:492
+#: inc/view/customize/banner/CookiePolicy.php:502
 msgctxt "legal-text"
 msgid "<strong>How to control cookies in a browser:</strong> For more granular control over cookies specific to certain websites, navigate to the privacy and cookie settings within your used browser. Here, you can adjust preferences related to individual sites' cookie usage."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:497
+#: inc/view/customize/banner/CookiePolicy.php:507
 msgctxt "legal-text"
 msgid "<strong>How to block cookies in a browser:</strong> It's possible to configure most modern browsers in their settings to block all cookies from being placed on your device. But blocking cookies could lead to certain services and functionalities not functioning correctly, e.g. logins as a user. You can also use extensions for many browsers which can block the setting of cookies on websites."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:502
+#: inc/view/customize/banner/CookiePolicy.php:512
 msgctxt "legal-text"
 msgid "<strong>How to manage cookies on this website:</strong> To tailor your preferences regarding cookies on this website, you can change your preferences at any time by clicking on the link in the section \"Rights of the website visitor\"."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:508
+#: inc/view/customize/banner/CookiePolicy.php:518
 msgctxt "legal-text"
 msgid "You can find more information on the handling of cookies <a href=\"https://devowl.io/rcb/cookie-handling/\" target=\"_blank\">devowl.io/rcb/cookie-handling/</a>."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:517
+#: inc/view/customize/banner/CookiePolicy.php:527
 msgctxt "legal-text"
 msgid "<strong>Essential cookies</strong> are indispensable for the basic functionality of a website and enable functions such as saving login information or access to secure areas of the site. These include, for example, security cookies, which can identify a bot that is not wanted on the website by storing an authentication key in a cookie."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:522
+#: inc/view/customize/banner/CookiePolicy.php:532
 msgctxt "legal-text"
 msgid "<strong>Functional cookies</strong> improve the user experience by storing information and preferences such as language settings or appearance settings of the website to provide personalized. This includes, for example, preference cookies that store the user's preferred video quality on a website."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:527
+#: inc/view/customize/banner/CookiePolicy.php:537
 msgctxt "legal-text"
 msgid "<strong>Statistics cookies</strong> collect data about the use of a website to gain insights into user behavior and optimize the performance of the site. This includes, for example, a randomly assigned user ID that makes it possible to attribute whether you have visited a subpage of the website."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:532
+#: inc/view/customize/banner/CookiePolicy.php:542
 msgctxt "legal-text"
 msgid "<strong>Marketing cookies</strong> are used to track user behavior across different websites and to display personalized advertising based on the interests and surfing behavior of users. This includes, for example, advertising cookies that store an interaction with an advertisement on the website and pass it on to advertisers or a chat system for pre-sale questions and customer support."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:539
+#: inc/view/customize/banner/CookiePolicy.php:549
 msgctxt "legal-text"
 msgid "On this website, both the operator of the website and third-party services which are used on this website may set cookies and access its content. Who can access which cookies and their content differs between first-party and third-party cookies. First-party cookies are created by the visited website and can only be read by the website operator and integrated third-party services on this website. Third-party cookies are set by usually third-party services on other domains, can be read on all websites on which the service that controls the domain is embedded and, for example, used by advertising networks to track user behavior across different websites and offer personalized advertising."
 msgstr ""
 
-#: inc/view/customize/banner/CookiePolicy.php:544
+#: inc/view/customize/banner/CookiePolicy.php:554
 msgctxt "legal-text"
 msgid "The cookie policy was last updated on {{dateOfUpdate}}."
 msgstr ""
@@ -3566,25 +3566,25 @@ msgid "Text of \"Accept all\" changes when user changes selection"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:269
-#: inc/view/customize/banner/Texts.php:519
+#: inc/view/customize/banner/Texts.php:527
 msgctxt "legal-text"
 msgid "Accept all"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:271
-#: inc/view/customize/banner/Texts.php:520
+#: inc/view/customize/banner/Texts.php:528
 msgctxt "legal-text"
 msgid "Continue without consent"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:273
-#: inc/view/customize/banner/individual/Texts.php:119
+#: inc/view/customize/banner/individual/Texts.php:121
 msgctxt "legal-text"
 msgid "Individual privacy preferences"
 msgstr ""
 
 #: inc/view/customize/banner/Decision.php:275
-#: inc/view/customize/banner/individual/Texts.php:138
+#: inc/view/customize/banner/individual/Texts.php:140
 msgctxt "legal-text"
 msgid "Save custom choices"
 msgstr ""
@@ -3770,7 +3770,7 @@ msgstr ""
 #: inc/view/customize/banner/individual/Group.php:257
 #: inc/view/customize/banner/individual/Texts.php:52
 #: inc/view/customize/banner/Texts.php:116
-#: inc/view/customize/banner/Texts.php:322
+#: inc/view/customize/banner/Texts.php:329
 msgid "Headline"
 msgstr ""
 
@@ -3812,49 +3812,49 @@ msgstr ""
 msgid "Texts"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:75
+#: inc/view/customize/banner/individual/Texts.php:76
 msgid "\"Save\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:82
+#: inc/view/customize/banner/individual/Texts.php:83
 msgid "\"Show service information\" link"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:89
+#: inc/view/customize/banner/individual/Texts.php:90
 msgid "\"Hide service information\" link"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:96
+#: inc/view/customize/banner/individual/Texts.php:97
 msgid "Additional teachings below service groups"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:97
+#: inc/view/customize/banner/individual/Texts.php:98
 msgid "If you need to place additional instructions in your country, such as an introduction to deleting cookies, they can be displayed. Typically only necessary if you are deliberately addressing other jurisdictions outside the EU."
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:122
-#: inc/view/customize/banner/Texts.php:508
+#: inc/view/customize/banner/individual/Texts.php:124
+#: inc/view/customize/banner/Texts.php:516
 msgctxt "legal-text"
 msgid "We use cookies and similar technologies on our website and process your personal data (e.g. IP address), for example, to personalize content and ads, to integrate media from third-party providers or to analyze traffic on our website. Data processing may also happen as a result of cookies being set. We share this data with third parties that we name in the privacy settings."
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:127
-#: inc/view/customize/banner/Texts.php:513
+#: inc/view/customize/banner/individual/Texts.php:129
+#: inc/view/customize/banner/Texts.php:521
 msgctxt "legal-text"
 msgid "The data processing may take place with your consent or on the basis of a legitimate interest, which you can object to in the privacy settings. You have the right not to consent and to change or revoke your consent at a later time. This revocation takes effect immediately but does not affect data already processed. For more information on the use of your data, please visit our {{privacyPolicy}}privacy policy{{/privacyPolicy}}."
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:132
+#: inc/view/customize/banner/individual/Texts.php:134
 msgctxt "legal-text"
 msgid "Below you will find an overview of all services used by this website. You can view detailed information about each service and agree to them individually or exercise your right to object."
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:139
+#: inc/view/customize/banner/individual/Texts.php:141
 msgctxt "legal-text"
 msgid "Show service information"
 msgstr ""
 
-#: inc/view/customize/banner/individual/Texts.php:140
+#: inc/view/customize/banner/individual/Texts.php:142
 msgctxt "legal-text"
 msgid "Hide service information"
 msgstr ""
@@ -3897,7 +3897,7 @@ msgid "The vertical distance between elements can be decreased or increased rela
 msgstr ""
 
 #: inc/view/customize/banner/StickyLinks.php:95
-#: inc/view/customize/banner/Texts.php:362
+#: inc/view/customize/banner/Texts.php:370
 msgid "Sticky legal links widget"
 msgstr ""
 
@@ -3995,241 +3995,241 @@ msgstr ""
 msgid "Use <code>{{minAge}}</code> as a placeholder for the age limit for minors in your country. Each country in the EU has its own age limits, which we have included in Real Cookie Banner. You can adjust the age limit in the %1$sage notice settings%2$s."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:140
+#: inc/view/customize/banner/Texts.php:141
 msgid "\"Accept all\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:147
+#: inc/view/customize/banner/Texts.php:148
 msgid "\"Continue without consent\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:154
+#: inc/view/customize/banner/Texts.php:155
 msgid "\"Individual privacy preferences\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:161
+#: inc/view/customize/banner/Texts.php:162
 msgid "\"Powered by\" link text"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:170
+#: inc/view/customize/banner/Texts.php:171
 msgid "Consent for data processing in unsafe third countries"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:178
+#: inc/view/customize/banner/Texts.php:179
 msgid "Data processing notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:179
+#: inc/view/customize/banner/Texts.php:180
 msgid "Use <code>{{legalBasis}}</code> as a placeholder for the legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:198
+#: inc/view/customize/banner/Texts.php:200
 msgid "Age notice"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:204
+#: inc/view/customize/banner/Texts.php:206
 msgid "Age notice in cookie banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:221
+#: inc/view/customize/banner/Texts.php:224
 msgid "Age notice in content blocker"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:237
+#: inc/view/customize/banner/Texts.php:241
 msgid "List of services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:243
+#: inc/view/customize/banner/Texts.php:247
 msgid "Naming of all services requiring consent in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:245
+#: inc/view/customize/banner/Texts.php:249
 msgid "Use <code>{{services}}</code> and <code>{{serviceGroups}}</code> as a placeholder for a list of services and groups."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:265
+#: inc/view/customize/banner/Texts.php:270
 msgid "Naming of all services on the legal basis of the legitimate interest in the first view"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:270
+#: inc/view/customize/banner/Texts.php:275
 msgid "Use <code>{{services}}</code> as a placeholder for a list of services with legitimate interest as legal basis."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:290
+#: inc/view/customize/banner/Texts.php:296
 msgid "Consent Forwarding"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:295
+#: inc/view/customize/banner/Texts.php:301
 msgid "Consent forwarding to other websites"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:297
+#: inc/view/customize/banner/Texts.php:303
 msgid "Use <code>{{websites}}</code> as a placeholder for the external website URLs."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:315
+#: inc/view/customize/banner/Texts.php:322
 msgid "At the moment we do not provide a live preview for content blocker texts."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:323
+#: inc/view/customize/banner/Texts.php:330
 msgid "Use <code>{{name}}</code> as a placeholder for the content blocker name."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:334
+#: inc/view/customize/banner/Texts.php:341
 msgid "Link text, to show all required services"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:342
+#: inc/view/customize/banner/Texts.php:349
 msgid "\"Load content\" button/link"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:350
+#: inc/view/customize/banner/Texts.php:357
 msgid "Additional info below the \"Load content\" button"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:366
+#: inc/view/customize/banner/Texts.php:374
 msgid "Privacy settings history"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:374
+#: inc/view/customize/banner/Texts.php:382
 msgid "Revoke consents"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:382
+#: inc/view/customize/banner/Texts.php:390
 msgid "Revoke consents: Success message"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:390
+#: inc/view/customize/banner/Texts.php:398
 msgid "Change privacy settings"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:406
+#: inc/view/customize/banner/Texts.php:414
 msgid "The standard texts in the cookie banner are worded carefully. If you customize them, make sure they are not misleading or riveting. According to the <a href=\"%s\" target=\"_blank\">Data Protection Commissioner of Baden-Wuerttemberg, Germany (Section B, 1.3.7.; German)</a>, for example, a headline \"We love cookies\" is already misleading."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:410
+#: inc/view/customize/banner/Texts.php:418
 msgid "https://www.baden-wuerttemberg.datenschutz.de/faq-zu-cookies-und-tracking-2/#13_informiertheit)"
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:425
+#: inc/view/customize/banner/Texts.php:433
 msgid "Consent for data processing in unsafe third countries is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:445
+#: inc/view/customize/banner/Texts.php:453
 msgid "Age notice is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:465
+#: inc/view/customize/banner/Texts.php:473
 msgid "Naming of all services in first view is currently disabled. Please navigate to %1$sSettings > Consent%2$s to activate it."
 msgstr ""
 
 #. translators:
-#: inc/view/customize/banner/Texts.php:485
+#: inc/view/customize/banner/Texts.php:493
 msgid "Consent Forwarding is currently disabled or no external hosts have been defined (a different domain than the current website domain). Please navigate to %1$sSettings > Consent Forwarding%2$s to configure it."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:505
+#: inc/view/customize/banner/Texts.php:513
 msgctxt "legal-text"
 msgid "Privacy preferences"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:521
+#: inc/view/customize/banner/Texts.php:529
 msgctxt "legal-text"
 msgid "Set privacy settings individually"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:522
+#: inc/view/customize/banner/Texts.php:530
 msgctxt "legal-text"
 msgid "Some services process personal data in unsafe third countries. By consenting, you also consent to data processing of labeled services per {{legalBasis}}, with risks like inadequate legal remedies, unauthorized access by authorities without information or possibility of objection, unauthorised transfer to third parties, and inadequate data security measures."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:527
+#: inc/view/customize/banner/Texts.php:535
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Then you cannot consent to optional services. Ask your parents or legal guardians to agree to these services with you."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:532
+#: inc/view/customize/banner/Texts.php:540
 msgctxt "legal-text"
 msgid "You are under {{minAge}} years old? Unfortunately, you are not permitted to consent to this service to view this content. Please ask your parents or guardians to agree to the service with you!"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:537
+#: inc/view/customize/banner/Texts.php:545
 msgctxt "legal-text"
 msgid "By accepting all services, you allow {{services}} to be loaded. These services are divided into groups {{serviceGroups}} according to their purpose (belonging marked with superscript numbers)."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:542
+#: inc/view/customize/banner/Texts.php:550
 msgctxt "legal-text"
 msgid "In addition, {{services}} are loaded based on a legitimate interest."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:547
+#: inc/view/customize/banner/Texts.php:555
 msgctxt "legal-text"
 msgid "Your consent is also applicable on {{websites}}."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:560
+#: inc/view/customize/banner/Texts.php:568
 msgctxt "legal-text"
 msgid "Accept services and load content"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:561
+#: inc/view/customize/banner/Texts.php:569
 msgctxt "legal-text"
 msgid "Loading the blocked content will adjust your privacy settings. Content from this service will not be blocked in the future."
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:566
+#: inc/view/customize/banner/Texts.php:574
 #: inc/view/navmenu/NavMenuLinks.php:111
 #: inc/view/navmenu/NavMenuLinks.php:112
 msgctxt "legal-text"
 msgid "Change privacy settings"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:567
+#: inc/view/customize/banner/Texts.php:575
 #: inc/view/navmenu/NavMenuLinks.php:115
 #: inc/view/navmenu/NavMenuLinks.php:116
 msgctxt "legal-text"
 msgid "Privacy settings history"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:568
+#: inc/view/customize/banner/Texts.php:576
 #: inc/view/navmenu/NavMenuLinks.php:119
 #: inc/view/navmenu/NavMenuLinks.php:120
 msgctxt "legal-text"
 msgid "Revoke consents"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:569
+#: inc/view/customize/banner/Texts.php:577
 #: inc/view/navmenu/NavMenuLinks.php:122
 msgctxt "legal-text"
 msgid "You have successfully revoked consent for services with its cookies and personal data processing. The page will be reloaded now!"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:602
+#: inc/view/customize/banner/Texts.php:610
 msgid "WordPress Cookie Plugin by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:603
+#: inc/view/customize/banner/Texts.php:611
 msgid "WordPress Cookie Notice by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:604
+#: inc/view/customize/banner/Texts.php:612
 msgid "Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:605
+#: inc/view/customize/banner/Texts.php:613
 msgid "GDPR Cookie Consent with Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:606
+#: inc/view/customize/banner/Texts.php:614
 msgid "Consent Management Platform by Real Cookie Banner"
 msgstr ""
 
-#: inc/view/customize/banner/Texts.php:607
+#: inc/view/customize/banner/Texts.php:615
 msgid "Cookie Consent Banner by Real Cookie Banner"
 msgstr ""
 

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/freemium",
-    "version": "1.3.102",
+    "version": "1.3.106",
     "private": true,
     "description": "Make your plugin to a freemium plugin with predefined Envato support",
     "homepage": "https://devowl.io",
@@ -116,10 +116,10 @@
                 "system": "weblate",
                 "weblate": {
                     "componentSettings": {
-                        "check_flags": "php-format",
+                        "check_flags": "php-format,automattic-components-format",
                         "enforced_checks": [
                             "php_format",
-                            "automatic_interpolate_components"
+                            "automattic_components_format"
                         ]
                     }
                 },

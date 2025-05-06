@@ -106,12 +106,17 @@ class ScanEntry
      * can be found for the same markup. This ID is unique for this scan entry so it can be used
      * together with the static method `deduplicate`.
      *
+     * @param string[] $excludeAttributes
      * @return string
      */
-    public function getId()
+    public function getId($excludeAttributes = [])
     {
         $this->calculateFields();
-        return \md5(\json_encode(['blockable' => $this->blockable === null ? \false : $this->blockable->getIdentifier(), 'expressions' => $this->expressions, 'template' => $this->template, 'blocked_url_hash' => $this->blocked_url_hash, 'markup' => $this->markup === null ? \false : $this->markup->getId(), 'tag' => $this->tag, 'attribute' => $this->attribute, 'source_url_hash' => $this->source_url_hash]));
+        $values = ['blockable' => $this->blockable === null ? \false : $this->blockable->getIdentifier(), 'expressions' => $this->expressions, 'template' => $this->template, 'blocked_url_hash' => $this->blocked_url_hash, 'markup' => $this->markup === null ? \false : $this->markup->getId(), 'tag' => $this->tag, 'attribute' => $this->attribute, 'source_url_hash' => $this->source_url_hash];
+        foreach ($excludeAttributes as $attr) {
+            unset($values[$attr]);
+        }
+        return \md5(\json_encode($values));
     }
     /**
      * Dedupe scan entries by their ID.

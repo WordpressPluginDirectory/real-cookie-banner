@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-product-manager-wp-client",
-    "version": "1.19.39",
+    "version": "1.19.43",
     "private": true,
     "description": "A WordPress client for Real Product Manager",
     "homepage": "https://devowl.io",
@@ -248,10 +248,10 @@
                 "system": "weblate",
                 "weblate": {
                     "componentSettings": {
-                        "check_flags": "php-format",
+                        "check_flags": "php-format,automattic-components-format",
                         "enforced_checks": [
                             "php_format",
-                            "automatic_interpolate_components"
+                            "automattic_components_format"
                         ]
                     }
                 },

@@ -156,6 +156,7 @@ return array(
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\AdditionalAttributesBlocker' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/AdditionalAttributesBlocker.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\AttributeJsonBlocker' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/AttributeJsonBlocker.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\Autoplay' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/Autoplay.php',
+    'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\BlockablesSorter' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/BlockablesSorter.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\CalculateUniqueKeys' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/CalculateUniqueKeys.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\CustomElementBlocker' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/CustomElementBlocker.php',
     'DevOwl\\RealCookieBanner\\Vendor\\DevOwl\\HeadlessContentBlocker\\plugins\\DoNotBlockScriptTextTemplates' => $vendorDir . '/devowl-wp/headless-content-blocker/src/plugins/DoNotBlockScriptTextTemplates.php',

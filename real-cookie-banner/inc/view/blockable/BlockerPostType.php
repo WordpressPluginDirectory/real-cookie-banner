@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\view\blockable;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Blocker as ServicesBlocker;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\CookieConsentManagement\services\Service;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\HeadlessContentBlocker;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePreview\ImagePreviewBlockable;
@@ -24,18 +25,26 @@ class BlockerPostType extends AbstractBlockable implements ImagePreviewBlockable
     use UtilsProvider;
     use ImagePreviewBlockableTrait;
     private $post;
+    private $allServices;
     /**
      * C'tor.
      *
      * @param HeadlessContentBlocker $headlessContentBlocker
      * @param WP_Post $post
+     * @param Service[] $allServices
      * @codeCoverageIgnore
      */
-    public function __construct($headlessContentBlocker, $post)
+    public function __construct($headlessContentBlocker, $post, $allServices)
     {
         parent::__construct($headlessContentBlocker);
         $this->post = $post;
+        $this->allServices = $allServices;
         $this->appendFromStringArray($post->metas[Blocker::META_NAME_RULES]);
+        $legalBasis = [];
+        foreach ($this->getRequiredServices() as $service) {
+            $legalBasis[] = $service->getLegalBasis();
+        }
+        $this->setData(AbstractBlockable::DATA_KEY_LEGAL_BASIS, $legalBasis);
     }
     // Documented in Blockable
     public function getBlockerId()
@@ -72,6 +81,22 @@ class BlockerPostType extends AbstractBlockable implements ImagePreviewBlockable
     public function getCriteria()
     {
         return $this->getPost()->metas[Blocker::META_NAME_CRITERIA];
+    }
+    /**
+     * Get `Service` instances of all required services.
+     *
+     * @return Service[]
+     */
+    public function getRequiredServices()
+    {
+        $requiredIds = $this->getRequiredIds();
+        $requiredServices = [];
+        foreach ($this->allServices as $service) {
+            if (\in_array($service->getId(), $requiredIds, \true)) {
+                $requiredServices[] = $service;
+            }
+        }
+        return $requiredServices;
     }
     /**
      * Getter.

@@ -3,6 +3,363 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.1.6 (2025-05-06)
+
+
+### Bug Fixes
+
+* automatically scan home page when changing Matomo settings (CU-865czwv74)
+* content blocker connected services with legitimate interest should have higher priority (CU-8698wyny4)
+* do not unnecessarily download the TCF GVL on every plugin update (CU-8698ggfna)
+* elementor video not loading when first head script is also blocked (CU-8698up2b2)
+* fallback for anonymous_localize_script with random fallback key (CU-8697fw0r4)
+* sanitize text fields in customizer live preview (CU-8698uce52)
+* scanner can sometimes not finish on path-based multisite installation (CU-8698wj46v)
+* use wp_kses_post when localizing cookie banner beside sanitize (CU-8698uce52)
+
+
+### Maintenance
+
+* update TCF iabtcf-es module to latest version (CU-8698ukcz8)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.7</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Maintenance
+
+* update TCF iabtcf-es module to latest version (CU-8698ukcz8)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.15</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Maintenance
+
+* update TCF iabtcf-es module to latest version (CU-8698ukcz8)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.28</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Bug Fixes
+
+* sanitize text fields in customizer live preview (CU-8698uce52)
+* use wp_kses_post when localizing cookie banner beside sanitize (CU-8698uce52)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.3.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibility with latest FluentCommunity version
+
+
+##### Features
+
+* introduce sorter mechanism for blockables with predefined priority (CU-8698wyny4)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.10</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* compatibility with Vimeo embeds in Breakdance builder (CU-8698w84ub)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.1.4</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* remove data-order and order style attributes from consent buttons (CU-8697fw0r4)
+
+
+##### Maintenance
+
+* update TCF iabtcf-es module to latest version (CU-8698ukcz8)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.1.4</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Bug Fixes
+
+* do not show technical handling notice for services with scanner results for Matomo Plugin (CU-865czwv74)
+
+
+##### Maintenance
+
+* update TCF iabtcf-es module to latest version (CU-8698ukcz8)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.27</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Bug Fixes
+
+* optimize welcome page after installing a plugin (CU-8697rd0b8)</details>
+
+<details><summary>Dependency updates @devowl-wp/sitemap-crawler 1.0.7</summary>
+
+
+**_Purpose of dependency:_** _Find and crawl sitemaps to get a full list of URLs._
+##### Bug Fixes
+
+* scanner can sometimes not finish on path-based multisite installation (CU-8698wj46v)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.27</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* fallback for anonymous_localize_script with random fallback key (CU-8697fw0r4)
+
+
+##### Performance Improvements
+
+* validate JSON before using JSON5 (CU-8698t43qg)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Bug Fixes
+
+* remove data-order and order style attributes from consent buttons (CU-8697fw0r4)</details>
+
+
+
+
+
+## 5.1.5 (2025-04-25) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.27</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Bug Fixes
+
+* quill editor and WYSIWYG editors are not rendered (CU-8698tv43q)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.7.3</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Continuous Integration
+
+* connect to REVIEW_APP ssh agent (CU-8698fyv1c)
+* connect to REVIEW_APP ssh agent (CU-8698fyv1c)
+* use GIT_STRATEGY none to fetch the commit in review stop job (CU-8698fyv1c)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.13</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Bug Fixes
+
+* quill editor and WYSIWYG editors are not rendered (CU-8698tv43q)</details>
+
+
+
+
+
+## 5.1.4 (2025-04-22)
+
+
+### Performance Improvements
+
+* race condition when downloading TCF GVL on Thursday (CU-8698gn11h)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.16</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Performance Improvements
+
+* race condition when downloading TCF GVL on Thursday (CU-8698gn11h)</details>
+
+
+
+
+
+## 5.1.3 (2025-04-17) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+
+### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)
+
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.12.26</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 1.0.12</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.104</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.25</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.19.41</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.0.13</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.13.25</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.25</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* update to Weblate 5.11 and use new automattic format (CU-31976hv)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.17</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* recreate FormData instance on every retry when uploading en file (CU-31976hv)
+* weblate 5.11 is not immediatly returning task_url when creating a component (CU-31976hv)</details>
+
+
+
+
+
+## 5.1.2 (2025-04-14)
+
+
+### Bug Fixes
+
+* login pages could not be scanned due to Loopback request could not be started (CU-8698qcr7p)
+
+
+### Maintenance
+
+* compatibility with WordPress 6.8 (CU-8698n6jp7)
+
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.9</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* calendly was found as external URL and service when it has a style attribute (CU-8698mqkuy)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.1.8</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* a deduplicated visual content blocker for Elementor videos autoplays all videos after unblock (CU-8698pajgj)</details>
+
+
+
+
+
+## 5.1.1 (2025-04-08) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+
+### Maintenance
+
+* migrate to docker swarm for multi-instance capability (CU-8697hja46)
+
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.2.8</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Maintenance
+
+* migrate to docker swarm for multi-instance capability (CU-8697hja46)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.7.2</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Maintenance
+
+* create owlreview.de certificates instead of swarm.owlreview.de (CU-8697hja46)
+* migrate to docker swarm for multi-instance capability (CU-8697hja46)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.4</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Maintenance
+
+* migrate to docker swarm for multi-instance capability (CU-8697hja46)</details>
+
+
+
+
+
 # 5.1.0 (2025-04-02)
 
 

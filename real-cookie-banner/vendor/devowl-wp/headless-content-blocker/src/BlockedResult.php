@@ -15,6 +15,13 @@ class BlockedResult
     private $markup;
     private $data = [];
     /**
+     * Additional results which are not part of the main blocking process but should be
+     * reported as well.
+     *
+     * @var BlockedResult[]
+     */
+    private $additionalResults = [];
+    /**
      * C'tor.
      *
      * @param string $tag
@@ -73,6 +80,16 @@ class BlockedResult
         $this->blockedExpressions = \array_unique($this->blockedExpressions);
     }
     /**
+     * Add additional result which is not part of the main blocking process but should be
+     * reported as well.
+     *
+     * @param BlockedResult $additionalResult
+     */
+    public function addAdditionalResult($additionalResult)
+    {
+        $this->additionalResults[] = $additionalResult;
+    }
+    /**
      * Allows to set additional data for this blocked result.
      *
      * @param string $key
@@ -118,6 +135,13 @@ class BlockedResult
     public function getBlockedExpressions()
     {
         return $this->blockedExpressions;
+    }
+    /**
+     * Getter.
+     */
+    public function getAdditionalResults()
+    {
+        return $this->additionalResults;
     }
     /**
      * Getter.

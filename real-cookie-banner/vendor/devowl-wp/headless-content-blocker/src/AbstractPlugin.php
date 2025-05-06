@@ -200,6 +200,16 @@ abstract class AbstractPlugin
         return \true;
     }
     /**
+     * Modify the blockables array before it gets registered.
+     *
+     * @param AbstractBlockable[] $blockables
+     * @return AbstractBlockable[]
+     */
+    public function modifyBlockables($blockables)
+    {
+        return $blockables;
+    }
+    /**
      * Getter.
      */
     public final function getHeadlessContentBlocker()

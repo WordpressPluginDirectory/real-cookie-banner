@@ -3,6 +3,7 @@
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\SelectorSyntaxMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockable;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AttributesHelper;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
@@ -318,6 +319,7 @@ abstract class AbstractMatcher
     protected function applyCheckResultHooks($result, $match)
     {
         $result = $this->getHeadlessContentBlocker()->runCheckResultCallback($result, $this, $match);
+        $originalResultIsBlocked = $result->isBlocked();
         // Is the match also covered by another selector syntax?
         $attributes = $match->getAttributes();
         $matchCallbacks = MatchPluginCallbacks::getFromMatch($match);
@@ -339,6 +341,19 @@ abstract class AbstractMatcher
                 if ($matcher instanceof SelectorSyntaxMatcher && $matcher->getBlockable() !== null) {
                     $result->addBlocked($matcher->getBlockable());
                     $result->addBlockedExpression($finder->getExpression());
+                    // Beside the "main" match, we need to create a new match instance for the additional result so a plugin like the
+                    // scanner can pick it up and show the markup accordingly.
+                    if (!$originalResultIsBlocked) {
+                        foreach ($finder->getAttributes() as $attr) {
+                            $selectorSyntaxMatch = new SelectorSyntaxMatch($finder, $match->getOriginalMatch(), $match->getTag(), $match->getAttributes(), $attr->getAttribute());
+                            $additionalResult = $this->createPlainResultFromMatch($selectorSyntaxMatch);
+                            $additionalResult->addBlocked($matcher->getBlockable());
+                            $additionalResult->addBlockedExpression($finder->getExpression());
+                            $additionalResult->setData('matcher', $matcher);
+                            $additionalResult->setData('match', $selectorSyntaxMatch);
+                            $result->addAdditionalResult($additionalResult);
+                        }
+                    }
                 }
                 $matchCallbacks->addBlockedMatchCallback(function ($result) use($match, $applyAttributes) {
                     foreach ($applyAttributes as $attribute => $value) {

@@ -249,6 +249,11 @@ abstract class AbstractCustomizePanel
                  * @return {mixed}
                  */
                 $value = \apply_filters('DevOwl/Customize/LocalizedValue/' . $controlId, $this->getSetting($controlId), $controlId);
+                // Allow to localize the value (e.g. for escaping HTML)
+                $localizeCallback = $control['setting']['localize_callback'] ?? null;
+                if (isset($localizeCallback)) {
+                    $value = $localizeCallback($value);
+                }
                 $result[$section['name']][$control['name']] = $value;
             }
         }

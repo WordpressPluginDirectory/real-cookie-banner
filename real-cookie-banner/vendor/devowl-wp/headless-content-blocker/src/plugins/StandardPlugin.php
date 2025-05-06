@@ -234,6 +234,8 @@ class StandardPlugin extends AbstractPlugin
             'valuationConfig',
             // [Plugin Comp] Slider Revolution
             '/window\\.SR7\\s*\\?\\?=/m',
+            // [Plugin Comp] Fluent Community
+            'fluentComAdmin',
         ]);
         /**
          * DoNotBlockScriptTextTemplates.
@@ -257,6 +259,7 @@ class StandardPlugin extends AbstractPlugin
         $cb->addPlugin(EvalJs::class);
         $cb->addPlugin(Confirm::class);
         $cb->addPlugin(ElementorProActionsPlugin::class);
+        $cb->addPlugin(BlockablesSorter::class);
         /**
          * Plugin.
          *

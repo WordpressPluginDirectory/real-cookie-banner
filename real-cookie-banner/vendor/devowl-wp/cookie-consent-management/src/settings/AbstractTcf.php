@@ -38,10 +38,14 @@ abstract class AbstractTcf extends BaseSettings
     public abstract function getGvl();
     /**
      * Changes to the Global Vendor List are published weekly at 5:00 PM Central European Time on Thursdays.
+     *
+     * To spread the load to our backend server we add a random amount of minutes between 15 and 60 minutes.
+     * Why skip 0-15? The cronjob which creates the GVL starts to run at 5:00 PM Central European Time and takes
+     * about 10 minutes to complete.
      */
     public static function getNextUpdateTime()
     {
-        return \strtotime('next thursday 4:00 PM');
+        return \strtotime('next thursday 4:00 PM') + \rand(15, 60) * 60;
         // convert CET to UTC (+01:00)
     }
     /**

@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\StyleInlineMa
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\TagAttributeMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\StyleInlineAttributeMatch;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Markup;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
@@ -68,6 +69,7 @@ class BlockableScanner extends AbstractPlugin
         if (!$this->active || $result->getData(self::BLOCKED_RESULT_DATA_KEY_IGNORE_IN_SCANNER)) {
             return;
         }
+        $this->processAdditionalResults($result);
         if ($matcher instanceof TagAttributeMatcher) {
             /**
              * Var.
@@ -115,7 +117,8 @@ class BlockableScanner extends AbstractPlugin
         $markup = $isBlocked->getMarkup();
         $link = $match->getLink();
         $linkAttribute = $match->getLinkAttribute();
-        if (!$this->probablyMemorizeIsBlocked($isBlocked, $link, $tag, $linkAttribute) && !$this->isStyleAttributeFalsePositive($linkAttribute, $link)) {
+        $markupStr = $markup === null ? '' : $markup->getContent();
+        if (!$this->probablyMemorizeIsBlocked($isBlocked, $link, $tag, $linkAttribute) && !$this->isStyleAttributeFalsePositive($linkAttribute, $link) && \strpos($markupStr, Constants::HTML_ATTRIBUTE_BLOCKER_ID) === \false) {
             $this->probablyMemorizeExternalUrl($isBlocked, $link, $tag, $linkAttribute, $markup);
         }
         return $isBlocked;
@@ -206,6 +209,13 @@ class BlockableScanner extends AbstractPlugin
         // At least one non-existing created template was used to block this content
         foreach ($isBlocked->getBlocked() as $blockable) {
             if ($blockable instanceof ScannableBlockable) {
+                // @codeCoverageIgnoreStart
+                // Can currently only be reproduced within the WordPress ecosystem,
+                // perhaps because of the usage of `StandardPlugin` which we will not use in our tests
+                if ($this->isStyleAttributeFalsePositive($attribute, $url)) {
+                    continue;
+                }
+                // @codeCoverageIgnoreEnd
                 $this->results[] = $entry = new ScanEntry();
                 $entry->blockable = $blockable;
                 $entry->template = $blockable->getIdentifier();
@@ -312,5 +322,19 @@ class BlockableScanner extends AbstractPlugin
         $previousActive = $this->active;
         $this->active = $active;
         return $previousActive;
+    }
+    /**
+     * Process additional results.
+     *
+     * @param BlockedResult $result
+     */
+    protected function processAdditionalResults($result)
+    {
+        $additionalResults = $result->getAdditionalResults();
+        foreach ($additionalResults as $additionalResult) {
+            if ($additionalResult->isBlocked()) {
+                $this->blockedMatch($additionalResult, $additionalResult->getData('matcher'), $additionalResult->getData('match'));
+            }
+        }
     }
 }

@@ -75,7 +75,10 @@ class TCF extends AbstractTcf implements IOverrideTCF
     public function new_version_installation()
     {
         // $this->updateGvl(); // Do not use this, as we need to wait for the `init` hook
-        \update_option(self::OPTION_TCF_GVL_NEXT_DOWNLOAD_TIME, '');
+        // Keep this commented out so we prevent adding this functionality back in the future by accident.
+        // For more context, see also https://app.clickup.com/t/8698ggfna?comment=90120122166836
+        // When a GVL update is necessary, do this via `DatabaseUpgrades` class and specify a version number.
+        // update_option(self::OPTION_TCF_GVL_NEXT_DOWNLOAD_TIME, '');
     }
     /**
      * Get singleton instance.
