@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: n/a\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #: queue/Executor.php:59
 msgid "Process failed due to an unexpected error."
@@ -17,6 +17,7 @@ msgstr ""
 
 #. translators:
 #: queue/Executor.php:145
+#, php-format
 msgid "%1$d / %2$d (thereof %3$d remaining) tasks could not be executed properly."
 msgstr ""
 

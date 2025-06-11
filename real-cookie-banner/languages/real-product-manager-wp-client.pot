@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: n/a\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #: AbstractInitiator.php:205
 msgid "https://devowl.io/account"
@@ -25,6 +25,7 @@ msgstr ""
 
 #. translators:
 #: license/License.php:197
+#, php-format
 msgid "The plugin has a new update server. Therefore, you need to reactivate your license (%s) to continue receiving updates."
 msgstr ""
 
@@ -67,6 +68,7 @@ msgstr ""
 
 #. translators:
 #: license/PluginUpdateLicensePool.php:170
+#, php-format
 msgid "The license server for checking the license cannot be reached. Please check if you are blocking access to %s e.g. by a firewall."
 msgstr ""
 
@@ -92,41 +94,49 @@ msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:172
+#, php-format
 msgid "You have not yet activated a license for the %s plugin. Activate the licence to receive automatic updates."
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:193
+#, php-format
 msgid "Updates of %s are waiting for you when you activate your license. Activate your license in the settings now!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:200
+#, php-format
 msgid "Activate your %s to use all features with great support. Activate now!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:204
+#, php-format
 msgid "You have not yet activated your %s license. Activate your license now in the settings!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:211
+#, php-format
 msgid "You are not allowed to use %s according to our license terms unless you have purchased a license. Activate it in the settings or buy one now!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:219
+#, php-format
 msgid "Attention! Pirates distribute %s for free without a license. Activate your license in the settings to show that you are not a pirate!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:227
+#, php-format
 msgid "You are probably using an illegally purchased copy of %s without a license. Check your license now!"
 msgstr ""
 
 #. translators:
 #: view/PluginUpdateView.php:235
+#, php-format
 msgid "You are probably using an illegal copy of %s. Purchase a license now or activate your license in the settings and continue using this software with a clear conscience!"
 msgstr ""
 

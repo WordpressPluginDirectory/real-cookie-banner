@@ -95,7 +95,7 @@ class DashboardTileMigrationMajor4 extends \DevOwl\RealCookieBanner\comp\migrati
             // translators:
             \__('Real Cookie Banner offered you so far to obtain special consent according to <a href="%1$s" target="_blank">Art. 49 (1) (a) GDPR</a> for data processing in the USA. <a href="%2$s" target="_blank">The USA is again a secure third country under data protection law since July 2023</a>. However, data processing of many services takes place worldwide and thus in other insecure countries.', RCB_TD),
             \__('https://gdpr-text.com/read/article-49/', RCB_TD),
-            \__('https://devowl.io/2023/us-data-processing-tadpf/', RCB_TD)
+            \__('https://devowl.io/data-protection/tadpf-us-data-processing/', RCB_TD)
         ), \sprintf(
             // translators:
             \__('You can now specify the countries of data processing in each service! We have already added this information in service templates. You can find a <a href="%1$s" target="_blank">list of secure third countries as defined by the EU in the settings</a>. This means that specific consents are now obtained for all unsecure third countries worldwide.', RCB_TD),
@@ -158,7 +158,7 @@ class DashboardTileMigrationMajor4 extends \DevOwl\RealCookieBanner\comp\migrati
         return \join('<br /><br/ >', [\sprintf(
             // translators:
             \__('Discover the new Real Cookie Banner 4.0! With this update, we\'ve made legal adjustments to make your cookie banner legally even more rubust. Learn more about the changes in the <a href="%s" target="_blank">release notes</a> on our blog!', RCB_TD),
-            \__('https://devowl.io/2023/real-cookie-banner-4-0/', RCB_TD)
+            \__('https://devowl.io/news/real-cookie-banner-4-0/', RCB_TD)
         ), \__('<strong>You should definitely take a look at the following points and apply them to your cookie banner configuration!</strong> You decide which changes to activate or ignore - we don\'t make any fundamental changes without your consent.', RCB_TD)]);
     }
     // Documented in AbstractDashboardTileMigration

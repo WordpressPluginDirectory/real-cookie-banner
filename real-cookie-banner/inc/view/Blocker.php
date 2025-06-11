@@ -84,6 +84,7 @@ class Blocker
         '.evcal_eventcard',
         // [Plugin Comp] Divi Builder
         '.divioverlay',
+        '.et_pb_toggle_content',
     ];
     /**
      * See `disableDeduplicateExceptions` parameter in `createVisual` for more information.

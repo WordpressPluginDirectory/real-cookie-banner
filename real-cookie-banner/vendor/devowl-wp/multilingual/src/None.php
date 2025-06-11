@@ -60,6 +60,11 @@ class None extends AbstractLanguagePlugin
     {
         return '';
     }
+    // Documented in AbstractLanguagePlugin
+    public function getPostLanguage($id)
+    {
+        return '';
+    }
     // Documented in AbstractSyncPlugin
     public function getOriginalPostId($id, $post_type)
     {

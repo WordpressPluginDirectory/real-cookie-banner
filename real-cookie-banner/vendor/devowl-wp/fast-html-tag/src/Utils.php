@@ -17,7 +17,7 @@ class Utils
      */
     const PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE = 'PARSE_HTML_ATTRIBUTES_CONSIDER_ATTRIBUTE_AS_BOOLEAN_VALUE_TRUE';
     const PARSE_HTML_ATTRIBUTES_CUSTOM_TAG = 'my-awesome-fast-html-tag';
-    public static $inPregReplaceCallbackRecursive = \false;
+    public static $inPregReplaceCallbackRecursive = 0;
     /**
      * Check if a string starts with a given needle.
      *
@@ -131,7 +131,7 @@ class Utils
      */
     public static function preg_replace_callback_recursive($pattern, $callback, $subject)
     {
-        self::$inPregReplaceCallbackRecursive = \true;
+        ++self::$inPregReplaceCallbackRecursive;
         $f = function ($matchesWithOffsets) use($pattern, $callback, &$f) {
             $matches = \array_column($matchesWithOffsets, 0);
             $current = $matches[0];
@@ -162,7 +162,7 @@ class Utils
         } catch (PregReplaceCallbackRerunException $e) {
             $replayWithSubject = $e->fetchNewSubject($subject);
         }
-        self::$inPregReplaceCallbackRecursive = \false;
+        --self::$inPregReplaceCallbackRecursive;
         if (\is_string($replayWithSubject)) {
             $jitSafeResult = self::preg_replace_callback_recursive($pattern, $callback, $replayWithSubject);
         }
@@ -260,7 +260,7 @@ class Utils
                     $attributes[$attrName] = $nodeValue;
                     // Fix VueJS attributes like `v-else-if="button_type > 'woo'"></template` which causes
                     // the regular expression to fail
-                    if (self::$inPregReplaceCallbackRecursive && \is_string($nodeValue) && self::endsWith($nodeValue, '></' . Utils::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG . '>')) {
+                    if (self::$inPregReplaceCallbackRecursive > 0 && \is_string($nodeValue) && self::endsWith($nodeValue, '></' . Utils::PARSE_HTML_ATTRIBUTES_CUSTOM_TAG . '>')) {
                         throw new PregReplaceCallbackRerunException(function ($subject, $matches, $offsets) use($str) {
                             $offsetMatch = $offsets[0];
                             // Check if there is a `/>` which would break the regex, too, and we need to replace it accordingly

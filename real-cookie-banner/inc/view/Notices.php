@@ -462,9 +462,11 @@ class Notices
     public function servicesWithUpdatedTemplatesHtml($needsUpdate, $context = 'notice')
     {
         $configPage = Core::getInstance()->getConfigPage();
+        $compLanguage = Core::getInstance()->getCompLanguage();
         $configPageUrl = $configPage->getUrl();
         $output = $context === 'notice' ? '<p>' . \__('Changes have been made to the templates you use in Real Cookie Banner. You should review the proposed changes and adjust your services and/or content blockers if necessary to be able to remain legally compliant. The following services are affected:', RCB_TD) . '</p><ul>' : '<ul>';
         foreach ($needsUpdate as $update) {
+            $postLanguage = $compLanguage->getPostLanguage($update->post_id);
             switch ($update->post_type) {
                 case Blocker::CPT_NAME:
                     $typeLabel = \__('Content Blocker', RCB_TD);
@@ -478,7 +480,7 @@ class Notices
                 default:
                     break;
             }
-            $output .= \sprintf('<li><strong>%s</strong> (%s) &bull; <a href="%s">%s</a></li>', \esc_html($update->post_title), $typeLabel, $editLink, \__('Review changes', RCB_TD));
+            $output .= \sprintf('<li><strong>%s</strong> (%s) &bull;%s <a href="%s">%s</a></li>', \esc_html($update->post_title), $typeLabel, !empty($postLanguage) ? \sprintf(' (%s) &bull;', $compLanguage->getTranslatedName($postLanguage)) : '', $editLink, \__('Review changes', RCB_TD));
         }
         $dismissLink = \add_query_arg(self::DISMISS_SERVICES_WITH_UPDATED_TEMPLATES_NOTICE_QUERY_ARG, '1', UtilsUtils::isRest() ? $configPageUrl : $_SERVER['REQUEST_URI']);
         $output .= $context === 'notice' ? '</ul><p><a href="' . \esc_url($dismissLink) . '">' . \__('Dismiss notice', RCB_TD) . '</a></p>' : '</ul>';

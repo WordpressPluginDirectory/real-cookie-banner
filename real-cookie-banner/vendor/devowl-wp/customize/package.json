@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.12.28",
+    "version": "1.12.30",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",

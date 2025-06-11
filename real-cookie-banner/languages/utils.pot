@@ -9,10 +9,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: n/a\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #. translators:
 #: Localization.php:455
+#, php-format
 msgid "Some language packs could not be downloaded for the textdomain %1$s (Error: %2$s, Endpoint: %3$s)."
 msgstr ""
 
@@ -26,6 +27,7 @@ msgstr ""
 
 #. translators:
 #: RateLimitNotice.php:69
+#, php-format
 msgid "Your WordPress unexpectedly requests the license server and cloud services of <strong>%1$s</strong> exceptionally often (URL: <code>%3$s</code>). This indicates a misconfiguration of your WordPress system, which can also affect the loading speed of your website or cause malfunctions. Please check with your technical contact what is configured incorrectly! Alternatively, you can <a href=\"%2$s\" target=\"_blank\">open a support ticket</a> at the plugin manufacturer support."
 msgstr ""
 
@@ -39,11 +41,13 @@ msgstr ""
 
 #. translators:
 #: Service.php:118
+#, php-format
 msgid "<strong>An unexpected network error has occurred!</strong> One or more WordPress plugins tried to call the WordPress REST API, which failed. Most likely a <strong>security plugin%s</strong>, a web <strong>server configuration</strong> or active <strong>ad-blocker extension</strong> installed on your browser disabled the REST API. Please make sure that the following REST API namespaces are reachable to use your plugin without problems:"
 msgstr ""
 
 #. translators:
 #: Service.php:126
+#, php-format
 msgid "What is the WordPress REST API and how to enable it? %1$sLearn more%2$s."
 msgstr ""
 

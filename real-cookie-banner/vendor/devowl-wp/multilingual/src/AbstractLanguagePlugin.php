@@ -136,6 +136,13 @@ abstract class AbstractLanguagePlugin
      */
     public abstract function getCurrentLanguage();
     /**
+     * Get language of passed post id.
+     *
+     * @param int $id
+     * @return string Returns empty string if no language is set or cannot be determined, otherwise the locale
+     */
+    public abstract function getPostLanguage($id);
+    /**
      * Get original id of passed post id.
      *
      * @param int $id

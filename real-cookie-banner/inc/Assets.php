@@ -165,10 +165,6 @@ class Assets
         // Enqueue code mirror to edit JavaScript files
         $cm_settings['codeEditor'] = \wp_enqueue_code_editor(['type' => 'text/html']);
         \wp_localize_script('jquery', 'cm_settings', $cm_settings);
-        // react-router-dom
-        $handleRemixRunRouter = $this->enqueueLibraryScript('remix-run-router', [[$useNonMinifiedSources, '@remix-run/router/dist/router.umd.js'], '@remix-run/router/dist/router.umd.min.js']);
-        $handleReactRouter = $this->enqueueLibraryScript('react-router', [[$useNonMinifiedSources, 'react-router/dist/umd/react-router.development.js'], 'react-router/dist/umd/react-router.production.min.js', [$handleRemixRunRouter]]);
-        \array_unshift($scriptDeps, $this->enqueueLibraryScript('react-router-dom', [[$useNonMinifiedSources, 'react-router-dom/dist/umd/react-router-dom.development.js'], 'react-router-dom/dist/umd/react-router-dom.production.min.js'], [Constants::ASSETS_HANDLE_REACT_DOM, $handleReactRouter]));
         // real-product-manager-wp-client (for licensing purposes)
         \array_unshift($scriptDeps, RpmWpClientCore::getInstance()->getAssets()->enqueue($this));
         $handle = $this->enqueueScript('admin', [[$this->isPro(), 'admin.pro.js'], 'admin.lite.js'], $scriptDeps);

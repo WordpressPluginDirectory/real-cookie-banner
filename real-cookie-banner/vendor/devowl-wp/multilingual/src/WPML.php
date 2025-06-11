@@ -104,6 +104,12 @@ class WPML extends AbstractSyncPlugin
         global $sitepress;
         return $sitepress->get_current_language();
     }
+    // Documented in AbstractLanguagePlugin
+    public function getPostLanguage($id)
+    {
+        $result = \apply_filters('wpml_post_language_details', '', $id);
+        return \is_array($result) ? $result['language_code'] : '';
+    }
     // Documented in AbstractSyncPlugin
     public function getOriginalPostId($id, $post_type)
     {

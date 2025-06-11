@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-queue",
-    "version": "1.0.15",
+    "version": "1.0.17",
     "private": true,
     "description": "Provide a promise-based queue system working in frontend for client and server tasks",
     "homepage": "https://devowl.io",

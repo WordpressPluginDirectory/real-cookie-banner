@@ -214,7 +214,7 @@ class DashboardTileMigrationMajor3 extends \DevOwl\RealCookieBanner\comp\migrati
         return \join('<br /><br/ >', [\sprintf(
             // translators:
             \__('With Real Cookie Banner 3.0 we have released a major update, in which we have implemented, among other things, current legal adjustments. Read more about the changes in our <a href="%s" target="_blank">blog post</a>.', RCB_TD),
-            \__('https://devowl.io/2022/real-cookie-banner-3-0/', RCB_TD)
+            \__('https://devowl.io/news/real-cookie-banner-3-0/', RCB_TD)
         ), \__('<strong>You should definitely take a look at the following points, because we have adjusted the behavior of the cookie banner.</strong> All changes can be optionally activated or ignored. We will not fundamentally change your cookie banner without your consent.', RCB_TD)]);
     }
     // Documented in AbstractDashboardTileMigration

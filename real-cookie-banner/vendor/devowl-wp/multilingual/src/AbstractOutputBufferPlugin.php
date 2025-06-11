@@ -30,6 +30,11 @@ abstract class AbstractOutputBufferPlugin extends AbstractLanguagePlugin
         // Silence is golden.
     }
     // Documented in AbstractLanguagePlugin
+    public function getPostLanguage($id)
+    {
+        return '';
+    }
+    // Documented in AbstractLanguagePlugin
     public function getOriginalPostId($id, $post_type)
     {
         return $id;

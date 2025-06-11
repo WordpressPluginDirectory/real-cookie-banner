@@ -70,6 +70,7 @@ class StandardPlugin extends AbstractPlugin
             'div[id^="lyte_":visualParent(value=2)]',
             // [Plugin Comp] OMGF
             '!script[id="omgf-pro-remove-async-google-fonts"]',
+            '!WebFontConfig*/host-google-fonts',
             // [Plugin Comp] https://github.com/paulirish/lite-youtube-embed
             'a[href:matchesUrl()][rel="wp-video-lightbox"]',
             // [Plugin Comp] https://elementor.com/help/lightbox/
@@ -236,6 +237,8 @@ class StandardPlugin extends AbstractPlugin
             '/window\\.SR7\\s*\\?\\?=/m',
             // [Plugin Comp] Fluent Community
             'fluentComAdmin',
+            // [Plugin Comp] WP Amelia
+            '/var wpAmeliaSettings/m',
         ]);
         /**
          * DoNotBlockScriptTextTemplates.

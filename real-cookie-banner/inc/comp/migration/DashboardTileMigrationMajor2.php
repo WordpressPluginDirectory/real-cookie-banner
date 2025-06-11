@@ -82,7 +82,7 @@ class DashboardTileMigrationMajor2 extends \DevOwl\RealCookieBanner\comp\migrati
         return \sprintf(
             // translators:
             \__('We have released a major update with Real Cookie Banner 2.0. Find out what\'s new in our %1$sblog article%2$s. <strong>You should definitely take a look at the following points, as we have adjusted the behavior of the cookie banner.</strong> All changes can be optionally activated or ignored. We will not change your cookie banner fundamentally without your consent.', RCB_TD),
-            \sprintf('<a href="%s" target="_blank">', \__('https://devowl.io/2021/real-cookie-banner-2-0-cookie-consent/', RCB_TD)),
+            \sprintf('<a href="%s" target="_blank">', \__('https://devowl.io/news/real-cookie-banner-2-0/', RCB_TD)),
             '</a>'
         );
     }
