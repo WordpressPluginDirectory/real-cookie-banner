@@ -74,12 +74,21 @@ class CookieGroup
             \update_term_meta($result['term_id'], self::META_NAME_IS_ESSENTIAL, \true);
             \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['functional'], self::TAXONOMY_NAME, ['description' => $defaultTexts['functional']]);
+            if (\is_admin() && \is_wp_error($result)) {
+                \wp_die($result);
+            }
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 1);
             \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['statistics'], self::TAXONOMY_NAME, ['description' => $defaultTexts['statistics']]);
+            if (\is_admin() && \is_wp_error($result)) {
+                \wp_die($result);
+            }
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 2);
             \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             $result = \wp_insert_term($groupNames['marketing'], self::TAXONOMY_NAME, ['description' => $defaultTexts['marketing']]);
+            if (\is_admin() && \is_wp_error($result)) {
+                \wp_die($result);
+            }
             \update_term_meta($result['term_id'], self::META_NAME_ORDER, 3);
             \update_term_meta($result['term_id'], self::META_NAME_IS_DEFAULT, \true);
             return !\is_wp_error($result);

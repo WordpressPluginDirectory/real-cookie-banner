@@ -262,7 +262,7 @@ trait Assets
             $dependencies = $dependencyMap[$basename];
             foreach ($dependencies as $dependency) {
                 $suffix = $locale . '-' . \md5($dependency);
-                $jsonFile = $languageFolder . '/' . $textDomain . '-' . $suffix . '.json';
+                $jsonFile = $languageFolder . $textDomain . '-' . $suffix . '.json';
                 if (\file_exists($jsonFile)) {
                     $result[] = $suffix;
                 }

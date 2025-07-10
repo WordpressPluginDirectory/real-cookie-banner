@@ -45,7 +45,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-### devowl-wp/cache-invalidate (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/cache-invalidate (Version dev-wordpress | no sha)
 Provide a single entry point to trigger cache invalidation of known caching plugins
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -58,7 +58,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/cookie-consent-management (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/cookie-consent-management (Version dev-wordpress | no sha)
 Provide cookie consent management with adapters to your environment
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -71,7 +71,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/customize (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/customize (Version dev-wordpress | no sha)
 Abstract utility for live preview (customize)
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -84,7 +84,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/deliver-anonymous-asset (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/deliver-anonymous-asset (Version dev-wordpress | no sha)
 Provide a functionality to deliver assets anonymous
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -97,7 +97,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/fast-html-tag (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/fast-html-tag (Version dev-wordpress | no sha)
 Find tags within HTML content and modify it in speed of light
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -110,7 +110,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/freemium (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/freemium (Version dev-wordpress | no sha)
 Make your plugin to a freemium plugin with predefined Envato support
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -123,7 +123,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/headless-content-blocker (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/headless-content-blocker (Version dev-wordpress | no sha)
 Block HTML content by URLs and selector syntax
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -136,7 +136,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/multilingual (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/multilingual (Version dev-wordpress | no sha)
 Provide helper functionality for multilingual plugins like WPML and PolyLang
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -149,7 +149,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-product-manager-wp-client (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/real-product-manager-wp-client (Version dev-wordpress | no sha)
 A WordPress client for Real Product Manager
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -162,7 +162,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-queue (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/real-queue (Version dev-wordpress | no sha)
 Provide a promise-based queue system working in frontend for client and server tasks
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -175,7 +175,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/real-utils (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/real-utils (Version dev-wordpress | no sha)
 Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -188,7 +188,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/service-cloud-consumer (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/service-cloud-consumer (Version dev-wordpress | no sha)
 Consume service and blocker templates from service cloud
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -201,7 +201,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### devowl-wp/utils (Version dev-refactor/db-consent-v2 | no sha)
+### devowl-wp/utils (Version dev-wordpress | no sha)
 Utility functionality for all your WordPress plugins.
 Homepage: Not configured.
 Licenses Used: GPL-3.0-or-later
@@ -682,7 +682,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-### yahnis-elsts/plugin-update-checker (Version v5.4 | e8e53e6)
+### yahnis-elsts/plugin-update-checker (Version v5.6 | a2db687)
 A custom update checker for WordPress plugins and themes. Useful if you can't host your plugin in the official WP repository but still want it to support automatic updates.
 Homepage: https://github.com/YahnisElsts/plugin-update-checker/
 Licenses Used: MIT

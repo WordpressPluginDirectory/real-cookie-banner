@@ -173,6 +173,19 @@ class NavMenuLinks
         return $atts;
     }
     /**
+     * Accessibility: Broken same-page link -> we need to add a dummy element with the ID and the rest is done via JavaScript.
+     *
+     * @param string $item_output
+     * @param WP_Post $item
+     */
+    public function walker_nav_menu_start_el($item_output, $item)
+    {
+        if ($this->isMenuItem($item)) {
+            $item_output = \str_replace('</a>', \sprintf('<span id="%s" aria-hidden="true"></span></a>', \substr($item->url, 1)), $item_output);
+        }
+        return $item_output;
+    }
+    /**
      * Register new metabox.
      */
     public function admin_head()

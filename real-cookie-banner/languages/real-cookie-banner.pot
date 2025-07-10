@@ -1992,52 +1992,52 @@ msgstr ""
 msgid "Service group"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:391
-#: inc/settings/CookieGroup.php:412
+#: inc/settings/CookieGroup.php:406
+#: inc/settings/CookieGroup.php:427
 #: inc/templates/TemplateConsumers.php:279
 msgid "Essential"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:392
-#: inc/settings/CookieGroup.php:413
+#: inc/settings/CookieGroup.php:407
+#: inc/settings/CookieGroup.php:428
 #: inc/templates/TemplateConsumers.php:282
 msgid "Functional"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:393
-#: inc/settings/CookieGroup.php:414
+#: inc/settings/CookieGroup.php:408
+#: inc/settings/CookieGroup.php:429
 #: inc/templates/TemplateConsumers.php:285
 msgid "Statistics"
 msgstr ""
 
 #. translators: Keep this for backwards-compatibility (usually it is "Statistics")
-#: inc/settings/CookieGroup.php:396
-#: inc/settings/CookieGroup.php:441
+#: inc/settings/CookieGroup.php:411
+#: inc/settings/CookieGroup.php:456
 msgid "Statistic"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:397
-#: inc/settings/CookieGroup.php:415
+#: inc/settings/CookieGroup.php:412
+#: inc/settings/CookieGroup.php:430
 #: inc/templates/TemplateConsumers.php:288
 msgid "Marketing"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:418
+#: inc/settings/CookieGroup.php:433
 msgctxt "legal-text"
 msgid "Essential services are required for the basic functionality of the website. They only contain technically necessary services. These services cannot be objected to."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:423
+#: inc/settings/CookieGroup.php:438
 msgctxt "legal-text"
 msgid "Functional services are necessary to provide features beyond the essential functionality such as prettier fonts, video playback or interactive web 2.0 features. Content from e.g. video platforms and social media platforms are blocked by default, and can be consented to. If the service is agreed to, this content is loaded automatically without further manual consent."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:428
+#: inc/settings/CookieGroup.php:443
 msgctxt "legal-text"
 msgid "Statistics services are needed to collect pseudonymous data about the visitors of the website. The data enables us to understand visitors better and to optimize the website."
 msgstr ""
 
-#: inc/settings/CookieGroup.php:433
+#: inc/settings/CookieGroup.php:448
 msgctxt "legal-text"
 msgid "Marketing services are used by us and third parties to track the behaviour of individual visitors (across multiple pages), analyse the data collected and, for example, display personalized advertisements. These services enable us to track visitors across multiple websites."
 msgstr ""
@@ -4322,7 +4322,7 @@ msgstr ""
 msgid "Success message"
 msgstr ""
 
-#: inc/view/navmenu/NavMenuLinks.php:297
+#: inc/view/navmenu/NavMenuLinks.php:314
 msgid "Add to Menu"
 msgstr ""
 

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.13.29",
+    "version": "1.13.32",
     "private": true,
     "description": "Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
@@ -42,8 +42,8 @@
         "not IE 11"
     ],
     "dependencies": {
-        "core-js": "3.37.1",
-        "jquery": "3.7.1"
+        "core-js": "catalog:webpack",
+        "jquery": "catalog:frontend"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -58,12 +58,12 @@
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/utils": "workspace:*",
         "@devowl-wp/webpack-config": "workspace:*",
-        "@types/jquery": "3.5.30",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "webpack": "5.92.0",
-        "webpack-cli": "5.1.4"
+        "@types/jquery": "catalog:types",
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "webpack": "catalog:webpack",
+        "webpack-cli": "catalog:webpack"
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*",
@@ -128,11 +128,11 @@
             "nb_NO": 100,
             "cs": 100,
             "pt@formal": 100,
-            "hu_HU": 100,
-            "ro_RO": 100,
+            "hu": 100,
+            "ro": 100,
             "el": 100,
             "fi": 100,
-            "sk_SK": 100
+            "sk": 100
         },
         "machineTranslation": {
             "fr@formal": [

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/service-cloud-consumer",
-    "version": "1.0.16",
+    "version": "1.0.18",
     "private": true,
     "description": "Consume service and blocker templates from service cloud",
     "homepage": "https://devowl.io",
@@ -39,10 +39,10 @@
         "@devowl-wp/phpcs-config": "workspace:*",
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "webpack-cli": "5.1.4"
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "webpack-cli": "catalog:webpack"
     },
     "peerDependencies": {
         "@devowl-wp/api-real-cookie-banner": "workspace:*"

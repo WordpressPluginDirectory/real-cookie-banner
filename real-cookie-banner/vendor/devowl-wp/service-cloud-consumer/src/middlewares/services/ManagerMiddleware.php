@@ -13,6 +13,11 @@ class ManagerMiddleware extends AbstractTemplateMiddleware
     const IDENTIFIER_GOOGLE_TAG_MANAGER = 'gtm';
     const IDENTIFIER_MATOMO_TAG_MANAGER = 'mtm';
     const SET_COOKIES_AFTER_CONSENT_VIA_JAVASCRIPT = 'none';
+    /**
+     * This is the old mechanism for Google Tag Manager. Google Tag Manager should be used with Google Consent Mode.
+     *
+     * @deprecated Use `SET_COOKIES_AFTER_CONSENT_VIA_GOOGLE_TAG_MANAGER_WITH_GCM` instead.
+     */
     const SET_COOKIES_AFTER_CONSENT_VIA_GOOGLE_TAG_MANAGER = 'googleTagManager';
     const SET_COOKIES_AFTER_CONSENT_VIA_GOOGLE_TAG_MANAGER_WITH_GCM = 'googleTagManagerWithGcm';
     const SET_COOKIES_AFTER_CONSENT_VIA_MATOMO_TAG_MANAGER = 'matomoTagManager';

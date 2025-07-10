@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/deliver-anonymous-asset",
-    "version": "1.0.16",
+    "version": "1.0.19",
     "private": true,
     "description": "Provide a functionality to deliver assets anonymous",
     "homepage": "https://devowl.io",
@@ -47,11 +47,11 @@
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/utils": "workspace:*",
         "@devowl-wp/webpack-config": "workspace:*",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "webpack": "5.92.0",
-        "webpack-cli": "5.1.4"
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "webpack": "catalog:webpack",
+        "webpack-cli": "catalog:webpack"
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"

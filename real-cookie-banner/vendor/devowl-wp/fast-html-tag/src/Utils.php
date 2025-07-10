@@ -142,7 +142,7 @@ class Utils
                 $offsets = [];
                 foreach ($matchesWithOffsets as $match) {
                     // See https://www.php.net/manual/en/function.preg-match.php#106804
-                    $offsets[] = \strlen(\utf8_decode(\substr($current, 0, $match[1])));
+                    $offsets[] = \mb_strlen(\substr($current, 0, $match[1]), 'UTF-8');
                 }
                 $e->setMatches($matches, $offsets);
                 throw $e;

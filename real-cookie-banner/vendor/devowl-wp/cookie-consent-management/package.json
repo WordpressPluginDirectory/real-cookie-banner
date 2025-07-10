@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "1.0.21",
+    "version": "1.0.23",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -27,16 +27,17 @@
         "@devowl-wp/continuous-integration": "workspace:*",
         "@devowl-wp/cookie-consent-web-client": "workspace:*",
         "@devowl-wp/eslint-config": "workspace:*",
+        "@devowl-wp/headless-content-unblocker": "workspace:*",
         "@devowl-wp/node-gitlab-ci": "workspace:*",
         "@devowl-wp/npm-licenses": "workspace:*",
         "@devowl-wp/phpcs-config": "workspace:*",
         "@devowl-wp/react-cookie-banner": "workspace:*",
         "@devowl-wp/react-cookie-banner-admin": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "webpack-cli": "5.1.4"
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "webpack-cli": "catalog:webpack"
     },
     "peerDependencies": {
         "@devowl-wp/cookie-consent-web-client": "workspace:*",

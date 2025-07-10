@@ -14,6 +14,10 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\Ma
  * a[data-href*="youtube.com"][class*="my-lightbox":confirm()]
  * ```
  *
+ * Parameters:
+ *
+ * - `[fixed=false]` (boolean): If true, the dialog will be fixed to the bottom of the screen
+ *
  * When called for an attribute it will mark the individual node in `confirm` mode (similar to `window.confirm()`). That means,
  * instead of rendering a visual content blocker for the blocked node, the blocked node is still rendered as-is but the
  * `click` event gets caught. Afterward, a confirm dialog with a visual content blocker (text-mode) will be shown.
@@ -37,12 +41,13 @@ class Confirm extends AbstractPlugin
      */
     public function fn($fn, $match, $value)
     {
-        MatchPluginCallbacks::getFromMatch($match)->addBlockedMatchCallback(function ($result) use($match) {
+        $fixed = $fn->getArgument('fixed', 'false') === 'true';
+        MatchPluginCallbacks::getFromMatch($match)->addBlockedMatchCallback(function ($result) use($match, $fixed) {
             if ($result->isBlocked()) {
                 if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_DELEGATE_CLICK)) {
                     $match->setAttribute(Constants::HTML_ATTRIBUTE_DELEGATE_CLICK, \json_encode(['selector' => 'self']));
                 }
-                $match->setAttribute(Constants::HTML_ATTRIBUTE_CONFIRM, \true);
+                $match->setAttribute(Constants::HTML_ATTRIBUTE_CONFIRM, \json_encode(['fixed' => $fixed]));
             }
         });
         return \true;

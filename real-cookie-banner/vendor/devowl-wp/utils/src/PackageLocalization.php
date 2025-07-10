@@ -92,6 +92,8 @@ class PackageLocalization
     /**
      * Get the `/languages` folder which is directly located under the plugins path.
      *
+     * The return value has always a trailing slash.
+     *
      * @param string $path A path to a folder or file within the plugins folder
      * @param boolean $appendFile If `true`, it automatically appends the basename of the `$path` to the resulting path
      * @param string $format The result format, can be `filesystem` or `url`
@@ -108,26 +110,24 @@ class PackageLocalization
         $pluginFilePathIsDir = @\is_dir($pluginLanguagesFolder);
         $result = \untrailingslashit($pluginFilePathIsDir ? $pluginLanguagesFolder . $appendFile : $path);
         $isRemoteMeta = $pluginFilePathIsDir && \is_file($pluginLanguagesFolder . 'meta.json');
+        $result = $defaultReturn;
         if ($isRemoteMeta) {
             // It is placed in `wp-content/languages/` or `wp-includes/languages/...`
             $cacheDir = self::getMoCacheDir($slug);
-            if (!$cacheDir) {
-                // Offloaded languages were not yet downloaded
-                return $defaultReturn;
-            }
-            $result = \trailingslashit($cacheDir) . $appendFile;
-            if ($format === 'url') {
-                $wpContentDir = \constant('WP_CONTENT_DIR');
-                $wpIncludesDir = \constant('ABSPATH') . \constant('WPINC');
-                if (\strpos($result, $wpContentDir) === 0) {
-                    return \content_url(\substr($result, \strlen($wpContentDir)));
-                } elseif (\strpos($result, $wpIncludesDir) === 0) {
-                    return \includes_url(\substr($result, \strlen($wpIncludesDir)));
+            if ($cacheDir) {
+                // Offloaded languages are downloaded
+                $result = \trailingslashit($cacheDir) . $appendFile;
+                if ($format === 'url') {
+                    $wpContentDir = \constant('WP_CONTENT_DIR');
+                    $wpIncludesDir = \constant('ABSPATH') . \constant('WPINC');
+                    if (\strpos($result, $wpContentDir) === 0) {
+                        $result = \content_url(\substr($result, \strlen($wpContentDir)));
+                    } elseif (\strpos($result, $wpIncludesDir) === 0) {
+                        $result = \includes_url(\substr($result, \strlen($wpIncludesDir)));
+                    }
                 }
-            } else {
-                return $result;
             }
         }
-        return $defaultReturn;
+        return $appendFile ? $result : \trailingslashit($result);
     }
 }

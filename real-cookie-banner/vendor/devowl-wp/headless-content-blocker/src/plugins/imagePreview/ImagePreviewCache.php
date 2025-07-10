@@ -86,7 +86,7 @@ abstract class ImagePreviewCache
      */
     public function extractImageExtension($mime)
     {
-        $all_mimes = ['png' => ['image/png', 'image/x-png'], 'bmp' => ['image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap'], 'gif' => ['image/gif'], 'jpeg' => ['image/jpeg', 'image/pjpeg'], 'svg' => ['image/svg+xml'], 'jp2' => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'], 'tiff' => ['image/tiff'], 'ico' => ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon']];
+        $all_mimes = ['png' => ['image/png', 'image/x-png'], 'bmp' => ['image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap'], 'gif' => ['image/gif'], 'jpeg' => ['image/jpeg', 'image/pjpeg'], 'svg' => ['image/svg+xml'], 'jp2' => ['image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'], 'tiff' => ['image/tiff'], 'ico' => ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon'], 'webp' => ['image/webp']];
         foreach ($all_mimes as $key => $value) {
             if (\array_search($mime, $value, \true) !== \false) {
                 return $key;

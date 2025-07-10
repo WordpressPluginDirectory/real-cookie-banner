@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/fast-html-tag",
-    "version": "1.2.16",
+    "version": "1.2.19",
     "private": true,
     "description": "Find tags within HTML content and modify it in speed of light",
     "homepage": "https://devowl.io",
@@ -31,8 +31,8 @@
         "phpunit-coverage-threshold": 100
     },
     "dependencies": {
-        "node-html-parser": "6.1.13",
-        "striptags": "3.2.0"
+        "node-html-parser": "catalog:backend",
+        "striptags": "catalog:isomorphic"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -44,12 +44,12 @@
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/vitest-config": "workspace:*",
-        "@vitest/coverage-v8": "2.0.5",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "vitest": "2.0.5",
-        "webpack-cli": "5.1.4"
+        "@vitest/coverage-v8": "catalog:testing",
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "vitest": "catalog:testing",
+        "webpack-cli": "catalog:webpack"
     },
     "engines": {
         "node": ">=14.15.0"

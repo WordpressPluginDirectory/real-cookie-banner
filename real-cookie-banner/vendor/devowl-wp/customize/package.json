@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.12.30",
+    "version": "1.12.33",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -36,11 +36,11 @@
         "not IE 11"
     ],
     "dependencies": {
-        "core-js": "3.37.1",
-        "dompurify": "3.2.5",
-        "jquery": "3.7.1",
-        "react": "18.3.1",
-        "react-dom": "18.3.1"
+        "core-js": "catalog:webpack",
+        "dompurify": "catalog:isomorphic",
+        "jquery": "catalog:frontend",
+        "react": "catalog:frontend",
+        "react-dom": "catalog:frontend"
     },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
@@ -54,14 +54,14 @@
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/utils": "workspace:*",
         "@devowl-wp/webpack-config": "workspace:*",
-        "@types/jquery": "3.5.30",
-        "@types/react": "18.3.3",
-        "@types/react-dom": "18.3.0",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.3",
-        "typescript": "5.4.5",
-        "webpack": "5.92.0",
-        "webpack-cli": "5.1.4"
+        "@types/jquery": "catalog:types",
+        "@types/react": "catalog:types",
+        "@types/react-dom": "catalog:types",
+        "ts-node": "catalog:build",
+        "tslib": "catalog:build",
+        "typescript": "catalog:build",
+        "webpack": "catalog:webpack",
+        "webpack-cli": "catalog:webpack"
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"
@@ -123,11 +123,11 @@
             "nb_NO": 100,
             "cs": 100,
             "pt@formal": 100,
-            "hu_HU": 100,
-            "ro_RO": 100,
+            "hu": 100,
+            "ro": 100,
             "el": 100,
             "fi": 100,
-            "sk_SK": 100
+            "sk": 100
         },
         "machineTranslation": {
             "fr@formal": [

@@ -443,6 +443,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_filter('update_post_metadata', [$this->getNotices(), 'update_post_meta_data_processing_in_unsafe_countries'], 10, 4);
         \add_filter('nav_menu_link_attributes', [$navMenuLinks, 'nav_menu_link_attributes'], 10, 2);
         \add_filter('wp_setup_nav_menu_item', [$navMenuLinks, 'wp_setup_nav_menu_item']);
+        \add_filter('walker_nav_menu_start_el', [$navMenuLinks, 'walker_nav_menu_start_el'], 10, 2);
         \add_filter('customize_nav_menu_available_item_types', [$navMenuLinks, 'register_customize_nav_menu_item_types']);
         \add_filter('customize_nav_menu_available_items', [$navMenuLinks, 'register_customize_nav_menu_items'], 10, 4);
         \add_filter('RCB/Revision/Current', [$navMenuLinks, 'revisionCurrent']);

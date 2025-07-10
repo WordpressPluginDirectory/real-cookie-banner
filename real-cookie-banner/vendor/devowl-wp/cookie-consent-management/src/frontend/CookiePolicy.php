@@ -32,22 +32,43 @@ class CookiePolicy
      * Render the cookie policy as HTML output.
      *
      * @param boolean $replaceVariables
+     * @param string[] $sectionsToRender
+     * @param boolean $removeHeadlines
      */
-    public function renderHtml($replaceVariables = \true)
+    public function renderHtml($replaceVariables = \true, $sectionsToRender = null, $removeHeadlines = \false)
     {
         $cookiePolicySettings = $this->getSettings();
         $toc = [];
         $output = [];
-        $output[] = $this->renderWebsiteOperatorSectionHtml($toc);
-        $output[] = $this->renderDiffToPrivacyPolicySectionHtml($toc);
-        $output[] = $this->renderCookieTechnologySectionHtml($toc);
-        $output[] = $this->renderLegalBasisSectionHtml($toc);
-        $output[] = $this->renderRightsOfVisitorSectionHtml($toc);
-        $output[] = $this->renderManageCookiesSectionHtml($toc);
-        $output[] = $this->renderTypesOfCookiesSectionHtml($toc);
-        $output[] = $this->renderCookiesOriginSectionHtml($toc);
-        $output[] = $this->renderListOfServicesSectionHtml($toc);
-        $additionalContent = $cookiePolicySettings->getAdditionalContent();
+        $sectionsToRender = $sectionsToRender === null ? ['table-of-contents', 'instruction-text', 'additional-content', 'website-operator', 'diff-to-privacy-policy', 'cookie-technology', 'legal-basis', 'rights-of-visitor', 'manage-cookies', 'types-of-cookies', 'cookies-origin', 'list-of-services'] : $sectionsToRender;
+        if (\in_array('website-operator', $sectionsToRender, \true)) {
+            $output[] = $this->renderWebsiteOperatorSectionHtml($toc);
+        }
+        if (\in_array('diff-to-privacy-policy', $sectionsToRender, \true)) {
+            $output[] = $this->renderDiffToPrivacyPolicySectionHtml($toc);
+        }
+        if (\in_array('cookie-technology', $sectionsToRender, \true)) {
+            $output[] = $this->renderCookieTechnologySectionHtml($toc);
+        }
+        if (\in_array('legal-basis', $sectionsToRender, \true)) {
+            $output[] = $this->renderLegalBasisSectionHtml($toc);
+        }
+        if (\in_array('rights-of-visitor', $sectionsToRender, \true)) {
+            $output[] = $this->renderRightsOfVisitorSectionHtml($toc);
+        }
+        if (\in_array('manage-cookies', $sectionsToRender, \true)) {
+            $output[] = $this->renderManageCookiesSectionHtml($toc);
+        }
+        if (\in_array('types-of-cookies', $sectionsToRender, \true)) {
+            $output[] = $this->renderTypesOfCookiesSectionHtml($toc);
+        }
+        if (\in_array('cookies-origin', $sectionsToRender, \true)) {
+            $output[] = $this->renderCookiesOriginSectionHtml($toc);
+        }
+        if (\in_array('list-of-services', $sectionsToRender, \true)) {
+            $output[] = $this->renderListOfServicesSectionHtml($toc);
+        }
+        $additionalContent = \in_array('additional-content', $sectionsToRender, \true) ? $cookiePolicySettings->getAdditionalContent() : '';
         if (!empty($additionalContent)) {
             // Replace `{{dateOfUpdate}}`
             $hashTime = $this->getCookieConsentManagement()->getRevision()->getPersistence()->getCurrentHashTime();
@@ -65,11 +86,18 @@ class CookiePolicy
             }, $additionalContent);
             $output[] = \wpautop(\sprintf('<p>%s</p>', $additionalContent));
         }
-        \array_unshift($output, \sprintf('<h2>%s</h2><ul>%s</ul>', $cookiePolicySettings->getHeadlineTableOfContents(), \join('', \array_map(function ($value) use($toc) {
-            return \sprintf('<li><a href="#%s">%s</a></li>', $value, $toc[$value]);
-        }, \array_keys($toc)))));
-        \array_unshift($output, \sprintf('<p>%s</p>', $cookiePolicySettings->getInstructionText()));
+        if (\in_array('table-of-contents', $sectionsToRender, \true)) {
+            \array_unshift($output, \sprintf('<h2>%s</h2><ul>%s</ul>', $cookiePolicySettings->getHeadlineTableOfContents(), \join('', \array_map(function ($value) use($toc) {
+                return \sprintf('<li><a href="#%s">%s</a></li>', $value, $toc[$value]);
+            }, \array_keys($toc)))));
+        }
+        if (\in_array('instruction-text', $sectionsToRender, \true)) {
+            \array_unshift($output, \sprintf('<p>%s</p>', $cookiePolicySettings->getInstructionText()));
+        }
         $html = \join('', $output);
+        if ($removeHeadlines) {
+            $html = \preg_replace('/<h2[^>]*>.*<\\/h2>/', '', $html);
+        }
         // Replace variables
         if ($replaceVariables) {
             $html = \preg_replace_callback('/{{(\\w+)}}(.*){{\\/\\1}}/m', function ($m) {

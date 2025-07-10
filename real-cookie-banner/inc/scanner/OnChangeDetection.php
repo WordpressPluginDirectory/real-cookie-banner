@@ -33,7 +33,10 @@ class OnChangeDetection
      * they do not get automatically scanned. In a perfect world, when `elementor_library` got changed, it needs
      * to add all URLs of the posts which uses it.
      */
-    const SKIP_POST_TYPE = [];
+    const SKIP_POST_TYPE = [
+        // [Plugin Comp] https://wordpress.org/plugins/wp-rest-api-log/
+        'wp-rest-api-log',
+    ];
     private $scanner;
     /**
      * C'tor.
