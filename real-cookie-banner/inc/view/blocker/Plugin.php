@@ -11,6 +11,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\AbstractBlockab
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\BlockedResult;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\Constants;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\finder\match\StyleInlineAttributeMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\ScriptInlineMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\SelectorSyntaxMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\StyleInlineAttributeMatcher;
@@ -20,7 +21,6 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\imagePr
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\StandardPlugin;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\tcf\TcfForwardGdprStringInUrl;
 use DevOwl\RealCookieBanner\base\UtilsProvider;
-use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\lite\view\blocker\WordPressImagePreviewCache;
 use DevOwl\RealCookieBanner\settings\TCF;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
@@ -391,5 +391,24 @@ class Plugin extends AbstractPlugin
         // Modify `wp-content/{themes,plugins}` to the configured folder
         $expression = \str_replace(['wp-content/themes', 'wp-content/plugins'], [$this->wpContentDir . '/themes', $this->wpContentDir . '/plugins'], $expression);
         return $expression;
+    }
+    /**
+     * See `AbstractPlugin`. In this plugin we do only allow `wordpress-filter:%s*` expressions for pseudo elements
+     * catched by the e.g. `pre_http_request` filter.
+     *
+     * @param BlockedResult $result
+     * @param AbstractBlockable $blockable
+     * @param string $expression
+     * @param AbstractMatcher $matcher
+     * @return boolean
+     */
+    public function beforeSetBlockedInResult($result, $blockable, $expression, $matcher)
+    {
+        $attributes = $result->getAttributes();
+        if (isset($attributes['wordpress-filter'])) {
+            $allowedExpressions = \sprintf('wordpress-filter:%s*', $attributes['wordpress-filter']);
+            return \strpos($expression, $allowedExpressions) === 0;
+        }
+        return \true;
     }
 }

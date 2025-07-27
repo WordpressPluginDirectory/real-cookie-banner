@@ -1376,7 +1376,7 @@ msgstr ""
 msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
 msgstr ""
 
-#: inc/Core.php:419
+#: inc/Core.php:420
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -4322,7 +4322,7 @@ msgstr ""
 msgid "Success message"
 msgstr ""
 
-#: inc/view/navmenu/NavMenuLinks.php:314
+#: inc/view/navmenu/NavMenuLinks.php:321
 msgid "Add to Menu"
 msgstr ""
 

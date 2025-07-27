@@ -240,6 +240,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('wp', [$this->getAssets(), 'createHashedAssets']);
         \add_action('login_init', [$this->getAssets(), 'createHashedAssets']);
         \add_action('plugins_loaded', [$this->getBlocker(), 'registerOutputBuffer'], ViewBlocker::OB_START_PLUGINS_LOADED_PRIORITY);
+        \add_filter('pre_http_request', [$this->getBlocker(), 'pre_http_request'], 10, 3);
         \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [TCF::getInstance(), 'new_version_installation']);
         \add_action('DevOwl/Utils/NewVersionInstallation/' . RCB_SLUG, [new DatabaseUpgrades(), 'apply']);
         \add_filter('RCB/Blocker/Enabled', [$this->getScanner(), 'force_blocker_enabled']);

@@ -748,15 +748,13 @@ JS;
                    var o = /* document.write * / JSON.parse(document.getElementById("a%1$s1-js-extra").innerHTML, receiver);
                    %6$s
                    window.%3$s = o;
-                   if (!window.%3$s) {
-                       const randomId = Math.random().toString(36).substring(2);
-                       window[randomId] = n;
-                   }
+                   const randomId = Math.random().toString(36).substring(2);
+                   window[randomId] = n;
                                     })();
                 */
                 $tag = \sprintf('<script type="application/json" %4$s id="a%1$s1-js-extra">%2$s</script>
 <script %4$s id="a%1$s2-js-extra">
-(()=>{var x=%5$s,t=(e,t)=>new Proxy(e,{get:(e,n)=>{let r=Reflect.get(e,n);return n===t&&"string"==typeof r&&(r=JSON.parse(r,x),Reflect.set(e,n,r)),r}}),n=JSON.parse(document.getElementById("a%1$s1-js-extra").innerHTML,x);%6$s;window.%3$s=n;!window.%3$s&&(window[Math.random().toString(36)]=n);
+(()=>{var x=%5$s,t=(e,t)=>new Proxy(e,{get:(e,n)=>{let r=Reflect.get(e,n);return n===t&&"string"==typeof r&&(r=JSON.parse(r,x),Reflect.set(e,n,r)),r}}),n=JSON.parse(document.getElementById("a%1$s1-js-extra").innerHTML,x);%6$s;window.%3$s=n;window[Math.random().toString(36)]=n;
 })();
 </script>', $uuid, \wp_json_encode($l10n), $object_name, \join(' ', [
                     // TODO: shouldn't this be part of @devowl-wp/cache-invalidate?
@@ -865,6 +863,10 @@ JS;
              * supports autoloader, so we can safely check if the class exists.
              */
             $iri = new Iri($url);
+            // The URL does not have a host, only a path
+            if ($iri->host === null) {
+                return $url;
+            }
             $iri->host = IdnaEncoder::encode($iri->host);
             return $iri->uri;
         } else {
@@ -875,6 +877,10 @@ JS;
                 require_once ABSPATH . WPINC . '/Requests/IDNAEncoder.php';
             }
             $iri = new Requests_IRI($url);
+            // The URL does not have a host, only a path
+            if ($iri->host === null) {
+                return $url;
+            }
             $iri->host = Requests_IDNAEncoder::encode($iri->host);
             return $iri->uri;
         }

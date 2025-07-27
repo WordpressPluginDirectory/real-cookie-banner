@@ -176,7 +176,7 @@ class Revision extends AbstractRevisionPersistance
         // Search for all available tag managers
         $createdTagManagers = [];
         foreach (ManagerMiddleware::TAG_MANAGER_IDENTIFIERS as $tagManagerIdentifier) {
-            $ids = \get_posts(Core::getInstance()->queryArguments(['post_type' => \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'fields' => 'ids', 'meta_query' => [['key' => \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, 'value' => $tagManagerIdentifier, 'compare' => '=']]], 'revisionGetManagerIds'));
+            $ids = \get_posts(Core::getInstance()->queryArguments(['post_type' => \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, 'numberposts' => -1, 'nopaging' => \true, 'fields' => 'ids', 'meta_query' => [['key' => \DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID, 'value' => \sprintf('^%s', $tagManagerIdentifier), 'compare' => 'REGEXP']]], 'revisionGetManagerIds'));
             $createdTagManagers[$tagManagerIdentifier] = $ids;
         }
         $notices = Core::getInstance()->getNotices();

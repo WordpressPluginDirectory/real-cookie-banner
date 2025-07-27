@@ -122,6 +122,9 @@ abstract class AbstractOutputBufferPlugin extends AbstractLanguagePlugin
         $result = \explode($joinDelimiter, $html);
         // Remove `keep-me` HTML tag to get real results
         foreach ($result as &$value) {
+            if (empty($value)) {
+                continue;
+            }
             $value = \explode('>', $value, 2)[1];
             $value = \substr($value, 0, (\strlen(self::HTML_TAG_KEEP) + 3) * -1);
             if (\is_callable($strip)) {

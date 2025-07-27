@@ -181,7 +181,10 @@ class NavMenuLinks
     public function walker_nav_menu_start_el($item_output, $item)
     {
         if ($this->isMenuItem($item)) {
-            $item_output = \str_replace('</a>', \sprintf('<span id="%s" aria-hidden="true"></span></a>', \substr($item->url, 1)), $item_output);
+            $item_output = \str_replace('</a>', \sprintf('<span id="%s" aria-hidden="true" %s></span></a>', \substr($item->url, 1), \join(' ', [
+                // [Plugin Comp] Colibri and `spyScroll`
+                'skip-scroll-spy="1"',
+            ])), $item_output);
         }
         return $item_output;
     }

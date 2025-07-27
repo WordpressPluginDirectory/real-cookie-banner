@@ -3,6 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.1.17 (2025-07-27)
+
+
+### Bug Fixes
+
+* hotfix when Weglot and TranslatePress with latest version lead to memory issues (CU-31mpbvp)
+
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.13.36</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* hotfix when Weglot and TranslatePress with latest version lead to memory issues (CU-31mpbvp)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.35</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* uncaught InvalidArgument IdnaEncoder::encode() Argument [#1](https://git.owlinfra.de/devowlio/devowl-wp/issues/1) () must be of type string|Stringable, NULL given</details>
+
+
+
+
+
+## 5.1.16 (2025-07-23)
+
+
+### Bug Fixes
+
+* allow to block WordPress server side HTTP requests with rule starting with wordpress-filter:pre_http_request*your-rule (CU-31mpbvp)
+* compatibility with Colibri page builder and website reloads too often (CU-869813z13)
+* do not show notice about missing GTM service when GTM4WP service is created (CU-31mpbvp)
+
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.1.11</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* update texts (CU-863h7m9h2)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.19.34</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* better anti ad-block system against Ghostery (CU-8697fw0r4)</details>
+
+
+
+
+
+## 5.1.15 (2025-07-18) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+
+
+
+
+
+## 5.1.14 (2025-07-16) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.1.12</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Bug Fixes
+
+* introduce translation options for fields and enhance translation handling in forms (CU-8699f32x9)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.1.8</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* introduce translation options for fields and enhance translation handling in forms (CU-8699f32x9)</details>
+
+
+
+
+
 ## 5.1.13 (2025-07-10)
 
 **Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
