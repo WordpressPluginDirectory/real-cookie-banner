@@ -1,5 +1,5 @@
 <?php
-// Cachebusters generated on 2025-07-27 09:09:31
+// Cachebusters generated on 2025-12-02 07:02:18
 return [
 	'@ant-design/icons' => '5.3.7',
 	'@antv/g2' => '5.2.1',
@@ -14,7 +14,7 @@ return [
 	'mobx' => '4.15.7',
 	'mobx-react' => '6.3.1',
 	'moment' => '2.30.1',
-	'preact' => '10.22.0',
+	'preact' => '10.27.1',
 	'rc-picker' => '4.6.3',
 	'react' => '18.3.1',
 	'react-dom' => '18.3.1',

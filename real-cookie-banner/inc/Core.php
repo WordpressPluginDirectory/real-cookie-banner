@@ -236,6 +236,7 @@ class Core extends BaseCore implements IOverrideCore
         \add_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . RCB_SLUG, [$automaticScanStarter, 'probablyAddClientJob']);
         \add_action('admin_init', [$this, 'registerSettings'], 1);
         \add_action('rest_api_init', [$this, 'registerSettings'], 1);
+        \add_filter('rest_request_after_callbacks', [$this->getBlocker(), 'skipContentBlockerOnRestAPIEndpoint'], 10, 3);
         \add_action('plugins_loaded', [\DevOwl\RealCookieBanner\Localization::class, 'multilingual'], 1);
         \add_action('wp', [$this->getAssets(), 'createHashedAssets']);
         \add_action('login_init', [$this->getAssets(), 'createHashedAssets']);

@@ -165,11 +165,11 @@ class Revision extends AbstractRevisionPersistance
      * - `created_tag_managers`: Has a cookie with a valid Google/Matomo Tag Manager script (so you can show a notice in your config UI)
      * - `public_count`: A total count of public cookies
      *
-     * @param boolean $recreate If true, a new revision gets created so new consents need to be made. Always recreates when no consents are given yet.
+     * @param boolean|"force" $recreate If true, a new revision gets created so new consents need to be made. Always recreates when no consents are given yet.
      */
     public function getCurrent($recreate = \false)
     {
-        $create = $this->getRevision()->create($recreate || UserConsent::getInstance()->getCount() === 0);
+        $create = $this->getRevision()->create($recreate === 'force' ? 'force' : $recreate || UserConsent::getInstance()->getCount() === 0);
         $calculated = $create['hash'];
         $publicToUsers = $this->getRevision()->getEnsuredCurrentHash();
         $consentsDeletedAt = \mysql2date('c', \get_transient(\DevOwl\RealCookieBanner\settings\Consent::TRANSIENT_SCHEDULE_CONSENTS_DELETION), \false);

@@ -146,8 +146,8 @@ trait Activator
         // phpcs:disable WordPress.DB.PreparedSQL
         $existingIndexesNonGrouped = $wpdb->get_results("SHOW INDEX FROM {$tableName}", ARRAY_A);
         // phpcs:enable WordPress.DB.PreparedSQL
+        $removeIndexes = [];
         if ($existingIndexesNonGrouped) {
-            $removeIndexes = [];
             $existingIndexes = [];
             foreach ($existingIndexesNonGrouped as $idxRow) {
                 $existingIndexes[$idxRow['Key_name']] = $existingIndexes[$idxRow['Key_name']] ?? [];
@@ -171,6 +171,7 @@ trait Activator
                 // phpcs:enable WordPress.DB.PreparedSQL
             }
         }
+        return $removeIndexes;
     }
     /**
      * `dbDelta` does currently not support removing columns from tables. For this, we need to read the structure of the

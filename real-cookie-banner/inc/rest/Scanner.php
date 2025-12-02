@@ -214,6 +214,16 @@ class Scanner
         if ($job === null || !$job->data->isLoopback) {
             return new WP_Error('rest_not_found', 'Job not found');
         }
+        // Validate that the URL belongs to the jobs' domain to prevent SSRF attacks
+        $jobDataUrl = $job->data->url;
+        $parsed_url = \wp_parse_url($url);
+        if (!$parsed_url || !isset($parsed_url['host'])) {
+            return new WP_Error('rest_invalid_url', 'Invalid URL provided');
+        }
+        $current_domain = \wp_parse_url($jobDataUrl, \PHP_URL_HOST);
+        if ($parsed_url['host'] !== $current_domain) {
+            return new WP_Error('rest_invalid_domain', 'URL must belong to the jobs\' domain');
+        }
         $checker = new SavingConsentViaRestApiEndpointChecker();
         // See https://github.com/WordPress/WordPress/blob/8fbd2fc6f40ea1f2ad746758b7111a66ab134e19/wp-admin/includes/class-wp-site-health.php#L2136-L2137
         $checker->setRequestArgument('sslverify', \apply_filters('https_local_ssl_verify', \false));
@@ -234,7 +244,7 @@ class Scanner
             $ok = $status >= 200 && $status < 300;
             // Check for a `Location` redirect
             $location = \wp_remote_retrieve_header($result, 'Location');
-            return new WP_REST_Response(['status' => $status, 'statusText' => \wp_remote_retrieve_response_message($result), 'ok' => $ok, 'headers' => (object) \wp_remote_retrieve_headers($result), 'redirected' => !empty($location), 'responseUrl' => $location, 'body' => \wp_remote_retrieve_body($result)]);
+            return new WP_REST_Response(['status' => $status, 'statusText' => \wp_remote_retrieve_response_message($result), 'ok' => $ok, 'headers' => (object) \wp_remote_retrieve_headers($result), 'redirected' => !empty($location), 'responseUrl' => $location, 'body' => \base64_encode(\wp_remote_retrieve_body($result))]);
         } else {
             return new WP_Error('rest_scan_without_login_error', 'Loopback request could not be started.');
         }

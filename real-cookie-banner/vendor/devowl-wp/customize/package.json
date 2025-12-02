@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.12.36",
+    "version": "1.13.7",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -107,7 +107,9 @@
             "ro_RO": "ro",
             "el": "el",
             "fi": "fi",
-            "sk_SK": "sk"
+            "sk_SK": "sk",
+            "sl_SI": "sl",
+            "hr": "hr"
         },
         "thresholds": {
             "de@informal": 100,
@@ -127,7 +129,9 @@
             "ro": 100,
             "el": 100,
             "fi": 100,
-            "sk": 100
+            "sk": 100,
+            "sl": 100,
+            "hr": 100
         },
         "machineTranslation": {
             "fr@formal": [
@@ -177,6 +181,9 @@
             ],
             "sk": [
                 "deepl"
+            ],
+            "sl": [
+                "deepl"
             ]
         },
         "copyFiles": {
@@ -216,6 +223,9 @@
             ],
             "fi_FI.(po)$": [
                 "fi.$1"
+            ],
+            "hr_HR.(po)$": [
+                "hr.$1"
             ]
         },
         "projects": {

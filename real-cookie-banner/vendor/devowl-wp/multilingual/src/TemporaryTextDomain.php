@@ -46,7 +46,7 @@ class TemporaryTextDomain
      * @var MO|PO
      */
     private $pomo = null;
-    private $skipFallbackTranslation;
+    private $isLocalePotFile;
     /**
      * C'tor.
      *
@@ -55,16 +55,16 @@ class TemporaryTextDomain
      * @param string|string[] $languageFile Can be a `.po`, `.pot` or `.mo` file. When passed as array,
      *                                      the translation entries are merged from right to left.
      * @param string $locale
-     * @param boolean $skipFallbackTranslation
+     * @param boolean $isLocalePotFile Is the `$locale` the language of the POT file?
      * @codeCoverageIgnore
      */
-    public function __construct($domain, $fallbackDomain, $languageFile, $locale, $skipFallbackTranslation = \false)
+    public function __construct($domain, $fallbackDomain, $languageFile, $locale, $isLocalePotFile = \false)
     {
         $this->domain = $domain;
         $this->fallbackDomain = $fallbackDomain;
         $this->languageFile = $languageFile;
         $this->locale = $locale;
-        $this->skipFallbackTranslation = $skipFallbackTranslation;
+        $this->isLocalePotFile = $isLocalePotFile;
         $this->fromLanguageFiles($this->languageFile);
         $this->hooks();
     }
@@ -164,7 +164,7 @@ class TemporaryTextDomain
     {
         if ($this->isCurrentlyActive() && $this->domain === $domain && $translation === $text) {
             if ($this->pomo === null) {
-                if ($this->skipFallbackTranslation) {
+                if ($this->isLocalePotFile) {
                     return $text;
                 }
                 return \call_user_func('translate', $text, $this->fallbackDomain);
@@ -185,7 +185,7 @@ class TemporaryTextDomain
     {
         if ($this->isCurrentlyActive() && $this->domain === $domain && $translation === $text) {
             if ($this->pomo === null) {
-                if ($this->skipFallbackTranslation) {
+                if ($this->isLocalePotFile) {
                     return $text;
                 }
                 return \call_user_func('translate_with_gettext_context', $text, $context, $this->fallbackDomain);
@@ -211,6 +211,15 @@ class TemporaryTextDomain
         return $this->locale;
     }
     /**
+     * Getter.
+     *
+     * @codeCoverageIgnore
+     */
+    public function isLocalePotFile()
+    {
+        return $this->isLocalePotFile;
+    }
+    /**
      * Create a temporary text domain from a given WP React Starter plugin receiver.
      *
      * @param string $domain
@@ -221,7 +230,7 @@ class TemporaryTextDomain
      */
     public static function fromPluginReceiver($domain, $fallbackDomain, $receiver, $compLanguageOrLocale, $overrideClass = null)
     {
-        $skipFallbackTranslation = \false;
+        $isLocalePotFile = \false;
         // Never use the language of the compatible plugin while deactivation
         if (isset($_GET['action'], $_GET['plugin']) && $_GET['action'] === 'deactivate') {
             $useLocale = '';
@@ -246,12 +255,12 @@ class TemporaryTextDomain
              */
             $overrideClassInstance = new $overrideClass();
             // Check if fallback should be skipped if the POT language is currently in use
-            $skipFallbackTranslation = \in_array($useLocale, $overrideClassInstance->getPotLanguages(), \true);
+            $isLocalePotFile = \in_array($useLocale, $overrideClassInstance->getPotLanguages(), \true);
             list(, $newMofile) = $overrideClassInstance->getMofilePath($mo, $fallbackDomain);
             if ($newMofile !== \false) {
                 $mo = $newMofile;
             }
         }
-        return new TemporaryTextDomain($domain, $fallbackDomain, $mo, $useLocale, $skipFallbackTranslation);
+        return new TemporaryTextDomain($domain, $fallbackDomain, $mo, $useLocale, $isLocalePotFile);
     }
 }

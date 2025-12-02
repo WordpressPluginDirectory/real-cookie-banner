@@ -248,9 +248,29 @@ class Activator
         }
         // wp_rcb_template
         $table_name = $this->getTableName(StorageHelper::TABLE_NAME);
+        /**
+         * Instead of using this length within the `identifier` field in the index, we need to use
+         * this length in the schema definition for the `identifier` field. Why? Because the index
+         * can otherwise not be used in a SQL query with `GROUP BY identifier` (see also `StorageHelper::retrieveBy`).
+         */
         $max_index_length_templates_identifier = $max_index_length - 70;
         // subtract length of other varchar fields
-        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            identifier varchar(200) NOT NULL,\n            context varchar(50) NOT NULL,\n            type varchar(20) NOT NULL,\n            version mediumint(9) UNSIGNED NOT NULL,\n            created_at datetime NOT NULL,\n            headline varchar (255) NOT NULL,\n            sub_headline tinytext NOT NULL,\n            logo_url tinytext NOT NULL,\n            is_outdated tinyint(1) NOT NULL,\n            is_disabled tinyint(1) NOT NULL,\n            is_invalidate_needed tinyint(1) DEFAULT 0 NOT NULL,\n            is_untranslated tinyint(1) DEFAULT 0 NOT NULL,\n            machine_translation_status varchar(20) NOT NULL,\n            is_hidden tinyint(1) NOT NULL,\n            is_recommended tinyint(1) NOT NULL,\n            is_cloud tinyint(1) NOT NULL,\n            tier varchar(8) NOT NULL,\n            tags mediumtext NOT NULL,\n            before_middleware mediumtext NOT NULL,\n            after_middleware mediumtext NOT NULL,\n            other_meta mediumtext NOT NULL,\n            successor_of_identifiers text DEFAULT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `version` (`identifier`({$max_index_length_templates_identifier}), `context`, `type`, `version`)\n        ) {$charset_collate};";
+        /**
+         * Migration from index `version` to `version_2`: Changed length of `identifier` from 200 to $max_index_length_templates_identifier
+         * We can safely do this as the `identifier` is never longer than 200 characters in the database currently.
+         */
+        $removedIndexes = $this->removeIndicesFromTable($table_name, ['version' => ['identifier', 'context', 'type', 'version']]);
+        if (\in_array('version', $removedIndexes, \true)) {
+            // phpcs:disable WordPress.DB.PreparedSQL
+            $columnDefinition = $wpdb->get_row("SHOW COLUMNS FROM {$table_name} LIKE 'identifier';");
+            // phpcs:enable WordPress.DB.PreparedSQL
+            if ($columnDefinition && $columnDefinition->Type !== "varchar({$max_index_length_templates_identifier})") {
+                // phpcs:disable WordPress.DB.PreparedSQL
+                $wpdb->query("ALTER TABLE {$table_name} CHANGE COLUMN identifier identifier varchar({$max_index_length_templates_identifier}) NOT NULL;");
+                // phpcs:enable WordPress.DB.PreparedSQL
+            }
+        }
+        $sql = "CREATE TABLE {$table_name} (\n            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n            identifier varchar({$max_index_length_templates_identifier}) NOT NULL,\n            context varchar(50) NOT NULL,\n            type varchar(20) NOT NULL,\n            version mediumint(9) UNSIGNED NOT NULL,\n            created_at datetime NOT NULL,\n            headline varchar (255) NOT NULL,\n            sub_headline tinytext NOT NULL,\n            logo_url tinytext NOT NULL,\n            is_outdated tinyint(1) NOT NULL,\n            is_disabled tinyint(1) NOT NULL,\n            is_invalidate_needed tinyint(1) DEFAULT 0 NOT NULL,\n            is_untranslated tinyint(1) DEFAULT 0 NOT NULL,\n            machine_translation_status varchar(20) NOT NULL,\n            is_hidden tinyint(1) NOT NULL,\n            is_recommended tinyint(1) NOT NULL,\n            is_cloud tinyint(1) NOT NULL,\n            tier varchar(8) NOT NULL,\n            tags mediumtext NOT NULL,\n            before_middleware mediumtext NOT NULL,\n            after_middleware mediumtext NOT NULL,\n            other_meta mediumtext NOT NULL,\n            successor_of_identifiers text DEFAULT NULL,\n            PRIMARY KEY  (id),\n            UNIQUE KEY `version_v2` (`identifier`, `context`, `type`, `version`)\n        ) {$charset_collate};";
         \dbDelta($sql);
         if ($errorlevel) {
             $wpdb->print_error();

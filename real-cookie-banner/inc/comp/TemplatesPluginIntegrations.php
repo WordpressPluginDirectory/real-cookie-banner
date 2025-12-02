@@ -61,10 +61,11 @@ class TemplatesPluginIntegrations
     const OPTION_NAME_CF_TURNSTILE_REGISTER = 'cfturnstile_register';
     const OPTION_NAME_CF_TURNSTILE_RESET = 'cfturnstile_reset';
     const OPTION_NAME_GTM4WP = 'gtm4wp-options';
+    const OPTION_NAME_AIO_WP_SECURITY_CONFIGS = 'aio_wp_security_configs';
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
-    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION, self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN, self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL];
+    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION, self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN, self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL, self::OPTION_NAME_AIO_WP_SECURITY_CONFIGS];
     const ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS, self::OPTION_NAME_MATOMO_PLUGIN, '/^wp-piwik/', self::OPTION_NAME_GTM4WP];
     const ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_CF_TURNSTILE_LOGIN, self::OPTION_NAME_CF_TURNSTILE_REGISTER, self::OPTION_NAME_CF_TURNSTILE_RESET, self::OPTION_NAME_USERS_CAN_REGISTER];
     /**
@@ -137,6 +138,7 @@ class TemplatesPluginIntegrations
         \add_action('delete_site_option', $callbackRegex);
         // Misc compatibilities
         \add_action('wpforms_settings_updated', $callbackInvalidateTemplatesCache);
+        \add_action('simba_tfa_activation_status_saved', $callbackInvalidateTemplatesCache);
         $this->serverSideConsentInjection();
     }
     /**
@@ -248,6 +250,22 @@ class TemplatesPluginIntegrations
                     $gdprDisableUuid = $gdprEnhancements && \wpforms_setting('gdpr-disable-uuid');
                     $gdprDisableIp = $gdprEnhancements && \wpforms_setting('gdpr-disable-details');
                     $recommended = !$gdprDisableUuid || !$gdprDisableIp;
+                }
+                break;
+            case 'all-in-one-wp-security-and-firewall':
+                $config = \get_option(self::OPTION_NAME_AIO_WP_SECURITY_CONFIGS);
+                if (\is_array($config)) {
+                    $enableBruteForceAttackPrevention = $config['aiowps_enable_brute_force_attack_prevention'];
+                    $enableRenameLoginPage = $config['aiowps_enable_rename_login_page'];
+                    $spambotDetectUseCookies = $config['aiowps_spambot_detect_usecookies'];
+                    if ($enableBruteForceAttackPrevention || $enableRenameLoginPage || $spambotDetectUseCookies) {
+                        $recommended = \true;
+                        break;
+                    }
+                    $users_with_tfa = \get_users(['meta_key' => 'tfa_enable_tfa', 'meta_value' => '1', 'number' => 1, 'fields' => 'ids']);
+                    if (!empty($users_with_tfa)) {
+                        $recommended = \true;
+                    }
                 }
                 break;
             default:

@@ -51,7 +51,6 @@ class LanguageDependingOption
         $this->originalOptionName = $originalOptionName;
         $this->default = $default;
         $this->defaultBehavior = $defaultBehavior;
-        $this->defaultLanguage = $comp->getCurrentLanguageFallback();
         $this->hooks();
     }
     /**
@@ -60,7 +59,8 @@ class LanguageDependingOption
     protected function hooks()
     {
         // Only do this for synced plugins
-        if ($this->getComp() instanceof AbstractSyncPlugin) {
+        if ($this->getComp() instanceof AbstractSyncPlugin && $this->getComp()->isActive()) {
+            $this->defaultLanguage = $this->getComp()->getCurrentLanguageFallback();
             \add_filter('pre_option_' . $this->getOriginalOptionName(), [$this, 'pre_option'], 10, 2);
             \add_filter('pre_update_option_' . $this->getOriginalOptionName(), [$this, 'pre_update_option'], 10, 3);
         }

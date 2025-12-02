@@ -17,7 +17,7 @@ class OptimizePressImpl extends AbstractCache
     // Documented in AbstractCache
     public function isActive()
     {
-        return \defined('OPD_VERSION');
+        return \defined('OPD_VERSION') && \function_exists('OPDashboard\\clear_all_cache');
     }
     // Documented in AbstractCache
     public function invalidate()

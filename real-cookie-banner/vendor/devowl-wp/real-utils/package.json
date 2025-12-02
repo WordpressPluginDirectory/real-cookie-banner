@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.13.35",
+    "version": "1.14.7",
     "private": true,
     "description": "Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
@@ -112,7 +112,9 @@
             "ro_RO": "ro",
             "el": "el",
             "fi": "fi",
-            "sk_SK": "sk"
+            "sk_SK": "sk",
+            "sl_SI": "sl",
+            "hr": "hr"
         },
         "thresholds": {
             "de@informal": 100,
@@ -132,7 +134,9 @@
             "ro": 100,
             "el": 100,
             "fi": 100,
-            "sk": 100
+            "sk": 100,
+            "sl": 100,
+            "hr": 100
         },
         "machineTranslation": {
             "fr@formal": [
@@ -182,6 +186,9 @@
             ],
             "sk": [
                 "deepl"
+            ],
+            "sl": [
+                "deepl"
             ]
         },
         "copyFiles": {
@@ -224,6 +231,9 @@
             ],
             "fi_FI.(po)$": [
                 "fi.$1"
+            ],
+            "hr_HR.(po)$": [
+                "hr.$1"
             ]
         },
         "projects": {

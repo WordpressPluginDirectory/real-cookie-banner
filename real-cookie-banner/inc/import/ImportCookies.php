@@ -77,6 +77,12 @@ trait ImportCookies
             if (isset($metas[Cookie::META_NAME_CODE_DYNAMICS])) {
                 $metas[Cookie::META_NAME_CODE_DYNAMICS] = \wp_slash(\json_encode($metas[Cookie::META_NAME_CODE_DYNAMICS]));
             }
+            // Remap provider contact to provider contact phone, email and link
+            if (isset($metas['providerContact']) && \is_array($metas['providerContact'])) {
+                $metas[Cookie::META_NAME_PROVIDER_CONTACT_PHONE] = $metas['providerContact']['phone'];
+                $metas[Cookie::META_NAME_PROVIDER_CONTACT_EMAIL] = $metas['providerContact']['email'];
+                $metas[Cookie::META_NAME_PROVIDER_CONTACT_LINK] = $metas['providerContact']['link'];
+            }
             // Find current cookie with same post_name
             $found = \false;
             foreach ($currentCookies as $currentCookie) {

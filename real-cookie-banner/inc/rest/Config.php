@@ -201,7 +201,7 @@ class Config extends WP_REST_Settings_Controller
         if (!$needsRetrigger) {
             Core::getInstance()->getNotices()->getStates()->set(Notices::NOTICE_REVISON_REQUEST_NEW_CONSENT_PREFIX . $revision->getContextVariablesString(), $revision->getCurrent()['calculated']);
         }
-        $current = $revision->getCurrent($needsRetrigger);
+        $current = $revision->getCurrent($needsRetrigger ? 'force' : \false);
         return new WP_REST_Response(\array_merge(['needs_retrigger' => $revision->needsRetrigger($current)], $current));
     }
     /**

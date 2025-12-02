@@ -55,6 +55,7 @@ class TemplateConsumers
      * @var ConsumerPool[]
      */
     private $pools = [];
+    private $persistedTranslations = [];
     /**
      * Singleton instance.
      *
@@ -530,13 +531,17 @@ class TemplateConsumers
      */
     public function probablyPersistTranslationsForRequestedLocales($locales)
     {
+        $currentContext = self::getContext();
         foreach ($locales as $locale) {
             $pool = $this->getPool($locale);
-            if ($pool === null) {
+            if ($pool === null || \in_array($locale, $this->persistedTranslations, \true)) {
                 continue;
             }
+            $this->persistedTranslations[] = $locale;
             $consumer = $pool->getConsumer(ServiceTemplate::class);
-            if ($consumer !== null && $consumer->isInvalidatedThroughStorage()) {
+            // For the current context (e.g. TranslatePress current language), we always retrieve the templates
+            // if not already done (internally, `retrieve` uses `shouldInvalidate` to not download twice).
+            if ($consumer !== null && ($consumer->isInvalidatedThroughStorage() || $locale === $currentContext)) {
                 $consumer->retrieve();
             }
         }

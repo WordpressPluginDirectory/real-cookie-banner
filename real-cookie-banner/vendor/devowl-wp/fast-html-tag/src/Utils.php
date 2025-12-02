@@ -4,6 +4,8 @@ namespace DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag;
 
 use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\PregReplaceCallbackRerunException;
 use DOMDocument;
+use SplObjectStorage;
+use Traversable;
 /**
  * Utility helpers.
  * @internal
@@ -58,10 +60,11 @@ class Utils
      *
      * @param string $string
      * @param mixed $default
+     * @param boolean $assoc
      * @see https://stackoverflow.com/a/6041773/5506547
-     * @return array|false
+     * @return array|object|false
      */
-    public static function isJson($string, $default = \false)
+    public static function isJson($string, $default = \false, $assoc = \true)
     {
         if (\is_array($string)) {
             return $string;
@@ -69,8 +72,74 @@ class Utils
         if (!\is_string($string)) {
             return $default;
         }
-        $result = \json_decode($string, ARRAY_A);
+        $result = \json_decode($string, $assoc);
         return \json_last_error() === \JSON_ERROR_NONE ? $result : $default;
+    }
+    /**
+     * Walk through an array or object recursively.
+     *
+     * @param mixed $data
+     * @param callable $callback
+     * @see https://chatgpt.com/share/68c9228e-f4bc-8002-be5c-24c7da52c764
+     * @see https://www.php.net/manual/en/function.array-walk-recursive.php#130141
+     * @codeCoverageIgnore
+     */
+    public static function array_and_object_walk_recursive(&$data, $callback)
+    {
+        $visited = new SplObjectStorage();
+        // For cycle detection
+        $recurse = function (&$node, $key = null) use(&$recurse, $callback, $visited) : void {
+            // 1) Arrays: Delegate as much as possible to `array_walk_recursive`
+            if (\is_array($node)) {
+                \array_walk_recursive($node, function (&$v, $k) use(&$recurse, $callback, $visited) : void {
+                    if (\is_object($v)) {
+                        // `array_walk_recursive` does not traverse objects further -> take over
+                        if (!$visited->contains($v)) {
+                            $visited->attach($v);
+                            foreach ($v as $ok => &$ov) {
+                                if (\is_array($ov) || \is_object($ov)) {
+                                    $recurse($ov, $ok);
+                                } else {
+                                    $callback($ov, $ok);
+                                }
+                            }
+                        }
+                    } else {
+                        $callback($v, $k);
+                    }
+                });
+                return;
+            }
+            // 2) Objects: recursively traverse (supports stdClass, public props, Traversable)
+            if (\is_object($node)) {
+                if ($visited->contains($node)) {
+                    return;
+                }
+                $visited->attach($node);
+                // If Traversable, iterate; otherwise over public properties
+                if ($node instanceof Traversable) {
+                    foreach ($node as $k => &$v) {
+                        if (\is_array($v) || \is_object($v)) {
+                            $recurse($v, $k);
+                        } else {
+                            $callback($v, $k);
+                        }
+                    }
+                } else {
+                    foreach ($node as $k => &$v) {
+                        if (\is_array($v) || \is_object($v)) {
+                            $recurse($v, $k);
+                        } else {
+                            $callback($v, $k);
+                        }
+                    }
+                }
+                return;
+            }
+            // 3) Scalars/other: directly to callback
+            $callback($node, $key);
+        };
+        $recurse($data, null);
     }
     /**
      * Check if a passed string is HTML.

@@ -90,7 +90,7 @@ class Reset
             // Types which are translated from the POT file
             $dry = $potLanguages;
         }
-        $fnPerLanguage = function ($locale, $currentLanguage) use(&$result, $languages, $defaultLanguage, $defaultLanguageWpCompatible, $potLanguages, $potLanguagesWithoutDefaultLanguage, &$dry) {
+        $fnPerLanguage = function ($locale, $currentLanguage) use(&$result, $languages, $defaultLanguage, $defaultLanguageWpCompatible, $potLanguagesWithoutDefaultLanguage, &$dry) {
             // Check if we have texts for this language and request to delete it
             $found = \false;
             foreach ($languages as $langToDelete) {
@@ -103,9 +103,7 @@ class Reset
                 return;
             }
             $resetTranslationPairsForLanguages = $locale === $defaultLanguage ? $potLanguagesWithoutDefaultLanguage : [];
-            if ($dry === null && \in_array($locale, $potLanguages, \true)) {
-                $result['serviceGroups'][$locale] = $this->textsServiceGroups($result['resetTranslationPairs'], $resetTranslationPairsForLanguages);
-            }
+            $result['serviceGroups'][$locale] = $this->textsServiceGroups($result['resetTranslationPairs'], $resetTranslationPairsForLanguages, $dry);
             $result['services'][$locale] = $this->textsGenericTemplates($languages, \DevOwl\RealCookieBanner\settings\Cookie::CPT_NAME, [\DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_PHONE, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_EMAIL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_CONTACT_LINK, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_PRIVACY_POLICY_URL, \DevOwl\RealCookieBanner\settings\Cookie::META_NAME_PROVIDER_LEGAL_NOTICE_URL], $result['resetTranslationPairs'], $defaultLanguageWpCompatible, $dry);
             $result['blockers'][$locale] = $this->textsGenericTemplates($languages, \DevOwl\RealCookieBanner\settings\Blocker::CPT_NAME, [\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_VISUAL_HERO_BUTTON_TEXT], $result['resetTranslationPairs'], $defaultLanguageWpCompatible, $dry);
         };
@@ -208,8 +206,9 @@ class Reset
      * @param string[] $resetTranslationPairs
      * @param string[] $persistForLanguages A set of languages for which the translations should be persisted in `$resetTranslationPairs`, this is
      *                                      only relevant for output buffer plugins.
+     * @param array $dry
      */
-    protected function textsServiceGroups(&$resetTranslationPairs, $persistForLanguages)
+    protected function textsServiceGroups(&$resetTranslationPairs, $persistForLanguages, $dry)
     {
         // Update terms
         $groupDescriptions = \DevOwl\RealCookieBanner\settings\CookieGroup::getInstance()->getDefaultDescriptions();
@@ -229,6 +228,10 @@ class Reset
             ++$i;
             $keyToUse = $mapIToKey[$i] ?? null;
             if ($keyToUse === null) {
+                continue;
+            }
+            if ($dry !== null) {
+                $dry = \array_values(\array_unique(\array_merge($dry, $persistForLanguages)));
                 continue;
             }
             $texts = ['description' => $groupDescriptions[$keyToUse], 'name' => $groupNames[$keyToUse]];
@@ -265,7 +268,7 @@ class Reset
         $templates = \array_column($templates, null, 'identifier');
         foreach ($existing as $post) {
             $template = $templates[$post->metas[\DevOwl\RealCookieBanner\settings\Blocker::META_NAME_PRESET_ID]] ?? null;
-            if ($template === null || $template->consumerData['isUntranslated']) {
+            if ($template === null) {
                 continue;
             }
             // Make `translations` available

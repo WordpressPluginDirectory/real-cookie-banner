@@ -33,10 +33,19 @@ class FlyingPressImpl extends AbstractCache
      */
     public function excludeAssetsHook($excludeAssets)
     {
+        // v4
         foreach (['flying_press_exclude_from_defer:js', 'flying_press_exclude_from_delay:js'] as $filter) {
             \add_filter($filter, function ($excluded) use($excludeAssets) {
                 $path = $excludeAssets->getAllUrlPath('js');
                 $handles = $excludeAssets->getHandles()['js'];
+                return \array_merge($excluded, $path, $handles);
+            });
+        }
+        // v5
+        foreach (['js', 'css'] as $type) {
+            \add_filter(\sprintf('flying_press_exclude_from_minify:%s', $type), function ($excluded) use($excludeAssets, $type) {
+                $path = $excludeAssets->getAllUrlPath($type);
+                $handles = $excludeAssets->getHandles()[$type];
                 return \array_merge($excluded, $path, $handles);
             });
         }

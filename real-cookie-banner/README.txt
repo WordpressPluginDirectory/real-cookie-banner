@@ -1,10 +1,10 @@
 === Real Cookie Banner: GDPR & ePrivacy Cookie Consent ===
 Contributors: devowl, mguenter, jankarres
 Tags: cookie banner, cookie plugin, cookie consent, gdpr, eprivacy
-Stable tag: 5.1.17
+Stable tag: 5.2.7
 Requires at least: 5.9
 Requires PHP: 7.4.0
-Tested up to: 6.8
+Tested up to: 6.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -47,7 +47,7 @@ You want a list of all features? [_Check it out on our website!_](https://devowl
 
 Real Cookie Banner is **localized in all 17 languages that are most commonly spoken in the EU.**
 
-The plugin has been translated by humans into English, German (informal and formal), French, Italian, Spanish, Portuguese, Polish, Dutch (informal and formal), Czech, Danish, Swedish, Norwegian Bokmål, Finnish, Greek, Romanian, Hungarian and Slovak. Texts in service templates and content blockers templates are partly machine-translated and will be revised by humans in the future.
+The plugin has been translated by humans into English, German (informal and formal), French, Italian, Spanish, Portuguese, Polish, Dutch (informal and formal), Czech, Danish, Swedish, Norwegian Bokmål, Finnish, Greek, Romanian, Hungarian, Slovak, Slovenian and Croatian. Texts in service templates and content blockers templates are partly machine-translated and will be revised by humans in the future.
 
 === All Features of Real Cookie Banner ===
 
@@ -145,6 +145,20 @@ Although the GDPR significantly impacts how cookies are used on websites, it doe
 = What is the ePrivacy Directive (implemented in national law as TDDDG/TTDSG, LOPD-GDD, DTA, TLA, LEK, E-com Act)? =
 
 The ePrivacy Directive, also known as the "Cookie Directive", is an EU directive focused on the protection of personal data in electronic communications. It requires companies and website operators within the EU to obtain users' consent before storing or accessing information on their devices, such as through cookies. It is the reason why most website in the EU have cookie plugins, also known as cookie consent dialogs or cookie banners. Member states have transposed the directive into their national laws, leading to various names for the legislation in different countries, like TDDDG (former TTDSG) in Germany, LOPD-GDD in Spain, DTA in Netherlands, TLA in Poland, LEK in Sweden, and the E-com Act in Norway.
+
+= Inspection of plugin source files =
+
+Most plugin files (PHP, templates, assets) are in the ZIP in human-friendly, unprocessed form (soure files).
+
+The plugin’s JavaScript/TypeScript is bundled (e.g. by Webpack) from plugin-specific packages and third-party open source to produce build files. Each build ends with `//# sourceMappingURL=…` to source maps with the original, human-readable code; these maps are public and the included source code can be inspected by anyone directly in your browser, if you have installed the plugin.
+
+To conveniently view the complete codebase of the consumed script in e.g. Chromium/Google Chrome, open *⋮ > More tools > Developer tools > ⋮ (in DevTools) > Settings > Preferences > Sources* and enable "JavaScript source maps", "CSS source maps", and "Allow DevTools to load resources, such as source maps, from remote file paths". Reload, then open *DevTools > Sources > "devowl-local-files"* to inspect all readable sources.
+
+Source maps are hosted outside the ZIP to keep size manageable; otherwise the plugin could exceed limits of web hosts and become non-installable.
+
+The repository with all source files can be do be inspected by anyone at [assets.devowl.io/wordpress-plugins-source-code.zip](https://assets.devowl.io/wordpress-plugins-source-code.zip). Please check out the `README.md` in the repository to learn how to get started!
+
+For details on the data procession of our servers, please read [devowl.io/privacy-policy](https://devowl.io/privacy-policy/).
 
 == Screenshots ==
 

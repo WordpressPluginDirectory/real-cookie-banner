@@ -223,7 +223,7 @@ class MyConsent
             "'NULL'",
             'NULL',
             // Do not use INSERT IGNORE here because it increments AUTO_INCREMENT (https://www.perplexity.ai/search/in-mysql-when-using-insert-ign-fsJfL5IpRoKYLVEBjDksyw)
-            "INSERT INTO {$table_name} (`hash`, `url`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `hash` = VALUES(`hash`), `url` = VALUES(`url`)'
+            "INSERT INTO {$table_name} (`hash`, `url`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `url` = VALUES(`url`)'
         )) : [];
         // phpcs:enable WordPress.DB
         if ($queryResult === \false) {
@@ -274,7 +274,7 @@ class MyConsent
             "'NULL'",
             'NULL',
             // Do not use INSERT IGNORE here because it increments AUTO_INCREMENT (https://www.perplexity.ai/search/in-mysql-when-using-insert-ign-fsJfL5IpRoKYLVEBjDksyw)
-            "INSERT INTO {$table_name} (`hash`, `decision`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `hash` = VALUES(`hash`), `decision` = VALUES(`decision`)'
+            "INSERT INTO {$table_name} (`hash`, `decision`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `decision` = VALUES(`decision`)'
         )) : [];
         // phpcs:enable WordPress.DB
         if ($queryResult === \false) {
@@ -323,7 +323,7 @@ class MyConsent
             "'NULL'",
             'NULL',
             // Do not use INSERT IGNORE here because it increments AUTO_INCREMENT (https://www.perplexity.ai/search/in-mysql-when-using-insert-ign-fsJfL5IpRoKYLVEBjDksyw)
-            "INSERT INTO {$table_name} (`hash`, `tcf_string`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `hash` = VALUES(`hash`), `tcf_string` = VALUES(`tcf_string`)'
+            "INSERT INTO {$table_name} (`hash`, `tcf_string`) VALUES " . \implode(',', $sqlValues) . ' ON DUPLICATE KEY UPDATE `tcf_string` = VALUES(`tcf_string`)'
         )) : [];
         // phpcs:enable WordPress.DB
         if ($queryResult === \false) {

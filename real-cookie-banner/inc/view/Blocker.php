@@ -13,6 +13,7 @@ use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\scanner\Scanner;
 use DevOwl\RealCookieBanner\settings\Blocker as SettingsBlocker;
+use DevOwl\RealCookieBanner\settings\CookieGroup;
 use DevOwl\RealCookieBanner\settings\General;
 use DevOwl\RealCookieBanner\Utils;
 use DevOwl\RealCookieBanner\view\blockable\BlockerPostType;
@@ -21,6 +22,9 @@ use WP_Scripts;
 use WP_Dependencies;
 use WP_Error;
 use WP_Query;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_REST_Server;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
 // Avoid direct file request
@@ -219,7 +223,7 @@ class Blocker
      *
      * If you want to use this functionality in your plugin, please use the filter `Consent/Block/HTML` instead!
      *
-     * @param string $html
+     * @param mixed $html
      */
     public function replace($html)
     {
@@ -311,6 +315,11 @@ class Blocker
      */
     protected function isAdminAjaxAction()
     {
+        $doingAjax = \wp_doing_ajax();
+        // Special case: WP Grid Builder and adding the `DOING_AJAX` constant manually.
+        if ($doingAjax && isset($_POST['wpgb'])) {
+            return \true;
+        }
         /**
          * Run the content blocker over `admin-ajax.php` responses.
          *
@@ -338,8 +347,10 @@ class Blocker
             'ut_get_portfolio_post_content',
             // [Plugin Comp] https://core.pixfort.com/
             'pix_get_popup_content',
+            // [Plugin Comp] Formidable Forms
+            'frm_entries_create',
         ]);
-        return \wp_doing_ajax() && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
+        return $doingAjax && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
     }
     /**
      * Hook into every HTTP request made by the WordPress instance and add script tags to the final HTML output
@@ -353,9 +364,15 @@ class Blocker
      */
     public function pre_http_request($response, $parsed_args, $url)
     {
+        // Only allow to block requests when our taxonomy is ready and can be read. Otherwise, we could run into "Invalid taxonomy" errors
+        // when reading service groups in `CookieGroup::getOrdered()` class.
+        // Example: WP Rocket sends a license check request before the `init` hook:
+        if (!\taxonomy_exists(CookieGroup::TAXONOMY_NAME)) {
+            return $response;
+        }
         static $truncated_path;
         $backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 15);
-        if (!\is_array($backtrace)) {
+        if (!\is_array($backtrace) || !\is_string($url)) {
             return $response;
         }
         if (isset($this->currentRequestUrlQueue[$url]) && $this->currentRequestUrlQueue[$url]) {
@@ -502,6 +519,31 @@ wordpress-filter:pre_http_request
             ['fl_builder' => '1'],
             $url
         );
+    }
+    /**
+     * Filter REST API responses to disable content blocking for specific endpoints.
+     *
+     * @param WP_REST_Response $response
+     * @param WP_REST_Server $server
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function skipContentBlockerOnRestAPIEndpoint($response, $server, $request)
+    {
+        // Check if this is the OptimizePress 3 page builder data endpoint
+        $route = $request->get_route();
+        if (\preg_match('/^\\/op3\\/v1\\/pages\\/\\d+\\/data/', $route)) {
+            $data = $response->get_data();
+            // Add the skip property to disable content blocking
+            if (\is_array($data)) {
+                $data['$$skipFastHtmlTag'] = ['HeadlessContentBlocker'];
+                $response->set_data($data);
+            } elseif (\is_object($data)) {
+                $data->{'$$skipFastHtmlTag'} = ['HeadlessContentBlocker'];
+                $response->set_data($data);
+            }
+        }
+        return $response;
     }
     /**
      * Modify the HTML of an oEmbed HTML and keep the original pasted URL as attribute

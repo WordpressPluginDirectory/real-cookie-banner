@@ -120,6 +120,8 @@ class DbConsentV2
                 $wpdb->query("ALTER TABLE {$table_name_old} ADD tcf_string tinytext");
                 $wpdb->query("ALTER TABLE {$table_name_old} ADD previous_gcm_consent tinytext");
                 $wpdb->query("ALTER TABLE {$table_name_old} ADD gcm_consent tinytext");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD recorder text");
+                $wpdb->query("ALTER TABLE {$table_name_old} ADD ui_view varchar(15) DEFAULT 'initial' NOT NULL");
                 // phpcs:enable WordPress.DB.PreparedSQL
                 $wpdb->show_errors($previousHideError);
                 // We do this type of "fix" only once, otherwise the user needs to contact us in support

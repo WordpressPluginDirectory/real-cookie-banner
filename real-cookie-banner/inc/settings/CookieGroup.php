@@ -158,6 +158,10 @@ class CookieGroup
         if ($force === \false && isset($this->cacheGetOrdered[$context])) {
             return $this->cacheGetOrdered[$context];
         }
+        // Check if taxonomy is registered
+        if (!\taxonomy_exists(self::TAXONOMY_NAME)) {
+            return [];
+        }
         // Read all including hidden, only the essential term may be empty
         $terms = [];
         $includingHidden = \get_terms(Core::getInstance()->queryArguments(['taxonomy' => self::TAXONOMY_NAME, 'orderby' => 'meta_value_num', 'order' => 'ASC', 'hide_empty' => \false, 'meta_query' => [['key' => self::META_NAME_ORDER, 'type' => 'NUMERIC']]], 'cookieGroupsGetOrdered'));

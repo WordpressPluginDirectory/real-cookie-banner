@@ -1319,21 +1319,21 @@ msgstr ""
 msgid "We need to inform you that on Feb. 02, 2022, the Belgian Data Protection Authority (APD) declared the collection of consents under the Transparency & Consent Framework (TCF) to be invalid. The decision is effective across the EU as it was issued in a one-stop-shop procedure."
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:527
+#: inc/comp/migration/DbConsentV2.php:529
 msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:543
+#: inc/comp/migration/DbConsentV2.php:545
 #: inc/scanner/Scanner.php:629
 msgid "https://devowl.io/support/"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:544
+#: inc/comp/migration/DbConsentV2.php:546
 #: inc/scanner/Scanner.php:630
 msgid "Contact support"
 msgstr ""
 
-#: inc/comp/migration/DbConsentV2.php:564
+#: inc/comp/migration/DbConsentV2.php:566
 msgid "Real Cookie Banner v5.0 introduces an optimized database schema that allows consent documents to be stored in less storage space. The migration failed. Please try again or contact the support of Real Cookie Banner!"
 msgstr ""
 
@@ -1376,7 +1376,7 @@ msgstr ""
 msgid "<strong>Pixel Your Site</strong> embed trackers by default without waiting for consent. Please activate the Real Cookie Banner integration under <a href=\"%1$s\"><i>PixelYourSite > Consent</i></a> to embed trackers only after consent. In addition, since you are using Real Cookie Banner, you need to enable all the suggested service templates in <a href=\"%2$s\"><i>Cookies > Scanner</i></a> for the trackers embedded with \"PixelYourSite\"."
 msgstr ""
 
-#: inc/Core.php:420
+#: inc/Core.php:421
 #: inc/view/checklist/GetPro.php:44
 msgid "https://devowl.io/go/real-cookie-banner?source=rcb-lite"
 msgstr ""
@@ -1397,8 +1397,8 @@ msgstr ""
 msgid "Footer links"
 msgstr ""
 
-#: inc/import/ImportCookies.php:144
-#: inc/import/ImportCookies.php:192
+#: inc/import/ImportCookies.php:151
+#: inc/import/ImportCookies.php:199
 #: inc/settings/Cookie.php:192
 msgid "Cookie"
 msgstr ""
@@ -1992,52 +1992,52 @@ msgstr ""
 msgid "Service group"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:406
-#: inc/settings/CookieGroup.php:427
-#: inc/templates/TemplateConsumers.php:279
+#: inc/settings/CookieGroup.php:411
+#: inc/settings/CookieGroup.php:432
+#: inc/templates/TemplateConsumers.php:281
 msgid "Essential"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:407
-#: inc/settings/CookieGroup.php:428
-#: inc/templates/TemplateConsumers.php:282
+#: inc/settings/CookieGroup.php:412
+#: inc/settings/CookieGroup.php:433
+#: inc/templates/TemplateConsumers.php:284
 msgid "Functional"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:408
-#: inc/settings/CookieGroup.php:429
-#: inc/templates/TemplateConsumers.php:285
+#: inc/settings/CookieGroup.php:413
+#: inc/settings/CookieGroup.php:434
+#: inc/templates/TemplateConsumers.php:287
 msgid "Statistics"
 msgstr ""
 
 #. translators: Keep this for backwards-compatibility (usually it is "Statistics")
-#: inc/settings/CookieGroup.php:411
-#: inc/settings/CookieGroup.php:456
+#: inc/settings/CookieGroup.php:416
+#: inc/settings/CookieGroup.php:461
 msgid "Statistic"
 msgstr ""
 
-#: inc/settings/CookieGroup.php:412
-#: inc/settings/CookieGroup.php:430
-#: inc/templates/TemplateConsumers.php:288
+#: inc/settings/CookieGroup.php:417
+#: inc/settings/CookieGroup.php:435
+#: inc/templates/TemplateConsumers.php:290
 msgid "Marketing"
-msgstr ""
-
-#: inc/settings/CookieGroup.php:433
-msgctxt "legal-text"
-msgid "Essential services are required for the basic functionality of the website. They only contain technically necessary services. These services cannot be objected to."
 msgstr ""
 
 #: inc/settings/CookieGroup.php:438
 msgctxt "legal-text"
-msgid "Functional services are necessary to provide features beyond the essential functionality such as prettier fonts, video playback or interactive web 2.0 features. Content from e.g. video platforms and social media platforms are blocked by default, and can be consented to. If the service is agreed to, this content is loaded automatically without further manual consent."
+msgid "Essential services are required for the basic functionality of the website. They only contain technically necessary services. These services cannot be objected to."
 msgstr ""
 
 #: inc/settings/CookieGroup.php:443
 msgctxt "legal-text"
-msgid "Statistics services are needed to collect pseudonymous data about the visitors of the website. The data enables us to understand visitors better and to optimize the website."
+msgid "Functional services are necessary to provide features beyond the essential functionality such as prettier fonts, video playback or interactive web 2.0 features. Content from e.g. video platforms and social media platforms are blocked by default, and can be consented to. If the service is agreed to, this content is loaded automatically without further manual consent."
 msgstr ""
 
 #: inc/settings/CookieGroup.php:448
+msgctxt "legal-text"
+msgid "Statistics services are needed to collect pseudonymous data about the visitors of the website. The data enables us to understand visitors better and to optimize the website."
+msgstr ""
+
+#: inc/settings/CookieGroup.php:453
 msgctxt "legal-text"
 msgid "Marketing services are used by us and third parties to track the behaviour of individual visitors (across multiple pages), analyse the data collected and, for example, display personalized advertisements. These services enable us to track visitors across multiple websites."
 msgstr ""
@@ -2215,7 +2215,7 @@ msgid "Customize cookie policy content"
 msgstr ""
 
 #. translators:
-#: inc/settings/Reset.php:278
+#: inc/settings/Reset.php:275
 #, php-format
 msgid "Your multilingual plugin Weglot does currently not support resetting texts for %s."
 msgstr ""
@@ -2414,125 +2414,125 @@ msgstr ""
 msgid "Local caching of selection in cookie banner until server documents consent; documentation periodic or at page switches attempted if server is unavailable or overloaded."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:248
+#: inc/templates/TemplateConsumers.php:250
 msgid "Load content"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:251
+#: inc/templates/TemplateConsumers.php:253
 msgid "Load map"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:254
+#: inc/templates/TemplateConsumers.php:256
 msgid "Load form"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:257
+#: inc/templates/TemplateConsumers.php:259
 #: inc/view/ConfigPage.php:191
 #: inc/view/customize/banner/FooterDesign.php:243
 msgid "Disabled"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:258
+#: inc/templates/TemplateConsumers.php:260
 msgid "Already created"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:259
+#: inc/templates/TemplateConsumers.php:261
 msgid "You have already created a Content Blocker with this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:263
+#: inc/templates/TemplateConsumers.php:265
 msgid "You have already created a Service (Cookie) with this template."
-msgstr ""
-
-#. translators:
-#: inc/templates/TemplateConsumers.php:268
-#, php-format
-msgid "This service template is optimized to work with %s."
 msgstr ""
 
 #. translators:
 #: inc/templates/TemplateConsumers.php:270
 #, php-format
+msgid "This service template is optimized to work with %s."
+msgstr ""
+
+#. translators:
+#: inc/templates/TemplateConsumers.php:272
+#, php-format
 msgid "Please activate %s in settings to use this template."
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:274
+#: inc/templates/TemplateConsumers.php:276
 msgid "A suitable content blocker for this service can be created automatically."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:293
+#: inc/templates/TemplateConsumers.php:295
 #, php-format
 msgid "This template is currently disabled because the respective WordPress plugin is not installed or the desired function is not active. <a href=\"%s\" target=\"_blank\">Learn more</a>"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:297
+#: inc/templates/TemplateConsumers.php:299
 msgid "https://devowl.io/knowledge-base/real-cookie-banner-disabled-cookie-templates/"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:300
+#: inc/templates/TemplateConsumers.php:302
 msgid "TCF required"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:301
+#: inc/templates/TemplateConsumers.php:303
 msgid "This template requires the integration of TCF, as the provider of this template uses this standard. Please activate this in the settings to be able to block this service."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:306
+#: inc/templates/TemplateConsumers.php:308
 #, php-format
 msgid "%s is a network of globally distributed servers that cache content and deliver it to your website visitors faster based on their location, reducing website load times and improving performance. This technology is also known as a content delivery network (CDN). {{strong}}Servers may also be located in countries that are considered unsafe in terms of data protection law.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:311
+#: inc/templates/TemplateConsumers.php:313
 #, php-format
 msgid "In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %1$s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses). Unfortunately, %1$s does not offer the option of concluding standard contractual clauses to our knowledge. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:316
+#: inc/templates/TemplateConsumers.php:318
 #, php-format
 msgid "%s unfortunately sets cookies that are not technically essential according to our knowledge, for which consent would be required. At the same time, the CDN cannot be blocked with a content blocker until the website visitors have given their consent, as otherwise parts of your website may malfunction. Therefore, in our legal opinion, {{strong}}it is not possible to use this service in a legally compliant manner.{{/strong}}"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:321
+#: inc/templates/TemplateConsumers.php:323
 #, php-format
 msgid "In order to use the service in a way that complies with data protection regulations, the only practical option would be to conclude standard contractual clauses (SCCs) with %s that guarantee the safe processing of personal data of your website visitors (in particular IP addresses)."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:326
+#: inc/templates/TemplateConsumers.php:328
 #, php-format
 msgid "{{strong}}Please make sure that you have concluded standard contract clauses with %1$s, which can be done on their website!{{/strong}} Since %1$s does not set cookies to our knowledge, we do not recommend creating a service in your cookie banner for it. However, you must mention the use of %1$s in your privacy policy."
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:331
+#: inc/templates/TemplateConsumers.php:333
 #, php-format
 msgid "Please remove %s from your website!"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:333
+#: inc/templates/TemplateConsumers.php:335
 #, php-format
 msgid "Why is %s integrated into my website at all?"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:335
+#: inc/templates/TemplateConsumers.php:337
 #, php-format
 msgid "If you do not consciously integrate %1$s, it is most likely that a plugin or theme you are using uses this CDN to load external scripts, fonts or media such as images. The best way to find out who is integrating the CDN is to disable the individual plugins or themes and scan again. Once you have found out where the integration is coming from, contact the developer of the plugin or theme to see if it can be used without %1$s or replace this plugin/theme!"
 msgstr ""
 
 #. translators:
-#: inc/templates/TemplateConsumers.php:340
+#: inc/templates/TemplateConsumers.php:342
 #, php-format
 msgid "How do I conclude standard contractual clauses with %s?"
 msgstr ""
 
-#: inc/templates/TemplateConsumers.php:344
+#: inc/templates/TemplateConsumers.php:346
 msgid "Acknowledged"
 msgstr ""
 

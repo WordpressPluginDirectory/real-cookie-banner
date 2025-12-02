@@ -58,8 +58,9 @@ class StorageHelper
         $type = $this->getType();
         $context = $this->getContext();
         $middlewareRoutine = \in_array($middlewareRoutine, ['before', 'after'], \true) ? $middlewareRoutine : 'after';
+        // Also try to use the `identifier` field to make the database use the index
         $where = [];
-        $joins = [];
+        $where[] = "t.identifier <> ''";
         $where[] = $wpdb->prepare('t.type = %s', $type);
         $where[] = $wpdb->prepare('t.context = %s', $context);
         $where['is_outdated'] = 't.is_outdated = 0';
@@ -93,7 +94,7 @@ class StorageHelper
             return [];
         }
         // phpcs:disable WordPress.DB
-        $result = $wpdb->get_results(\sprintf("SELECT t2.versions, %s AS response, is_invalidate_needed, t2.context\n                    FROM {$table_name} t %s\n                    LEFT JOIN (\n                      SELECT identifier, context, GROUP_CONCAT(DISTINCT version) AS versions\n                      FROM {$table_name}\n                      GROUP BY identifier, context\n                    ) t2 ON t.identifier = t2.identifier AND t.context = t2.context\n                    WHERE %s\n                    ORDER BY headline ASC, version DESC", $middlewareRoutine . '_middleware', \join(' AND ', $joins), \join(' AND ', $where)), ARRAY_A);
+        $result = $wpdb->get_results(\sprintf("SELECT t2.versions, %s AS response, is_invalidate_needed, t2.context\n                    FROM {$table_name} t\n                    LEFT JOIN (\n                      SELECT identifier, context, GROUP_CONCAT(DISTINCT version) AS versions\n                      FROM {$table_name}\n                      GROUP BY identifier, context\n                    ) t2 ON t.identifier = t2.identifier AND t.context = t2.context\n                    WHERE %s\n                    ORDER BY headline ASC, version DESC", $middlewareRoutine . '_middleware', \join(' AND ', $where)), ARRAY_A);
         // phpcs:enable WordPress.DB
         if ($result === null) {
             // Error happened, do not try to refetch from data sources
