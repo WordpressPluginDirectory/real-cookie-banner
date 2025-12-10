@@ -62,12 +62,14 @@ class TemplatesPluginIntegrations
     const OPTION_NAME_CF_TURNSTILE_RESET = 'cfturnstile_reset';
     const OPTION_NAME_GTM4WP = 'gtm4wp-options';
     const OPTION_NAME_AIO_WP_SECURITY_CONFIGS = 'aio_wp_security_configs';
+    const OPTION_NAME_SOLID_SECURITY_CONFIGS = 'itsec-storage';
+    const OPTION_NAME_SOLID_SECURITY_ACTIVE_MODULES = 'itsec_active_modules';
     // Network options
     const OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL = 'exactmetrics_network_profile';
     const OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL = 'monsterinsights_network_profile';
-    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION, self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN, self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL, self::OPTION_NAME_AIO_WP_SECURITY_CONFIGS];
+    const INVALIDATE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_RANK_MATH_GA, self::OPTION_NAME_ANALYTIFY_AUTHENTICATION, self::OPTION_NAME_ANALYTIFY_PROFILE, self::OPTION_NAME_ANALYTIFY_GOOGLE_TOKEN, self::OPTION_NAME_EXACTMETRICS_SITE_PROFILE, self::OPTION_NAME_MONSTERINSIGHTS_SITE_PROFILE, self::OPTION_NAME_GA_GOOGLE_ANALYTICS, self::OPTION_NAME_GA_GOOGLE_ANALYTICS_PRO, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS, self::OPTION_NAME_WP_PIWIK, self::OPTION_NAME_MATOMO_PLUGIN, self::OPTION_NAME_PERFMATTERS_GA, self::OPTION_NAME_JETPACK_SITE_STATS, self::OPTION_NAME_WOOCOMMERCE_GEOLOCATION, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_ACCOUNT_ID, self::OPTION_NAME_WOOCOMMERCE_GOOGLE_ANALYTICS_PRO_SETTINGS, self::OPTION_NAME_WOOCOMMERCE_FEATURE_ORDER_ATTRIBUTION, self::OPTION_NAME_SHOW_COMMENTS_COOKIES_OPT_IN, self::OPTION_NAME_EXACTMETRICS_NETWORK_PROFIL, self::OPTION_NAME_MONSTERINSIGHTS_NETWORK_PROFIL, self::OPTION_NAME_AIO_WP_SECURITY_CONFIGS, self::OPTION_NAME_SOLID_SECURITY_CONFIGS, self::OPTION_NAME_SOLID_SECURITY_ACTIVE_MODULES];
     const ADD_MAIN_URL_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_SEOPRESS_GOOGLE_ANALYTICS, self::OPTION_NAME_MATOMO_PLUGIN, '/^wp-piwik/', self::OPTION_NAME_GTM4WP];
-    const ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_CF_TURNSTILE_LOGIN, self::OPTION_NAME_CF_TURNSTILE_REGISTER, self::OPTION_NAME_CF_TURNSTILE_RESET, self::OPTION_NAME_USERS_CAN_REGISTER];
+    const ADD_USER_LOGIN_URLS_TO_SCAN_QUEUE_WHEN_OPTION_CHANGES = [self::OPTION_NAME_CF_TURNSTILE_LOGIN, self::OPTION_NAME_CF_TURNSTILE_REGISTER, self::OPTION_NAME_CF_TURNSTILE_RESET, self::OPTION_NAME_USERS_CAN_REGISTER, self::OPTION_NAME_SOLID_SECURITY_CONFIGS, self::OPTION_NAME_SOLID_SECURITY_ACTIVE_MODULES];
     /**
      * Singleton instance.
      *
@@ -169,6 +171,13 @@ class TemplatesPluginIntegrations
             // WooCommerce Google Analytics: Disable Consent Mode management as this is our responsibility
             \add_filter('woocommerce_ga_gtag_consent_modes', function ($modes) {
                 return GoogleConsentMode::getInstance()->isEnabled() ? [] : $modes;
+            });
+            // MailPoet
+            \add_filter('mailpoet_is_cookie_tracking_enabled', function ($track) {
+                if (!$track) {
+                    return \false;
+                }
+                return \wp_rcb_consent_given('http', 'mailpoet_page_view', '*')['cookieOptIn'];
             });
         }
         // WPForms
@@ -282,6 +291,18 @@ class TemplatesPluginIntegrations
     public function templates_blocker_recommended($recommended, $identifier)
     {
         switch ($identifier) {
+            case 'solid-security-with-google-recaptcha':
+            case 'solid-security-with-hcaptcha':
+            case 'solid-security-with-cloudflare-turnstile':
+                $activeModules = \get_option(self::OPTION_NAME_SOLID_SECURITY_ACTIVE_MODULES);
+                if (\is_array($activeModules) && isset($activeModules['recaptcha']) && $activeModules['recaptcha']) {
+                    $provider = $identifier === 'solid-security-with-google-recaptcha' ? 'google' : ($identifier === 'solid-security-with-hcaptcha' ? 'hcaptcha' : 'cloudflare');
+                    $configs = \get_option(self::OPTION_NAME_SOLID_SECURITY_CONFIGS);
+                    if (\is_array($configs) && isset($configs['recaptcha']['provider']) && $configs['recaptcha']['provider'] === $provider && $configs['recaptcha']['comments']) {
+                        $recommended = \true;
+                    }
+                }
+                break;
             default:
                 break;
         }

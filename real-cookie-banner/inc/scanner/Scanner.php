@@ -9,6 +9,7 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\scanner
 use DevOwl\RealCookieBanner\base\UtilsProvider;
 use DevOwl\RealCookieBanner\Cache;
 use DevOwl\RealCookieBanner\comp\ComingSoonPlugins;
+use DevOwl\RealCookieBanner\comp\TemplatesPluginIntegrations;
 use DevOwl\RealCookieBanner\Core;
 use DevOwl\RealCookieBanner\templates\StorageHelper;
 use DevOwl\RealCookieBanner\templates\TemplateConsumers;
@@ -321,6 +322,17 @@ class Scanner
                 if ($job !== null && \property_exists($job->data, 'isLoopback') && $job->data->isLoopback) {
                     $this->isActiveCache = \true;
                 }
+            }
+            if ($this->isActiveCache) {
+                // These filters are only applied when the scanner is active; they differ from the ones in `probablyReduceCurrentUserPermissions`
+                // as they are applied as soon as we know that the scanner is active.
+                // [Plugin Comp] Solid Security: Deactivate the "Enable GDPR Opt-In" option so our scanner can find the GDPR Opt-In form as well
+                \add_filter('option_' . TemplatesPluginIntegrations::OPTION_NAME_SOLID_SECURITY_CONFIGS, function ($option) {
+                    if (\is_array($option) && isset($option['recaptcha'])) {
+                        $option['gdpr'] = \false;
+                    }
+                    return $option;
+                });
             }
         }
         return $this->isActiveCache;

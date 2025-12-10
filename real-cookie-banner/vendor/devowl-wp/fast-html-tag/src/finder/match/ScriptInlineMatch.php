@@ -24,6 +24,9 @@ class ScriptInlineMatch extends TagWithContentMatch
     public function isJavascript()
     {
         $type = $this->getAttribute('type');
+        if (\in_array($type, ['module'], \true)) {
+            return \true;
+        }
         return empty($type) ? \true : \strpos($type, 'javascript') !== \false;
     }
     /**

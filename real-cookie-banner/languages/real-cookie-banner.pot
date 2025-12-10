@@ -1324,12 +1324,12 @@ msgid "Real Cookie Banner: Migration of consent data"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:545
-#: inc/scanner/Scanner.php:629
+#: inc/scanner/Scanner.php:644
 msgid "https://devowl.io/support/"
 msgstr ""
 
 #: inc/comp/migration/DbConsentV2.php:546
-#: inc/scanner/Scanner.php:630
+#: inc/scanner/Scanner.php:645
 msgid "Contact support"
 msgstr ""
 
@@ -1908,31 +1908,31 @@ msgstr ""
 msgid "I allow to place a link in the cookie banner, which informs about the use of this plugin."
 msgstr ""
 
-#: inc/scanner/Scanner.php:610
+#: inc/scanner/Scanner.php:625
 msgid "Real Cookie Banner: Scan of your pages"
 msgstr ""
 
-#: inc/scanner/Scanner.php:612
+#: inc/scanner/Scanner.php:627
 msgid "Real Cookie Banner: Automatic scan of complete website"
 msgstr ""
 
-#: inc/scanner/Scanner.php:634
+#: inc/scanner/Scanner.php:649
 msgid "Cancel scan"
 msgstr ""
 
-#: inc/scanner/Scanner.php:638
+#: inc/scanner/Scanner.php:653
 msgid "Skip failed pages"
 msgstr ""
 
 #. translators:
-#: inc/scanner/Scanner.php:660
+#: inc/scanner/Scanner.php:675
 #, php-format
 msgid "%1$d pages failed to be scanned."
 msgid_plural "%1$d pages failed to be scanned."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/scanner/Scanner.php:669
+#: inc/scanner/Scanner.php:684
 msgid "Real Cookie Banner tried to automatically scan your entire website for services and external URLs."
 msgstr ""
 

@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.9 (2025-12-10)
+
+
+### Bug Fixes
+
+* block dynamically injected scripts and stylesheets until consent (CU-f535x6)
+* compatibility with MailPoet and blocking analytics tracking cookies when no consent given (CU-m3dtuf)
+* compatibility with SolidSecurity reCaptcha, hCaptcha and Cloudflare Turnstile (CU-869apt3a0)
+* introduce new client-side: content blocker rule syntax (CU-f535x6)
+
+
+### Performance Improvements
+
+* tcf vendor list query is slow on MariaDB database (CU-869372e3a)
+
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.33</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Bug Fixes
+
+* introduce new client-side: content blocker rule syntax (CU-f535x6)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.3.0</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Features
+
+* add support for script modules in content blocker (CU-869be7jn7)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.3.15</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibility with latest Bricks Builder when using Google Maps
+* compatibility with SolidSecurity reCaptcha, hCaptcha and Cloudflare Turnstile (CU-869apt3a0)
+
+
+##### Tests
+
+* add HTML fixture for script module consent handling (CU-869be7jn7)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.2.0</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* introduce new client-side: content blocker rule syntax (CU-f535x6)
+* prevent iframe location replacement on Firefox Mobile to avoid App-Intent dialog (CU-869be8n2w)
+
+
+##### Features
+
+* add support for script modules in content blocker (CU-869be7jn7)
+* block dynamically injected scripts and stylesheets until consent (CU-f535x6)</details>
+
+
+
+
+
+## 5.2.8 (2025-12-04) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.5.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Features
+
+* inital implementation of object-storage package (CU-8697h8axv)
+* introduce contract profiles with predefined internal profile to exclude from OpenAPI (CU-8699tgz5g)</details>
+
+
+
+
+
 ## 5.2.7 (2025-12-02)
 
 

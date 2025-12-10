@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.20.7",
+    "version": "1.20.8",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",

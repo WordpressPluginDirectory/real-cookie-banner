@@ -241,6 +241,10 @@ class StandardPlugin extends AbstractPlugin
             'fluentComAdmin',
             // [Plugin Comp] WP Amelia
             '/var wpAmeliaSettings/m',
+            // [Plugin Comp] Solid Security
+            'ITSECRecaptchaOptIn',
+            // [Plugin Comp] Bricks Builder
+            '/var bricksData/m',
         ]);
         /**
          * DoNotBlockScriptTextTemplates.
