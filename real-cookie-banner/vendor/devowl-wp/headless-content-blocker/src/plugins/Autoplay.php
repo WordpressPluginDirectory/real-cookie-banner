@@ -33,7 +33,7 @@ class Autoplay extends AbstractPlugin
     public function blockedMatch($result, $matcher, $match)
     {
         if ($match instanceof TagAttributeMatch) {
-            $tag = $match->getTag();
+            $tag = \strtolower($match->getTag());
             $linkAttribute = $match->getLinkAttribute();
             $transformedAttributeValue = AttributesHelper::transformAttribute($linkAttribute);
             $link = $match->getAttribute($transformedAttributeValue, $match->getLink(), \true);

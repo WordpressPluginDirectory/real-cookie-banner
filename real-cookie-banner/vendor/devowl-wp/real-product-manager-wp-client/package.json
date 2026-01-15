@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-product-manager-wp-client",
-    "version": "1.20.8",
+    "version": "1.20.9",
     "private": true,
     "description": "A WordPress client for Real Product Manager",
     "homepage": "https://devowl.io",
@@ -69,9 +69,6 @@
         "mobx": "*",
         "react": "*",
         "react-dom": "*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

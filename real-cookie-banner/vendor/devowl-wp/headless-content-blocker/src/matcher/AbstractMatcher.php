@@ -69,17 +69,18 @@ abstract class AbstractMatcher
      * Iterate our blockables in a given string and save results to the `BlockedResult`.
      *
      * @param BlockedResult $result
-     * @param string $string
+     * @param string|string[] $string
      * @param boolean $useContainsRegularExpression
      * @param boolean $multilineRegexp
      * @param string[] $useRegularExpressionFromMap
-     * @param AbstractBlockable $useBlockables
+     * @param AbstractBlockable[] $useBlockables
+     * @param boolean $forceAllowMultiple
      */
-    public function iterateBlockablesInString($result, $string, $useContainsRegularExpression = \false, $multilineRegexp = \false, $useRegularExpressionFromMap = null, $useBlockables = null)
+    public function iterateBlockablesInString($result, $string, $useContainsRegularExpression = \false, $multilineRegexp = \false, $useRegularExpressionFromMap = null, $useBlockables = null, $forceAllowMultiple = null)
     {
         $cb = $this->getHeadlessContentBlocker();
-        $allowMultiple = $cb->isAllowMultipleBlockerResults();
-        $string = $this->prepareChunksFromString($string);
+        $allowMultiple = $forceAllowMultiple === null ? $cb->isAllowMultipleBlockerResults() : $forceAllowMultiple;
+        $string = \is_array($string) ? $string : $this->prepareChunksFromString($string);
         $blockables = $useBlockables === null ? $cb->getBlockables() : $useBlockables;
         foreach ($blockables as $blockable) {
             $regularExpressions = $useContainsRegularExpression ? $blockable->getContainsRegularExpressions() : $blockable->getRegularExpressions();
@@ -123,6 +124,7 @@ abstract class AbstractMatcher
                 }
             }
         }
+        $cb->runIterateBlockablesInStringCallback($this, $result, $string, $useContainsRegularExpression, $multilineRegexp, $useRegularExpressionFromMap, $blockables, $allowMultiple);
     }
     /**
      * Prepare chunks cause `pcre.jit` can lead to `PREG_JIT_STACKLIMIT_ERROR` errors
@@ -174,10 +176,10 @@ abstract class AbstractMatcher
         if ($linkAttribute !== null) {
             $newLinkAttribute = $this->applyNewLinkElement($match, $linkAttribute, $link);
         }
-        $scriptType = $match->getAttribute(Constants::HTML_ATTRIBUTE_TYPE_NAME, $match->getTag() === 'script' ? Constants::HTML_ATTRIBUTE_TYPE_JS : Constants::HTML_ATTRIBUTE_TYPE_CSS);
+        $scriptType = $match->getAttribute(Constants::HTML_ATTRIBUTE_TYPE_NAME, $match->isTag('script') ? Constants::HTML_ATTRIBUTE_TYPE_JS : Constants::HTML_ATTRIBUTE_TYPE_CSS);
         $this->applyConsentAttributes($result, $match);
         $this->applyReplaceAlwaysAttributes($match);
-        if (\in_array($match->getTag(), Constants::HTML_ATTRIBUTE_TYPE_FOR, \true) && $scriptType !== Constants::HTML_ATTRIBUTE_TYPE_VALUE) {
+        if (\in_array(\strtolower($match->getTag()), Constants::HTML_ATTRIBUTE_TYPE_FOR, \true) && $scriptType !== Constants::HTML_ATTRIBUTE_TYPE_VALUE) {
             $newTypeAttribute = AttributesHelper::transformAttribute(Constants::HTML_ATTRIBUTE_TYPE_NAME);
             $match->setAttribute($newTypeAttribute, $scriptType);
             $match->setAttribute(Constants::HTML_ATTRIBUTE_TYPE_NAME, Constants::HTML_ATTRIBUTE_TYPE_VALUE);
@@ -191,7 +193,7 @@ abstract class AbstractMatcher
      */
     protected function applyReplaceAlwaysAttributes($match)
     {
-        $tag = $match->getTag();
+        $tag = \strtolower($match->getTag());
         $replaceAlwaysAttributes = $this->getHeadlessContentBlocker()->getReplaceAlwaysAttributes();
         if (isset($replaceAlwaysAttributes[$tag])) {
             foreach ($replaceAlwaysAttributes[$tag] as $attr) {
@@ -211,25 +213,22 @@ abstract class AbstractMatcher
      */
     public function applyConsentAttributes($result, $match)
     {
-        $blocker = $result->getFirstBlocked();
-        if ($blocker->hasBlockerId()) {
-            $requiredIds = $blocker->getRequiredIds();
-            $alreadyRequiredIds = [];
-            if ($match->hasAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS)) {
-                $alreadyRequiredIds = \explode(',', $match->getAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS));
+        foreach ($result->getBlocked() as $blocker) {
+            if ($blocker->hasBlockerId()) {
+                $requiredIds = $blocker->getRequiredIds();
+                $alreadyRequiredIds = [];
+                if ($match->hasAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS)) {
+                    $alreadyRequiredIds = \explode(',', $match->getAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS));
+                }
+                $match->setAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS, \join(',', \array_unique(\array_merge($requiredIds, $alreadyRequiredIds))));
+                if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_BY)) {
+                    $match->setAttribute(Constants::HTML_ATTRIBUTE_BY, $blocker->getCriteria());
+                }
+                if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_BLOCKER_ID)) {
+                    $match->setAttribute(Constants::HTML_ATTRIBUTE_BLOCKER_ID, $blocker->getBlockerId());
+                }
             }
-            $match->setAttribute(Constants::HTML_ATTRIBUTE_COOKIE_IDS, \join(',', \array_unique(\array_merge($requiredIds, $alreadyRequiredIds))));
-            if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_BY)) {
-                $match->setAttribute(Constants::HTML_ATTRIBUTE_BY, $blocker->getCriteria());
-            }
-            if (!$match->hasAttribute(Constants::HTML_ATTRIBUTE_BLOCKER_ID)) {
-                $match->setAttribute(Constants::HTML_ATTRIBUTE_BLOCKER_ID, $blocker->getBlockerId());
-            }
-            return \true;
         }
-        // @codeCoverageIgnoreStart
-        return \false;
-        // @codeCoverageIgnoreEnd
     }
     /**
      * Prepare the new transformed link attribute.
@@ -242,7 +241,7 @@ abstract class AbstractMatcher
     {
         $newLinkAttribute = AttributesHelper::transformAttribute($linkAttribute);
         // Special case: `<embed` needs to have a `src`
-        if ($match->getTag() === 'embed' && $linkAttribute === 'src') {
+        if ($match->isTag('embed') && $linkAttribute === 'src') {
             $match->setAttribute('src', 'about:blank');
             $match->setAttribute($newLinkAttribute, $link);
             return $newLinkAttribute;
@@ -323,7 +322,7 @@ abstract class AbstractMatcher
         // Is the match also covered by another selector syntax?
         $attributes = $match->getAttributes();
         $matchCallbacks = MatchPluginCallbacks::getFromMatch($match);
-        foreach ($this->getHeadlessContentBlocker()->findPotentialSelectorSyntaxFindersForMatch($match->getTag(), \array_keys($attributes)) as $finder) {
+        foreach ($this->getHeadlessContentBlocker()->findPotentialSelectorSyntaxFindersForMatch(\strtolower($match->getTag()), \array_keys($attributes)) as $finder) {
             $matcher = $this->getHeadlessContentBlocker()->getFinderToMatcher()[$finder] ?? null;
             // @codeCoverageIgnoreStart
             if ($matcher === null) {

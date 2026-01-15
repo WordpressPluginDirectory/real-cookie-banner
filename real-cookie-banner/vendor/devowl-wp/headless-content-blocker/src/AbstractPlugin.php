@@ -29,6 +29,8 @@ abstract class AbstractPlugin
     }
     /**
      * Before the content blocker gets setup.
+     *
+     * @codeCoverageIgnore
      */
     public function setup()
     {
@@ -36,6 +38,8 @@ abstract class AbstractPlugin
     }
     /**
      * The content blocker got setup completely.
+     *
+     * @codeCoverageIgnore
      */
     public function afterSetup()
     {
@@ -52,6 +56,7 @@ abstract class AbstractPlugin
      * Allows to modify the HTML after the content blocker has done its job.
      *
      * @param string $html
+     * @codeCoverageIgnore
      */
     public function modifyHtmlAfterProcessing($html)
     {
@@ -62,6 +67,7 @@ abstract class AbstractPlugin
      *
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
+     * @codeCoverageIgnore
      */
     public function beforeMatch($matcher, $match)
     {
@@ -73,6 +79,7 @@ abstract class AbstractPlugin
      * @param BlockedResult $result
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
+     * @codeCoverageIgnore
      */
     public function blockedMatch($result, $matcher, $match)
     {
@@ -84,6 +91,7 @@ abstract class AbstractPlugin
      * @param BlockedResult $result
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
+     * @codeCoverageIgnore
      */
     public function notBlockedMatch($result, $matcher, $match)
     {
@@ -96,6 +104,7 @@ abstract class AbstractPlugin
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
      * @return BlockedResult
+     * @codeCoverageIgnore
      */
     public function checkResult($result, $matcher, $match)
     {
@@ -108,6 +117,7 @@ abstract class AbstractPlugin
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
      * @return string[]
+     * @codeCoverageIgnore
      */
     public function keepAlwaysAttributes($keepAttributes, $matcher, $match)
     {
@@ -120,10 +130,32 @@ abstract class AbstractPlugin
      * @param ScriptInlineMatcher $matcher
      * @param ScriptInlineMatch $match
      * @return string[]
+     * @codeCoverageIgnore
      */
     public function skipInlineScriptVariableAssignment($names, $matcher, $match)
     {
         return $names;
+    }
+    /**
+     * This method is run while iterating blockables and check if rules are found within a string.
+     * It allows you to add additional blockables to the result even if `isAllowMultipleBlockerResults` is `false`.
+     *
+     * Note: All required IDs from each matching Blockable will be merged together, but only the ID of the first Blockable found
+     * will be assigned as the `consent-id` of the element.
+     *
+     * @param AbstractMatcher $matcher
+     * @param BlockedResult $result
+     * @param string $string
+     * @param boolean $useContainsRegularExpression
+     * @param boolean $multilineRegexp
+     * @param string[] $useRegularExpressionFromMap
+     * @param AbstractBlockable[] $useBlockables
+     * @param boolean $allowMultiple
+     * @codeCoverageIgnore
+     */
+    public function iterateBlockablesInString($matcher, $result, $string, $useContainsRegularExpression, $multilineRegexp, $useRegularExpressionFromMap, $useBlockables, $allowMultiple)
+    {
+        // Silence is golden.
     }
     /**
      * Do not extract blocked rules of a CSS inline script to a second document.
@@ -132,6 +164,7 @@ abstract class AbstractPlugin
      * @param StyleInlineMatcher|StyleInlineAttributeMatcher $matcher
      * @param StyleInlineMatch|StyleInlineAttributeMatch $match
      * @return boolean
+     * @codeCoverageIgnore
      */
     public function inlineStyleShouldBeExtracted($extract, $matcher, $match)
     {
@@ -145,6 +178,7 @@ abstract class AbstractPlugin
      * @param StyleInlineMatcher|StyleInlineAttributeMatcher $matcher
      * @param StyleInlineMatch|StyleInlineAttributeMatch $match
      * @return boolean
+     * @codeCoverageIgnore
      */
     public function inlineStyleModifyDocuments($document, $extractedDocument, $matcher, $match)
     {
@@ -158,6 +192,7 @@ abstract class AbstractPlugin
      * @param StyleInlineMatcher|StyleInlineAttributeMatcher $matcher
      * @param StyleInlineMatch|StyleInlineAttributeMatch $match
      * @return boolean
+     * @codeCoverageIgnore
      */
     public function inlineStyleBlockRule($result, $url, $matcher, $match)
     {
@@ -170,6 +205,7 @@ abstract class AbstractPlugin
      * @param AbstractMatcher $matcher
      * @param AbstractMatch $match
      * @return boolean|string|number
+     * @codeCoverageIgnore
      */
     public function visualParent($visualParent, $matcher, $match)
     {
@@ -181,6 +217,7 @@ abstract class AbstractPlugin
      * @param string $expression
      * @param AbstractBlockable $blockable
      * @return string
+     * @codeCoverageIgnore
      */
     public function blockableStringExpression($expression, $blockable)
     {
@@ -194,6 +231,7 @@ abstract class AbstractPlugin
      * @param string $expression
      * @param AbstractMatcher $matcher
      * @return boolean
+     * @codeCoverageIgnore
      */
     public function beforeSetBlockedInResult($result, $blockable, $expression, $matcher)
     {
@@ -204,6 +242,7 @@ abstract class AbstractPlugin
      *
      * @param AbstractBlockable[] $blockables
      * @return AbstractBlockable[]
+     * @codeCoverageIgnore
      */
     public function modifyBlockables($blockables)
     {

@@ -245,6 +245,12 @@ class StandardPlugin extends AbstractPlugin
             'ITSECRecaptchaOptIn',
             // [Plugin Comp] Bricks Builder
             '/var bricksData/m',
+            // [Plugin Comp] PixelYourSite
+            '/var pysOptions/m',
+            // [Plugin Comp] WP Grid Builder
+            'wpgb_settings',
+            // [Plugin Comp] Fluent Calendar
+            '/var fluentCalendarPublicVars/m',
         ]);
         /**
          * DoNotBlockScriptTextTemplates.

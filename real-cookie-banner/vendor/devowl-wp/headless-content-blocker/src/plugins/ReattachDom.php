@@ -31,7 +31,7 @@ class ReattachDom extends AbstractPlugin
              * @var AbstractMatch
              */
             $match = $match;
-            return $match->getTag() === 'iframe' && $match->hasAttribute(AttributesHelper::transformAttribute('data-lazy-src'));
+            return $match->isTag('iframe') && $match->hasAttribute(AttributesHelper::transformAttribute('data-lazy-src'));
         });
     }
     /**

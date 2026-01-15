@@ -73,7 +73,7 @@ class SavingConsentViaRestApiEndpointChecker
         // Include all cookies except WordPress login cookies
         foreach ($_COOKIE as $key => $value) {
             // Exclude authentication cookies: https://github.com/WordPress/WordPress/blob/06615abcf77d4e87df3906381f5d362e5eff5943/wp-includes/default-constants.php#L270-L289
-            if (!Utils::startsWith($key, 'wordpress_') && !\in_array($key, [
+            if (!Utils::startsWith($key, 'wordpress_') && !Utils::startsWith($key, 'real_cookie_banner') && !\in_array($key, [
                 // Disable existing session as this could lead to errors in loopback requests and lead to the following error:
                 // cURL error 28: Operation timed out after 1000 milliseconds with 0 bytes received
                 'PHPSESSID',

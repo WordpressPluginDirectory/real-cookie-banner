@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-queue",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "private": true,
     "description": "Provide a promise-based queue system working in frontend for client and server tasks",
     "homepage": "https://devowl.io",
@@ -68,9 +68,6 @@
         "@devowl-wp/utils": "workspace:*",
         "react": "*",
         "react-dom": "*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

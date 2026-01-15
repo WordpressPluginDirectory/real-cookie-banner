@@ -295,6 +295,8 @@ class Core extends BaseCore implements IOverrideCore
         // LiteSpeed Cache Unique CSS
         \add_filter('us_grid_listing_post', [$this->getBlocker(), 'replace']);
         // Impreza Lazy Loading posts
+        \add_filter('woocommerce_update_order_review_fragments', [$this->getBlocker(), 'replace']);
+        // WooCommerce
         \add_filter('fl_builder_render_js', [ScriptInlineMatcher::class, 'makeInlineScriptSkippable']);
         // Beaver Builder and inline scripts (https://docs.wpbeaverbuilder.com/beaver-builder/developer/how-to-tips/load-css-and-javascript-inline/)
         \add_action('shutdown', function () {

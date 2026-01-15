@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.20.8",
+    "version": "1.20.9",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",
@@ -91,9 +91,6 @@
         "webpack": "catalog:webpack",
         "webpack-cli": "catalog:webpack",
         "wp-hookdoc": "catalog:docs"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

@@ -39,7 +39,7 @@ class ScriptInlineExtractExternalUrl extends AbstractPlugin
     public function checkResult($result, $matcher, $match)
     {
         $markup = $result->getMarkup();
-        if ($match->getTag() === 'script' && $markup !== null) {
+        if ($match->isTag('script') && $markup !== null) {
             $url = self::extractExternalUrlFromInline($markup->getContent());
             if (!empty($url)) {
                 $result->setData(self::BLOCKED_RESULT_DATA_KEY, $url);

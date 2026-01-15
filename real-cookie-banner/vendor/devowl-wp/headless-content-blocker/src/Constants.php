@@ -30,6 +30,15 @@ abstract class Constants
      */
     const HTML_ATTRIBUTE_COOKIE_IDS = 'consent-required';
     /**
+     * The condition of the consent. Can be `and` or `or`.
+     *
+     * - `and` = All required IDs need to be accepted
+     * - `or` = At least one required ID needs to be accepted
+     */
+    const HTML_ATTRIBUTE_CONDITION = 'consent-condition';
+    const HTML_ATTRIBUTE_CONDITION_VALUE_AND = 'and';
+    const HTML_ATTRIBUTE_CONDITION_VALUE_OR = 'or';
+    /**
      * A tag got blocked, e. g. `iframe`. We can now determine the "Visual Parent". The visual parent is the
      * closest parent where the content blocker should be placed to. The visual parent can be configured as follow:
      *

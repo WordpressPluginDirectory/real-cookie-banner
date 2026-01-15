@@ -37,7 +37,24 @@ class Utils
     {
         $name = \str_replace('*', self::TEMP_REGEX_AVOID_UNMASK, $name);
         $regex = \sprintf('/^%s$/', \str_replace(self::TEMP_REGEX_AVOID_UNMASK, '((?:.|\\n)*)', \preg_quote($name, '/')));
-        // Remove duplicate `(.*)` identifiers to avoid "catastrophical backtrace"
+        return self::removeDuplicateAsterisksInRegex($regex);
+    }
+    /**
+     * Remove duplicate `(.*)` identifiers to avoid "catastrophical backtrace". This also greatly
+     * improves performance.
+     *
+     * ```
+     * Input:  `/^((?:.|\\n)*)((?:.|\\n)*)((?:.|\\n)*)\\.hs\\-scripts\\.com((?:.|\\n)*)$/`
+     * Output: `/^((?:.|\\n)*)                        \\.hs\\-scripts\\.com((?:.|\\n)*)$/`
+     *                        ^^^^^^^^^^^^^^^^^^^^^^^^
+     *                        ^ This is removed
+     * ```
+     *
+     * @param string $regex
+     * @return string
+     */
+    public static function removeDuplicateAsterisksInRegex($regex)
+    {
         return \preg_replace('/(\\((\\(\\?:\\.\\|\\\\n\\)\\*)\\))+/m', '((?:.|\\n)*)', $regex);
     }
     /**

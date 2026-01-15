@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/deliver-anonymous-asset",
-    "version": "1.0.33",
+    "version": "1.0.34",
     "private": true,
     "description": "Provide a functionality to deliver assets anonymous",
     "homepage": "https://devowl.io",
@@ -55,9 +55,6 @@
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

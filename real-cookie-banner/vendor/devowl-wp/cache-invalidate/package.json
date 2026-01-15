@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cache-invalidate",
-    "version": "1.18.32",
+    "version": "1.18.33",
     "private": true,
     "description": "Provide a single entry point to trigger cache invalidation of known caching plugins",
     "homepage": "https://devowl.io",
@@ -62,9 +62,6 @@
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

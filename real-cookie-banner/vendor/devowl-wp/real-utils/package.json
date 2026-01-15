@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.14.8",
+    "version": "1.14.9",
     "private": true,
     "description": "Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
@@ -68,9 +68,6 @@
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*",
         "jquery": "*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

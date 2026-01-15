@@ -193,6 +193,7 @@ abstract class AbstractOutputBufferPlugin extends AbstractLanguagePlugin
             if ($previousContent === $translation) {
                 list(, $translation) = $this->translateStringFromMo($translation, $locale, $context);
             }
+            $this->translateArrayCache[$untranslated] = $translation;
             $untranslated = $translation;
         }
     }

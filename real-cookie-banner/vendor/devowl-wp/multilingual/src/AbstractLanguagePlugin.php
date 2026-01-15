@@ -60,6 +60,7 @@ abstract class AbstractLanguagePlugin
     protected $splitTranslationEntriesCache = [];
     protected $findI18nKeyOfTranslationCache = [];
     protected $lockCurrentTranslations = \false;
+    protected $translateArrayCache = [];
     /**
      * C'tor.
      *
@@ -344,7 +345,13 @@ abstract class AbstractLanguagePlugin
         $this->createTemporaryTextDomain($this->getDefaultLanguage(), \true);
         $this->snapshotCurrentTranslations(\true);
         $this->createTemporaryTextDomain($useLocale, \true);
-        $expandedContent = Utils::expandKeys($content, $skipKeys);
+        $expandedContent = Utils::expandKeys($content, $skipKeys, function ($key, &$value) {
+            if (\is_string($value) && !empty($value) && !\is_numeric($value) && isset($this->translateArrayCache[$value])) {
+                $value = $this->translateArrayCache[$value];
+                return \true;
+            }
+            return \false;
+        });
         $referenceMap = [];
         \array_walk_recursive($expandedContent, function (&$value) use(&$referenceMap) {
             if (\is_string($value) && !empty($value) && !\is_numeric($value)) {

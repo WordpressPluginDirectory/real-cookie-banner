@@ -2,6 +2,8 @@
 
 namespace DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker;
 
+use DevOwl\RealCookieBanner\Vendor\DevOwl\FastHtmlTag\finder\match\AbstractMatch;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\AbstractMatcher;
 /**
  * A blocked result defines a "blocked" content while processing the content blocker itself.
  * @internal
@@ -14,6 +16,7 @@ class BlockedResult
     private $attributes;
     private $markup;
     private $data = [];
+    private $blockedMatchCallbacks = [];
     /**
      * Additional results which are not part of the main blocking process but should be
      * reported as well.
@@ -58,7 +61,9 @@ class BlockedResult
      */
     public function addBlocked($blocked)
     {
-        $this->blocked[] = $blocked;
+        if (!\in_array($blocked, $this->blocked, \true)) {
+            $this->blocked[] = $blocked;
+        }
     }
     /**
      * Mark the content to be blocked through given expressions.
@@ -88,6 +93,28 @@ class BlockedResult
     public function addAdditionalResult($additionalResult)
     {
         $this->additionalResults[] = $additionalResult;
+    }
+    /**
+     * Add a callable after a blocked match got found so you can alter the match again. Parameters:
+     * `AbstractMatcher $matcher, AbstractMatch $match`.
+     *
+     * @param callable $callback
+     */
+    public function addBlockedMatchCallback($callback)
+    {
+        $this->blockedMatchCallbacks[] = $callback;
+    }
+    /**
+     * Run registered blocked-match callbacks.
+     *
+     * @param AbstractMatcher $matcher
+     * @param AbstractMatch $match
+     */
+    public function runBlockedMatchCallback($matcher, $match)
+    {
+        foreach ($this->blockedMatchCallbacks as $callback) {
+            $callback($matcher, $match);
+        }
     }
     /**
      * Allows to set additional data for this blocked result.

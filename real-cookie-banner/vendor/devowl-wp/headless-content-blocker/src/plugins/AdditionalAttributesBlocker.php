@@ -24,7 +24,7 @@ class AdditionalAttributesBlocker extends AbstractPlugin
      */
     public function blockedMatch($result, $matcher, $match)
     {
-        if (\in_array($match->getTag(), $this->tags, \true)) {
+        if (\in_array(\strtolower($match->getTag()), $this->tags, \true)) {
             foreach ($this->attributes as $attribute) {
                 $attributeValue = $match->getAttribute($attribute);
                 if ($attributeValue !== null) {

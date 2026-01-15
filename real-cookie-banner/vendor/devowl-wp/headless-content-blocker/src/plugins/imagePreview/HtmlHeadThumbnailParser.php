@@ -43,7 +43,7 @@ class HtmlHeadThumbnailParser extends FastHtmlTag
              * @var TagAttributeMatch
              */
             $match = $match;
-            $tag = $match->getTag();
+            $tag = \strtolower($match->getTag());
             switch ($tag) {
                 case 'meta':
                     if ($match->hasAttribute('property') && $match->hasAttribute('content')) {

@@ -186,11 +186,11 @@ class BlockableScanner extends AbstractPlugin
      */
     protected function probablyMemorizeExternalUrl($isBlocked, $url, $tag, $attribute, $markup)
     {
-        if (!$isBlocked->isBlocked() && !\in_array($tag, ['a'], \true) && $this->isNotAnExcludedUrl($url) && !\preg_match('/^data:\\w+\\/[\\w+-]+[,;]/m', $url)) {
+        if (!$isBlocked->isBlocked() && !\in_array(\strtolower($tag), ['a'], \true) && $this->isNotAnExcludedUrl($url) && !\preg_match('/^data:\\w+\\/[\\w+-]+[,;]/m', $url)) {
             $this->results[] = $entry = new ScanEntry();
             $entry->blocked_url = \strpos($url, '//') === 0 ? 'https:' . $url : $url;
             $entry->source_url = $this->sourceUrl;
-            $entry->tag = $tag;
+            $entry->tag = \strtolower($tag);
             $entry->attribute = $attribute;
             $entry->markup = $markup;
         }
@@ -221,7 +221,7 @@ class BlockableScanner extends AbstractPlugin
                 $entry->template = $blockable->getIdentifier();
                 $entry->blocked_url = $url !== null && \strpos($url, '//') === 0 ? 'https:' . $url : $url;
                 $entry->source_url = $this->sourceUrl;
-                $entry->tag = $tag;
+                $entry->tag = \strtolower($tag);
                 $entry->attribute = $attribute;
                 $entry->expressions = $isBlocked->getBlockedExpressions();
                 // Inline scripts, styles and `SelectorSyntaxBlocker` support also the markup

@@ -29,7 +29,7 @@ class CustomElementBlocker extends AbstractPlugin
      */
     public function blockedMatch($result, $matcher, $match)
     {
-        $tag = $match->getTag();
+        $tag = \strtolower($match->getTag());
         if ($result->isBlocked() && !\in_array($tag, self::HTML_TAG_EXCLUDE, \true) && \strpos($tag, '-') !== \false) {
             if (!\in_array($tag, $this->customElements, \true)) {
                 $this->customElements[] = $tag;

@@ -49,7 +49,7 @@ abstract class AbstractMatch
     {
         $this->finder = $finder;
         $this->originalMatch = $originalMatch;
-        $this->tag = \strtolower($tag);
+        $this->tag = $tag;
         $this->attributes = $attributes ?? [];
         $this->transformBase64DataUrls();
     }
@@ -446,10 +446,22 @@ abstract class AbstractMatch
     }
     /**
      * Getter.
+     *
+     * Attention: This returns the tag in the original form. If you want to check if the tag is a certain
+     * tag case-insensitive, use `strtolower(getTag())` instead or directly `->isTag('script')`.
      */
     public function getTag()
     {
         return $this->tag;
+    }
+    /**
+     * Check if the tag is a certain tag case-insensitive.
+     *
+     * @param string $tag
+     */
+    public function isTag($tag)
+    {
+        return \strtolower($this->tag) === \strtolower($tag);
     }
     /**
      * Getter.

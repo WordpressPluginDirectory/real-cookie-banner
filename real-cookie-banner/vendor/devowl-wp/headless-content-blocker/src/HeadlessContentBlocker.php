@@ -20,9 +20,11 @@ use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\StyleIn
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\StyleInlineMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\matcher\TagAttributeMatcher;
 use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\internal\NegatePlugin;
+use DevOwl\RealCookieBanner\Vendor\DevOwl\HeadlessContentBlocker\plugins\SharedAtLeastOne;
 use Exception;
 use DevOwl\RealCookieBanner\Vendor\Sabberworm\CSS\CSSList\Document;
 use SplObjectStorage;
+use ReflectionMethod;
 /**
  * Initialize a new headless content blocker.
  * @internal
@@ -45,6 +47,7 @@ class HeadlessContentBlocker extends FastHtmlTag
     private $keepAlwaysAttributesByCallback = [];
     private $skipInlineScriptVariableAssignments = [];
     private $skipInlineScriptVariableAssignmentsByCallback = [];
+    private $iterateBlockablesInStringCallback = [];
     private $inlineStyleDummyUrlPath = null;
     private $inlineStyleShouldBeExtractedByCallback = [];
     private $inlineStyleModifyDocumentsByCallback = [];
@@ -107,6 +110,7 @@ class HeadlessContentBlocker extends FastHtmlTag
         parent::__construct('HeadlessContentBlocker');
         $this->init();
         $this->addPlugin(NegatePlugin::class);
+        $this->addPlugin(SharedAtLeastOne::class);
         $this->finderToMatcher = new SplObjectStorage();
     }
     /**
@@ -132,23 +136,81 @@ class HeadlessContentBlocker extends FastHtmlTag
         $this->plugins[$className] = $this->plugins[$className] ?? [];
         $this->plugins[$className][] = $plugin;
         // Register callbacks
-        $this->addSetupCallback([$plugin, 'setup']);
-        $this->addAfterSetupCallback([$plugin, 'afterSetup']);
-        $this->addCallback([$plugin, 'modifyHtmlAfterProcessing']);
-        $this->addBeforeMatchCallback([$plugin, 'beforeMatch']);
-        $this->addBlockedMatchCallback([$plugin, 'blockedMatch']);
-        $this->addNotBlockedMatchCallback([$plugin, 'notBlockedMatch']);
-        $this->addCheckResultCallback([$plugin, 'checkResult']);
-        $this->addKeepAlwaysAttributesCallback([$plugin, 'keepAlwaysAttributes']);
-        $this->addSkipInlineScriptVariableAssignmentsCallback([$plugin, 'skipInlineScriptVariableAssignment']);
-        $this->addVisualParentCallback([$plugin, 'visualParent']);
-        $this->addInlineStyleShouldBeExtractedCallback([$plugin, 'inlineStyleShouldBeExtracted']);
-        $this->addInlineStyleModifyDocumentsCallback([$plugin, 'inlineStyleModifyDocuments']);
-        $this->addInlineStyleBlockRuleCallback([$plugin, 'inlineStyleBlockRule']);
-        $this->addBlockableStringExpressionCallback([$plugin, 'blockableStringExpression']);
-        $this->addBeforeSetBlockedInResultCallback([$plugin, 'beforeSetBlockedInResult']);
-        $this->addModifyBlockablesCallback([$plugin, 'modifyBlockables']);
+        if ($this->checkIfPluginProvidesCallback($plugin, 'setup')) {
+            $this->addSetupCallback([$plugin, 'setup']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'afterSetup')) {
+            $this->addAfterSetupCallback([$plugin, 'afterSetup']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'modifyHtmlAfterProcessing')) {
+            $this->addCallback([$plugin, 'modifyHtmlAfterProcessing']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'beforeMatch')) {
+            $this->addBeforeMatchCallback([$plugin, 'beforeMatch']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'blockedMatch')) {
+            $this->addBlockedMatchCallback([$plugin, 'blockedMatch']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'notBlockedMatch')) {
+            $this->addNotBlockedMatchCallback([$plugin, 'notBlockedMatch']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'checkResult')) {
+            $this->addCheckResultCallback([$plugin, 'checkResult']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'keepAlwaysAttributes')) {
+            $this->addKeepAlwaysAttributesCallback([$plugin, 'keepAlwaysAttributes']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'skipInlineScriptVariableAssignment')) {
+            $this->addSkipInlineScriptVariableAssignmentsCallback([$plugin, 'skipInlineScriptVariableAssignment']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'iterateBlockablesInString')) {
+            $this->addIterateBlockablesInStringCallback([$plugin, 'iterateBlockablesInString']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'visualParent')) {
+            $this->addVisualParentCallback([$plugin, 'visualParent']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'inlineStyleShouldBeExtracted')) {
+            $this->addInlineStyleShouldBeExtractedCallback([$plugin, 'inlineStyleShouldBeExtracted']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'inlineStyleModifyDocuments')) {
+            $this->addInlineStyleModifyDocumentsCallback([$plugin, 'inlineStyleModifyDocuments']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'inlineStyleBlockRule')) {
+            $this->addInlineStyleBlockRuleCallback([$plugin, 'inlineStyleBlockRule']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'blockableStringExpression')) {
+            $this->addBlockableStringExpressionCallback([$plugin, 'blockableStringExpression']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'beforeSetBlockedInResult')) {
+            $this->addBeforeSetBlockedInResultCallback([$plugin, 'beforeSetBlockedInResult']);
+        }
+        if ($this->checkIfPluginProvidesCallback($plugin, 'modifyBlockables')) {
+            $this->addModifyBlockablesCallback([$plugin, 'modifyBlockables']);
+        }
         return $plugin;
+    }
+    /**
+     * Check if a plugin provides a callback for a given method. This is useful to only add the callback if the plugin overrides the method
+     * and improves performance when iterating the callbacks in the individual `run*Callback` methods.
+     *
+     * @param object $plugin
+     * @param string $methodName
+     * @return boolean
+     */
+    private function checkIfPluginProvidesCallback($plugin, $methodName)
+    {
+        try {
+            if ($plugin instanceof NegatePlugin) {
+                // We should always add all callbacks for at least one plugin to make sure that all callbacks have at least one plugin registered
+                return \true;
+            }
+            return (new ReflectionMethod($plugin, $methodName))->getDeclaringClass()->getName() !== AbstractPlugin::class;
+            // @codeCoverageIgnoreStart
+        } catch (Exception $e) {
+            // This should never happen, but who knows...
+            return \true;
+        }
+        // @codeCoverageIgnoreEnd
     }
     /**
      * Respect additional tags and attributes for a given map. For example, there is
@@ -316,6 +378,20 @@ class HeadlessContentBlocker extends FastHtmlTag
     public function addSkipInlineScriptVariableAssignmentsCallback($callback)
     {
         $this->skipInlineScriptVariableAssignmentsByCallback[] = $callback;
+    }
+    /**
+     * Add a callable after iterating blockables in a string and allow you to add additional blockables to the result.
+     *
+     * Note: All required IDs from each matching Blockable will be merged together, but only the ID of the first Blockable found
+     * will be assigned as the `consent-id` of the element.
+     *
+     * Parameters: `AbstractMatcher $matcher, BlockedResult $result, string $string, boolean $useContainsRegularExpression, boolean $multilineRegexp, string[] $useRegularExpressionFromMap, AbstractBlockable[] $useBlockables, boolean $allowMultiple`.
+     *
+     * @param callable $callback
+     */
+    public function addIterateBlockablesInStringCallback($callback)
+    {
+        $this->iterateBlockablesInStringCallback[] = $callback;
     }
     /**
      * When blocking CSS inline styles, we replace URLs with dummy URLs and we cannot rely on data-uri's
@@ -642,6 +718,7 @@ class HeadlessContentBlocker extends FastHtmlTag
         }
         // Delegate `MatchPluginCallbacks`
         MatchPluginCallbacks::getFromMatch($match)->runBlockedMatchCallback($result, $matcher);
+        $result->runBlockedMatchCallback($matcher, $match);
     }
     /**
      * Run registered not-blocked-match callbacks.
@@ -715,6 +792,24 @@ class HeadlessContentBlocker extends FastHtmlTag
             $extract = $callback($extract, $matcher, $match);
         }
         return $extract;
+    }
+    /**
+     * Run registered callbacks to iterate blockables in a string.
+     *
+     * @param AbstractMatcher $matcher
+     * @param BlockedResult $result
+     * @param string $string
+     * @param boolean $useContainsRegularExpression
+     * @param boolean $multilineRegexp
+     * @param string[] $useRegularExpressionFromMap
+     * @param AbstractBlockable[] $blockables
+     * @param boolean $allowMultiple
+     */
+    public function runIterateBlockablesInStringCallback($matcher, $result, $string, $useContainsRegularExpression, $multilineRegexp, $useRegularExpressionFromMap, $blockables, $allowMultiple)
+    {
+        foreach ($this->iterateBlockablesInStringCallback as $callback) {
+            $callback($matcher, $result, $string, $useContainsRegularExpression, $multilineRegexp, $useRegularExpressionFromMap, $blockables, $allowMultiple);
+        }
     }
     /**
      * Run registered callbacks to not extract blocked CSS rules to a second document.

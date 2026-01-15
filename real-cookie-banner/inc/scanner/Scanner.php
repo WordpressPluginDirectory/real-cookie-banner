@@ -654,7 +654,11 @@ class Scanner
         $role_with_least_caps = null;
         $least_capabilities_count = \PHP_INT_MAX;
         foreach ($roles as $role_name => $role_info) {
-            $capabilities_count = \count($role_info['capabilities']);
+            $capabilities = $role_info['capabilities'] ?? [];
+            if (!\is_array($capabilities)) {
+                continue;
+            }
+            $capabilities_count = \count($capabilities);
             if ($capabilities_count < $least_capabilities_count) {
                 $least_capabilities_count = $capabilities_count;
                 $role_with_least_caps = $role_name;

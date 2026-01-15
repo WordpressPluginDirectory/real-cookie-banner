@@ -55,10 +55,11 @@ class Utils
      * multidimensional arrays. This functionality also keeps the reference!
      *
      * @param mixed $arr
-     * @param string $skipKeys
+     * @param string[] $skipKeys
+     * @param callable $skipKeysByCallback
      * @see https://stackoverflow.com/a/40217420/5506547
      */
-    public static function expandKeys(&$arr, $skipKeys = [])
+    public static function expandKeys(&$arr, $skipKeys = [], $skipKeysByCallback = null)
     {
         $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($arr), RecursiveIteratorIterator::SELF_FIRST);
         $pathMapping = [];
@@ -79,7 +80,11 @@ class Utils
                         $refValue =& $refValue->{$dot};
                     }
                 }
-                $flatArray[\implode('.', $pathMapping)] =& $refValue;
+                $path = \implode('.', $pathMapping);
+                if (\is_callable($skipKeysByCallback) && $skipKeysByCallback($path, $refValue)) {
+                    continue;
+                }
+                $flatArray[$path] =& $refValue;
             }
         }
         return $flatArray;

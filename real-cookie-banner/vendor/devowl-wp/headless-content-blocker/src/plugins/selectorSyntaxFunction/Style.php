@@ -55,7 +55,7 @@ class Style extends AbstractPlugin
         MatchPluginCallbacks::getFromMatch($match)->addBlockedMatchCallback(function ($result) use($match, $selectors, $applyUnblocked) {
             if ($result->isBlocked() && !$match->hasInvisibleAttribute(self::INVISIBLE_ATTRIBUTE_ALREADY_SET)) {
                 $selectorId = \sprintf('consent-style-%d', ++$this->counter);
-                $selector = \sprintf('%s%s[%s]', $match->getTag(), $applyUnblocked === 'true' ? '' : \sprintf('[%s]', Constants::HTML_ATTRIBUTE_COOKIE_IDS), $selectorId);
+                $selector = \sprintf('%s%s[%s]', \strtolower($match->getTag()), $applyUnblocked === 'true' ? '' : \sprintf('[%s]', Constants::HTML_ATTRIBUTE_COOKIE_IDS), $selectorId);
                 $match->setAttribute($selectorId, \true);
                 $styles = [];
                 foreach ($selectors as $argName => $value) {

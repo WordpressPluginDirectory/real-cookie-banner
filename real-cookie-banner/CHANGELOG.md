@@ -3,6 +3,237 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.10 (2026-01-15)
+
+
+### Bug Fixes
+
+* compatibility with Brizy editor not loading in frontend editor (CU-869brchk2)
+* compatibility with WooCommerce and allow to block dynamically loaded fragments in checkout process (CU-863g4qm6a)
+* handle potential SecurityError when accessing window properties and cookie banner is not visible (CU-869bh1a05)
+* uncaught TypeError: count(): Argument [#1](https://git.owlinfra.de/devowlio/devowl-wp/issues/1) ($value) must be of type Countable|array, string given Scanner.php
+
+
+### Code Refactoring
+
+* consent handling to use a transport object for better flexibility and add support for 'or' condition in consent checks (CU-f535x6)
+
+
+### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)
+
+
+### Performance Improvements
+
+* allow to configure to put the huge JSON to the bottom of the HTML via RCB/Experimental/OptimizedWpLocalizeScript hook (CU-869b9znyx)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.3.6</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.33</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Bug Fixes
+
+* compatibility with Seraphinite Accelorator (CU-86944875q)
+
+
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.38</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Bug Fixes
+
+* exclude real_cookie_banner cookies from consent checks notice (CU-869bh0uwq)
+
+
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.34</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Code Refactoring
+
+* consent handling to use a transport object for better flexibility and add support for 'or' condition in consent checks (CU-f535x6)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.13.9</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 1.0.34</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.3.1</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Bug Fixes
+
+* allow to block elements with capitalized characters (CU-869bh2c93)
+* in some cases content does not get unblocked when scripts without loading-semantics need to be unblocked first (CU-869brj1eb)
+
+
+##### Maintenance
+
+* code AI review (note 7021, CU-869bh2c93)
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.126</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.4.0</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* allow to block elements with capitalized characters (CU-869bh2c93)
+* compatibility with Fluent Calendar when not loading in frontend
+* compatibility with PixelYourSite when pysOptions gets blocked (CU-869bra6kz)
+* compatibility with WP Grid Builder and 'wpgb_settings is not defined' error
+
+
+##### Features
+
+* implement SharedAtLeastOne plugin to merge required IDs across blockers using at-least-one logic (CU-f535x6)
+
+
+##### Maintenance
+
+* code AI review (note 7021, CU-869bh2c93)
+* code review AI (note 6992, CU-f535x6)
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.2.1</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Bug Fixes
+
+* in some cases content does not get unblocked when scripts without loading-semantics need to be unblocked first (CU-869brj1eb)
+
+
+##### Code Refactoring
+
+* consent handling to use a transport object for better flexibility and add support for 'or' condition in consent checks (CU-f535x6)
+
+
+##### Maintenance
+
+* code AI review (note 7026, CU-f535x6)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.14.9</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Bug Fixes
+
+* add support for additional ISO 3166-1 alpha-2 country codes (Caribbean Netherlands, Curaçao, Sint Maarten, South Sudan, Kosovo)
+
+
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)
+
+
+##### Performance Improvements
+
+* introduce an in-memory cache for already translated items within translateArray (CU-869bgtjqe)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.20.9</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.1.9</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.14.9</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.31</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.9</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* remove package.json#engines from internal packages (CU-86931jwau)
+
+
+##### Performance Improvements
+
+* allow to configure to put the huge JSON to the bottom of the HTML via RCB/Experimental/OptimizedWpLocalizeScript hook (CU-869b9znyx)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.6.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Features
+
+* refactor new Contract API (CU-8699twn1u)
+
+
+##### Maintenance
+
+* ai review (CU-8699twn1u)
+* fix issues found in testing (CU-8699twn1u)
+* fix purpose in contracts ((CU-8699twn1u)
+* remove package.json#engines from internal packages (CU-86931jwau)</details>
+
+
+
+
+
 ## 5.2.9 (2025-12-10)
 
 

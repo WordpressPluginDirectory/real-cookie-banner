@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.14.8",
+    "version": "1.14.9",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",
@@ -58,9 +58,6 @@
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

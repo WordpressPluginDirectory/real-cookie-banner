@@ -41,7 +41,7 @@ class Image extends AbstractPlugin
      */
     public function visualParent($visualParent, $matcher, $match)
     {
-        if ($match->getTag() === self::HTML_TAG_SOURCE) {
+        if ($match->isTag(self::HTML_TAG_SOURCE)) {
             return \true;
         }
         return $visualParent;
@@ -55,7 +55,7 @@ class Image extends AbstractPlugin
      */
     public function blockedMatch($result, $matcher, $match)
     {
-        if ($result->isBlocked() && $matcher instanceof TagAttributeMatcher && $match->getTag() === self::HTML_TAG_IMG && $match->hasAttribute(self::HTML_ATTRIBUTE_SRCSET)) {
+        if ($result->isBlocked() && $matcher instanceof TagAttributeMatcher && $match->isTag(self::HTML_TAG_IMG) && $match->hasAttribute(self::HTML_ATTRIBUTE_SRCSET)) {
             $newSrcAttribute = AttributesHelper::transformAttribute(self::HTML_ATTRIBUTE_SRCSET);
             $match->setAttribute($newSrcAttribute, $match->getAttribute(self::HTML_ATTRIBUTE_SRCSET));
             $match->setAttribute(self::HTML_ATTRIBUTE_SRCSET, null);

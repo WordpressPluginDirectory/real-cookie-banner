@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/cookie-consent-management",
-    "version": "1.0.37",
+    "version": "1.0.38",
     "private": true,
     "description": "Provide cookie consent management with adapters to your environment",
     "homepage": "https://devowl.io",
@@ -45,9 +45,6 @@
         "@devowl-wp/react-cookie-banner": "workspace:*",
         "@devowl-wp/react-cookie-banner-admin": "workspace:*",
         "@types/node": "18.19.34"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "license-check": {
         "spdx": [

@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/customize",
-    "version": "1.13.8",
+    "version": "1.13.9",
     "private": true,
     "description": "Abstract utility for live preview (customize)",
     "homepage": "https://devowl.io",
@@ -65,9 +65,6 @@
     },
     "peerDependencies": {
         "@devowl-wp/utils": "workspace:*"
-    },
-    "engines": {
-        "node": ">=14.15.0"
     },
     "continuous-localization": {
         "locales": {

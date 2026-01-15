@@ -79,7 +79,7 @@ class SelectorSyntaxFinder extends TagAttributeFinder
      */
     public function matchesAttributesLoose($str)
     {
-        if ($this->tag !== self::WILDCARD_TAG && \strpos($str, $this->tag) === \false) {
+        if ($this->tag !== self::WILDCARD_TAG && \stripos($str, $this->tag) === \false) {
             return \false;
         }
         foreach ($this->attributes as $attribute) {
@@ -99,7 +99,7 @@ class SelectorSyntaxFinder extends TagAttributeFinder
     public function matchesAttributes($values, $match, $satisfiesFunctions = \true)
     {
         // @codeCoverageIgnoreStart e.g. `@devowl-wp/headless-content-blocker` uses this API on non-matching tags
-        if ($this->getTag() !== self::WILDCARD_TAG && $this->getTag() !== $match->getTag()) {
+        if ($this->getTag() !== self::WILDCARD_TAG && !$match->isTag($this->getTag())) {
             return \false;
         }
         // @codeCoverageIgnoreEnd

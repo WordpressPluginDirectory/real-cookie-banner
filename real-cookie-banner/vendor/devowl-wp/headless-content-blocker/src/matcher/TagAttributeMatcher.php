@@ -40,7 +40,7 @@ class TagAttributeMatcher extends AbstractMatcher
     {
         $result = $this->createPlainResultFromMatch($match);
         $linkAttribute = $match->getLinkAttribute();
-        $isDataUrlScript = $match->getTag() === 'script' && $match->isAttributeDataUrl($linkAttribute) !== \false;
+        $isDataUrlScript = $match->isTag('script') && $match->isAttributeDataUrl($linkAttribute) !== \false;
         // Fix inline scripts which hold the inline script in `src` attribute with base64 encoded content
         if ($isDataUrlScript) {
             // Already processed?

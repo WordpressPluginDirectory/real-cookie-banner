@@ -53,7 +53,7 @@ class LinkRelBlocker extends AbstractPlugin
     public function checkResult($result, $matcher, $match)
     {
         $rel = $match->getAttribute('rel');
-        $isLink = $match->getTag() === 'link' && $match->hasAttribute('rel') && \count(\array_intersect(\explode(' ', $rel), self::REL)) > 0;
+        $isLink = $match->isTag('link') && $match->hasAttribute('rel') && \count(\array_intersect(\explode(' ', $rel), self::REL)) > 0;
         // Split a `<link rel="dns-prefetch preconnect"` into multiple nodes and rerun the content blocker
         if ($isLink && \strpos($rel, ' ') !== \false) {
             $result->disableBlocking();
