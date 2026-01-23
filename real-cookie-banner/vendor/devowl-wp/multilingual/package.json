@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.14.9",
+    "version": "1.14.11",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",
@@ -10,7 +10,13 @@
         "**/*.{css,scss,less}",
         "./src/public/ts/*.tsx"
     ],
-    "main": "lib/index.tsx",
+    "type": "module",
+    "exports": {
+        ".": {
+            "devowl-source": "./lib/index.tsx",
+            "default": "./lib/index.js"
+        }
+    },
     "files": [
         "dist",
         "dev",
@@ -35,9 +41,6 @@
         "defaults",
         "not IE 11"
     ],
-    "dependencies": {
-        "core-js": "catalog:webpack"
-    },
     "devDependencies": {
         "@devowl-wp/composer-licenses": "workspace:*",
         "@devowl-wp/continuous-integration": "workspace:*",
@@ -50,7 +53,7 @@
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/utils": "workspace:*",
         "@devowl-wp/webpack-config": "workspace:*",
-        "ts-node": "catalog:build",
+        "@swc-node/register": "catalog:build",
         "tslib": "catalog:build",
         "typescript": "catalog:build",
         "webpack": "catalog:webpack",
@@ -297,9 +300,6 @@
         },
         "module": {
             "type": "es6"
-        },
-        "env": {
-            "coreJs": 3
         },
         "sourceMaps": true
     }

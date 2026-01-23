@@ -3,6 +3,619 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.12 (2026-01-23)
+
+
+### Maintenance
+
+* upgrade to TCF 2.3 and support disclosure opt-out, description and special purposes fields (CU-8699gmyb1)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.3.8</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Maintenance
+
+* upgrade to TCF 2.3 and support disclosure opt-out, description and special purposes fields (CU-8699gmyb1)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.36</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Maintenance
+
+* upgrade to TCF 2.3 and support disclosure opt-out, description and special purposes fields (CU-8699gmyb1)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.1.25</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* upgrade to TCF 2.3 and support disclosure opt-out, description and special purposes fields (CU-8699gmyb1)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.1.26</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Maintenance
+
+* upgrade to TCF 2.3 and support disclosure opt-out, description and special purposes fields (CU-8699gmyb1)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.15</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Bug Fixes
+
+* validate container registry image did not catch curl errors correctly (CU-86931jwau)</details>
+
+
+
+
+
+## 5.2.11 (2026-01-20) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+
+### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+### Maintenance
+
+* upgrade dependencies (CU-86931jwau)
+
+
+<details><summary>Dependency updates @devowl-wp/api-real-cookie-banner 1.3.7</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Real Cookie Banner backend._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/cache-invalidate 1.18.34</summary>
+
+
+**_Purpose of dependency:_** _Provide a single entry point to trigger cache invalidation of known caching plugins_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-management 1.0.39</summary>
+
+
+**_Purpose of dependency:_** _Provide cookie consent management with adapters to your environment_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade to Node 24 (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/cookie-consent-web-client 1.0.35</summary>
+
+
+**_Purpose of dependency:_** _Apply cookies consent (opt-in, opt-out) to the current webpage._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/customize 1.13.10</summary>
+
+
+**_Purpose of dependency:_** _Abstract utility for live preview (customize)_
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/deliver-anonymous-asset 1.0.35</summary>
+
+
+**_Purpose of dependency:_** _Provide a functionality to deliver assets anonymous_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/fast-html-tag 1.3.2</summary>
+
+
+**_Purpose of dependency:_** _Find tags within HTML content and modify it in speed of light_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.127</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.4.1</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Tests
+
+* content blocker JSON file was not found (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/headless-content-unblocker 1.2.2</summary>
+
+
+**_Purpose of dependency:_** _Unblock mechanism for @devowl-wp/headless-content-blocker with visual capabilities._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/multilingual 1.14.10</summary>
+
+
+**_Purpose of dependency:_** _Provide helper functionality for multilingual plugins like WPML and PolyLang_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner 1.1.24</summary>
+
+
+**_Purpose of dependency:_** _Provide UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade to Node 24 (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-cookie-banner-admin 1.1.25</summary>
+
+
+**_Purpose of dependency:_** _Provide admin UI for a cookie banner and content blocker for multiple services._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 1.0.16</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.20.10</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-queue 1.1.10</summary>
+
+
+**_Purpose of dependency:_** _Provide a promise-based queue system working in frontend for client and server tasks_
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade backend and isomoprhic packages (CU-86931jwau)
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.14.10</summary>
+
+
+**_Purpose of dependency:_** _Create cross-selling ads, about page, rating and newsletter input for WP Real plugins._
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/resolve-none-computed-style 1.1.51</summary>
+
+
+**_Purpose of dependency:_** _Read the actually applied CSS property value instead of the calculated one._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/service-cloud-consumer 1.0.32</summary>
+
+
+**_Purpose of dependency:_** _Consume service and blocker templates from service cloud_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/sitemap-crawler 1.0.17</summary>
+
+
+**_Purpose of dependency:_** _Find and crawl sitemaps to get a full list of URLs._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.10</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Dependency updates @devowl-wp/web-html-element-interaction-recorder 1.0.16</summary>
+
+
+**_Purpose of dependency:_** _Record and replay interactions on a given HTML element._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/api 1.6.1</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* add HTTP 410 Gone status for deleted reports in order service (CU-8699tgz5g)
+* add media upload functionality for logos (CU-8699tgz5g)
+* adjust Content-Type handling in fetch client to allow browser to set for FormData (CU-8699tgz5g)
+* do not hide internal routes in OpenAPI in non-production environments (CU-8699tgz5g)
+* improve developer experience as using schema-mutable methods outside the middleware looses validations and refinements (CU-8699tgz5g)
+* prevent duplicate tags in OpenAPI document generation (CU-8699tgz5g)
+* review points including 20 (CU-8699tgz5g)
+* throw runtime error when refine is used in schema definition (CU-8699tgz5g)
+
+
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* update refine function parameter naming for consistency across schemas (CU-8699tgz5g)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Documentation
+
+* enhance group management by introducing parent relationships and sorting (CU-8699tgz5g)
+
+
+##### Maintenance
+
+* upgrade to Node 24 (CU-86931jwau)</details>
+
+<details><summary>Development dependency update @devowl-wp/composer-licenses 0.1.20</summary>
+
+
+**_Purpose of dependency:_** _Helper functionalities for your composer project to validate licenses and generate a disclaimer._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.7.13</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Bug Fixes
+
+* only scan current branch with gitleaks (CU-869aw6tca)
+
+
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* use complyforce.com as production domain (CU-8699th190)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.30</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* improve weblate component settings sync for file formats (CU-86931jwau)
+
+
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.2.21</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Code Refactoring
+
+* migrate from Jest to Vitest and clean up related configurations (CU-86931jwau)
+* migrate to ESM (CU-861mnuuc5)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade dependencies (CU-86931jwau)
+* upgrade to Node 24 (CU-86931jwau)
+* use Relation type for ESM preparation in TypeORM relations (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/iso-codes 1.2.13</summary>
+
+
+**_Purpose of dependency:_** _Enums and key value getters for all countries in different ISO code standards._
+##### Bug Fixes
+
+* validate vat id syntax for eu and ch (CU-8699tgz5g)
+
+
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/monorepo-utils 0.2.22</summary>
+
+
+**_Purpose of dependency:_** _Predefined monorepo utilities and tasks._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)
+* upgrade dependencies (CU-86931jwau)</details>
+
+<details><summary>Development dependency update @devowl-wp/node-gitlab-ci 0.8.14</summary>
+
+
+**_Purpose of dependency:_** _Create dynamic GitLab CI pipelines in JavaScript or TypeScript for each project. Reuse and inherit instructions and avoid duplicate code!_
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/npm-licenses 0.1.15</summary>
+
+
+**_Purpose of dependency:_** _Helper functionalities for your project to validate licenses and generate a disclaimer._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/phpcs-config 0.1.19</summary>
+
+
+**_Purpose of dependency:_** _Predefined functionalities for PHPCS._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/regexp-translation-extractor 0.2.47</summary>
+
+
+**_Purpose of dependency:_** _Provide a performant translation extractor based on regular expression._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/ts-config 0.1.19</summary>
+
+
+**_Purpose of dependency:_** _Predefined compiler options for our backends._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-cookie-banner 1.0.21</summary>
+
+
+**_Purpose of dependency:_** _Provide a scoped stylesheet, types and util functionality for a web cookie banner._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* upgrade to Node 24 (CU-86931jwau)</details>
+
+<details><summary>Development dependency update @devowl-wp/web-scoped-css 1.0.18</summary>
+
+
+**_Purpose of dependency:_** _Define a scoped stylesheet in JavaScript with performance in mind._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.52</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Code Refactoring
+
+* migrate to ESM (CU-861mnuuc5)
+* remove deprecated packages which are coming with native Node 24 (CU-86931jwau)
+* remove fs-extra, use fs:promise and disallow blocking/sync methods (CU-86931jwau)
+* replace execSync with spawnSync for improved command execution consistency and security (CU-86931jwau)
+* safer usage of imports and exports with TypeScript's verbatimModuleSyntax option (CU-861mhn5rj)
+* use package.json#exports everywhere for ESM preparation (CU-861mnuuc5)
+
+
+##### Maintenance
+
+* make CI build work (CU-861mnuuc5)
+* upgrade dependencies (CU-86931jwau)</details>
+
+
+
+
+
 ## 5.2.10 (2026-01-15)
 
 

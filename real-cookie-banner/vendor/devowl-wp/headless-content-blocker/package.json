@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/headless-content-blocker",
-    "version": "1.4.0",
+    "version": "1.4.2",
     "private": true,
     "description": "Block HTML content by URLs and selector syntax",
     "homepage": "https://devowl.io",
@@ -10,7 +10,17 @@
         "**/*.{css,scss,less}",
         "./src/public/ts/*.tsx"
     ],
-    "main": "index.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "devowl-source": "./index.ts",
+            "default": "./index.js"
+        },
+        "./test/fixtures/content-blockers.json": {
+            "devowl-source": "./test/fixtures/content-blockers.json",
+            "default": "./test/fixtures/content-blockers.json"
+        }
+    },
     "files": [
         "dist",
         "dev"
@@ -45,10 +55,10 @@
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
         "@devowl-wp/vitest-config": "workspace:*",
+        "@swc-node/register": "catalog:build",
         "@types/diffable-html": "catalog:types",
         "@vitest/coverage-v8": "catalog:testing",
         "diffable-html": "catalog:isomorphic",
-        "ts-node": "catalog:build",
         "tslib": "catalog:build",
         "typescript": "catalog:build",
         "vitest": "catalog:testing",

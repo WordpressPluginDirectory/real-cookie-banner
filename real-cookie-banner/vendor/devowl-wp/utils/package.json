@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.20.9",
+    "version": "1.20.11",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",
@@ -10,7 +10,16 @@
         "**/*.{css,scss,less}",
         "./src/public/ts/*.tsx"
     ],
-    "main": "lib/index.tsx",
+    "type": "module",
+    "exports": {
+        ".": {
+            "devowl-source": "./lib/index.tsx",
+            "default": "./lib/index.js"
+        },
+        "./antd.scss": {
+            "devowl-source": "./lib/antd.scss"
+        }
+    },
     "files": [
         "dist",
         "dev",
@@ -28,33 +37,32 @@
         "lint:eslint": "dowl --silent task @devowl-wp/eslint-config",
         "lint:phpcs": "dowl --silent task @devowl-wp/phpcs-config",
         "task": "task --taskfile ./tasks/Taskfile.yml",
-        "test:jest": "dowl --silent task jest",
-        "test:jest:coverage": "dowl --silent task jest/coverage",
         "test:phpunit": "dowl --silent task @devowl-wp/phpunit-config",
         "test:phpunit:coverage": "dowl --silent task @devowl-wp/phpunit-config:coverage",
         "test:phpunit:profile": "dowl --silent task @devowl-wp/phpunit-config:profile",
+        "test:vitest": "dowl --silent task @devowl-wp/vitest-config",
+        "test:vitest:coverage": "dowl --silent task @devowl-wp/vitest-config:coverage",
         "wp": "$(which wp)$(test $CI && echo ' --allow-root')",
         "wp:weak": "php -n -dextension=phar.so -dextension=json.so -dextension=mbstring.so -dextension=tokenizer.so -dmemory_limit=-1 $(which wp)$(test $CI && echo ' --allow-root')"
     },
     "config": {
-        "phpunit-coverage-threshold": 30
+        "phpunit-coverage-threshold": 30,
+        "vitest-coverage-threshold": 50
     },
     "browserslist": [
         "defaults",
         "not IE 11"
     ],
     "dependencies": {
+        "@automattic/interpolate-components": "catalog:frontend",
         "@devowl-wp/api": "workspace:*",
         "@wordpress/i18n": "catalog:wordpress",
-        "core-js": "catalog:webpack",
         "deepmerge": "catalog:isomorphic",
         "immer": "catalog:isomorphic",
-        "interpolate-components": "catalog:frontend",
         "jquery": "catalog:frontend",
         "js-cookie": "catalog:frontend",
         "json-form-data": "catalog:isomorphic",
         "mobx": "catalog:legacy",
-        "querystringify": "catalog:isomorphic",
         "react": "catalog:frontend",
         "react-dom": "catalog:frontend"
     },
@@ -69,25 +77,22 @@
         "@devowl-wp/phpcs-config": "workspace:*",
         "@devowl-wp/phpunit-config": "workspace:*",
         "@devowl-wp/ts-config": "workspace:*",
+        "@devowl-wp/vitest-config": "workspace:*",
         "@devowl-wp/webpack-config": "workspace:*",
-        "@swc/jest": "catalog:build",
-        "@types/jest": "catalog:types",
+        "@swc-node/register": "catalog:build",
         "@types/jquery": "catalog:types",
         "@types/json-form-data": "catalog:types",
-        "@types/querystringify": "catalog:types",
         "@types/react": "catalog:types",
         "@types/react-dom": "catalog:types",
+        "@vitest/coverage-v8": "catalog:testing",
         "apidoc": "catalog:docs",
         "identity-obj-proxy": "catalog:testing",
-        "jest": "catalog:testing",
-        "jest-environment-jsdom": "catalog:testing",
-        "jest-junit": "catalog:testing",
         "jsdoc": "catalog:docs",
         "php-parser": "catalog:isomorphic",
-        "ts-node": "catalog:build",
         "tslib": "catalog:build",
         "typedoc": "catalog:docs",
         "typescript": "catalog:build",
+        "vitest": "catalog:testing",
         "webpack": "catalog:webpack",
         "webpack-cli": "catalog:webpack",
         "wp-hookdoc": "catalog:docs"
@@ -317,9 +322,6 @@
         },
         "module": {
             "type": "es6"
-        },
-        "env": {
-            "coreJs": 3
         },
         "sourceMaps": true
     }
