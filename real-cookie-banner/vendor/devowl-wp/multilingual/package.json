@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/multilingual",
-    "version": "1.14.11",
+    "version": "1.14.13",
     "private": true,
     "description": "Provide helper functionality for multilingual plugins like WPML and PolyLang",
     "homepage": "https://devowl.io",

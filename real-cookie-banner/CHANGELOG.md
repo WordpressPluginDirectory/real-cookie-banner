@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.14 (2026-02-05)
+
+
+### Bug Fixes
+
+* compatibility for Routiz plugin and Google Map not visually blocked in modal window
+* optimize vendor persistence and cleanup deleted TCF vendors (CU-8699gmyb1)
+
+
+<details><summary>Dependency updates @devowl-wp/headless-content-blocker 1.4.3</summary>
+
+
+**_Purpose of dependency:_** _Block HTML content by URLs and selector syntax_
+##### Bug Fixes
+
+* compatibiltiy with RafflePress</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.13</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Bug Fixes
+
+* compatibility with Hostinger and services could not be created (CU-869c14a9d)</details>
+
+
+
+
+
+## 5.2.13 (2026-02-02) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-cookie-banner) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.6.3</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* avoid passing complete zod schemas to ContractResponse (CU-869bdvdfh)</details>
+
+<details><summary>Development dependency update @devowl-wp/continuous-localization 0.8.32</summary>
+
+
+**_Purpose of dependency:_** _Provide a CLI to push and pull localization files from different translation management systems._
+##### Bug Fixes
+
+* compatibility with Weblate 5.13 (file form params) and correctly create create/update component source file (CU-869bu5atn)
+
+
+##### Build System
+
+* correctly fetch languages for frontends (CU-869bu5atn)</details>
+
+
+
+
+
 ## 5.2.12 (2026-01-23)
 
 

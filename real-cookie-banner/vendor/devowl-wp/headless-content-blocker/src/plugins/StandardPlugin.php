@@ -251,6 +251,8 @@ class StandardPlugin extends AbstractPlugin
             'wpgb_settings',
             // [Plugin Comp] Fluent Calendar
             '/var fluentCalendarPublicVars/m',
+            // [Plugin Comp] RafflePress
+            '/var rafflepress_api_url/m',
         ]);
         /**
          * DoNotBlockScriptTextTemplates.

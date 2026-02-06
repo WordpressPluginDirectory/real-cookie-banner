@@ -349,6 +349,8 @@ class Blocker
             'pix_get_popup_content',
             // [Plugin Comp] Formidable Forms
             'frm_entries_create',
+            // [Plugin Comp] Routiz
+            'rz_listing_edit',
         ]);
         return $doingAjax && isset($_REQUEST['action']) && \in_array($_REQUEST['action'], $actions, \true);
     }
